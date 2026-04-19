@@ -1,0 +1,48 @@
+{
+  "content_hash": "1fe3df848a525f62933498b158dd58fe87bb3a21afb30940a2c4cfaa78a81225",
+  "sample_size": 90,
+  "diagnostics": {
+    "rejection_counts": {
+      "pool_too_small": 0,
+      "pool_too_large": 0,
+      "unparseable_id": 0
+    },
+    "stratum_stats": {
+      "2hop": {
+        "candidates_after_filter": 1252,
+        "drawn": 30
+      },
+      "3hop": {
+        "candidates_after_filter": 760,
+        "drawn": 30
+      },
+      "4hop": {
+        "candidates_after_filter": 405,
+        "drawn": 30
+      }
+    },
+    "total_sampled": 90,
+    "seed": 20260418
+  },
+  "summary": {
+    "total": 90,
+    "by_hop_depth": {
+      "2hop": 30,
+      "3hop": 30,
+      "4hop": 30
+    },
+    "by_subcategory": {
+      "2hop": 30,
+      "3hop1": 21,
+      "3hop2": 9,
+      "4hop1": 13,
+      "4hop3": 9,
+      "4hop2": 8
+    },
+    "pool_size_min": 18,
+    "pool_size_max": 20,
+    "pool_size_mean": 19.977777777777778,
+    "supporting_per_question_mean": 3.0
+  },
+  "manifest_path": "/home/claude/phase1/data/sample_manifest_v1.json"
+}
