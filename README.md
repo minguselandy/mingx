@@ -1,13 +1,24 @@
-# MuSiQue Gate 1 / Phase 1 Scaffold
+# MuSiQue Gate 1 Project
 
 This repository now contains the local implementation scaffold for MuSiQue
-Gate 1, covering:
+Gate 1 as a runnable project, covering:
 
 1. Phase 0 artifact validation and smoke checks
 2. Phase 1 manifest loading, ordering, log-prob scoring, and `delta_loo`
 3. Append-only measurement storage with `events.jsonl` as source of truth
 4. Cohort runner support for mock and live DashScope / Qwen runs
 5. Bridge and export scaffolds for calibration batches
+
+Documentation entrypoints:
+
+- [docs/README.md](./docs/README.md)
+- [docs/architecture.md](./docs/architecture.md)
+- [docs/protocols/execution-readiness-checklist.md](./docs/protocols/execution-readiness-checklist.md)
+- [configs/runs/README.md](./configs/runs/README.md)
+
+The current `phase0/` and `phase1/` directories are compatibility-oriented
+runtime packages. They no longer represent the preferred long-term project
+architecture.
 
 ## Runtime
 
@@ -27,8 +38,8 @@ uv venv
 .\.venv\Scripts\Activate.ps1
 uv sync
 uv run pytest
-uv run python -m phase1.smoke --backend mock --run-plan artifacts/phase1/run_plan.json --env .env
-uv run python -m phase1.run --plan artifacts/phase1/live_calibration_p3_plan.json --backend live --env .env
+uv run python -m phase1.smoke --backend mock --run-plan configs/runs/smoke.json --env .env
+uv run python -m phase1.run --plan configs/runs/live-calibration-p3.json --backend live --env .env
 ```
 
 ### WSL / bash
@@ -37,6 +48,6 @@ uv venv
 source .venv/bin/activate
 uv sync
 uv run pytest
-uv run python -m phase1.smoke --backend mock --run-plan artifacts/phase1/run_plan.json --env .env
-uv run python -m phase1.run --plan artifacts/phase1/live_calibration_p3_plan.json --backend live --env .env
+uv run python -m phase1.smoke --backend mock --run-plan configs/runs/smoke.json --env .env
+uv run python -m phase1.run --plan configs/runs/live-calibration-p3.json --backend live --env .env
 ```

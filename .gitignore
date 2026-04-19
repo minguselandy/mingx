@@ -10,5 +10,6 @@ pytest-tmp/
 __pycache__/
 *.pyc
 .tmp-*.json
+backups/
 artifacts/**/cache/
 artifacts/**/checkpoints/

@@ -19,7 +19,7 @@ def test_dashscope_request_builder_uses_phase1_logprob_contract(workspace_tmp_di
     )
     context = load_phase1_context(
         phase1_config_path=Path("phase1.yaml"),
-        run_plan_path=Path("artifacts/phase1/run_plan.json"),
+        run_plan_path=Path("configs/runs/smoke.json"),
         env_path=env_path,
     )
     backend = DashScopeChatBackend(context=context, model_role="small")

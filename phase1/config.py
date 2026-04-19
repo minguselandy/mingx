@@ -82,7 +82,7 @@ def _load_env_values(env_path: str | Path | None) -> dict[str, str]:
 
 def load_phase1_context(
     phase1_config_path: str | Path = "phase1.yaml",
-    run_plan_path: str | Path = "artifacts/phase1/run_plan.json",
+    run_plan_path: str | Path = "configs/runs/smoke.json",
     env_path: str | Path | None = None,
 ) -> Phase1Context:
     config_path = Path(phase1_config_path).resolve()

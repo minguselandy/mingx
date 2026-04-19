@@ -34,7 +34,7 @@ def _resolve_from_run_plan(run_plan: dict, key: str, run_plan_path: Path, root_d
 def run_phase1_smoke(
     *,
     backend_name: str,
-    run_plan_path: str | Path = "artifacts/phase1/run_plan.json",
+    run_plan_path: str | Path = "configs/runs/smoke.json",
     env_path: str | Path | None = None,
 ) -> dict:
     run_plan_file = _resolve_run_plan_path(run_plan_path)
@@ -252,7 +252,7 @@ def run_phase1_smoke(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run a minimal Phase 1 smoke flow.")
     parser.add_argument("--backend", choices=("mock", "live"), default="mock")
-    parser.add_argument("--run-plan", default="artifacts/phase1/run_plan.json")
+    parser.add_argument("--run-plan", default="configs/runs/smoke.json")
     parser.add_argument("--env", default=None)
     args = parser.parse_args()
 

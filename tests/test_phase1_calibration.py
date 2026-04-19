@@ -89,7 +89,7 @@ def test_calibration_manifest_supports_excluded_question_ids_and_same_hop_replac
 
 
 def test_live_calibration_p3_plan_is_pinned_to_expected_selection_and_storage(workspace_tmp_dir):
-    plan_path = Path("artifacts/phase1/live_calibration_p3_plan.json")
+    plan_path = Path("configs/runs/live-calibration-p3.json")
     plan = json.loads(plan_path.read_text(encoding="utf-8"))
     calibration_output = workspace_tmp_dir / "live-calibration-p3.json"
     calibration = build_calibration_manifest(
@@ -134,3 +134,17 @@ def test_live_calibration_p3_plan_is_pinned_to_expected_selection_and_storage(wo
         "4hop3__373866_5189_38229_86687",
         "4hop1__105401_17130_70784_61381",
     ]
+
+
+def test_canonical_run_configs_exist_under_configs_runs():
+    expected = {
+        "smoke.json",
+        "cohort.json",
+        "live-pilot.json",
+        "live-mini-batch.json",
+        "live-calibration-p2.json",
+        "live-calibration-p3.json",
+    }
+    actual = {path.name for path in Path("configs/runs").glob("*.json")}
+
+    assert expected.issubset(actual)

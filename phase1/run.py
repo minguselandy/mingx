@@ -298,7 +298,7 @@ def _build_unit_specs(*, questions: list[ManifestQuestion], model_role: str, con
 def run_phase1_cohort(
     *,
     backend_name: str,
-    cohort_plan_path: str | Path = "artifacts/phase1/cohort_plan.json",
+    cohort_plan_path: str | Path = "configs/runs/cohort.json",
     env_path: str | Path | None = None,
 ) -> dict:
     plan_path = _resolve_plan_path(cohort_plan_path)
@@ -627,7 +627,7 @@ def run_phase1_cohort(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run the minimal recoverable Phase 1 cohort flow.")
-    parser.add_argument("--plan", default="artifacts/phase1/cohort_plan.json")
+    parser.add_argument("--plan", default="configs/runs/cohort.json")
     parser.add_argument("--backend", choices=("mock", "live"), default="mock")
     parser.add_argument("--env", default=None)
     args = parser.parse_args()

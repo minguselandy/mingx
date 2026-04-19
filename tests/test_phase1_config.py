@@ -31,7 +31,7 @@ def test_load_phase1_context_prefers_environment_over_env_file(workspace_tmp_dir
 
     context = load_phase1_context(
         phase1_config_path=Path("phase1.yaml"),
-        run_plan_path=Path("artifacts/phase1/run_plan.json"),
+        run_plan_path=Path("configs/runs/smoke.json"),
         env_path=env_path,
     )
 
