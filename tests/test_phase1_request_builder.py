@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from phase1.config import load_phase1_context
-from phase1.dashscope_backend import DashScopeChatBackend
+from cps.providers.dashscope import DashScopeChatBackend
+from cps.runtime.config import load_phase1_context
 
 
 def test_dashscope_request_builder_uses_phase1_logprob_contract(workspace_tmp_dir):

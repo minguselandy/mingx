@@ -4,9 +4,9 @@ import json
 from pathlib import Path
 from urllib import error
 
-import phase1.dashscope_backend as dashscope_backend_module
-from phase1.config import load_phase1_context
-from phase1.dashscope_backend import DashScopeChatBackend
+import cps.providers.dashscope as dashscope_backend_module
+from cps.providers.dashscope import DashScopeChatBackend
+from cps.runtime.config import load_phase1_context
 
 
 def _build_context(workspace_tmp_dir):

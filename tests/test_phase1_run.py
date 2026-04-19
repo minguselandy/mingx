@@ -1,12 +1,12 @@
 import json
 from pathlib import Path
 
-import phase1.run as phase1_run_module
-from phase0.manifest import load_manifest
-from phase0.measurement_store import append_event, iter_events
-from phase1.orderings import build_orderings
-from phase1.run import run_phase1_cohort
-from phase1.scoring import MockScoringBackend
+import cps.runtime.cohort as phase1_run_module
+from cps.data.manifest import load_manifest
+from cps.scoring.backends import MockScoringBackend
+from cps.scoring.orderings import build_orderings
+from cps.runtime.cohort import run_phase1_cohort
+from cps.store.measurement import append_event, iter_events
 
 
 def _write_env(path: Path) -> None:

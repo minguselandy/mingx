@@ -1,5 +1,5 @@
 {
-  "status": "pending_measurement_consumption",
-  "question_scope": "cohort",
-  "reason": "annotation and expert arbitration remain outside the current cohort runner"
+  "status": "not_computed",
+  "question_id": "2hop__256778_131879",
+  "reason": "annotation and expert arbitration are outside the current minimal Phase 1 smoke path"
 }

@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from dotenv import dotenv_values
 
-from phase1.run import run_phase1_cohort
+from cps.runtime.cohort import run_phase1_cohort
 
 
 ROOT = Path(__file__).resolve().parents[1]

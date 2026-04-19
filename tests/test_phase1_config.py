@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from phase1.config import load_phase1_context
-from phase1.secrets import extract_api_key_from_csv, mask_secret
+from cps.runtime.config import load_phase1_context
+from cps.runtime.secrets import extract_api_key_from_csv, mask_secret
 
 
 CSV_PATH = Path(r"C:\Users\Mingx\Documents\mx-codex\默认业务空间-apiKey-4648916.csv")

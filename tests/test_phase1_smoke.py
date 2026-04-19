@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from phase1.smoke import run_phase1_smoke
+from cps.runtime.phase1_smoke import run_phase1_smoke
 
 
 def test_phase1_mock_smoke_produces_measurements_and_exports(workspace_tmp_dir):

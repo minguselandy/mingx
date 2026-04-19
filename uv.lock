@@ -294,7 +294,7 @@ wheels = [
 ]
 
 [[package]]
-name = "context-projection-selection-phase0"
+name = "context-projection-selection"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

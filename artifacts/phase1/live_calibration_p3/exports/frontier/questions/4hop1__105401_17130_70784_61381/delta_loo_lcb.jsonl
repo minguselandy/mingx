@@ -1,5 +1,5 @@
-{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 0, "delta_loo_lcb": -2.2e-06}
-{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 1, "delta_loo_lcb": 0.0}
-{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 2, "delta_loo_lcb": -6e-07}
-{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 3, "delta_loo_lcb": -1.6e-06}
-{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 4, "delta_loo_lcb": -3.4e-06}
+{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 0, "delta_loo_lcb": 0.135684}
+{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 1, "delta_loo_lcb": 0.196838}
+{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 2, "delta_loo_lcb": 0.119452}
+{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 3, "delta_loo_lcb": 0.19921}
+{"question_id": "4hop1__105401_17130_70784_61381", "hop_depth": "4hop", "model_role": "frontier", "paragraph_id": 4, "delta_loo_lcb": 0.40762000000000004}

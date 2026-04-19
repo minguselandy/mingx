@@ -1,6 +1,6 @@
 {
-  "run_id": "phase1-cohort-20260419135539",
-  "backend": "live",
+  "run_id": "phase1-cohort-20260419181747",
+  "backend": "mock",
   "calibration_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\calibration_manifest.json",
   "calibration_per_hop_count": 3,
   "blocked_questions_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\blocked_questions.json",
@@ -13,13 +13,13 @@
     "small": {
       "planned": 9,
       "completed": 9,
-      "skipped": 9,
+      "skipped": 0,
       "incomplete": 0
     },
     "frontier": {
       "planned": 9,
       "completed": 9,
-      "skipped": 9,
+      "skipped": 0,
       "incomplete": 0
     }
   }

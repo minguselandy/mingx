@@ -1,17 +1,23 @@
 # Run Plans
 
-这里保存项目级运行计划。
+This directory stores canonical project-level run plans.
 
-这些文件描述：
+These files define:
 
-- 输入 manifest / hash
-- scorer backend 角色
-- calibration 范围
-- storage 输出目录
+- input manifest and hash sources
+- backend role and scoring scope
+- calibration scope
+- output storage roots
 
-它们不是运行结果本身；真实运行结果仍然落在 `artifacts/`。
+They are not run outputs themselves. Real outputs still land under
+`artifacts/`.
 
-当前推荐入口：
+Canonical runtime package:
+
+- `python -m cps.runtime.phase1_smoke`
+- `python -m cps.runtime.cohort`
+
+Current recommended run plans:
 
 - [smoke.json](./smoke.json)
 - [cohort.json](./cohort.json)

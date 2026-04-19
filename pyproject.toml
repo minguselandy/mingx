@@ -1,7 +1,7 @@
 [project]
-name = "context-projection-selection-phase0"
+name = "context-projection-selection"
 version = "0.1.0"
-description = "Phase 0 data lock-in and sampling reproducibility for MuSiQue"
+description = "MuSiQue Gate 1 / Phase 1 measurement scaffold for context projection selection"
 requires-python = ">=3.11"
 dependencies = [
   "datasets>=2.19",

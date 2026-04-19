@@ -2,8 +2,8 @@ import json
 from collections import Counter
 from pathlib import Path
 
-from phase0.manifest import load_manifest
-from phase1.calibration import (
+from cps.data.manifest import load_manifest
+from cps.runtime.calibration import (
     SELECTION_ALGORITHM_VERSION,
     build_calibration_manifest,
 )

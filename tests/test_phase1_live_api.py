@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from dotenv import dotenv_values
 
-from phase1.smoke import run_phase1_smoke
+from cps.runtime.phase1_smoke import run_phase1_smoke
 
 
 ROOT = Path(__file__).resolve().parents[1]

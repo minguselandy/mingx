@@ -1,4 +1,4 @@
-from phase1.orderings import build_orderings
+from cps.scoring.orderings import build_orderings
 
 
 def test_build_orderings_is_stable_for_question_and_seed():

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from phase1.bridge import run_bridge_analysis
+from cps.analysis.bridge import run_bridge_analysis
 
 
 def _write_snapshot(
