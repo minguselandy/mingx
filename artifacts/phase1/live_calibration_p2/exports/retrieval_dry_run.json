@@ -1,0 +1,2342 @@
+[
+  {
+    "question_id": "2hop__86458_20273",
+    "hop_depth": "2hop",
+    "results": [
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.4,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.4,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 6.25,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.95,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 6.25,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.95,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 6.25,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 5.95,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 6.25,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 5.95,
+            "rank": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "question_id": "2hop__132929_684936",
+    "hop_depth": "2hop",
+    "results": [
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 4.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 3.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 3.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 4.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 3.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 3.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "East India Company",
+            "score": 2.2,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Tianjin Port (Group) Company",
+            "score": 2.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 4.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 3.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 3.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "East India Company",
+            "score": 2.2,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Tianjin Port (Group) Company",
+            "score": 2.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 4.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 3.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 3.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 4.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 3.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 3.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "East India Company",
+            "score": 2.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Tianjin Port (Group) Company",
+            "score": 2.1,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 4.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 3.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 3.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "East India Company",
+            "score": 2.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Tianjin Port (Group) Company",
+            "score": 2.1,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 7.75,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 6.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 5.25,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 7.75,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 6.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 5.25,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "East India Company",
+            "score": 3.95,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Tianjin Port (Group) Company",
+            "score": 3.6,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 7.75,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 6.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 5.25,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "East India Company",
+            "score": 3.95,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Tianjin Port (Group) Company",
+            "score": 3.6,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 7.75,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 6.25,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 6.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 7.75,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 6.25,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "East India Company",
+            "score": 4.95,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Tianjin Port (Group) Company",
+            "score": 4.6,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Beer",
+            "score": 7.75,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "The Unbeliever",
+            "score": 6.25,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 1,
+            "title": "American Stores",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "East India Company",
+            "score": 4.95,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Tianjin Port (Group) Company",
+            "score": 4.6,
+            "rank": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "question_id": "3hop1__222979_40769_64047",
+    "hop_depth": "3hop",
+    "results": [
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 3.3,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 3.3,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 3.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 3.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 7.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 7.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 6.6,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 6.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 7.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 6.6,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 6.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 8.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 7.6,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 8.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 7.6,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 6.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 8.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 7.6,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 6.2,
+            "rank": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "question_id": "3hop1__409517_547811_80702",
+    "hop_depth": "3hop",
+    "results": [
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 7.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 5.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 5.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 7.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 5.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Confederation Bridge",
+            "score": 3.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 7.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 5.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Confederation Bridge",
+            "score": 3.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 7.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 5.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 5.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 7.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 5.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Confederation Bridge",
+            "score": 3.1,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 7.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 5.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Confederation Bridge",
+            "score": 3.1,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 9.9,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 7.5,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 7.45,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 9.9,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 7.5,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 7.45,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 7.05,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Confederation Bridge",
+            "score": 5.95,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 9.9,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 7.5,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 7.45,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 7.05,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Confederation Bridge",
+            "score": 5.95,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 10.9,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 8.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 7.5,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 10.9,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 8.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 7.5,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 7.45,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Confederation Bridge",
+            "score": 6.95,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Interstate 182 Bridge",
+            "score": 10.9,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Carleton Bridge",
+            "score": 8.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Dufferin Street bridges",
+            "score": 7.5,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Giovanni Cifolelli",
+            "score": 7.45,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Confederation Bridge",
+            "score": 6.95,
+            "rank": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "question_id": "4hop1__76111_624859_355213_203322",
+    "hop_depth": "4hop",
+    "results": [
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.1,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.1,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.2,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.1,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.2,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 8.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 7.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 8.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 7.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 5.7,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.9,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 8.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 7.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 5.7,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.9,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 9.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 8.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 9.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 8.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 5.7,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 4.9,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 9.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 8.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 5.7,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 4.9,
+            "rank": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "question_id": "4hop3__373866_5189_38229_86687",
+    "hop_depth": "4hop",
+    "results": [
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 11.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 9.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 8.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 11.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 9.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 8.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Ndriçim Babasi",
+            "score": 7.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Ministry of National Defence (Ecuador)",
+            "score": 3.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 11.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 9.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 8.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Ndriçim Babasi",
+            "score": 7.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Ministry of National Defence (Ecuador)",
+            "score": 3.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 11.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 9.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 8.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 11.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 9.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 8.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Ndriçim Babasi",
+            "score": 7.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Ministry of National Defence (Ecuador)",
+            "score": 3.1,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 11.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 9.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 8.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Ndriçim Babasi",
+            "score": 7.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Ministry of National Defence (Ecuador)",
+            "score": 3.1,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 14.55,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 13.15,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 9.75,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 14.55,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 13.15,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 9.75,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Ndriçim Babasi",
+            "score": 8.05,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Ministry of National Defence (Ecuador)",
+            "score": 3.8,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 14.55,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 13.15,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 9.75,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Ndriçim Babasi",
+            "score": 8.05,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Ministry of National Defence (Ecuador)",
+            "score": 3.8,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 15.55,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 13.15,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 9.75,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 15.55,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 13.15,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 9.75,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Ndriçim Babasi",
+            "score": 8.05,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Ministry of National Defence (Ecuador)",
+            "score": 4.8,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Dwight D. Eisenhower",
+            "score": 15.55,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "German reunification",
+            "score": 13.15,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Movement for Changes",
+            "score": 9.75,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Ndriçim Babasi",
+            "score": 8.05,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Ministry of National Defence (Ecuador)",
+            "score": 4.8,
+            "rank": 5
+          }
+        ]
+      }
+    ]
+  }
+]

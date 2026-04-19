@@ -1,0 +1,62 @@
+{
+  "question_id": "2hop__256778_131879",
+  "hop_depth": "2hop",
+  "V_model": "claude-haiku-4-5-20251001",
+  "baseline_logp": -2.5,
+  "orderings": [
+    {
+      "ordering_id": "canonical",
+      "ordering": [
+        0,
+        1,
+        2
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": 0,
+          "full_logp": -1.2,
+          "loo_logp": -1.6,
+          "delta_loo": 0.4
+        },
+        {
+          "paragraph_id": 1,
+          "full_logp": -1.2,
+          "loo_logp": -1.3,
+          "delta_loo": 0.1
+        }
+      ]
+    },
+    {
+      "ordering_id": "permuted",
+      "ordering": [
+        1,
+        0,
+        2
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": 0,
+          "full_logp": -1.15,
+          "loo_logp": -1.5,
+          "delta_loo": 0.35
+        },
+        {
+          "paragraph_id": 1,
+          "full_logp": -1.15,
+          "loo_logp": -1.22,
+          "delta_loo": 0.07
+        }
+      ]
+    }
+  ],
+  "delta_loo_LCB": [
+    {
+      "paragraph_id": 0,
+      "delta_loo": 0.355
+    },
+    {
+      "paragraph_id": 1,
+      "delta_loo": 0.07300000000000001
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# Project-local Codex overrides for the MuSiQue execution scaffold.
+# Keep this file intentionally small and let the global ECC install
+# provide the broader defaults.
+
+[agents]
+max_threads = 3
+max_depth = 1
+
+[agents.protocol_guard]
+description = "Read-only protocol checker for Phase 0/1 execution alignment against locked project specs."
+config_file = "agents/protocol-guard.toml"

@@ -1,0 +1,1172 @@
+[
+  {
+    "question_id": "2hop__86458_20273",
+    "hop_depth": "2hop",
+    "results": [
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.4,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.4,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 5.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 4.0,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 6.25,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.95,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 6.25,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 3.95,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 6.25,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 5.95,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Presbyterianism",
+            "score": 11.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Presbyterianism",
+            "score": 9.05,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Presbyterianism",
+            "score": 8.4,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Presbyterianism",
+            "score": 6.25,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 1,
+            "title": "First Presbyterian Church (Trenton, New Jersey)",
+            "score": 5.95,
+            "rank": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "question_id": "3hop1__222979_40769_64047",
+    "hop_depth": "3hop",
+    "results": [
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 3.3,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 3.3,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 3.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 4.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 4.0,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 3.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 7.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 7.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 6.6,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 6.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 7.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 6.6,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 6.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 8.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 7.6,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 8.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 7.6,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 6.2,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 0,
+            "title": "Imperialism",
+            "score": 8.4,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "Lexus RX",
+            "score": 8.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Scion Fuse",
+            "score": 7.6,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Londonskaya Hotel",
+            "score": 6.9,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hapoel Rishon LeZion F.C.",
+            "score": 6.2,
+            "rank": 5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "question_id": "4hop1__76111_624859_355213_203322",
+    "hop_depth": "4hop",
+    "results": [
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.1,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.1,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.2,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_plus_cross_encoder",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.2,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.2,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.1,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.2,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bm25_baseline",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 6.1,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 5.1,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 4.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.1,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 3.0,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 8.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 7.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 8.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 7.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 5.7,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.9,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "bi_encoder_only",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 8.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 7.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 5.7,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 3.9,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 3,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 9.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 8.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 5,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 9.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 8.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 5.7,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 4.9,
+            "rank": 5
+          }
+        ]
+      },
+      {
+        "configuration_id": "hybrid_rrf",
+        "top_k": 10,
+        "ranked_paragraphs": [
+          {
+            "paragraph_id": 4,
+            "title": "Hungry Jack's",
+            "score": 9.25,
+            "rank": 1
+          },
+          {
+            "paragraph_id": 1,
+            "title": "On the Good Ship Lollipop",
+            "score": 8.6,
+            "rank": 2
+          },
+          {
+            "paragraph_id": 0,
+            "title": "Gold Hill, North Carolina",
+            "score": 6.0,
+            "rank": 3
+          },
+          {
+            "paragraph_id": 2,
+            "title": "Krasnovishersky District",
+            "score": 5.7,
+            "rank": 4
+          },
+          {
+            "paragraph_id": 3,
+            "title": "Don't You Worry 'bout a Thing",
+            "score": 4.9,
+            "rank": 5
+          }
+        ]
+      }
+    ]
+  }
+]

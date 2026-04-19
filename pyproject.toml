@@ -1,0 +1,26 @@
+[project]
+name = "context-projection-selection-phase0"
+version = "0.1.0"
+description = "Phase 0 data lock-in and sampling reproducibility for MuSiQue"
+requires-python = ">=3.11"
+dependencies = [
+  "datasets>=2.19",
+  "pydantic>=2.7",
+  "python-dotenv>=1.0",
+  "orjson>=3.10",
+  "tqdm>=4.66",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.2",
+  "ruff>=0.5",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = [".pytest-tmp", "pytest-tmp"]
+markers = ["live_api: calls the live DashScope OpenAI-compatible API"]

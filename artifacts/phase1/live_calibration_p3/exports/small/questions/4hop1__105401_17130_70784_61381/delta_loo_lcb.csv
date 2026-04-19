@@ -1,0 +1,6 @@
+question_id,hop_depth,model_role,paragraph_id,delta_loo_lcb
+4hop1__105401_17130_70784_61381,4hop,small,0,0.0
+4hop1__105401_17130_70784_61381,4hop,small,1,0.0
+4hop1__105401_17130_70784_61381,4hop,small,2,0.0
+4hop1__105401_17130_70784_61381,4hop,small,3,0.0
+4hop1__105401_17130_70784_61381,4hop,small,4,0.0

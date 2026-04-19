@@ -1,0 +1,243 @@
+{
+  "question_id": "4hop1__105401_17130_70784_61381",
+  "hop_depth": "4hop",
+  "V_model": "qwen3-14b",
+  "model_role": "small",
+  "provider": "dashscope",
+  "backend_id": "dashscope_openai_chat",
+  "baseline_logp": 0.0,
+  "orderings": [
+    {
+      "ordering_id": "canonical_v1",
+      "ordering": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": 0,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 1,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 2,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 3,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 4,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        }
+      ]
+    },
+    {
+      "ordering_id": "permutation_1",
+      "ordering": [
+        0,
+        4,
+        2,
+        1,
+        3
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": 0,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 1,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 2,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 3,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 4,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        }
+      ]
+    },
+    {
+      "ordering_id": "permutation_2",
+      "ordering": [
+        3,
+        2,
+        4,
+        1,
+        0
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": 0,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 1,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 2,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 3,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 4,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        }
+      ]
+    },
+    {
+      "ordering_id": "permutation_3",
+      "ordering": [
+        2,
+        0,
+        4,
+        1,
+        3
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": 0,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 1,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 2,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 3,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 4,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        }
+      ]
+    },
+    {
+      "ordering_id": "permutation_4",
+      "ordering": [
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "paragraphs": [
+        {
+          "paragraph_id": 0,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 1,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 2,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 3,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        },
+        {
+          "paragraph_id": 4,
+          "full_logp": 0.0,
+          "loo_logp": 0.0,
+          "delta_loo": 0.0
+        }
+      ]
+    }
+  ],
+  "delta_loo_LCB": [
+    {
+      "paragraph_id": 0,
+      "delta_loo": 0.0
+    },
+    {
+      "paragraph_id": 1,
+      "delta_loo": 0.0
+    },
+    {
+      "paragraph_id": 2,
+      "delta_loo": 0.0
+    },
+    {
+      "paragraph_id": 3,
+      "delta_loo": 0.0
+    },
+    {
+      "paragraph_id": 4,
+      "delta_loo": 0.0
+    }
+  ]
+}

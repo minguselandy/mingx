@@ -1,0 +1,51 @@
+{
+  "status": "computed",
+  "calibration_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p2\\calibration_manifest.json",
+  "per_hop": {
+    "2hop": {
+      "sigma_stratum": 0.0003552953825887538,
+      "bridge_coefficient_variance": {
+        "intercept": 4.9597472570170055e-11,
+        "slope": 0.0
+      },
+      "calibration_consistency": {
+        "pearson_r": 0.0,
+        "mae": 0.00019620000000000003,
+        "rmse": 0.00033706279533641804,
+        "sigma_calibration": 0.0003552953825887538,
+        "mae_threshold": 0.0001776476912943769
+      },
+      "note": "annotation disagreement rates remain pending until kappa/annotation wiring"
+    },
+    "3hop": {
+      "sigma_stratum": 0.0003851629617591898,
+      "bridge_coefficient_variance": {
+        "intercept": 3.8124655389789805e-09,
+        "slope": 0.0
+      },
+      "calibration_consistency": {
+        "pearson_r": 0.0,
+        "mae": 0.000218052,
+        "rmse": 0.0003653976688486121,
+        "sigma_calibration": 0.0003851629617591898,
+        "mae_threshold": 0.0001925814808795949
+      },
+      "note": "annotation disagreement rates remain pending until kappa/annotation wiring"
+    },
+    "4hop": {
+      "sigma_stratum": 2.620060219833803e-05,
+      "bridge_coefficient_variance": {
+        "intercept": 2.1817544519519523e-10,
+        "slope": 0.0
+      },
+      "calibration_consistency": {
+        "pearson_r": 0.0,
+        "mae": 2.09e-05,
+        "rmse": 2.4856073704428866e-05,
+        "sigma_calibration": 2.620060219833803e-05,
+        "mae_threshold": 1.3100301099169015e-05
+      },
+      "note": "annotation disagreement rates remain pending until kappa/annotation wiring"
+    }
+  }
+}

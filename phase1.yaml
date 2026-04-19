@@ -1,0 +1,86 @@
+experiment:
+  id: musique_gate1_phase1_v1
+  protocol_version: phase1.v1
+  seed: 20260418
+
+provider:
+  name: dashscope
+  api_style: openai_chat_compatible
+  base_url_env: DASHSCOPE_BASE_URL
+  api_key_env: DASHSCOPE_API_KEY
+
+models:
+  frontier:
+    model: qwen3-32b
+    purpose: ["bridge_subsample", "calibration_replay", "arbitration"]
+    decoding:
+      temperature: 0.0
+      max_completion_tokens: 64
+      seed: 20260418
+      stream: false
+      n: 1
+      extra_body:
+        enable_thinking: false
+    logprob:
+      enabled: true
+      top_logprobs: 0
+
+  small:
+    model: qwen3-14b
+    purpose: ["full_n_replay", "lower_cost_delta_loo"]
+    decoding:
+      temperature: 0.0
+      max_completion_tokens: 64
+      seed: 20260418
+      stream: false
+      n: 1
+      extra_body:
+        enable_thinking: false
+    logprob:
+      enabled: true
+      top_logprobs: 0
+
+  coding:
+    model: qwen3-coder-plus
+    purpose: ["implementation_assistant"]
+
+scoring:
+  utility_metric: log_loss
+  answer_mode: short_normalized
+  canonical_ordering_id: canonical_v1
+  variance_source: paragraph_order_permutation_only
+  permutation_count: 5
+  top_k_values: [3, 5, 10]
+
+storage:
+  cache_dir: ./artifacts/phase1/cache
+  measurement_dir: ./artifacts/phase1/measurements
+  checkpoint_dir: ./artifacts/phase1/checkpoints
+  export_dir: ./artifacts/phase1/exports
+  append_only_events: true
+
+cache:
+  request_cache: true
+  parsed_result_cache: true
+  key_fields: ["provider", "model", "protocol_version", "question_id", "subset_hash", "ordering_id", "answer_mode", "temperature", "seed", "top_logprobs"]
+
+rate_limit:
+  max_concurrency: 4
+  soft_rpm: 60
+  soft_tpm: 120000
+  retry:
+    max_attempts: 6
+    base_delay_sec: 1.0
+    max_delay_sec: 30.0
+    backoff: exponential
+    jitter: true
+    retry_statuses: [429, 500, 502, 503, 504]
+
+resume:
+  checkpoint_every_n_requests: 20
+  source_of_truth: event_log
+  reconcile_from_events_on_resume: true
+
+optional_batch:
+  enabled: false
+  use_for: ["large_full_n_backfill"]

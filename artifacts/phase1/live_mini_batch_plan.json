@@ -1,0 +1,29 @@
+{
+  "experiment_id": "musique_gate1_phase1_live_minibatch_v1",
+  "protocol_version": "phase1.v1",
+  "phase1_config_path": "./phase1.yaml",
+  "manifest_path": "./artifacts/phase0/sample_manifest_v1.json",
+  "hash_path": "./artifacts/phase0/content_hashes.json",
+  "calibration_manifest_path": "./artifacts/phase1/live_mini_batch/calibration_manifest.json",
+  "backend": "live",
+  "question_paragraph_limit": 5,
+  "calibration": {
+    "per_hop_count": 1
+  },
+  "scoring": {
+    "k_lcb": 5,
+    "lcb_quantile": 0.1
+  },
+  "small_full_n": {
+    "questions": "calibration_manifest"
+  },
+  "frontier_calibration": {
+    "questions": "calibration_manifest"
+  },
+  "storage": {
+    "cache_dir": "./artifacts/phase1/live_mini_batch/cache",
+    "measurement_dir": "./artifacts/phase1/live_mini_batch/measurements",
+    "checkpoint_dir": "./artifacts/phase1/live_mini_batch/checkpoints",
+    "export_dir": "./artifacts/phase1/live_mini_batch/exports"
+  }
+}

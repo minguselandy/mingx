@@ -1,0 +1,8 @@
+{
+  "question_id": "2hop__656411_345851",
+  "model_role": "small",
+  "delta_loo_jsonl": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\exports\\small\\questions\\2hop__656411_345851\\delta_loo_lcb.jsonl",
+  "delta_loo_csv": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\exports\\small\\questions\\2hop__656411_345851\\delta_loo_lcb.csv",
+  "bridge_input": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\exports\\small\\questions\\2hop__656411_345851\\bridge_input.csv",
+  "row_count": 20
+}

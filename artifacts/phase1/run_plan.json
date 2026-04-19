@@ -1,0 +1,20 @@
+{
+  "experiment_id": "musique_gate1_phase1_v1",
+  "protocol_version": "phase1.v1",
+  "phase1_config_path": "./phase1.yaml",
+  "manifest_path": "./artifacts/phase0/sample_manifest_v1.json",
+  "hash_path": "./artifacts/phase0/content_hashes.json",
+  "smoke_question_id": "2hop__256778_131879",
+  "smoke_paragraph_limit": 5,
+  "scoring": {
+    "model_role": "small",
+    "k_lcb": 5,
+    "lcb_quantile": 0.1
+  },
+  "storage": {
+    "cache_dir": "./artifacts/phase1/cache",
+    "measurement_dir": "./artifacts/phase1/measurements",
+    "checkpoint_dir": "./artifacts/phase1/checkpoints",
+    "export_dir": "./artifacts/phase1/exports"
+  }
+}

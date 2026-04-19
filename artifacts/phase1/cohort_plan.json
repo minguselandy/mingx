@@ -1,0 +1,25 @@
+{
+  "experiment_id": "musique_gate1_phase1_v1",
+  "protocol_version": "phase1.v1",
+  "phase1_config_path": "./phase1.yaml",
+  "manifest_path": "./artifacts/phase0/sample_manifest_v1.json",
+  "hash_path": "./artifacts/phase0/content_hashes.json",
+  "calibration_manifest_path": "./artifacts/phase1/calibration_manifest.json",
+  "backend": "mock",
+  "scoring": {
+    "k_lcb": 5,
+    "lcb_quantile": 0.1
+  },
+  "small_full_n": {
+    "questions": "all"
+  },
+  "frontier_calibration": {
+    "questions": "calibration_manifest"
+  },
+  "storage": {
+    "cache_dir": "./artifacts/phase1/cache",
+    "measurement_dir": "./artifacts/phase1/measurements",
+    "checkpoint_dir": "./artifacts/phase1/checkpoints",
+    "export_dir": "./artifacts/phase1/exports"
+  }
+}

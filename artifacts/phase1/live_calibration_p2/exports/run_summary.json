@@ -1,0 +1,26 @@
+{
+  "run_id": "phase1-cohort-20260419131753",
+  "backend": "live",
+  "calibration_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p2\\calibration_manifest.json",
+  "calibration_per_hop_count": 2,
+  "blocked_questions_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p2\\blocked_questions.json",
+  "excluded_question_ids": [],
+  "retrieval_dry_run": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p2\\exports\\retrieval_dry_run.json",
+  "bridge_status": "computed",
+  "source_of_truth": "event_log",
+  "resume_from_event_log": true,
+  "model_roles": {
+    "small": {
+      "planned": 6,
+      "completed": 6,
+      "skipped": 6,
+      "incomplete": 0
+    },
+    "frontier": {
+      "planned": 6,
+      "completed": 6,
+      "skipped": 6,
+      "incomplete": 0
+    }
+  }
+}

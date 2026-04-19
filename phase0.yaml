@@ -1,0 +1,16 @@
+phase0:
+  domain: musique
+  source_repo: dgslibisey/MuSiQue
+  split: validation
+  seed: 20260418
+  n_per_stratum: 30
+  hop_strata: ["2hop", "3hop", "4hop"]
+  pool_size_range: [15, 25]
+  outputs:
+    artifact_dir: ./artifacts/phase0
+    manifest_path: ./artifacts/phase0/sample_manifest_v1.json
+    hash_path: ./artifacts/phase0/content_hashes.json
+  checks:
+    require_content_hash: true
+    require_balanced_strata: true
+    require_manifest_smoke_test: true

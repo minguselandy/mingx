@@ -1,0 +1,114 @@
+{
+  "status": "computed",
+  "bridge_form": "linear_ols",
+  "diagnostic_scope": "pure_python_without_scipy",
+  "calibration_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_mini_batch\\calibration_manifest.json",
+  "bootstrap_resamples": 1000,
+  "per_hop": {
+    "2hop": {
+      "coefficients": {
+        "intercept": 4.848000000000001e-05,
+        "slope": 0.0,
+        "intercept_ci": [
+          4.848000000000001e-05,
+          4.848000000000001e-05
+        ],
+        "slope_ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "calibration": {
+        "question_count": 1,
+        "row_count": 5
+      },
+      "consistency": {
+        "pearson_r": 0.0,
+        "mae": 0.000285648,
+        "rmse": 0.00035880973453907293,
+        "sigma_calibration": 0.0004011614787090106,
+        "mae_threshold": 0.0002005807393545053
+      },
+      "diagnostics": {
+        "normality_test": "jarque_bera_proxy_without_scipy",
+        "normality_pvalue": 0.5766016085554253,
+        "breusch_pagan_pvalue": 1.0,
+        "icc_question_residual": 0.0
+      },
+      "bridge_coefficient_variance": {
+        "intercept": 0.0,
+        "slope": 0.0
+      }
+    },
+    "3hop": {
+      "coefficients": {
+        "intercept": 0.00023876000000000002,
+        "slope": 0.0,
+        "intercept_ci": [
+          0.00023876000000000002,
+          0.00023876000000000002
+        ],
+        "slope_ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "calibration": {
+        "question_count": 1,
+        "row_count": 5
+      },
+      "consistency": {
+        "pearson_r": 0.0,
+        "mae": 0.000466656,
+        "rmse": 0.0005839993616434867,
+        "sigma_calibration": 0.0006529311357256598,
+        "mae_threshold": 0.0003264655678628299
+      },
+      "diagnostics": {
+        "normality_test": "jarque_bera_proxy_without_scipy",
+        "normality_pvalue": 0.5688448201294282,
+        "breusch_pagan_pvalue": 1.0,
+        "icc_question_residual": 0.0
+      },
+      "bridge_coefficient_variance": {
+        "intercept": 0.0,
+        "slope": 0.0
+      }
+    },
+    "4hop": {
+      "coefficients": {
+        "intercept": -1e-06,
+        "slope": 0.0,
+        "intercept_ci": [
+          -1e-06,
+          -1e-06
+        ],
+        "slope_ci": [
+          0.0,
+          0.0
+        ]
+      },
+      "calibration": {
+        "question_count": 1,
+        "row_count": 5
+      },
+      "consistency": {
+        "pearson_r": 0.0,
+        "mae": 1.52e-06,
+        "rmse": 1.7204650534085253e-06,
+        "sigma_calibration": 1.9235384061671345e-06,
+        "mae_threshold": 9.617692030835672e-07
+      },
+      "diagnostics": {
+        "normality_test": "jarque_bera_proxy_without_scipy",
+        "normality_pvalue": 0.6581693475469569,
+        "breusch_pagan_pvalue": 1.0,
+        "icc_question_residual": 0.0
+      },
+      "bridge_coefficient_variance": {
+        "intercept": 0.0,
+        "slope": 0.0
+      }
+    }
+  }
+}

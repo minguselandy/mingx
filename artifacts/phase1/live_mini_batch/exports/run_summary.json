@@ -1,0 +1,24 @@
+{
+  "run_id": "phase1-cohort-20260419034605",
+  "backend": "live",
+  "calibration_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_mini_batch\\calibration_manifest.json",
+  "calibration_per_hop_count": 1,
+  "retrieval_dry_run": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_mini_batch\\exports\\retrieval_dry_run.json",
+  "bridge_status": "computed",
+  "source_of_truth": "event_log",
+  "resume_from_event_log": true,
+  "model_roles": {
+    "small": {
+      "planned": 3,
+      "completed": 3,
+      "skipped": 0,
+      "incomplete": 0
+    },
+    "frontier": {
+      "planned": 3,
+      "completed": 3,
+      "skipped": 0,
+      "incomplete": 0
+    }
+  }
+}
