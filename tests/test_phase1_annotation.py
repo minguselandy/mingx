@@ -161,10 +161,17 @@ def test_materialize_annotation_artifacts_is_order_insensitive_and_writes_templa
     assert [row["annotation_item_id"] for row in queue_a] == [row["annotation_item_id"] for row in queue_b]
 
     manifest = json.loads((export_dir_a / "annotations" / "annotation_manifest.json").read_text(encoding="utf-8"))
+    readme_path = export_dir_a / "annotations" / "README.md"
     assert manifest["selection_algorithm_version"] == "face_validity_sample_v1"
     assert Path(manifest["required_label_paths"]["primary_a"]).exists()
     assert Path(manifest["required_label_paths"]["primary_b"]).exists()
     assert Path(manifest["required_label_paths"]["expert"]).exists()
+    assert Path(report_a["annotation_readme_path"]) == readme_path
+    assert readme_path.exists()
+    readme_text = readme_path.read_text(encoding="utf-8")
+    assert "HIGH" in readme_text and "LOW" in readme_text and "BUFFER" in readme_text
+    assert "primary_a.csv" in readme_text and "expert.csv" in readme_text
+    assert "[synthetic_passthrough]" in readme_text
 
     items = [
         json.loads(line)
@@ -175,4 +182,3 @@ def test_materialize_annotation_artifacts_is_order_insensitive_and_writes_templa
     assert items[0]["question_text"] == question_lookup[items[0]["question_id"]].question_text
     assert items[0]["answer_text"] == question_lookup[items[0]["question_id"]].answer_text
     assert items[0]["target_paragraph"]["paragraph_id"] in {0, 1}
-

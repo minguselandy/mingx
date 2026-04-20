@@ -7,12 +7,13 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-from cps.analysis.exports import write_csv, write_json, write_jsonl
+from cps.analysis.exports import write_csv, write_json, write_jsonl, write_text
 from cps.data.manifest import ManifestBundle
 from cps.store.measurement import append_event, iter_events
 
 
 FACE_VALIDITY_ALGORITHM_VERSION = "face_validity_sample_v1"
+SYNTHETIC_JUSTIFICATION_MARKER = "[synthetic_passthrough]"
 LABEL_FILE_KEYS = ("primary_a", "primary_b", "expert")
 LABEL_COLUMNS = [
     "annotation_item_id",
@@ -28,6 +29,55 @@ LABEL_COLUMNS = [
 
 def _annotation_root(export_dir: str | Path) -> Path:
     return Path(export_dir) / "annotations"
+
+
+def _annotation_readme(
+    *,
+    queue_count: int,
+    flagged_count: int,
+    face_validity_count: int,
+    label_paths: dict[str, str],
+) -> str:
+    return "\n".join(
+        [
+            "# Phase 1 Annotation Package",
+            "",
+            "## 你现在需要做什么",
+            f"- 本轮待标注实例总数：`{queue_count}`",
+            f"- tolerance-band flagged：`{flagged_count}`",
+            f"- face-validity sample：`{face_validity_count}`",
+            "- 你只需要填写 `labels/` 目录下的 3 个 CSV，然后重跑同一条 cohort 命令。",
+            "",
+            "## 必须填写的文件",
+            f"- `primary_a.csv`: `{label_paths['primary_a']}`",
+            f"- `primary_b.csv`: `{label_paths['primary_b']}`",
+            f"- `expert.csv`: `{label_paths['expert']}`",
+            "",
+            "## 字段规则",
+            "- 只能填写 `HIGH`、`LOW`、`BUFFER` 这三个标签。",
+            "- `annotation_item_id`、`question_id`、`paragraph_id`、`hop_depth`、`source`、`automated_label` 不要改。",
+            "- `primary_a.csv` 和 `primary_b.csv`：`label` 必填，`justification` 可留空。",
+            "- `expert.csv`：`label` 和 `justification` 都必填。",
+            f"- 不要把 `justification` 填成保留字 `{SYNTHETIC_JUSTIFICATION_MARKER}`；这是测试专用标记。",
+            "",
+            "## 参考文件",
+            "- `annotation_queue.csv`：本次需要处理的实例清单。",
+            "- `annotation_items.jsonl`：每个实例的完整上下文。",
+            "- `target_paragraph` 是目标段落，`paragraphs[]` 是该题的完整段落池。",
+            "- `source = tolerance_flagged` 表示这是容忍带仲裁样本。",
+            "- `source = face_validity_sample` 表示这是非 flagged 的抽样核验样本。",
+            "",
+            "## 完成后怎么继续",
+            "- 填完 3 个 CSV 后，重跑生成这个目录的同一条 cohort 命令。",
+            "- 当前仓库的 canonical mock 命令是：",
+            "  `uv run python -m cps.runtime.cohort --plan configs/runs/live-calibration-p3.json --backend mock --env .env`",
+            "- 如果你要完成 live run 的最终闭环，把上面命令里的 `--backend mock` 改成 `--backend live`。",
+            "",
+            "## 完成判定",
+            "- 3 个 CSV 全部逐行填完后，runner 会自动 ingest labels、计算 `kappa_summary.json`。",
+            "- reduced-scope 或 synthetic 标注路径仍然只会得到 pilot 级 measurement 状态，不会被当成正式 Phase 1 完成。",
+        ]
+    )
 
 
 def _stable_digest(*parts: object) -> str:
@@ -133,6 +183,16 @@ def _read_label_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
+def _annotation_mode_from_rows(rows_by_annotator: dict[str, list[dict[str, str]]]) -> str:
+    if not rows_by_annotator:
+        return "awaiting_labels"
+    for annotator_rows in rows_by_annotator.values():
+        for row in annotator_rows:
+            if SYNTHETIC_JUSTIFICATION_MARKER in (row.get("justification") or ""):
+                return "synthetic_passthrough"
+    return "human_labels"
+
+
 def materialize_annotation_artifacts(
     *,
     bundle: ManifestBundle,
@@ -232,9 +292,18 @@ def materialize_annotation_artifacts(
             }
         )
     items_path = write_jsonl(annotation_root / "annotation_items.jsonl", items_rows)
+    readme_path = write_text(
+        annotation_root / "README.md",
+        _annotation_readme(
+            queue_count=len(queue_rows),
+            flagged_count=len(flagged_rows),
+            face_validity_count=len(face_validity_rows),
+            label_paths=label_paths,
+        ),
+    )
 
     template_rows = _label_template_rows(queue_rows)
-    for label_key, label_path in label_paths.items():
+    for label_path in label_paths.values():
         path = Path(label_path)
         if not path.exists():
             write_csv(path, template_rows, LABEL_COLUMNS)
@@ -245,6 +314,7 @@ def materialize_annotation_artifacts(
         "annotation_manifest_path": str(manifest_path),
         "annotation_queue_path": str(queue_path),
         "annotation_items_path": str(items_path),
+        "annotation_readme_path": str(readme_path),
         "label_paths": label_paths,
         "queue_count": len(queue_rows),
         "flagged_count": len(flagged_rows),
@@ -255,11 +325,11 @@ def materialize_annotation_artifacts(
 def annotation_status_from_files(annotation_manifest_path: str | Path) -> dict[str, Any]:
     manifest = json.loads(Path(annotation_manifest_path).read_text(encoding="utf-8"))
     label_paths = {key: Path(value) for key, value in manifest["required_label_paths"].items()}
+    rows_by_annotator = {annotator_id: _read_label_rows(path) for annotator_id, path in label_paths.items()}
     completion: dict[str, Any] = {}
     complete = True
 
-    for annotator_id, path in label_paths.items():
-        rows = _read_label_rows(path)
+    for annotator_id, rows in rows_by_annotator.items():
         completed_rows = 0
         for row in rows:
             label_present = bool((row.get("label") or "").strip())
@@ -270,13 +340,14 @@ def annotation_status_from_files(annotation_manifest_path: str | Path) -> dict[s
             else:
                 complete = False
         completion[annotator_id] = {
-            "path": str(path),
+            "path": str(label_paths[annotator_id]),
             "total_rows": len(rows),
             "completed_rows": completed_rows,
         }
 
     return {
         "status": "ready_for_ingestion" if complete else "awaiting_labels",
+        "annotation_mode": _annotation_mode_from_rows(rows_by_annotator) if complete else "awaiting_labels",
         "annotation_manifest_hash": manifest["annotation_manifest_hash"],
         "completion": completion,
         "counts": manifest["counts"],
@@ -291,6 +362,7 @@ def load_annotation_ledger_from_events(
     records: dict[str, dict[str, Any]] = {}
     ingested_by_annotator = {key: set() for key in LABEL_FILE_KEYS}
     kappa_events: list[dict[str, Any]] = []
+    annotation_mode = "human_labels"
 
     for event in iter_events(store_dir):
         payload = event.get("payload") or {}
@@ -305,6 +377,8 @@ def load_annotation_ledger_from_events(
 
         annotator_id = str(payload["annotator_id"])
         annotation_item_id = str(payload["annotation_item_id"])
+        if SYNTHETIC_JUSTIFICATION_MARKER in str(payload.get("justification") or ""):
+            annotation_mode = "synthetic_passthrough"
         record = records.setdefault(
             annotation_item_id,
             {
@@ -322,6 +396,7 @@ def load_annotation_ledger_from_events(
 
     return {
         "records": records,
+        "annotation_mode": annotation_mode if records else "awaiting_labels",
         "ingested_by_annotator": {key: sorted(value) for key, value in ingested_by_annotator.items()},
         "kappa_materialized": bool(kappa_events),
         "kappa_events": kappa_events,
@@ -395,5 +470,6 @@ def ingest_annotation_labels(
     return {
         "status": "ingested",
         "annotation_manifest_hash": annotation_manifest_hash,
+        "annotation_mode": status["annotation_mode"],
         "ingested_count": ingested_count,
     }

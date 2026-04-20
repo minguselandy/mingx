@@ -29,12 +29,15 @@ def test_compute_reliability_summary_reports_kappa_ci_and_tier():
 
     summary = compute_reliability_summary(
         annotation_rows=rows,
+        annotation_mode="synthetic_passthrough",
         seed=20260418,
         bootstrap_resamples=40,
         threshold=0.7,
     )
 
     assert summary["status"] == "computed"
+    assert summary["annotation_mode"] == "synthetic_passthrough"
+    assert summary["scientific_consumption_allowed"] is False
     assert summary["threshold"]["value"] == 0.7
     assert summary["threshold"]["source_document"] == "execution-readiness-checklist.md"
     assert summary["pooled"]["kappa_primary"]["point_estimate"] == 1.0

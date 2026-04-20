@@ -14,6 +14,11 @@ RETRIEVAL_CONFIGS = (
     "bi_encoder_only",
     "hybrid_rrf",
 )
+LEAKAGE_GUARDED_CONFIGS = {"bi_encoder_plus_cross_encoder"}
+READINESS_ONLY_NOTE = (
+    "readiness scaffold only; this configuration is blocked from scientific consumption because it references "
+    "MuSiQue is_supporting ground truth"
+)
 
 
 @dataclass(frozen=True)
@@ -28,6 +33,8 @@ class RetrievalHit:
 class RetrievalResult:
     configuration_id: str
     top_k: int
+    leakage_guard: str
+    scientific_consumption_allowed: bool
     ranked_paragraphs: tuple[RetrievalHit, ...]
 
 
@@ -61,7 +68,12 @@ class SimpleOverlapRetrievalBackend:
         paragraphs: Sequence[ManifestParagraph],
         configuration_id: str,
         top_k: int,
+        allow_placeholder: bool = False,
     ) -> RetrievalResult:
+        if configuration_id in LEAKAGE_GUARDED_CONFIGS and not allow_placeholder:
+            raise ValueError(
+                f"{configuration_id} is blocked by retrieval leakage guard and cannot be used as a scientific retriever"
+            )
         question_tokens = _tokenize(question_text)
         ranked = sorted(
             (
@@ -73,6 +85,8 @@ class SimpleOverlapRetrievalBackend:
         return RetrievalResult(
             configuration_id=configuration_id,
             top_k=top_k,
+            leakage_guard="blocked" if configuration_id in LEAKAGE_GUARDED_CONFIGS else "clear",
+            scientific_consumption_allowed=configuration_id not in LEAKAGE_GUARDED_CONFIGS,
             ranked_paragraphs=tuple(
                 RetrievalHit(
                     paragraph_id=paragraph.paragraph_id,
@@ -98,11 +112,16 @@ def build_retrieval_dry_run(
                 paragraphs=question.paragraphs,
                 configuration_id=configuration_id,
                 top_k=int(top_k),
+                allow_placeholder=True,
             )
             results.append(
                 {
                     "configuration_id": result.configuration_id,
                     "top_k": result.top_k,
+                    "retrieval_mode": "readiness_scaffold",
+                    "leakage_guard": result.leakage_guard,
+                    "scientific_consumption_allowed": result.scientific_consumption_allowed,
+                    "notes": READINESS_ONLY_NOTE if not result.scientific_consumption_allowed else "readiness scaffold",
                     "ranked_paragraphs": [
                         {
                             "paragraph_id": hit.paragraph_id,

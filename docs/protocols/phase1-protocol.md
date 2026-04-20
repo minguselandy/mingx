@@ -1,4 +1,4 @@
-# Phase 1 Probe Protocol: Extraction Uniformity Measurement on MuSiQue
+﻿# Phase 1 Probe Protocol: Extraction Uniformity Measurement on MuSiQue
 
 **Associated documents:** Phase 0 Specification (`phase0-specification.md`), paper draft (`paper-draft-v5_5-taskB-final-gemini-minimal-q7revised-polish2.md`).
 
@@ -38,9 +38,9 @@ For each sampled question, the full paragraph pool is extracted in its native or
 
 ### B.1 V_frontier and V_small model specifications
 
-The frontier predictive family is instantiated as Claude Opus 4.7 (`claude-opus-4-7`) accessed via the Anthropic API. The smaller predictive family is instantiated as Claude Haiku 4.5 (`claude-haiku-4-5-20251001`). Both models are queried at temperature 0 with forced-decode log-probability extraction to ensure deterministic point estimates per paragraph ordering. API version pins and exact model strings are recorded in the execution log.
+The frontier predictive family is instantiated as Qwen3-32B (`qwen3-32b`) and the smaller predictive family is instantiated as Qwen3-14B (`qwen3-14b`), both accessed via DashScope's OpenAI-compatible `/chat/completions` endpoint. Both models are queried with `temperature = 0`, `logprobs = true`, `top_logprobs = 0`, `n = 1`, `stream = false`, and `enable_thinking = false` so that forced-decode log-probability extraction yields deterministic point estimates per paragraph ordering. Exact model strings, provider base URL, and decoding parameters are recorded in the execution log.
 
-The choice of intra-family tiering (Opus 4.7 and Haiku 4.5 both from the Claude 4.x lineage) preserves architectural and training-data coherence between V_frontier and V_small, which is the structural condition under which the linear-per-stratum bridge function is most likely to hold.
+The choice of intra-family tiering (Qwen3-32B and Qwen3-14B both from the dense Qwen3 family) preserves tokenizer, architectural class, and pretraining-lineage coherence between V_frontier and V_small, which is the structural condition under which the linear-per-stratum bridge function is most likely to hold.
 
 ### B.2 Forced-decode log-probability extraction protocol
 
@@ -56,6 +56,8 @@ Answer:
 and forcing the decoder to produce the MuSiQue canonical answer string. The sum of token-level log-probabilities along the forced decode yields `log P_V(y* | q, X_S)`. Tokenization variance between V_frontier and V_small is resolved by computing log-probabilities in the model-native tokenization and comparing across V choices only via the aggregated per-answer scalar, not via token-level alignment.
 
 The baseline `log P_V(y* | q)` (question alone, no paragraphs) is computed once per question per V, and cached for reuse across all subset computations for that question.
+
+Under DashScope's OpenAI-compatible response schema, token-level log-probabilities are extracted from the emitted content channel only. Responses that route through `reasoning_content` or otherwise require thinking-mode handling are rejected as protocol deviations because they do not preserve the forced-decode measurement target.
 
 ### B.3 δ_loo computation algorithm
 
@@ -82,6 +84,12 @@ This design specifies paragraph-order permutation as the variance source for the
 ### B.5 Measurement storage schema
 
 Per-question records are stored with the following schema: `question_id`, `hop_depth`, `V_model`, `baseline_logp`, `orderings[]` (each carrying the ordering permutation and per-paragraph `logp_full`, `logp_loo`, `delta_loo`), and `delta_loo_LCB` (the aggregated LCB quantile per paragraph). Storage is append-only and versioned to support partial-run resumption if inference execution is interrupted.
+
+### B.6 Contamination diagnostic (unconditional pre-bridge step)
+
+Before bridge fitting proceeds, the protocol examines the distribution of baseline `log P_V(y* | q)` values under V_frontier on the executed cohort. The diagnostic records the fraction of questions whose question-only baseline exceeds `log(0.5) ≈ -0.69`, which corresponds to a substantial probability of answering correctly from parametric memory rather than from contextual evidence.
+
+If more than 20% of executed questions exceed this threshold, the contamination gate is marked as failed. Bridge fitting, tolerance-band construction, and annotation may still proceed for engineering and diagnostic purposes, but the resulting run is not treated as a measurement-validated Phase 1 output for downstream Phase 2 consumption. The contamination diagnostic artifact is therefore a pre-bridge gate in the scientific interpretation layer, even when the engineering pipeline completes successfully.
 
 ---
 
@@ -205,19 +213,25 @@ Phase 2 sample-size calculation for the full-study extraction audit consumes the
 
 ### G.3 Known limitations and caveats for Phase 2 design
 
-The limitations and caveats surfaced during Phase 1 execution are recorded for Phase 2 consumption. These include any residual-diagnostic failures that triggered bridge escalation, any annotator-level systematic bias patterns detected in κ_primary-expert, any hop-depth strata where per-stratum κ falls below 0.6 even when pooled κ meets the threshold, and any measurement artifacts detected during face-validity verification that suggest the automated classification is systematically biased in ways not captured by the tertile-boundary tolerance band.
+The limitations and caveats surfaced during Phase 1 execution are recorded for Phase 2 consumption. These include any residual-diagnostic failures that triggered bridge escalation, any annotator-level systematic bias patterns detected in primary-expert agreement, any hop-depth strata where per-stratum kappa falls below the binding threshold even when pooled kappa meets the threshold, any contamination-diagnostic failures, and any measurement artifacts detected during face-validity verification that suggest the automated classification is systematically biased in ways not captured by the tertile-boundary tolerance band.
+
+Repository note: the current `live-pilot`, `live-mini-batch`, `live-calibration-p2`, and `live-calibration-p3` run plans are reduced-scope pilot artifacts. They use `question_paragraph_limit = 5` and calibration `per_hop_count` values of `1`, `2`, or `3`, and therefore must not be consumed as Phase 2 statistical inputs.
 
 ---
 
 ## Appendix A: Implementation-Level Decisions (locked)
 
-The four protocol-authoring parameters carried over from Phase 0 §9 are locked as follows:
+The implementation-level decisions carried over from Phase 0 are locked as follows.
 
-**V_frontier specific model:** Claude Opus 4.7 (`claude-opus-4-7`), which is the current Anthropic frontier and matches anticipated openWorker deployment. This decision is revisable if openWorker deployment uses a non-Anthropic frontier provider, and that revision would propagate through the bridge portability analysis.
+**Provider and endpoint:** DashScope OpenAI-compatible Chat Completions API.
 
-**V_small specific model:** Claude Haiku 4.5 (`claude-haiku-4-5-20251001`), which preserves intra-family architectural coherence with V_frontier and enables the bridge function to operate within a coherent training and architecture lineage.
+**V_frontier specific model:** Qwen3-32B (`qwen3-32b`).
 
-**MuSiQue split:** Development set. Test-set integrity is preserved for future headline evaluation, and dev-set training-data contamination is mitigated structurally by the fact that the extraction uniformity hypothesis tests bias patterns across strata rather than absolute accuracy.
+**V_small specific model:** Qwen3-14B (`qwen3-14b`).
+
+**Decoding discipline:** `temperature = 0`, `top_p = 1.0`, `logprobs = true`, `top_logprobs = 0`, `n = 1`, `stream = false`, `max_completion_tokens` bounded to the forced-decode target, and `enable_thinking = false`.
+
+**MuSiQue split:** Development set. Test-set integrity is preserved for future headline evaluation, with one explicit caveat: MuSiQue is public and may have been present in Qwen3 pretraining, so the contamination diagnostic in Section B.6 is mandatory rather than optional.
 
 **Execution timeline:** Parallel with openWorker infrastructure audit. Phase 1 proceeds on the MuSiQue-sufficient infrastructure independently of openWorker trace-field export progress.
 
@@ -225,13 +239,15 @@ The four protocol-authoring parameters carried over from Phase 0 §9 are locked 
 
 ## Appendix B: Failure-Mode Remediation Paths
 
-Three primary Phase 1 failure modes are anticipated, each with a documented remediation path.
+Four primary Phase 1 failure modes are anticipated, each with a documented remediation path.
 
-**V_small bridge failure (Link 2):** Triggered by residual normality p < 0.01 and heteroscedasticity p < 0.01 jointly across two or more strata, or by Pearson correlation below 0.9 between bridged and directly-measured δ_loo on the calibration subsample. Remediation escalates through isotonic regression, then per-hop-depth polynomial bridge, then V_frontier-only execution on the full N = 90 at approximately 4× inference cost increase.
+**V_small bridge failure (Link 2):** Triggered by residual normality p < 0.01 and heteroscedasticity p < 0.01 jointly across two or more strata, or by Pearson correlation below 0.9 between bridged and directly-measured delta_loo on the calibration subsample. Remediation escalates through isotonic regression, then per-hop-depth polynomial bridge, then V_frontier-only execution on the full N = 90.
 
-**Automation-substitution failure (Link 3):** Triggered by κ_automated-expert < 0.6. Remediation options are: widen the tolerance band (increases arbitration rate, increases expert-layer load), invert the annotator hierarchy (expert primary with primary annotators as verification, which changes the annotator-hour budget profile), or revise the tertile-stratification operationalization itself.
+**Automation-substitution failure (Link 3):** Triggered by automated-to-expert kappa below the binding threshold. Remediation options are: widen the tolerance band, revise tertile operationalization, or revise the annotation hierarchy. Under the Qwen3 substitution, this branch must first rule out contamination-compressed delta_loo signal and insufficient paragraph-pool scope before treating the issue as a pure annotation-design failure.
 
-**Inter-primary disagreement (κ_primary < 0.6):** Triggered by κ_primary < 0.6 on the arbitration set. Remediation is protocol refinement via an expert-led calibration session with the primary annotators, followed by re-annotation of the disagreement subset. If protocol refinement does not restore κ ≥ 0.6, the annotator-pool expertise profile is revised (likely toward domain-expert contractors) and the budget is recomputed accordingly.
+**Inter-primary disagreement:** Triggered by low primary-primary agreement on the arbitration set. Remediation is protocol refinement via an expert-led calibration session with the primary annotators, followed by re-annotation of the disagreement subset. If protocol refinement does not restore acceptable agreement, the annotator-pool expertise profile is revised.
+
+**MuSiQue-in-Qwen3 contamination failure:** Triggered when more than 20% of executed questions have baseline `log P(y* | q)` above `log(0.5)`. Remediation proceeds in order: restrict scientific interpretation to uncontaminated questions if effective N remains viable, re-run under protocol-full scope to verify the diagnostic is not a reduced-scope artifact, or return to Phase 0 revision if contamination is too severe for meaningful measurement validation.
 
 ---
 

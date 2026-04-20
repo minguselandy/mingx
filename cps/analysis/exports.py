@@ -34,6 +34,12 @@ def write_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str]) -> 
     return path
 
 
+def write_text(path: Path, content: str) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+    return path
+
+
 def role_export_dir(export_dir: Path, model_role: str) -> Path:
     return export_dir / model_role
 

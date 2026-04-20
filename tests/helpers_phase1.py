@@ -4,6 +4,8 @@ import csv
 import json
 from pathlib import Path
 
+from cps.runtime.annotation import SYNTHETIC_JUSTIFICATION_MARKER
+
 
 def complete_annotation_labels(annotation_manifest_path: str | Path) -> dict:
     manifest_path = Path(annotation_manifest_path)
@@ -16,10 +18,7 @@ def complete_annotation_labels(annotation_manifest_path: str | Path) -> dict:
             rows = list(csv.DictReader(handle))
         for row in rows:
             row["label"] = row["automated_label"]
-            if annotator_id == "expert":
-                row["justification"] = "synthetic expert justification"
-            else:
-                row["justification"] = row.get("justification") or ""
+            row["justification"] = SYNTHETIC_JUSTIFICATION_MARKER
         with path.open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()) if rows else [])
             if rows:

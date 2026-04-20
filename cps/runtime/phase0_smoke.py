@@ -12,6 +12,8 @@ from cps.store.measurement import (
     snapshot_path_for,
 )
 
+PHASE0_SMOKE_MODEL_ID = "qwen3-14b"
+
 
 def _build_synthetic_ordering_events(bundle, question, run_id: str) -> list[dict[str, Any]]:
     paragraph_ids = [paragraph.paragraph_id for paragraph in question.paragraphs[:2]]
@@ -21,7 +23,7 @@ def _build_synthetic_ordering_events(bundle, question, run_id: str) -> list[dict
         "run_id": run_id,
         "question_id": question.question_id,
         "hop_depth": question.hop_depth,
-        "model_id": "claude-haiku-4-5-20251001",
+        "model_id": PHASE0_SMOKE_MODEL_ID,
         "baseline_logp": -2.5,
         "manifest_hash": bundle.manifest_hash,
         "sampling_seed": bundle.sampling_config["seed"],
@@ -95,7 +97,7 @@ def run_phase0_smoke(
             "run_id": run_id,
             "question_id": question.question_id,
             "hop_depth": question.hop_depth,
-            "model_id": "claude-haiku-4-5-20251001",
+            "model_id": PHASE0_SMOKE_MODEL_ID,
             "ordering_id": None,
             "ordering": None,
             "paragraph_id": None,
@@ -118,7 +120,7 @@ def run_phase0_smoke(
             "run_id": run_id,
             "question_id": question.question_id,
             "hop_depth": question.hop_depth,
-            "model_id": "claude-haiku-4-5-20251001",
+            "model_id": PHASE0_SMOKE_MODEL_ID,
             "ordering_id": None,
             "ordering": None,
             "paragraph_id": None,

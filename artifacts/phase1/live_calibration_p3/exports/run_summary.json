@@ -1,22 +1,32 @@
 {
-  "run_id": "phase1-cohort-20260419184359",
+  "run_id": "phase1-cohort-20260420025026",
   "backend": "mock",
+  "scope_mode": "pilot_reduced_scope",
+  "annotation_mode": "awaiting_labels",
   "calibration_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\calibration_manifest.json",
   "calibration_per_hop_count": 3,
   "blocked_questions_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\blocked_questions.json",
   "excluded_question_ids": [],
   "retrieval_dry_run": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\retrieval_dry_run.json",
+  "contamination": {
+    "status": "computed",
+    "path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\contamination_diagnostics.json",
+    "gate_decision": "pass"
+  },
   "bridge_status": "computed",
   "annotation": {
     "status": "awaiting_labels",
+    "annotation_mode": "awaiting_labels",
     "queue_count": 28,
     "flagged_count": 26,
     "face_validity_count": 2,
     "annotation_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\annotation_manifest.json",
+    "annotation_readme_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\README.md",
     "annotation_status_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\annotation_status.json"
   },
   "kappa": {
     "status": "awaiting_annotation",
+    "annotation_mode": "awaiting_labels",
     "kappa_summary_path": ""
   },
   "source_of_truth": "event_log",
@@ -35,5 +45,6 @@
       "incomplete": 0
     }
   },
-  "phase1_completion_status": "awaiting_annotation"
+  "pipeline_status": "awaiting_annotation",
+  "measurement_status": "pilot_only"
 }

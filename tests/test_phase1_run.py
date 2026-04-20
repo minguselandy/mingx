@@ -240,6 +240,8 @@ def test_phase1_cohort_runner_ignores_checkpoint_if_event_log_is_incomplete(work
         env_path=env_path,
     )
     assert first_report["status"] == "awaiting_annotation"
+    assert first_report["summary"]["pipeline_status"] == "awaiting_annotation"
+    assert first_report["summary"]["measurement_status"] == "pilot_only"
     complete_annotation_labels(first_report["annotation_manifest_path"])
 
     report = run_phase1_cohort(
@@ -249,6 +251,9 @@ def test_phase1_cohort_runner_ignores_checkpoint_if_event_log_is_incomplete(work
     )
 
     assert report["status"] == "green"
+    assert report["summary"]["pipeline_status"] == "pipeline_validated"
+    assert report["summary"]["measurement_status"] == "pilot_only"
+    assert report["summary"]["annotation_mode"] == "synthetic_passthrough"
     assert Path(report["calibration_manifest_path"]).exists()
     assert report["summary"]["model_roles"]["small"]["planned"] == 3
     assert report["summary"]["model_roles"]["small"]["completed"] == 3
@@ -343,6 +348,7 @@ def test_phase1_cohort_runner_supports_configurable_calibration_per_hop_count(wo
         env_path=env_path,
     )
     assert first_report["status"] == "awaiting_annotation"
+    assert first_report["summary"]["measurement_status"] == "pilot_only"
     complete_annotation_labels(first_report["annotation_manifest_path"])
 
     report = run_phase1_cohort(
@@ -353,6 +359,8 @@ def test_phase1_cohort_runner_supports_configurable_calibration_per_hop_count(wo
     calibration_manifest = json.loads(calibration_manifest_path.read_text(encoding="utf-8"))
 
     assert report["status"] == "green"
+    assert report["summary"]["pipeline_status"] == "pipeline_validated"
+    assert report["summary"]["measurement_status"] == "pilot_only"
     assert report["summary"]["calibration_per_hop_count"] == 1
     assert report["summary"]["model_roles"]["small"]["planned"] == 3
     assert report["summary"]["model_roles"]["small"]["completed"] == 3
@@ -582,6 +590,7 @@ def test_phase1_cohort_runner_writes_blocked_questions_and_replaces_on_rerun(wor
         env_path=env_path,
     )
     assert second_report["status"] == "awaiting_annotation"
+    assert second_report["summary"]["measurement_status"] == "pilot_only"
     complete_annotation_labels(second_report["annotation_manifest_path"])
 
     third_report = run_phase1_cohort(
@@ -598,6 +607,8 @@ def test_phase1_cohort_runner_writes_blocked_questions_and_replaces_on_rerun(wor
     ]
 
     assert third_report["status"] == "green"
+    assert third_report["summary"]["pipeline_status"] == "pipeline_validated"
+    assert third_report["summary"]["measurement_status"] == "pilot_only"
     assert third_report["summary"]["model_roles"]["small"]["planned"] == 6
     assert third_report["summary"]["model_roles"]["small"]["completed"] == 6
     assert third_report["summary"]["model_roles"]["frontier"]["planned"] == 6

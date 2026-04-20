@@ -120,5 +120,11 @@ def test_cps_runtime_cohort_runs_with_mock_backend(workspace_tmp_dir):
     )
 
     assert report["status"] == "green"
+    assert report["summary"]["pipeline_status"] == "pipeline_validated"
+    assert report["summary"]["measurement_status"] == "pilot_only"
+    assert report["summary"]["scope_mode"] == "pilot_reduced_scope"
+    assert report["summary"]["annotation_mode"] == "synthetic_passthrough"
     assert report["summary"]["model_roles"]["small"]["completed"] == 3
     assert report["summary"]["model_roles"]["frontier"]["completed"] == 3
+    assert Path(report["annotation_readme_path"]).exists()
+    assert Path(report["summary"]["annotation"]["annotation_readme_path"]).exists()

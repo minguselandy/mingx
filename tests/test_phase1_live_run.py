@@ -84,6 +84,7 @@ def test_phase1_live_cohort_runner_against_dashscope(workspace_tmp_dir):
         env_path=isolated_env_path,
     )
     assert first_report["status"] == "awaiting_annotation"
+    assert first_report["summary"]["measurement_status"] == "pilot_only"
     complete_annotation_labels(first_report["annotation_manifest_path"])
 
     report = run_phase1_cohort(
@@ -93,6 +94,9 @@ def test_phase1_live_cohort_runner_against_dashscope(workspace_tmp_dir):
     )
 
     assert report["status"] == "green"
+    assert report["summary"]["pipeline_status"] == "pipeline_validated"
+    assert report["summary"]["measurement_status"] == "pilot_only"
+    assert report["summary"]["annotation_mode"] == "synthetic_passthrough"
     assert report["summary"]["model_roles"]["small"]["planned"] == 1
     assert report["summary"]["model_roles"]["small"]["completed"] == 1
     assert report["summary"]["model_roles"]["frontier"]["planned"] == 1

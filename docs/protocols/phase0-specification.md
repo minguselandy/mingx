@@ -1,4 +1,4 @@
-# Phase 0 Specification: Context Projection Selection — Experimental Cycle Lock-In
+﻿# Phase 0 Specification: Context Projection Selection — Experimental Cycle Lock-In
 
 **Associated paper:** Context Projection Selection in Multi-Agent Systems: Conditional Weak-Submodular Theory and Regime Diagnostics (`paper-draft-v5_5-taskB-final-gemini-minimal-q7revised-polish2.md`)
 
@@ -123,6 +123,8 @@ The following design invariants must be preserved in Phase 1 so that Phase 4 (op
 
 **Counterfactual-value operationalization drift.** The leave-one-out operationalization of value is sensitive to the choice of predictive family V. If openWorker deployment uses a different model tier than the MuSiQue evaluation, the value axis shifts and stratification is not directly portable; Phase 4 must re-stratify under the openWorker-native V.
 
+**MuSiQue-in-Qwen3 contamination risk.** MuSiQue is public and may have been present in Qwen3 pretraining. Under the locked DashScope/Qwen3 substitution this becomes a tracked scope limitation rather than a background assumption. Phase 1 therefore treats the baseline `log P(y* | q)` contamination diagnostic as a mandatory gate before any bridge result can be interpreted as measurement-valid.
+
 **Diagnostic coverage is partial in Phase 1.** Extraction uniformity is the primary focus; γ̂_{q,LCB} and pairwise interaction information are measured only on the subsample required to establish trace infrastructure and estimator stability. Full regime-detection validation is Phase 5 and beyond.
 
 ---
@@ -142,11 +144,10 @@ The following design invariants must be preserved in Phase 1 so that Phase 4 (op
 - **Computational budget:** approximately 9,600 forward passes, approximately 25% frontier-tier and 75% smaller-tier.
 - **Infrastructure status:** openWorker trace-field audit parallel-tracked, non-blocking.
 
-**Remaining Phase 1 protocol-authoring parameters.** Four operational decisions remain underspecified. These are implementation-specific choices best resolved inside the Phase 1 protocol document rather than as Phase 0 lock-in dimensions.
+**Provider and V-selection lock.** The execution environment fixes the provider/model family for Phase 1. V_frontier is Qwen3-32B (`qwen3-32b`) and V_small is Qwen3-14B (`qwen3-14b`), both accessed through DashScope's OpenAI-compatible endpoint with `enable_thinking = false` and token-level log-probability extraction enabled. This is an infrastructural lock, not a remaining protocol-authoring choice.
 
-- **V_frontier specific model.** Candidates include the current frontier Claude tier, GPT-class frontier, or equivalent. The choice should match anticipated Phase 4 openWorker deployment tier as closely as possible to maximize bridge portability.
-- **V_small specific model.** Candidates include the same-family smaller tier (e.g., Haiku-class, mini-class) for maximum V-family coherence, or cross-family smaller models if deployment heterogeneity is anticipated.
-- **MuSiQue split.** Whether probe instances are drawn from the development set (preserving test-set integrity for future evaluation) or the test set (if development-set contamination with training data is a concern for the selected V_frontier).
-- **Phase 1 execution timeline.** Whether Phase 1 is scheduled for immediate execution, delayed to coordinate with openWorker infrastructure audit completion, or paced to match external review cycles.
+**MuSiQue split.** Development set, preserved as the scientific working split with an explicit contamination caveat under Qwen3.
+
+**Phase 1 execution timeline.** Parallel with the openWorker infrastructure audit.
 
 **Sequencing.** The next artifact is the Phase 1 probe protocol document, which operationalizes the locked Phase 0 design into an executable measurement procedure. This document should be developed in alternation with the Phase 2 experimental design document so that probe findings can feed sample-size parameters back into Phase 2 rather than proceeding in strict sequential construction.

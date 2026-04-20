@@ -118,6 +118,7 @@ def _tier_classification(pooled: dict[str, Any], threshold: float) -> dict[str, 
 def compute_reliability_summary(
     *,
     annotation_rows: list[dict[str, Any]],
+    annotation_mode: str,
     seed: int,
     bootstrap_resamples: int = 1000,
     threshold: float = 0.7,
@@ -192,6 +193,8 @@ def compute_reliability_summary(
 
     return {
         "status": "computed",
+        "annotation_mode": annotation_mode,
+        "scientific_consumption_allowed": annotation_mode == "human_labels",
         "threshold": {
             "value": threshold,
             "source_document": "execution-readiness-checklist.md",
@@ -223,6 +226,7 @@ def compute_reliability_from_events(
     rows = list(ledger["records"].values())
     summary = compute_reliability_summary(
         annotation_rows=rows,
+        annotation_mode=str(ledger["annotation_mode"]),
         seed=sampling_seed,
         bootstrap_resamples=bootstrap_resamples,
         threshold=threshold,

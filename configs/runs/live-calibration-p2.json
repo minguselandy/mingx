@@ -2,6 +2,7 @@
   "experiment_id": "musique_gate1_phase1_v1",
   "protocol_version": "phase1.v1",
   "phase1_config_path": "./phase1.yaml",
+  "scope_mode": "pilot_reduced_scope",
   "manifest_path": "./artifacts/phase0/sample_manifest_v1.json",
   "hash_path": "./artifacts/phase0/content_hashes.json",
   "calibration_manifest_path": "./artifacts/phase1/live_calibration_p2/calibration_manifest.json",

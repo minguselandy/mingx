@@ -5,8 +5,8 @@
   "scope_mode": "protocol_full",
   "manifest_path": "./artifacts/phase0/sample_manifest_v1.json",
   "hash_path": "./artifacts/phase0/content_hashes.json",
-  "calibration_manifest_path": "./artifacts/phase1/calibration_manifest.json",
-  "backend": "mock",
+  "calibration_manifest_path": "./artifacts/phase1/protocol_full_live/calibration_manifest.json",
+  "backend": "live",
   "calibration": {
     "per_hop_count": 10
   },
@@ -21,9 +21,9 @@
     "questions": "calibration_manifest"
   },
   "storage": {
-    "cache_dir": "./artifacts/phase1/cache",
-    "measurement_dir": "./artifacts/phase1/measurements",
-    "checkpoint_dir": "./artifacts/phase1/checkpoints",
-    "export_dir": "./artifacts/phase1/exports"
+    "cache_dir": "./artifacts/phase1/protocol_full_live/cache",
+    "measurement_dir": "./artifacts/phase1/protocol_full_live/measurements",
+    "checkpoint_dir": "./artifacts/phase1/protocol_full_live/checkpoints",
+    "export_dir": "./artifacts/phase1/protocol_full_live/exports"
   }
 }
