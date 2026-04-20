@@ -1,0 +1,21 @@
+{
+  "status": "materialized",
+  "seed": 20260418,
+  "annotation_manifest_hash": "e426d0650fd99875917ad093b5b07fd04eb2ef9f0fd3fbcbe31253923423a013",
+  "selection_algorithm_version": "face_validity_sample_v1",
+  "source_paths": {
+    "bridge_diagnostics": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\bridge_diagnostics.json",
+    "bridged_delta_loo_jsonl": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\bridged_delta_loo.jsonl",
+    "tolerance_band": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\tolerance_band.json"
+  },
+  "counts": {
+    "queue_count": 28,
+    "flagged_count": 26,
+    "face_validity_count": 2
+  },
+  "required_label_paths": {
+    "primary_a": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\labels\\primary_a.csv",
+    "primary_b": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\labels\\primary_b.csv",
+    "expert": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\labels\\expert.csv"
+  }
+}

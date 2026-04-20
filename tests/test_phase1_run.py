@@ -7,6 +7,7 @@ from cps.scoring.backends import MockScoringBackend
 from cps.scoring.orderings import build_orderings
 from cps.runtime.cohort import run_phase1_cohort
 from cps.store.measurement import append_event, iter_events
+from tests.helpers_phase1 import complete_annotation_labels
 
 
 def _write_env(path: Path) -> None:
@@ -174,7 +175,7 @@ def test_phase1_cohort_runner_rebuilds_missing_derivations_without_rescoring(wor
         if event["event_type"] == "baseline_scored" and event.get("model_role") == "small"
     ]
 
-    assert report["status"] == "green"
+    assert report["status"] == "red"
     assert len(before_baselines) == 1
     assert len(after_baselines) == 1
     assert Path(report["calibration_manifest_path"]).exists()
@@ -209,9 +210,13 @@ def test_phase1_cohort_runner_ignores_checkpoint_if_event_log_is_incomplete(work
         checkpoint_dir=checkpoint_dir,
         cache_dir=cache_dir,
         calibration_manifest_path=calibration_manifest_path,
-        small_questions=small_question_ids,
-        frontier_questions=frontier_question_ids,
+        small_questions="calibration_manifest",
+        frontier_questions="calibration_manifest",
     )
+    payload = json.loads(plan_path.read_text(encoding="utf-8"))
+    payload["calibration"] = {"per_hop_count": 1}
+    payload["question_paragraph_limit"] = 5
+    plan_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     (checkpoint_dir / "bogus.json").write_text(
@@ -229,6 +234,14 @@ def test_phase1_cohort_runner_ignores_checkpoint_if_event_log_is_incomplete(work
         encoding="utf-8",
     )
 
+    first_report = run_phase1_cohort(
+        backend_name="mock",
+        cohort_plan_path=plan_path,
+        env_path=env_path,
+    )
+    assert first_report["status"] == "awaiting_annotation"
+    complete_annotation_labels(first_report["annotation_manifest_path"])
+
     report = run_phase1_cohort(
         backend_name="mock",
         cohort_plan_path=plan_path,
@@ -239,11 +252,14 @@ def test_phase1_cohort_runner_ignores_checkpoint_if_event_log_is_incomplete(work
     assert Path(report["calibration_manifest_path"]).exists()
     assert report["summary"]["model_roles"]["small"]["planned"] == 3
     assert report["summary"]["model_roles"]["small"]["completed"] == 3
-    assert report["summary"]["model_roles"]["small"]["skipped"] == 0
-    assert report["summary"]["model_roles"]["frontier"]["planned"] == 1
-    assert report["summary"]["model_roles"]["frontier"]["completed"] == 1
-    assert Path(export_dir / "small" / "questions" / small_question_ids[0] / "export_manifest.json").exists()
-    assert Path(export_dir / "frontier" / "questions" / frontier_question_ids[0] / "export_manifest.json").exists()
+    assert first_report["summary"]["model_roles"]["small"]["skipped"] == 0
+    assert report["summary"]["model_roles"]["small"]["skipped"] == 3
+    assert report["summary"]["model_roles"]["frontier"]["planned"] == 3
+    assert report["summary"]["model_roles"]["frontier"]["completed"] == 3
+    calibration_manifest = json.loads(calibration_manifest_path.read_text(encoding="utf-8"))
+    selected_question_ids = [entry["question_id"] for entry in calibration_manifest["selected_questions"]]
+    assert Path(export_dir / "small" / "questions" / selected_question_ids[0] / "export_manifest.json").exists()
+    assert Path(export_dir / "frontier" / "questions" / selected_question_ids[0] / "export_manifest.json").exists()
 
 
 def test_phase1_cohort_runner_supports_optional_paragraph_limit(workspace_tmp_dir):
@@ -286,7 +302,7 @@ def test_phase1_cohort_runner_supports_optional_paragraph_limit(workspace_tmp_di
         event for event in iter_events(measurement_dir) if event["event_type"] == "protocol_deviation"
     ]
 
-    assert report["status"] == "green"
+    assert report["status"] == "red"
     assert len(snapshot["orderings"]) == 5
     assert all(len(ordering["ordering"]) == 5 for ordering in snapshot["orderings"])
     assert protocol_deviations
@@ -320,6 +336,14 @@ def test_phase1_cohort_runner_supports_configurable_calibration_per_hop_count(wo
     payload["calibration"] = {"per_hop_count": 1}
     payload["question_paragraph_limit"] = 5
     plan_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    first_report = run_phase1_cohort(
+        backend_name="mock",
+        cohort_plan_path=plan_path,
+        env_path=env_path,
+    )
+    assert first_report["status"] == "awaiting_annotation"
+    complete_annotation_labels(first_report["annotation_manifest_path"])
 
     report = run_phase1_cohort(
         backend_name="mock",
@@ -473,7 +497,7 @@ def test_phase1_cohort_runner_does_not_skip_when_preexisting_orderings_match_onl
         (measurement_dir / "questions" / "small" / f"{question.question_id}.json").read_text(encoding="utf-8")
     )
 
-    assert report["status"] == "green"
+    assert report["status"] == "red"
     assert len(before_baselines) == 1
     assert len(after_baselines) == 2
     assert len(snapshot["orderings"]) == 5
@@ -557,6 +581,14 @@ def test_phase1_cohort_runner_writes_blocked_questions_and_replaces_on_rerun(wor
         cohort_plan_path=plan_path,
         env_path=env_path,
     )
+    assert second_report["status"] == "awaiting_annotation"
+    complete_annotation_labels(second_report["annotation_manifest_path"])
+
+    third_report = run_phase1_cohort(
+        backend_name="live",
+        cohort_plan_path=plan_path,
+        env_path=env_path,
+    )
 
     calibration_manifest = json.loads(calibration_manifest_path.read_text(encoding="utf-8"))
     selected_2hop = [
@@ -565,10 +597,10 @@ def test_phase1_cohort_runner_writes_blocked_questions_and_replaces_on_rerun(wor
         if entry["hop_depth"] == "2hop"
     ]
 
-    assert second_report["status"] == "green"
-    assert second_report["summary"]["model_roles"]["small"]["planned"] == 6
-    assert second_report["summary"]["model_roles"]["small"]["completed"] == 6
-    assert second_report["summary"]["model_roles"]["frontier"]["planned"] == 6
-    assert second_report["summary"]["model_roles"]["frontier"]["completed"] == 6
+    assert third_report["status"] == "green"
+    assert third_report["summary"]["model_roles"]["small"]["planned"] == 6
+    assert third_report["summary"]["model_roles"]["small"]["completed"] == 6
+    assert third_report["summary"]["model_roles"]["frontier"]["planned"] == 6
+    assert third_report["summary"]["model_roles"]["frontier"]["completed"] == 6
     assert blocked_question_id not in selected_2hop
     assert selected_2hop == ["2hop__132929_684936", "2hop__32254_84601"]

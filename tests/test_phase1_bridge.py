@@ -113,6 +113,7 @@ def test_run_bridge_analysis_computes_coefficients_and_tolerance_band(workspace_
         assert round(coefficients["intercept"], 6) == 1.0
         assert round(coefficients["slope"], 6) == 2.0
         assert diagnostics["per_hop"][hop_depth]["consistency"]["pearson_r"] == 1.0
+        assert diagnostics["per_hop"][hop_depth]["diagnostics"]["normality_test"] == "shapiro_wilk"
 
     bridged_rows = [
         json.loads(line)

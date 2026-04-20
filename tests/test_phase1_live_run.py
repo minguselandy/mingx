@@ -6,6 +6,7 @@ import pytest
 from dotenv import dotenv_values
 
 from cps.runtime.cohort import run_phase1_cohort
+from tests.helpers_phase1 import complete_annotation_labels
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,7 +39,7 @@ def test_phase1_live_cohort_runner_against_dashscope(workspace_tmp_dir):
         encoding="utf-8",
     )
 
-    question_id = "2hop__256778_131879"
+    question_id = "3hop1__222979_40769_64047"
     cohort_plan_path = workspace_tmp_dir / "live_cohort_plan.json"
     cohort_plan_path.write_text(
         json.dumps(
@@ -54,6 +55,9 @@ def test_phase1_live_cohort_runner_against_dashscope(workspace_tmp_dir):
                 "scoring": {
                     "k_lcb": 5,
                     "lcb_quantile": 0.1,
+                },
+                "calibration": {
+                    "per_hop_count": 1,
                 },
                 "small_full_n": {
                     "questions": [question_id],
@@ -73,6 +77,14 @@ def test_phase1_live_cohort_runner_against_dashscope(workspace_tmp_dir):
         ),
         encoding="utf-8",
     )
+
+    first_report = run_phase1_cohort(
+        backend_name="live",
+        cohort_plan_path=cohort_plan_path,
+        env_path=isolated_env_path,
+    )
+    assert first_report["status"] == "awaiting_annotation"
+    complete_annotation_labels(first_report["annotation_manifest_path"])
 
     report = run_phase1_cohort(
         backend_name="live",

@@ -3,6 +3,7 @@ from pathlib import Path
 
 from cps.runtime.cohort import run_phase1_cohort
 from cps.runtime.phase1_smoke import run_phase1_smoke
+from tests.helpers_phase1 import complete_annotation_labels
 
 
 def _write_env(path: Path) -> None:
@@ -103,6 +104,14 @@ def test_cps_runtime_cohort_runs_with_mock_backend(workspace_tmp_dir):
         ),
         encoding="utf-8",
     )
+
+    first_report = run_phase1_cohort(
+        backend_name="mock",
+        cohort_plan_path=plan_path,
+        env_path=env_path,
+    )
+    assert first_report["status"] == "awaiting_annotation"
+    complete_annotation_labels(first_report["annotation_manifest_path"])
 
     report = run_phase1_cohort(
         backend_name="mock",

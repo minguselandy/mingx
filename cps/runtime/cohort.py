@@ -11,8 +11,14 @@ from cps.analysis.exports import (
     export_delta_lcb,
     write_json,
 )
+from cps.analysis.reliability import compute_reliability_from_events
 from cps.data.manifest import ManifestQuestion, load_manifest, validate_manifest
 from cps.providers.dashscope import DashScopeChatBackend
+from cps.runtime.annotation import (
+    annotation_status_from_files,
+    ingest_annotation_labels,
+    materialize_annotation_artifacts,
+)
 from cps.runtime.calibration import build_calibration_manifest
 from cps.runtime.config import load_phase1_context
 from cps.runtime.retrieval import build_retrieval_dry_run
@@ -261,6 +267,95 @@ def _append_blocked_question_event(
             },
         },
     )
+
+
+def _append_annotation_queue_event(
+    *,
+    store_dir: Path,
+    context,
+    run_id: str,
+    annotation_report: dict[str, object],
+) -> None:
+    append_event(
+        store_dir,
+        {
+            "event_type": "annotation_queue_materialized",
+            "run_id": run_id,
+            "question_id": None,
+            "hop_depth": None,
+            "provider": context.provider.name,
+            "backend_id": None,
+            "model_id": None,
+            "model_role": None,
+            "ordering_id": None,
+            "ordering": None,
+            "paragraph_id": None,
+            "full_logp": None,
+            "loo_logp": None,
+            "delta_loo": None,
+            "baseline_logp": None,
+            "manifest_hash": None,
+            "sampling_seed": context.experiment["seed"],
+            "protocol_version": context.experiment["protocol_version"],
+            "request_fingerprint": None,
+            "response_status": "materialized",
+            "notes": str(annotation_report["annotation_manifest_path"]),
+            "payload": {
+                "annotation_manifest_hash": annotation_report["annotation_manifest_hash"],
+                "annotation_manifest_path": annotation_report["annotation_manifest_path"],
+                "annotation_queue_path": annotation_report["annotation_queue_path"],
+                "annotation_items_path": annotation_report["annotation_items_path"],
+                "queue_count": annotation_report["queue_count"],
+                "flagged_count": annotation_report["flagged_count"],
+                "face_validity_count": annotation_report["face_validity_count"],
+            },
+        },
+    )
+
+
+def _write_annotation_status(
+    *,
+    export_dir: Path,
+    annotation_report: dict[str, object],
+    annotation_file_status: dict[str, object],
+) -> Path:
+    return write_json(
+        export_dir / "annotations" / "annotation_status.json",
+        {
+            "status": annotation_file_status["status"],
+            "annotation_manifest_hash": annotation_report["annotation_manifest_hash"],
+            "annotation_manifest_path": annotation_report["annotation_manifest_path"],
+            "annotation_queue_path": annotation_report["annotation_queue_path"],
+            "annotation_items_path": annotation_report["annotation_items_path"],
+            "queue_count": annotation_report["queue_count"],
+            "flagged_count": annotation_report["flagged_count"],
+            "face_validity_count": annotation_report["face_validity_count"],
+            "completion": annotation_file_status["completion"],
+        },
+    )
+
+
+def _finalize_variance_bias_budget(
+    *,
+    variance_bias_budget_path: str | Path,
+    kappa_summary_path: str | Path,
+) -> Path:
+    variance_path = Path(variance_bias_budget_path)
+    variance_payload = json.loads(variance_path.read_text(encoding="utf-8"))
+    kappa_payload = json.loads(Path(kappa_summary_path).read_text(encoding="utf-8"))
+
+    variance_payload["annotation_summary"] = {
+        "kappa_summary_path": str(Path(kappa_summary_path).resolve()),
+        "tier_classification": kappa_payload["tier_classification"],
+        "threshold": kappa_payload["threshold"],
+    }
+    for hop_depth, hop_payload in variance_payload.get("per_hop", {}).items():
+        hop_payload["annotation_reliability"] = {
+            "kappa_primary": kappa_payload["per_hop"].get(hop_depth, {}).get("kappa_primary"),
+            "kappa_primary_expert": kappa_payload["per_hop"].get(hop_depth, {}).get("kappa_primary_expert"),
+            "kappa_automated_expert": kappa_payload["per_hop"].get(hop_depth, {}).get("kappa_automated_expert"),
+        }
+    return write_json(variance_path, variance_payload)
 
 
 def _build_unit_specs(*, questions: list[ManifestQuestion], model_role: str, context, backend, manifest_hash: str, k_lcb: int) -> tuple[list[MeasurementUnitSpec], dict[tuple[str, str], list]]:
@@ -542,20 +637,86 @@ def run_phase1_cohort(
         seed=int(context.experiment["seed"]),
         bootstrap_resamples=1000,
     )
-    kappa_stub = write_json(
-        context.storage.export_dir / "kappa_summary.json",
-        {
-            "status": "pending_measurement_consumption",
-            "question_scope": "cohort",
-            "reason": "annotation and expert arbitration remain outside the current cohort runner",
-        },
-    )
-    stub_exports = {
-        "bridge_diagnostics": bridge_exports["bridge_diagnostics"],
-        "tolerance_band": bridge_exports["tolerance_band"],
-        "variance_bias_budget": bridge_exports["variance_bias_budget"],
-        "kappa_summary": str(kappa_stub),
-    }
+    if bridge_exports["status"] == "computed":
+        annotation_report = materialize_annotation_artifacts(
+            bundle=bundle,
+            export_dir=context.storage.export_dir,
+            bridge_diagnostics_path=bridge_exports["bridge_diagnostics"],
+            bridged_delta_loo_jsonl_path=bridge_exports["bridged_delta_loo_jsonl"],
+            tolerance_band_path=bridge_exports["tolerance_band"],
+            seed=int(context.experiment["seed"]),
+        )
+        _append_annotation_queue_event(
+            store_dir=context.storage.measurement_dir,
+            context=context,
+            run_id=run_id,
+            annotation_report=annotation_report,
+        )
+        annotation_file_status = annotation_status_from_files(annotation_report["annotation_manifest_path"])
+        annotation_status_path = _write_annotation_status(
+            export_dir=context.storage.export_dir,
+            annotation_report=annotation_report,
+            annotation_file_status=annotation_file_status,
+        )
+
+        kappa_report: dict[str, object] = {"status": "awaiting_annotation", "kappa_summary_path": ""}
+        if annotation_file_status["status"] == "ready_for_ingestion":
+            ingest_annotation_labels(
+                store_dir=context.storage.measurement_dir,
+                annotation_manifest_path=annotation_report["annotation_manifest_path"],
+                run_id=run_id,
+                provider=context.provider.name,
+                protocol_version=context.experiment["protocol_version"],
+                sampling_seed=int(context.experiment["seed"]),
+            )
+            kappa_report = compute_reliability_from_events(
+                store_dir=context.storage.measurement_dir,
+                annotation_manifest_hash=annotation_report["annotation_manifest_hash"],
+                export_dir=context.storage.export_dir,
+                run_id=run_id,
+                provider=context.provider.name,
+                protocol_version=context.experiment["protocol_version"],
+                sampling_seed=int(context.experiment["seed"]),
+                bootstrap_resamples=1000,
+                threshold=0.7,
+            )
+            _finalize_variance_bias_budget(
+                variance_bias_budget_path=bridge_exports["variance_bias_budget"],
+                kappa_summary_path=kappa_report["kappa_summary_path"],
+            )
+            annotation_file_status = {
+                **annotation_file_status,
+                "status": "completed",
+            }
+            annotation_status_path = _write_annotation_status(
+                export_dir=context.storage.export_dir,
+                annotation_report=annotation_report,
+                annotation_file_status=annotation_file_status,
+            )
+    else:
+        annotation_report = {
+            "status": "pending_bridge",
+            "annotation_manifest_hash": "",
+            "annotation_manifest_path": "",
+            "annotation_queue_path": "",
+            "annotation_items_path": "",
+            "queue_count": 0,
+            "flagged_count": 0,
+            "face_validity_count": 0,
+        }
+        annotation_file_status = {
+            "status": "pending_bridge",
+            "completion": {},
+        }
+        annotation_status_path = write_json(
+            context.storage.export_dir / "annotations" / "annotation_status.json",
+            {
+                "status": "pending_bridge",
+                "reason": "bridge outputs are incomplete, so annotation artifacts were not materialized",
+                "bridge_status": bridge_exports["status"],
+            },
+        )
+        kappa_report = {"status": "pending_bridge", "kappa_summary_path": ""}
     states_after = rebuild_measurement_unit_states(
         store_dir=context.storage.measurement_dir,
         export_dir=context.storage.export_dir,
@@ -571,6 +732,18 @@ def run_phase1_cohort(
         "excluded_question_ids": blocked_question_ids,
         "retrieval_dry_run": str(retrieval_path),
         "bridge_status": bridge_exports["status"],
+        "annotation": {
+            "status": annotation_file_status["status"],
+            "queue_count": annotation_report["queue_count"],
+            "flagged_count": annotation_report["flagged_count"],
+            "face_validity_count": annotation_report["face_validity_count"],
+            "annotation_manifest_path": annotation_report["annotation_manifest_path"],
+            "annotation_status_path": str(annotation_status_path),
+        },
+        "kappa": {
+            "status": kappa_report["status"],
+            "kappa_summary_path": kappa_report.get("kappa_summary_path", ""),
+        },
         "source_of_truth": "event_log",
         "resume_from_event_log": True,
         "model_roles": {},
@@ -586,6 +759,19 @@ def run_phase1_cohort(
             "incomplete": planned - completed,
         }
 
+    status = "green"
+    if any(role["incomplete"] for role in summary["model_roles"].values()):
+        status = "red"
+    elif bridge_exports["status"] != "computed":
+        status = "red"
+    elif annotation_file_status["status"] == "awaiting_labels":
+        status = "awaiting_annotation"
+    elif kappa_report["status"] != "computed":
+        status = "red"
+
+    summary["phase1_completion_status"] = (
+        "engineering_complete" if status == "green" else "awaiting_annotation" if status == "awaiting_annotation" else "incomplete"
+    )
     run_summary_path = write_json(context.storage.export_dir / "run_summary.json", summary)
     checkpoint_path = write_json(
         context.storage.checkpoint_dir / f"{run_id}.json",
@@ -606,10 +792,6 @@ def run_phase1_cohort(
         },
     )
 
-    status = "green"
-    if any(role["incomplete"] for role in summary["model_roles"].values()):
-        status = "red"
-
     return {
         "status": status,
         "run_id": run_id,
@@ -618,9 +800,11 @@ def run_phase1_cohort(
         "blocked_questions_path": str(blocked_questions_path),
         "run_summary_path": str(run_summary_path),
         "checkpoint_path": str(checkpoint_path),
+        "annotation_manifest_path": str(annotation_report["annotation_manifest_path"]),
+        "annotation_status_path": str(annotation_status_path),
         "summary": summary,
         "bridge_exports": bridge_exports,
-        "stub_exports": stub_exports,
+        "kappa_report": kappa_report,
         "validation": validation,
     }
 

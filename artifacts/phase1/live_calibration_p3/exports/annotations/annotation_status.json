@@ -1,0 +1,27 @@
+{
+  "status": "awaiting_labels",
+  "annotation_manifest_hash": "e426d0650fd99875917ad093b5b07fd04eb2ef9f0fd3fbcbe31253923423a013",
+  "annotation_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\annotation_manifest.json",
+  "annotation_queue_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\annotation_queue.csv",
+  "annotation_items_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\annotation_items.jsonl",
+  "queue_count": 28,
+  "flagged_count": 26,
+  "face_validity_count": 2,
+  "completion": {
+    "primary_a": {
+      "path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\labels\\primary_a.csv",
+      "total_rows": 28,
+      "completed_rows": 0
+    },
+    "primary_b": {
+      "path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\labels\\primary_b.csv",
+      "total_rows": 28,
+      "completed_rows": 0
+    },
+    "expert": {
+      "path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\exports\\annotations\\labels\\expert.csv",
+      "total_rows": 28,
+      "completed_rows": 0
+    }
+  }
+}

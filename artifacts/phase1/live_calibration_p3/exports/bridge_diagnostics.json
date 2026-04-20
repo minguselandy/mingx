@@ -1,7 +1,7 @@
 {
   "status": "computed",
   "bridge_form": "linear_ols",
-  "diagnostic_scope": "pure_python_without_scipy",
+  "diagnostic_scope": "scipy_shapiro_with_pure_python_bridge",
   "calibration_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_calibration_p3\\calibration_manifest.json",
   "bootstrap_resamples": 1000,
   "per_hop": {
@@ -30,7 +30,7 @@
         "mae_threshold": 0.035716846552265716
       },
       "diagnostics": {
-        "normality_test": "jarque_bera_proxy_without_scipy",
+        "normality_test": "shapiro_wilk",
         "normality_pvalue": 1.0,
         "breusch_pagan_pvalue": 1.0,
         "icc_question_residual": 0.0
@@ -65,7 +65,7 @@
         "mae_threshold": 0.045209463636131174
       },
       "diagnostics": {
-        "normality_test": "jarque_bera_proxy_without_scipy",
+        "normality_test": "shapiro_wilk",
         "normality_pvalue": 1.0,
         "breusch_pagan_pvalue": 1.0,
         "icc_question_residual": 0.0
@@ -100,7 +100,7 @@
         "mae_threshold": 0.05645165467902602
       },
       "diagnostics": {
-        "normality_test": "jarque_bera_proxy_without_scipy",
+        "normality_test": "shapiro_wilk",
         "normality_pvalue": 1.0,
         "breusch_pagan_pvalue": 1.0,
         "icc_question_residual": 0.0

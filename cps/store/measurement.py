@@ -19,6 +19,10 @@ ALLOWED_EVENT_TYPES = {
     "export_materialized",
     "question_materialized",
     "protocol_deviation",
+    "annotation_queue_materialized",
+    "annotation_label_ingested",
+    "expert_arbitration_ingested",
+    "kappa_materialized",
 }
 EVENT_FIELDS = (
     "event_type",

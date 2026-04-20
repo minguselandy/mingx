@@ -8,6 +8,7 @@ dependencies = [
   "pydantic>=2.7",
   "python-dotenv>=1.0",
   "orjson>=3.10",
+  "scipy>=1.13",
   "tqdm>=4.66",
 ]
 

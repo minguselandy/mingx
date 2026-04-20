@@ -15,7 +15,10 @@
         "sigma_calibration": 0.07143369310453143,
         "mae_threshold": 0.035716846552265716
       },
-      "note": "annotation disagreement rates remain pending until kappa/annotation wiring"
+      "annotation_reliability": {
+        "status": "pending_annotation",
+        "reason": "annotation disagreement rates populate after annotation and kappa ingestion"
+      }
     },
     "3hop": {
       "sigma_stratum": 0.09041892727226235,
@@ -30,7 +33,10 @@
         "sigma_calibration": 0.09041892727226235,
         "mae_threshold": 0.045209463636131174
       },
-      "note": "annotation disagreement rates remain pending until kappa/annotation wiring"
+      "annotation_reliability": {
+        "status": "pending_annotation",
+        "reason": "annotation disagreement rates populate after annotation and kappa ingestion"
+      }
     },
     "4hop": {
       "sigma_stratum": 0.11290330935805204,
@@ -45,7 +51,10 @@
         "sigma_calibration": 0.11290330935805204,
         "mae_threshold": 0.05645165467902602
       },
-      "note": "annotation disagreement rates remain pending until kappa/annotation wiring"
+      "annotation_reliability": {
+        "status": "pending_annotation",
+        "reason": "annotation disagreement rates populate after annotation and kappa ingestion"
+      }
     }
   }
 }

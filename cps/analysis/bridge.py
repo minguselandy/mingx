@@ -7,6 +7,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from scipy.stats import shapiro
+
 from cps.analysis.exports import write_csv, write_json, write_jsonl
 
 
@@ -67,18 +69,13 @@ def _pearson(xs: list[float], ys: list[float]) -> float:
     return numerator / denominator
 
 
-def _jarque_bera_pvalue(residuals: list[float]) -> float:
-    n = len(residuals)
-    if n < 3:
+def _shapiro_wilk_pvalue(residuals: list[float]) -> float:
+    if len(residuals) < 3:
         return 1.0
     sigma = _sample_std(residuals)
     if sigma == 0:
         return 1.0
-    centered = [(value - _mean(residuals)) / sigma for value in residuals]
-    skew = sum(value**3 for value in centered) / n
-    kurtosis = sum(value**4 for value in centered) / n
-    jb = (n / 6.0) * (skew**2 + ((kurtosis - 3.0) ** 2) / 4.0)
-    return math.exp(-jb / 2.0)
+    return float(shapiro(residuals).pvalue)
 
 
 def _breusch_pagan_pvalue(xs: list[float], residuals: list[float]) -> float:
@@ -223,8 +220,8 @@ def _fit_per_hop(calibration_rows: list[dict[str, Any]], *, seed: int, bootstrap
                 "mae_threshold": 0.5 * sigma_calibration,
             },
             "diagnostics": {
-                "normality_test": "jarque_bera_proxy_without_scipy",
-                "normality_pvalue": _jarque_bera_pvalue(residuals),
+                "normality_test": "shapiro_wilk",
+                "normality_pvalue": _shapiro_wilk_pvalue(residuals),
                 "breusch_pagan_pvalue": _breusch_pagan_pvalue(
                     [float(row["delta_small"]) for row in rows],
                     residuals,
@@ -444,7 +441,7 @@ def run_bridge_analysis(
     diagnostics_payload = {
         "status": "computed",
         "bridge_form": "linear_ols",
-        "diagnostic_scope": "pure_python_without_scipy",
+        "diagnostic_scope": "scipy_shapiro_with_pure_python_bridge",
         "calibration_manifest_path": str(Path(calibration_manifest_path).resolve()),
         "bootstrap_resamples": bootstrap_resamples,
         "per_hop": coefficients,
@@ -457,7 +454,10 @@ def run_bridge_analysis(
                 "sigma_stratum": tolerance_payload["per_hop"][hop_depth]["sigma"],
                 "bridge_coefficient_variance": diagnostics["bridge_coefficient_variance"],
                 "calibration_consistency": diagnostics["consistency"],
-                "note": "annotation disagreement rates remain pending until kappa/annotation wiring",
+                "annotation_reliability": {
+                    "status": "pending_annotation",
+                    "reason": "annotation disagreement rates populate after annotation and kappa ingestion",
+                },
             }
             for hop_depth, diagnostics in coefficients.items()
         },
