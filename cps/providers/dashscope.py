@@ -67,11 +67,20 @@ class DashScopeChatBackend:
             "top_logprobs": int(self.model_config.logprob["top_logprobs"]),
         }
         extra_body = dict(decoding.get("extra_body") or {})
-        for key, value in extra_body.items():
-            if key in payload:
-                raise ValueError(f"extra_body key collides with request payload field: {key}")
-            payload[key] = value
+        if extra_body:
+            payload["extra_body"] = extra_body
         return payload
+
+    @staticmethod
+    def build_transport_payload(payload: dict) -> dict:
+        """Flatten `extra_body` for provider transport while preserving config contract upstream."""
+        transport_payload = dict(payload)
+        extra_body = dict(transport_payload.pop("extra_body", {}) or {})
+        for key, value in extra_body.items():
+            if key in transport_payload:
+                raise ValueError(f"extra_body key collides with transport payload field: {key}")
+            transport_payload[key] = value
+        return transport_payload
 
     def _request_cache_path(self, request_fingerprint: str) -> Path:
         return self.context.storage.cache_dir / "requests" / self.model_role / f"{request_fingerprint}.json"
@@ -168,9 +177,12 @@ class DashScopeChatBackend:
         answer_text: str,
         ordered_paragraphs: Sequence[ManifestParagraph],
     ) -> ScoreResult:
-        payload = self.build_request_payload(question_text, answer_text, ordered_paragraphs)
+        request_payload = self.build_request_payload(question_text, answer_text, ordered_paragraphs)
+        payload = self.build_transport_payload(request_payload)
+        request_fingerprint = hashlib.sha256(
+            json.dumps(request_payload, ensure_ascii=False).encode("utf-8")
+        ).hexdigest()
         body = json.dumps(payload).encode("utf-8")
-        request_fingerprint = hashlib.sha256(body).hexdigest()
         cached_score = self._load_cached_score(request_fingerprint, answer_text)
         if cached_score is not None:
             return cached_score

@@ -1,5 +1,5 @@
 {
-  "run_id": "phase1-cohort-20260420025026",
+  "run_id": "phase1-cohort-20260420104433",
   "backend": "mock",
   "scope_mode": "pilot_reduced_scope",
   "annotation_mode": "awaiting_labels",
@@ -31,17 +31,33 @@
   },
   "source_of_truth": "event_log",
   "resume_from_event_log": true,
+  "question_counts": {
+    "small": {
+      "planned": 9,
+      "completed": 9,
+      "skipped": 9,
+      "remaining": 0
+    },
+    "frontier": {
+      "planned": 9,
+      "completed": 9,
+      "skipped": 9,
+      "remaining": 0
+    }
+  },
   "model_roles": {
     "small": {
       "planned": 9,
       "completed": 9,
       "skipped": 9,
+      "remaining": 0,
       "incomplete": 0
     },
     "frontier": {
       "planned": 9,
       "completed": 9,
       "skipped": 9,
+      "remaining": 0,
       "incomplete": 0
     }
   },

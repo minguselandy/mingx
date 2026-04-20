@@ -41,6 +41,8 @@ def test_load_phase1_context_prefers_environment_over_env_file(workspace_tmp_dir
     assert context.models["frontier"].model == "qwen3-32b"
     assert context.models["small"].model == "qwen3-14b"
     assert context.scoring.permutation_count == 5
+    assert "sk-from-process-env" not in repr(context.provider)
+    assert context.provider.masked_api_key in repr(context.provider)
 
 
 def test_load_phase1_context_prefers_run_plan_storage_over_env_defaults(workspace_tmp_dir):

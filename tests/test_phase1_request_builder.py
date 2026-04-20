@@ -38,8 +38,11 @@ def test_dashscope_request_builder_uses_phase1_logprob_contract(workspace_tmp_di
     assert payload["stream"] is False
     assert payload["n"] == 1
     assert payload["max_completion_tokens"] == 64
-    assert payload["enable_thinking"] is False
-    assert "extra_body" not in payload
+    assert payload["extra_body"]["enable_thinking"] is False
+
+    transport_payload = backend.build_transport_payload(payload)
+    assert transport_payload["enable_thinking"] is False
+    assert "extra_body" not in transport_payload
 
 
 def test_dashscope_logprob_extractor_supports_message_level_logprobs():

@@ -261,6 +261,18 @@ def test_phase1_cohort_runner_ignores_checkpoint_if_event_log_is_incomplete(work
     assert report["summary"]["model_roles"]["small"]["skipped"] == 3
     assert report["summary"]["model_roles"]["frontier"]["planned"] == 3
     assert report["summary"]["model_roles"]["frontier"]["completed"] == 3
+    assert report["summary"]["question_counts"]["small"] == {
+        "planned": 3,
+        "completed": 3,
+        "skipped": 3,
+        "remaining": 0,
+    }
+    assert report["summary"]["question_counts"]["frontier"] == {
+        "planned": 3,
+        "completed": 3,
+        "skipped": 3,
+        "remaining": 0,
+    }
     calibration_manifest = json.loads(calibration_manifest_path.read_text(encoding="utf-8"))
     selected_question_ids = [entry["question_id"] for entry in calibration_manifest["selected_questions"]]
     assert Path(export_dir / "small" / "questions" / selected_question_ids[0] / "export_manifest.json").exists()
@@ -366,6 +378,8 @@ def test_phase1_cohort_runner_supports_configurable_calibration_per_hop_count(wo
     assert report["summary"]["model_roles"]["small"]["completed"] == 3
     assert report["summary"]["model_roles"]["frontier"]["planned"] == 3
     assert report["summary"]["model_roles"]["frontier"]["completed"] == 3
+    assert report["summary"]["question_counts"]["small"]["remaining"] == 0
+    assert report["summary"]["question_counts"]["frontier"]["remaining"] == 0
     assert calibration_manifest["per_hop_counts"] == {"2hop": 1, "3hop": 1, "4hop": 1}
     assert len(calibration_manifest["selected_questions"]) == 3
     assert {entry["hop_depth"] for entry in calibration_manifest["selected_questions"]} == {

@@ -824,17 +824,27 @@ def run_phase1_cohort(
         },
         "source_of_truth": "event_log",
         "resume_from_event_log": True,
+        "question_counts": {},
         "model_roles": {},
     }
     for model_role, specs in {"small": small_specs, "frontier": frontier_specs}.items():
         role_states = [states_after[(spec.question_id, spec.model_role)] for spec in specs]
         completed = sum(1 for state in role_states if state["completed"])
         planned = len(specs)
-        summary["model_roles"][model_role] = {
+        remaining = planned - completed
+        role_counts = {
             "planned": planned,
             "completed": completed,
             "skipped": skipped_by_role[model_role],
-            "incomplete": planned - completed,
+            "remaining": remaining,
+            "incomplete": remaining,
+        }
+        summary["model_roles"][model_role] = role_counts
+        summary["question_counts"][model_role] = {
+            "planned": role_counts["planned"],
+            "completed": role_counts["completed"],
+            "skipped": role_counts["skipped"],
+            "remaining": role_counts["remaining"],
         }
 
     pipeline_status = _pipeline_status(

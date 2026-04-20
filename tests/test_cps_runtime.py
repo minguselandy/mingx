@@ -126,5 +126,7 @@ def test_cps_runtime_cohort_runs_with_mock_backend(workspace_tmp_dir):
     assert report["summary"]["annotation_mode"] == "synthetic_passthrough"
     assert report["summary"]["model_roles"]["small"]["completed"] == 3
     assert report["summary"]["model_roles"]["frontier"]["completed"] == 3
+    assert report["summary"]["question_counts"]["small"]["remaining"] == 0
+    assert report["summary"]["question_counts"]["frontier"]["remaining"] == 0
     assert Path(report["annotation_readme_path"]).exists()
     assert Path(report["summary"]["annotation"]["annotation_readme_path"]).exists()
