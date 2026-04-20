@@ -122,7 +122,7 @@ sidecar：
 除非用户要求，否则不要先写长篇分析。
 
 ## Git and delivery
-- 当用户明确要求“做完后提交到 GitHub”时，默认在本轮完成代码与验证后直接执行本地 commit 和远端 push，不额外停下来重复确认。
+- 默认在本轮完成代码与验证后直接执行本地 commit 和远端 push，除非用户明确要求不要提交或不要 push。
 - push 前仍需保持最小安全检查：不要提交 `.env`、API key、cache、checkpoint、临时文件或其他本地 secret。
 - 若当前机器上的 `git` 不在 PATH 中，可以使用已安装的 `git.exe` 绝对路径继续完成提交与 push；不要因为 PATH 问题中断交付。
 - 若 push 失败，优先报告阻塞原因并保留已完成的本地提交状态。
