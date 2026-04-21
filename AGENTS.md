@@ -8,19 +8,19 @@
 - 每一步尽量产出可复用 artifact，例如 `json`、`csv`、`parquet`、`md`、`script`。
 
 ## Working surface
-- 当前工作目录 `phase0-config-starter/` 是干净的实现和配置落点。
-- 工作区级 `files/` 目录是当前规格和现有 artifact 的主要来源。
-- 优先复用 `files/` 中已有内容，而不是重新发明接口或重新录入规格。
+- 当前工作目录 `.`（仓库根目录）是实现、配置和运行入口。
+- `docs/protocols/`、`artifacts/phase0/`、`configs/runs/` 是当前规格、运行计划和现有 artifact 的主要来源。
+- 优先复用仓库内已有协议文档、run plan、脚本和 artifact，而不是重新发明接口或重新录入规格。
 
 优先读取的现有 artifact：
-- `C:\Users\Mingx\Documents\mx-codex\files\phase0-specification.md`
-- `C:\Users\Mingx\Documents\mx-codex\files\phase1-protocol.md`
-- `C:\Users\Mingx\Documents\mx-codex\files\phase2-design.md`
-- `C:\Users\Mingx\Documents\mx-codex\files\execution-readiness-checklist.md`
-- `C:\Users\Mingx\Documents\mx-codex\files\data_prep.py`
-- `C:\Users\Mingx\Documents\mx-codex\files\data_prep.json`
-- `C:\Users\Mingx\Documents\mx-codex\files\sample_manifest_v1.json`
-- `C:\Users\Mingx\Documents\mx-codex\files\content_hashes.json`
+- `docs/protocols/phase0-specification.md`
+- `docs/protocols/phase1-protocol.md`
+- `docs/protocols/phase2-design.md`
+- `docs/protocols/execution-readiness-checklist.md`
+- `data_prep.py`
+- `reference/files/data_prep.json`
+- `artifacts/phase0/sample_manifest_v1.json`
+- `artifacts/phase0/content_hashes.json`
 
 ## Document precedence
 当规格文档之间存在张力时，按下面顺序解释，只指出影响当前执行的问题：
@@ -96,7 +96,7 @@ sidecar：
 - 优先小步修改。
 - 优先改当前 gate 最相关文件，不做无关重构。
 - 不要在没有明确收益时扩目录树。
-- 优先复用 `files/` 下现有脚本和 artifact，再决定是否迁移或精简到 starter。
+- 优先复用仓库内现有脚本和 artifact，尤其是 `docs/protocols/`、`artifacts/phase0/`、`configs/runs/`、`reference/files/` 下的内容，再决定是否迁移或精简。
 - measurement/event store 使用 append-only 思路。
 - 确定性派生产物可以 overwrite，或明确做 versioned snapshot；不要把所有中间文件都做成追加式。
 - checkpoint 只做恢复辅助，event log 才是 source of truth。
@@ -124,5 +124,5 @@ sidecar：
 ## Git and delivery
 - 默认在本轮完成代码与验证后直接执行本地 commit 和远端 push，除非用户明确要求不要提交或不要 push。
 - push 前仍需保持最小安全检查：不要提交 `.env`、API key、cache、checkpoint、临时文件或其他本地 secret。
-- 若当前机器上的 `git` 不在 PATH 中，可以使用已安装的 `git.exe` 绝对路径继续完成提交与 push；不要因为 PATH 问题中断交付。
+- 若当前机器上的 `git` 不在 PATH 中，可以使用已安装的 `git` 绝对路径继续完成提交与 push；不要因为 PATH 问题中断交付。
 - 若 push 失败，优先报告阻塞原因并保留已完成的本地提交状态。
