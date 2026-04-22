@@ -3,7 +3,7 @@ from pathlib import Path
 from phase0.manifest import load_manifest, validate_manifest
 
 
-FIXTURES_DIR = Path(__file__).resolve().parents[3] / "files"
+FIXTURES_DIR = Path("artifacts/phase0")
 
 
 def test_load_manifest_normalizes_sample_manifest_fields():

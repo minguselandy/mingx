@@ -9,7 +9,8 @@
 
 ## Working surface
 - 当前工作目录 `.`（仓库根目录）是实现、配置和运行入口。
-- `docs/protocols/`、`artifacts/phase0/`、`configs/runs/` 是当前规格、运行计划和现有 artifact 的主要来源。
+- `docs/` 下的文档当前分为两个子目录：`docs/protocols/`（当前生效协议）和 `docs/archive/`（历史草稿/归档材料）。
+- `artifacts/phase0/`、`configs/runs/`、`reference/files/` 是当前运行输入、run plan 和旧 `files/` 参考材料的主要来源。
 - 优先复用仓库内已有协议文档、run plan、脚本和 artifact，而不是重新发明接口或重新录入规格。
 
 优先读取的现有 artifact：
@@ -17,7 +18,9 @@
 - `docs/protocols/phase1-protocol.md`
 - `docs/protocols/phase2-design.md`
 - `docs/protocols/execution-readiness-checklist.md`
+- `docs/archive/paper-draft-v5.5-taskB-final-gemini-minimal-q7revised-polish2.md`
 - `data_prep.py`
+- `reference/files/data_prep.py`
 - `reference/files/data_prep.json`
 - `artifacts/phase0/sample_manifest_v1.json`
 - `artifacts/phase0/content_hashes.json`
@@ -25,15 +28,15 @@
 ## Document precedence
 当规格文档之间存在张力时，按下面顺序解释，只指出影响当前执行的问题：
 
-1. `execution-readiness-checklist.md`
+1. `docs/protocols/execution-readiness-checklist.md`
    负责 gate 顺序、下一可执行动作、并行 sidecar 的阻塞关系。
-2. `phase1-protocol.md`
+2. `docs/protocols/phase1-protocol.md`
    负责可执行测量流程、数据准备、log-prob、bridge、annotation 的实施细节。
-3. `phase0-specification.md`
+3. `docs/protocols/phase0-specification.md`
    负责锁定 domain、granularity、budget、design invariant、known limitation。
-4. `phase2-design.md`
+4. `docs/protocols/phase2-design.md`
    负责后续 pilot/full-study 的统计和设计约束，但不要提前把项目推进成完整 Phase 2/4 实验平台。
-5. paper draft
+5. `docs/archive/paper-draft-v5.5-taskB-final-gemini-minimal-q7revised-polish2.md`
    只用于研究 framing、术语和“不该跑偏成什么论文”。
 
 ## Current project priority
@@ -41,7 +44,7 @@
 
 当前执行顺序：
 1. 锁定并验证 Phase 0 / Gate 1 上游 artifact
-   `content_hashes.json`、`sample_manifest_v1.json`、最小 smoke validation。
+   `artifacts/phase0/content_hashes.json`、`artifacts/phase0/sample_manifest_v1.json`、最小 smoke validation。
 2. 建立 sample manifest loader 和基础 schema 对齐。
 3. 建立 forced-decode answer log-prob scoring interface。
 4. 建立 paragraph-order permutation 下的 `delta_loo` / LCB aggregation。
@@ -96,7 +99,7 @@ sidecar：
 - 优先小步修改。
 - 优先改当前 gate 最相关文件，不做无关重构。
 - 不要在没有明确收益时扩目录树。
-- 优先复用仓库内现有脚本和 artifact，尤其是 `docs/protocols/`、`artifacts/phase0/`、`configs/runs/`、`reference/files/` 下的内容，再决定是否迁移或精简。
+- 优先复用仓库内现有脚本和 artifact，尤其是 `docs/protocols/`、`docs/archive/`、`artifacts/phase0/`、`configs/runs/`、`reference/files/` 下的内容，再决定是否迁移或精简。
 - measurement/event store 使用 append-only 思路。
 - 确定性派生产物可以 overwrite，或明确做 versioned snapshot；不要把所有中间文件都做成追加式。
 - checkpoint 只做恢复辅助，event log 才是 source of truth。

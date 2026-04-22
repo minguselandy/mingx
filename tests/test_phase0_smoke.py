@@ -3,7 +3,7 @@ from pathlib import Path
 from phase0.smoke import run_phase0_smoke
 
 
-FIXTURES_DIR = Path(__file__).resolve().parents[3] / "files"
+FIXTURES_DIR = Path("artifacts/phase0")
 
 
 def test_phase0_smoke_runs_end_to_end_with_fixtures(workspace_tmp_dir):

@@ -4,11 +4,18 @@ from cps.runtime.config import load_phase1_context
 from cps.runtime.secrets import extract_api_key_from_csv, mask_secret
 
 
-CSV_PATH = Path(r"C:\Users\Mingx\Documents\mx-codex\默认业务空间-apiKey-4648916.csv")
-
-
-def test_extract_api_key_from_nonstandard_csv():
-    api_key = extract_api_key_from_csv(CSV_PATH)
+def test_extract_api_key_from_nonstandard_csv(workspace_tmp_dir):
+    csv_path = workspace_tmp_dir / "dashscope_api_key.csv"
+    csv_path.write_text(
+        "\n".join(
+            [
+                "名称,API Key,备注",
+                "default,sk-from-test-csv-1234567890,local fixture",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    api_key = extract_api_key_from_csv(csv_path)
 
     assert api_key.startswith("sk-")
     assert len(api_key) > 10
