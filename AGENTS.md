@@ -10,7 +10,9 @@
 ## Working surface
 - 当前工作目录 `.`（仓库根目录）是实现、配置和运行入口。
 - `docs/` 下的文档当前分为两个子目录：`docs/protocols/`（当前生效协议）和 `docs/archive/`（历史草稿/归档材料）。
+- `api/` 是当前 provider/profile、backend 工厂和 API smoke 工具的统一入口；涉及模型切换或 API 接入时优先从这里收口。
 - `artifacts/phase0/`、`configs/runs/`、`reference/files/` 是当前运行输入、run plan 和旧 `files/` 参考材料的主要来源。
+- `.env.example` 记录当前推荐的 secret 与 `API_*` 覆盖模板。
 - 优先复用仓库内已有协议文档、run plan、脚本和 artifact，而不是重新发明接口或重新录入规格。
 
 优先读取的现有 artifact：
@@ -99,6 +101,7 @@ sidecar：
 - 优先小步修改。
 - 优先改当前 gate 最相关文件，不做无关重构。
 - 不要在没有明确收益时扩目录树。
+- 涉及 provider/model 或 API 切换时，优先修改 `api/settings.py`、`api/backends.py`、`api/README.md`，不要把 provider 分支散落到 `cps/runtime`。
 - 优先复用仓库内现有脚本和 artifact，尤其是 `docs/protocols/`、`docs/archive/`、`artifacts/phase0/`、`configs/runs/`、`reference/files/` 下的内容，再决定是否迁移或精简。
 - measurement/event store 使用 append-only 思路。
 - 确定性派生产物可以 overwrite，或明确做 versioned snapshot；不要把所有中间文件都做成追加式。

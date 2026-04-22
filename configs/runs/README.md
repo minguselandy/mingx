@@ -8,6 +8,7 @@ These files define:
 - backend role and scoring scope
 - calibration scope
 - output storage roots
+- but not provider secrets, concrete base URLs, or hardcoded live model ids
 
 They are not run outputs themselves. Real outputs still land under
 `artifacts/`.
@@ -16,6 +17,17 @@ Canonical runtime package:
 
 - `python -m cps.runtime.phase1_smoke`
 - `python -m cps.runtime.cohort`
+
+Provider/model resolution:
+
+- Run plans intentionally stay at the `mock` / `live` backend level.
+- The active live provider and role-model mapping are resolved through
+  `api/settings.py`, typically via `API_PROFILE` plus optional `API_*`
+  overrides from `.env`.
+- Default profile: `dashscope-qwen-phase1`
+- Optional exploration profile: `evas-openai`
+  This profile is useful for API smoke tests, but it is not currently
+  Phase 1 logprob-ready.
 
 Current recommended run plans:
 
@@ -35,3 +47,6 @@ Interpretation rules:
 - `scope_mode = protocol_full` means the config is intended to satisfy the scientific Phase 1 scope.
 - `scope_mode = pilot_reduced_scope` means the config is engineering/pilot only and must not be used as a Phase 2 statistical input.
 - Current `live-*` configs use reduced scope, including `question_paragraph_limit = 5` and calibration `per_hop_count` values of `1`, `2`, or `3`.
+- To switch live provider/model bundles, prefer
+  `python -m api --export-phase1-env --profile <profile>`
+  rather than editing run plans directly.

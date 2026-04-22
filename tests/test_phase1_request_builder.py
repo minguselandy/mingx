@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from cps.providers.dashscope import DashScopeChatBackend
+from cps.providers.openai_compatible import OpenAICompatibleChatBackend
 from cps.runtime.config import load_phase1_context
 
 
@@ -22,7 +22,7 @@ def test_dashscope_request_builder_uses_phase1_logprob_contract(workspace_tmp_di
         run_plan_path=Path("configs/runs/smoke.json"),
         env_path=env_path,
     )
-    backend = DashScopeChatBackend(context=context, model_role="small")
+    backend = OpenAICompatibleChatBackend(context=context, model_role="small")
 
     payload = backend.build_request_payload(
         question_text="Who won?",
@@ -46,7 +46,7 @@ def test_dashscope_request_builder_uses_phase1_logprob_contract(workspace_tmp_di
 
 
 def test_dashscope_logprob_extractor_supports_message_level_logprobs():
-    logprob_sum, token_logprobs, content, content_match = DashScopeChatBackend._extract_logprob_sum(
+    logprob_sum, token_logprobs, content, content_match = OpenAICompatibleChatBackend._extract_logprob_sum(
         {
             "choices": [
                 {

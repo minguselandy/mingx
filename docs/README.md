@@ -7,6 +7,8 @@ long-lived `phase0` / `phase1` code roots.
 
 - [architecture.md](./architecture.md)
   Explains the code layout, artifact layout, and migration direction.
+- [../api/README.md](../api/README.md)
+  Explains API profiles, backend factories, and provider/model resolution.
 - [../configs/runs/README.md](../configs/runs/README.md)
   Lists the canonical run-plan entrypoints.
 - [protocols/execution-readiness-checklist.md](./protocols/execution-readiness-checklist.md)
@@ -24,6 +26,8 @@ long-lived `phase0` / `phase1` code roots.
 
 ## Code Semantics
 
+`api/` owns provider/model profiles, backend factories, and API smoke helpers.
+
 `cps/` is now the canonical implementation package.
 
 `phase0/` and `phase1/` remain in the repository as compatibility shims so
@@ -32,5 +36,7 @@ existing tests, imports, and runtime commands do not break during migration.
 Until the migration is fully complete, keep these rules:
 
 - Prefer `cps.*` for new imports
+- Prefer `api/*` for provider/model switching instead of adding provider
+  branches to runtime entrypoints
 - Keep `events.jsonl` as source of truth
 - Do not break existing live plans or run artifacts

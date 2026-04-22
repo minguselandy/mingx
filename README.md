@@ -8,7 +8,7 @@ It currently covers:
 1. Phase 0 artifact validation and smoke checks
 2. Phase 1 manifest loading, ordering, log-prob scoring, and `delta_loo`
 3. Append-only measurement storage with `events.jsonl` as source of truth
-4. Cohort runner support for mock and live DashScope / Qwen runs
+4. Cohort runner support for mock and live API-profile-backed runs
 5. Bridge and export scaffolds for calibration batches
 
 Project entrypoints:
@@ -17,19 +17,28 @@ Project entrypoints:
 - [docs/architecture.md](./docs/architecture.md)
 - [docs/protocols/execution-readiness-checklist.md](./docs/protocols/execution-readiness-checklist.md)
 - [configs/runs/README.md](./configs/runs/README.md)
+- [api/README.md](./api/README.md)
 
 The `phase0/` and `phase1/` directories now act as compatibility shims.
 New imports and new runtime entrypoints should prefer `cps.*`.
 
 ## Runtime
 
-- Provider: DashScope OpenAI-compatible Chat API
-- Frontier model: `qwen3-32b`
-- Small model: `qwen3-14b`
-- Coding model: `qwen3-coder-plus`
+- Protocol lock remains:
+  DashScope OpenAI-compatible Chat API
+  `frontier = qwen3-32b`
+  `small = qwen3-14b`
+  `coding = qwen3-coder-plus`
+- Runtime provider/model resolution now lives under `api/`:
+  `api/settings.py` owns active API profiles and role-model mapping
+  `api/backends.py` owns live/mock backend construction
+  `cps/runtime` consumes role models and does not branch on provider names directly
+- Current API profiles:
+  `dashscope-qwen-phase1` is the default Phase 1 profile
+  `evas-openai` is an optional OpenAI-compatible profile for exploration and smoke tests
+- Use `.env.example` as the template for secrets and generic `API_*` overrides
 
-Secrets stay in local `.env` and are not committed. Use `.env.example` as the
-template.
+Secrets stay in local `.env` and are not committed.
 
 ## Suggested commands
 
@@ -39,6 +48,8 @@ uv venv
 .\.venv\Scripts\Activate.ps1
 uv sync
 uv run pytest
+uv run python -m api --show-profiles
+uv run python -m api --export-phase1-env --profile dashscope-qwen-phase1
 uv run python -m cps.runtime.phase1_smoke --backend mock --run-plan configs/runs/smoke.json --env .env
 uv run python -m cps.runtime.cohort --plan configs/runs/live-calibration-p3.json --backend live --env .env
 ```
@@ -49,6 +60,8 @@ uv venv
 source .venv/bin/activate
 uv sync
 uv run pytest
+uv run python -m api --show-profiles
+uv run python -m api --export-phase1-env --profile dashscope-qwen-phase1
 uv run python -m cps.runtime.phase1_smoke --backend mock --run-plan configs/runs/smoke.json --env .env
 uv run python -m cps.runtime.cohort --plan configs/runs/live-calibration-p3.json --backend live --env .env
 ```

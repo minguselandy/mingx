@@ -1,3 +1,4 @@
+from api.backends import build_live_backend, build_scoring_backend
 from api.evas import (
     EVAS_DEFAULT_BASE_URL,
     EVAS_RECOMMENDED_MODELS,
@@ -36,6 +37,8 @@ __all__ = [
     "EvasApiSettings",
     "OpenAICompatibleClient",
     "OpenAICompatibleCredentials",
+    "build_live_backend",
+    "build_scoring_backend",
     "build_phase1_env_overrides",
     "build_recommendation_report",
     "choose_model_for_role",

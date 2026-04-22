@@ -5,6 +5,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from api.backends import build_scoring_backend
 from cps.analysis.bridge import run_bridge_analysis
 from cps.analysis.contamination import run_contamination_analysis
 from cps.analysis.exports import (
@@ -14,7 +15,6 @@ from cps.analysis.exports import (
 )
 from cps.analysis.reliability import compute_reliability_from_events
 from cps.data.manifest import ManifestQuestion, load_manifest, validate_manifest
-from cps.providers.dashscope import DashScopeChatBackend
 from cps.runtime.annotation import (
     annotation_status_from_files,
     ingest_annotation_labels,
@@ -23,7 +23,6 @@ from cps.runtime.annotation import (
 from cps.runtime.calibration import build_calibration_manifest
 from cps.runtime.config import load_phase1_context
 from cps.runtime.retrieval import build_retrieval_dry_run
-from cps.scoring.backends import MockScoringBackend
 from cps.scoring.delta_loo import (
     append_delta_materialized_event,
     compute_question_delta_loo,
@@ -64,11 +63,7 @@ def _resolve_question_ids(raw_value, calibration_question_ids: list[str], bundle
 
 
 def _build_backend(context, backend_name: str, model_role: str):
-    if backend_name == "mock":
-        return MockScoringBackend(model_id=context.models[model_role].model)
-    if backend_name == "live":
-        return DashScopeChatBackend(context=context, model_role=model_role)
-    raise ValueError(f"Unsupported backend: {backend_name}")
+    return build_scoring_backend(context=context, backend_name=backend_name, model_role=model_role)
 
 
 def _calibration_per_hop_count(plan: dict) -> int:

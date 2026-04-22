@@ -10,17 +10,33 @@ Gate 1 / Phase 1 project with:
 - append-only measurement storage
 - cohort runner support
 - bridge and export scaffolds
+- API profile and backend abstraction
 - protocol and reference documentation
 
 ## Canonical Structure
 
-The project now has three main semantics:
+The project now has four main semantics:
 
 ### 1. `docs/`
 
 Protocols, architecture notes, and archived research material.
 
-### 2. `cps/`
+### 2. `api/`
+
+Provider/model profile resolution, backend factories, and API-facing smoke
+helpers.
+
+Key responsibilities:
+
+- `settings.py`
+  Resolves the active API profile, provider metadata, and role-model mapping.
+- `backends.py`
+  Builds live/mock scoring backends so runtime code does not branch on
+  provider names.
+- `evas.py`
+  Keeps EVAS-specific probing, recommendations, and CLI helpers.
+
+### 3. `cps/`
 
 Canonical code package, organized by capability:
 
@@ -31,12 +47,27 @@ Canonical code package, organized by capability:
 - `runtime/`
 - `analysis/`
 
-### 3. `artifacts/`
+### 4. `artifacts/`
 
 Real run outputs and reproducibility material.
 
 Phase labels still belong here because they describe run stages and outputs,
 not long-term code-module boundaries.
+
+## API Resolution Flow
+
+The implementation now separates protocol locks from transport details.
+
+1. `phase1.yaml` still records the locked Phase 1 provider/model family.
+2. `.env` and generic `API_*` overrides are resolved by `api/settings.py`.
+3. `api/backends.py` maps the resolved API profile to a concrete scoring
+   backend.
+4. `cps/runtime/*` consumes generic `frontier` / `small` / `coding` roles and
+   does not need to know whether the live backend is DashScope or EVAS.
+5. `cps/providers/openai_compatible.py` contains the concrete OpenAI-compatible
+   transport implementation.
+6. `cps/providers/dashscope.py` and `phase1/*` remain compatibility shims for
+   older imports.
 
 ## Compatibility Policy
 
@@ -44,6 +75,7 @@ not long-term code-module boundaries.
 
 That means:
 
+- `api/` is the source of truth for provider/model switching
 - `cps/` is the implementation source of truth
 - legacy imports remain valid
 - run plans stay under `configs/runs/`

@@ -5,12 +5,11 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from api.backends import build_scoring_backend
 from cps.analysis.exports import ensure_directories, export_delta_lcb, export_stub_artifacts, write_json
 from cps.data.manifest import load_manifest, validate_manifest
-from cps.providers.dashscope import DashScopeChatBackend
 from cps.runtime.config import load_phase1_context
 from cps.runtime.retrieval import build_retrieval_dry_run
-from cps.scoring.backends import MockScoringBackend
 from cps.scoring.delta_loo import compute_question_delta_loo, limit_question_for_smoke
 from cps.scoring.orderings import build_orderings
 from cps.store.measurement import append_event, events_path_for, rebuild_run_progress, snapshot_path_for
@@ -68,14 +67,8 @@ def run_phase1_smoke(
     question = next((item for item in bundle.sample if item.question_id == question_id), bundle.sample[0])
     limited_question = limit_question_for_smoke(question, run_plan.get("smoke_paragraph_limit"))
 
-    if backend_name == "mock":
-        model_role = run_plan["scoring"].get("model_role", "small")
-        backend = MockScoringBackend(model_id=context.models[model_role].model)
-    elif backend_name == "live":
-        model_role = run_plan["scoring"].get("model_role", "small")
-        backend = DashScopeChatBackend(context=context, model_role=model_role)
-    else:
-        raise ValueError(f"Unsupported backend: {backend_name}")
+    model_role = run_plan["scoring"].get("model_role", "small")
+    backend = build_scoring_backend(context=context, backend_name=backend_name, model_role=model_role)
 
     append_event(
         context.storage.measurement_dir,

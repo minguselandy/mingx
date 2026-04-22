@@ -4,8 +4,9 @@ import json
 from pathlib import Path
 from urllib import error
 
-import cps.providers.dashscope as dashscope_backend_module
-from cps.providers.dashscope import DashScopeChatBackend
+import api.backends as api_backends
+import cps.providers.openai_compatible as openai_backend_module
+from cps.providers.openai_compatible import OpenAICompatibleChatBackend
 from cps.runtime.config import load_phase1_context
 
 
@@ -96,7 +97,7 @@ def _response_payload(content="River Great Ouse"):
 
 def test_dashscope_backend_uses_parsed_cache_before_network(workspace_tmp_dir, monkeypatch):
     context = _build_context(workspace_tmp_dir)
-    backend = DashScopeChatBackend(context=context, model_role="small")
+    backend = OpenAICompatibleChatBackend(context=context, model_role="small")
     payload = backend.build_request_payload("Who won?", "Alice", [])
     request_fingerprint = hashlib.sha256(json.dumps(payload).encode("utf-8")).hexdigest()
     parsed_cache_path = backend._parsed_cache_path(request_fingerprint)
@@ -119,7 +120,7 @@ def test_dashscope_backend_uses_parsed_cache_before_network(workspace_tmp_dir, m
     def _should_not_run(*args, **kwargs):
         raise AssertionError("network should not be used when parsed cache exists")
 
-    monkeypatch.setattr(dashscope_backend_module.request, "urlopen", _should_not_run)
+    monkeypatch.setattr(openai_backend_module.request, "urlopen", _should_not_run)
 
     score = backend.score_answer("Who won?", "Alice", [])
 
@@ -130,7 +131,7 @@ def test_dashscope_backend_uses_parsed_cache_before_network(workspace_tmp_dir, m
 
 def test_dashscope_backend_retries_retryable_http_errors_and_writes_cache(workspace_tmp_dir, monkeypatch):
     context = _build_context(workspace_tmp_dir)
-    backend = DashScopeChatBackend(context=context, model_role="small")
+    backend = OpenAICompatibleChatBackend(context=context, model_role="small")
     calls = {"count": 0}
 
     def _fake_urlopen(http_request, timeout=60):
@@ -145,8 +146,8 @@ def test_dashscope_backend_retries_retryable_http_errors_and_writes_cache(worksp
             )
         return _FakeHTTPResponse(_response_payload(), status=200)
 
-    monkeypatch.setattr(dashscope_backend_module.request, "urlopen", _fake_urlopen)
-    monkeypatch.setattr(dashscope_backend_module.time, "sleep", lambda seconds: None)
+    monkeypatch.setattr(openai_backend_module.request, "urlopen", _fake_urlopen)
+    monkeypatch.setattr(openai_backend_module.time, "sleep", lambda seconds: None)
 
     score = backend.score_answer("Which river?", "River Great Ouse", [])
 
@@ -202,7 +203,20 @@ def test_openai_compatible_backend_backend_id_tracks_provider_name(workspace_tmp
         env_path=env_path,
     )
 
-    backend = DashScopeChatBackend(context=context, model_role="small")
+    backend = OpenAICompatibleChatBackend(context=context, model_role="small")
 
     assert backend.backend_id == "evas_openai_chat"
     assert backend.model_id == "openai/gpt-5.4-mini"
+
+
+def test_api_backend_factory_hides_provider_specific_backend_choice(workspace_tmp_dir):
+    context = _build_context(workspace_tmp_dir)
+
+    backend = api_backends.build_scoring_backend(
+        context=context,
+        backend_name="live",
+        model_role="small",
+    )
+
+    assert isinstance(backend, OpenAICompatibleChatBackend)
+    assert backend.backend_id == "dashscope_openai_chat"

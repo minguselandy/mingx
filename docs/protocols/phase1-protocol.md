@@ -40,6 +40,8 @@ For each sampled question, the full paragraph pool is extracted in its native or
 
 The frontier predictive family is instantiated as Qwen3-32B (`qwen3-32b`) and the smaller predictive family is instantiated as Qwen3-14B (`qwen3-14b`), both accessed via DashScope's OpenAI-compatible `/chat/completions` endpoint. Both models are queried with `temperature = 0`, `logprobs = true`, `top_logprobs = 0`, `n = 1`, `stream = false`, and `enable_thinking = false` so that forced-decode log-probability extraction yields deterministic point estimates per paragraph ordering. Exact model strings, provider base URL, and decoding parameters are recorded in the execution log.
 
+Implementation note: the repository now routes provider/profile resolution through `api/settings.py` and backend selection through `api/backends.py`, but the default active profile remains `dashscope-qwen-phase1`. This code-level abstraction does not change the scientific lock stated in this protocol section.
+
 The choice of intra-family tiering (Qwen3-32B and Qwen3-14B both from the dense Qwen3 family) preserves tokenizer, architectural class, and pretraining-lineage coherence between V_frontier and V_small, which is the structural condition under which the linear-per-stratum bridge function is most likely to hold.
 
 ### B.2 Forced-decode log-probability extraction protocol
@@ -57,7 +59,7 @@ and forcing the decoder to produce the MuSiQue canonical answer string. The sum 
 
 The baseline `log P_V(y* | q)` (question alone, no paragraphs) is computed once per question per V, and cached for reuse across all subset computations for that question.
 
-Under DashScope's OpenAI-compatible response schema, token-level log-probabilities are extracted from the emitted content channel only. Responses that route through `reasoning_content` or otherwise require thinking-mode handling are rejected as protocol deviations because they do not preserve the forced-decode measurement target.
+Under DashScope's OpenAI-compatible response schema, token-level log-probabilities are extracted from the emitted content channel only. Responses that route through `reasoning_content` or otherwise require thinking-mode handling are rejected as protocol deviations because they do not preserve the forced-decode measurement target. The current repository implementation realizes this transport contract in `cps/providers/openai_compatible.py`, with compatibility shims retained for older DashScope-specific import paths.
 
 ### B.3 δ_loo computation algorithm
 
@@ -223,7 +225,7 @@ Repository note: the current `live-pilot`, `live-mini-batch`, `live-calibration-
 
 The implementation-level decisions carried over from Phase 0 are locked as follows.
 
-**Provider and endpoint:** DashScope OpenAI-compatible Chat Completions API.
+**Provider and endpoint:** DashScope OpenAI-compatible Chat Completions API, surfaced in the repository as the default API profile `dashscope-qwen-phase1`.
 
 **V_frontier specific model:** Qwen3-32B (`qwen3-32b`).
 
