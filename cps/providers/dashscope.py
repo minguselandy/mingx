@@ -13,13 +13,14 @@ from cps.runtime.config import Phase1Context
 from cps.scoring.backends import ScoreResult
 
 
-class DashScopeChatBackend:
-    backend_id = "dashscope_openai_chat"
+class OpenAICompatibleChatBackend:
+    backend_id = "openai_compatible_chat"
 
     def __init__(self, context: Phase1Context, model_role: str) -> None:
         self.context = context
         self.model_role = model_role
         self.provider_name = context.provider.name
+        self.backend_id = f"{self.provider_name}_openai_chat" if self.provider_name else self.backend_id
         self.model_id = context.models[model_role].model
         self.model_config = context.models[model_role]
         self.cache_config = dict(context.raw_config.get("cache") or {})
@@ -167,7 +168,7 @@ class DashScopeChatBackend:
         logprobs_block = message.get("logprobs") or choice.get("logprobs") or {}
         logprob_items = (logprobs_block.get("content")) or []
         if not logprob_items:
-            raise ValueError("DashScope response did not include token logprobs")
+            raise ValueError("OpenAI-compatible response did not include token logprobs")
         token_logprobs = tuple(float(item["logprob"]) for item in logprob_items if "logprob" in item)
         return sum(token_logprobs), token_logprobs, content, True
 
@@ -222,11 +223,15 @@ class DashScopeChatBackend:
                     return score
             except error.HTTPError as exc:
                 error_body = exc.read().decode("utf-8", errors="replace")
-                last_error = RuntimeError(f"DashScope request failed with HTTP {exc.code}: {error_body}")
+                last_error = RuntimeError(
+                    f"{self.provider_name} request failed with HTTP {exc.code}: {error_body}"
+                )
                 if attempt >= max_attempts or not self._should_retry_http(exc.code):
                     raise last_error from exc
             except error.URLError as exc:
-                last_error = RuntimeError(f"DashScope request failed with transport error: {exc.reason}")
+                last_error = RuntimeError(
+                    f"{self.provider_name} request failed with transport error: {exc.reason}"
+                )
                 if attempt >= max_attempts:
                     raise last_error from exc
 
@@ -234,4 +239,8 @@ class DashScopeChatBackend:
 
         if last_error is not None:
             raise last_error
-        raise RuntimeError("DashScope request failed without a captured exception")
+        raise RuntimeError("OpenAI-compatible request failed without a captured exception")
+
+
+class DashScopeChatBackend(OpenAICompatibleChatBackend):
+    backend_id = "dashscope_openai_chat"

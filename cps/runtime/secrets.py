@@ -4,6 +4,8 @@ import argparse
 import csv
 from pathlib import Path
 
+from api.settings import DEFAULT_API_PROFILE
+
 
 DEFAULT_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 
@@ -51,12 +53,10 @@ def build_env_text(api_key: str) -> str:
             "HF_DATASETS_CACHE=.cache/huggingface/datasets",
             f"DASHSCOPE_API_KEY={api_key}",
             f"DASHSCOPE_BASE_URL={DEFAULT_BASE_URL}",
+            f"API_PROFILE={DEFAULT_API_PROFILE}",
             "PHASE1_EXPERIMENT_ID=musique_gate1_phase1_v1",
             "PHASE1_PROTOCOL_VERSION=phase1.v1",
             "PHASE1_SEED=20260418",
-            "PHASE1_FRONTIER_MODEL=qwen3-32b",
-            "PHASE1_SMALL_MODEL=qwen3-14b",
-            "CODING_MODEL=qwen3-coder-plus",
             "PHASE1_CACHE_DIR=./artifacts/phase1/cache",
             "PHASE1_MEASUREMENT_DIR=./artifacts/phase1/measurements",
             "PHASE1_EXPORT_DIR=./artifacts/phase1/exports",

@@ -16,6 +16,9 @@
 python -m api --list-models --show-recommendations
 python -m api --chat-smoke --role small
 python -m api --env-file .env --chat-smoke --model openai/gpt-5.4-mini
+python -m api --show-profiles
+python -m api --export-phase1-env --profile dashscope-qwen-phase1
+python -m api --export-phase1-env --profile evas-openai
 ```
 
 默认推荐模型：
@@ -29,5 +32,7 @@ python -m api --env-file .env --chat-smoke --model openai/gpt-5.4-mini
 - 当前 CLI 会同时显示两套信息：
   Phase 1 已锁定的 Qwen 模型
   EVAS 下可选的候选模型
+- 运行时现在优先从 `api/settings.py` 解析 active profile；`cps/runtime` 不再直接关心具体是 EVAS 还是 DashScope/Qwen
+- 现在也可以直接导出通用 `API_PROFILE` / `API_*_MODEL` 环境变量，便于临时切换 API 配置而不改 `phase1.yaml`
 - 这套目录适合做模型探测、聊天 smoke test 和后续统一 API 管理。
 - 当前 EVAS 已探测模型还不能直接替换 Phase 1 的 `delta_loo` scorer，因为返回里没有稳定可用的 token `logprobs`。

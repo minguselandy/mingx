@@ -8,12 +8,14 @@ from typing import Any
 
 from dotenv import dotenv_values
 
+from api.settings import resolve_api_profile
 from cps.data.manifest import load_phase0_config
 from cps.runtime.secrets import mask_secret
 
 
 @dataclass(frozen=True)
 class ProviderConfig:
+    profile_name: str | None
     name: str
     api_style: str
     base_url_env: str
@@ -92,23 +94,16 @@ def load_phase1_context(
     run_plan = json.loads(run_plan_file.read_text(encoding="utf-8"))
     env_values = _load_env_values(env_path)
 
-    provider_block = raw_config["provider"]
-    base_url = env_values.get(provider_block["base_url_env"])
-    api_key = env_values.get(provider_block["api_key_env"])
-    if not base_url:
-        raise ValueError(f"Missing provider base URL env var: {provider_block['base_url_env']}")
-    if not api_key:
-        raise ValueError(f"Missing provider api key env var: {provider_block['api_key_env']}")
+    resolved_api_profile = resolve_api_profile(env_values=env_values)
+    if not resolved_api_profile.base_url:
+        raise ValueError(f"Missing provider base URL env var: {resolved_api_profile.base_url_env}")
+    if not resolved_api_profile.api_key:
+        raise ValueError(f"Missing provider api key env var: {resolved_api_profile.api_key_env}")
 
-    model_env_map = {
-        "frontier": "PHASE1_FRONTIER_MODEL",
-        "small": "PHASE1_SMALL_MODEL",
-        "coding": "CODING_MODEL",
-    }
     models = {
         role: ModelConfig(
             role=role,
-            model=str(env_values.get(model_env_map.get(role, "")) or model_block["model"]),
+            model=str(resolved_api_profile.role_models[role]),
             purpose=tuple(model_block.get("purpose") or ()),
             decoding=dict(model_block.get("decoding") or {}),
             logprob=dict(model_block.get("logprob") or {}),
@@ -157,13 +152,14 @@ def load_phase1_context(
         root_dir=root_dir,
         experiment=dict(raw_config["experiment"]),
         provider=ProviderConfig(
-            name=str(provider_block["name"]),
-            api_style=str(provider_block["api_style"]),
-            base_url_env=str(provider_block["base_url_env"]),
-            api_key_env=str(provider_block["api_key_env"]),
-            base_url=str(base_url),
-            api_key=str(api_key),
-            masked_api_key=mask_secret(str(api_key)),
+            profile_name=resolved_api_profile.profile_name,
+            name=resolved_api_profile.provider_name,
+            api_style=resolved_api_profile.api_style,
+            base_url_env=resolved_api_profile.base_url_env,
+            api_key_env=resolved_api_profile.api_key_env,
+            base_url=str(resolved_api_profile.base_url),
+            api_key=str(resolved_api_profile.api_key),
+            masked_api_key=mask_secret(str(resolved_api_profile.api_key)),
         ),
         models=models,
         scoring=scoring,

@@ -104,3 +104,30 @@ def test_load_phase1_context_prefers_run_plan_storage_over_env_defaults(workspac
     assert context.storage.export_dir.parent.name == "live_mini_batch"
     assert context.storage.checkpoint_dir.parent.name == "live_mini_batch"
     assert context.storage.cache_dir.parent.name == "live_mini_batch"
+
+
+def test_load_phase1_context_supports_provider_profile_overrides(workspace_tmp_dir):
+    env_path = workspace_tmp_dir / ".env"
+    env_path.write_text(
+        "\n".join(
+            [
+                "API_PROFILE=evas-openai",
+                "EVAS_API_KEY=sk-from-evas-env",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    context = load_phase1_context(
+        phase1_config_path=Path("phase1.yaml"),
+        run_plan_path=Path("configs/runs/smoke.json"),
+        env_path=env_path,
+    )
+
+    assert context.provider.profile_name == "evas-openai"
+    assert context.provider.name == "evas"
+    assert context.provider.base_url == "https://api.evas.ai/v1"
+    assert context.provider.api_key == "sk-from-evas-env"
+    assert context.models["frontier"].model == "openai/gpt-5.4"
+    assert context.models["small"].model == "openai/gpt-5.4-mini"
+    assert context.models["coding"].model == "openai/gpt-5.3-codex"

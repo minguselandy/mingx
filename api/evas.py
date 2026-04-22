@@ -9,16 +9,20 @@ from typing import Mapping
 from dotenv import dotenv_values
 
 from api.openai_compatible import OpenAICompatibleClient, OpenAICompatibleCredentials
+from api.settings import (
+    DEFAULT_EVAS_PROFILE,
+    build_phase1_env_overrides,
+    format_phase1_env_overrides,
+    get_api_profile,
+    list_api_profiles,
+    resolve_api_profile,
+)
 from cps.data.manifest import load_phase0_config
 from cps.runtime.secrets import mask_secret
 
 
-EVAS_DEFAULT_BASE_URL = "https://api.evas.ai/v1"
-EVAS_RECOMMENDED_MODELS = {
-    "frontier": "openai/gpt-5.4",
-    "small": "openai/gpt-5.4-mini",
-    "coding": "openai/gpt-5.3-codex",
-}
+EVAS_DEFAULT_BASE_URL = get_api_profile(DEFAULT_EVAS_PROFILE).default_base_url
+EVAS_RECOMMENDED_MODELS = dict(get_api_profile(DEFAULT_EVAS_PROFILE).role_models)
 EVAS_MODEL_ENV_MAP = {
     "frontier": "EVAS_FRONTIER_MODEL",
     "small": "EVAS_SMALL_MODEL",
@@ -148,9 +152,24 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--base-url", help="Override EVAS base URL.")
     parser.add_argument("--api-key", help="Override EVAS API key.")
     parser.add_argument(
+        "--profile",
+        default=DEFAULT_EVAS_PROFILE,
+        help="API profile used when printing runtime override settings.",
+    )
+    parser.add_argument(
         "--phase1-config",
         default="phase1.yaml",
         help="Phase 1 config path used to show the current locked Qwen model mapping.",
+    )
+    parser.add_argument(
+        "--show-profiles",
+        action="store_true",
+        help="List available API provider profiles.",
+    )
+    parser.add_argument(
+        "--export-phase1-env",
+        action="store_true",
+        help="Print shell-style runtime API overrides for the selected profile.",
     )
     parser.add_argument(
         "--list-models",
@@ -185,6 +204,28 @@ def _parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = _parse_args()
+    if args.show_profiles:
+        print("Available API profiles:")
+        for profile in list_api_profiles():
+            print(f"  - {profile.profile_name}")
+            print(f"    provider: {profile.provider_name}")
+            print(f"    default_base_url: {profile.default_base_url}")
+            print(f"    phase1_logprob_ready: {profile.phase1_logprob_ready}")
+            print(f"    note: {profile.note}")
+        print("")
+
+    if args.export_phase1_env:
+        raw_overrides = {
+            key: value
+            for key, value in {
+                "EVAS_API_BASE_URL": args.base_url,
+            }.items()
+            if value
+        }
+        print(format_phase1_env_overrides(args.profile, env_values=raw_overrides))
+        if not (args.list_models or args.show_recommendations or args.chat_smoke):
+            return 0
+
     raw_overrides = {
         key: value
         for key, value in {
@@ -212,6 +253,8 @@ def main() -> int:
     if args.show_recommendations or not args.chat_smoke:
         report = build_recommendation_report(model_ids, settings, phase1_config_path=args.phase1_config)
         phase1_locked = report["phase1_locked"]
+        resolved_profile = resolve_api_profile(env_values=raw_overrides, profile_name=args.profile)
+        profile_overrides = build_phase1_env_overrides(args.profile, env_values=raw_overrides)
         print("")
         print("Current Phase 1 locked model mapping:")
         print(
@@ -228,6 +271,10 @@ def main() -> int:
             print(f"  - {role}: {payload['chosen']}")
             print(f"    requested: {payload['requested']}")
             print(f"    note: {payload['note']}")
+        print("")
+        print(f"Selected API settings profile: {args.profile}")
+        print(f"  provider name: {resolved_profile.provider_name}")
+        print(f"  runtime base url: {profile_overrides['API_BASE_URL']}")
         print("")
         print(report["phase1_warning"])
 

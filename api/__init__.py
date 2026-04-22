@@ -9,18 +9,40 @@ from api.evas import (
     load_evas_settings,
     load_phase1_locked_models,
 )
+from api.settings import (
+    API_PROVIDER_PROFILES,
+    DEFAULT_API_PROFILE,
+    DEFAULT_EVAS_PROFILE,
+    ApiProviderProfile,
+    ResolvedApiProfile,
+    build_phase1_env_overrides,
+    format_phase1_env_overrides,
+    get_api_profile,
+    list_api_profiles,
+    resolve_api_profile,
+)
 from api.openai_compatible import OpenAICompatibleClient, OpenAICompatibleCredentials
 
 __all__ = [
+    "API_PROVIDER_PROFILES",
+    "DEFAULT_API_PROFILE",
     "EVAS_DEFAULT_BASE_URL",
+    "DEFAULT_EVAS_PROFILE",
     "EVAS_RECOMMENDED_MODELS",
     "PHASE1_LOCK_NOTE",
     "PHASE1_LOGPROB_WARNING",
+    "ApiProviderProfile",
+    "ResolvedApiProfile",
     "EvasApiSettings",
     "OpenAICompatibleClient",
     "OpenAICompatibleCredentials",
+    "build_phase1_env_overrides",
     "build_recommendation_report",
     "choose_model_for_role",
+    "format_phase1_env_overrides",
+    "get_api_profile",
     "load_evas_settings",
     "load_phase1_locked_models",
+    "list_api_profiles",
+    "resolve_api_profile",
 ]
