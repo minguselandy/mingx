@@ -419,5 +419,93 @@ def test_followup_package_rejects_execution_ready_when_decision_sheet_run_id_mis
     assert report["approval"]["execution_ready"] is False
 
 
+def test_followup_package_rejects_execution_ready_for_unsupported_followup_action(workspace_tmp_dir):
+    bundle = load_manifest(FIXTURE_MANIFEST)
+    source_plan_path = workspace_tmp_dir / "source-plan.json"
+    source_calibration_path = workspace_tmp_dir / "source-run" / "calibration_manifest.json"
+    replacement_manifest_path = workspace_tmp_dir / "replacement_manifest.json"
+    decision_sheet_path = workspace_tmp_dir / "decision-sheet.md"
+
+    _write_source_plan(source_plan_path, calibration_manifest_path=source_calibration_path)
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=source_calibration_path,
+        seed=20260418,
+        per_hop_count=1,
+    )
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=replacement_manifest_path,
+        seed=20260418,
+        per_hop_count=1,
+        exclude_question_ids=("2hop__86458_20273",),
+    )
+    _write_source_run_summary(workspace_tmp_dir / "source-exports" / "run_summary.json")
+    _write_decision_sheet(
+        decision_sheet_path,
+        run_id="phase1-cohort-test-followup",
+        approved_followup_action="return_to_phase0_revision",
+        question_decisions={"2hop__86458_20273": "drop_and_replace"},
+    )
+
+    output_root = workspace_tmp_dir / "followup-package"
+    report = build_followup_package(
+        source_plan_path=source_plan_path,
+        replacement_manifest_path=replacement_manifest_path,
+        output_root=output_root,
+        decision_sheet_path=decision_sheet_path,
+    )
+
+    assert report["approval"]["status"] == "unsupported_followup_action"
+    assert report["approval"]["execution_ready"] is False
+
+
+def test_followup_package_rejects_execution_ready_when_question_decisions_do_not_match_drop_list(workspace_tmp_dir):
+    bundle = load_manifest(FIXTURE_MANIFEST)
+    source_plan_path = workspace_tmp_dir / "source-plan.json"
+    source_calibration_path = workspace_tmp_dir / "source-run" / "calibration_manifest.json"
+    replacement_manifest_path = workspace_tmp_dir / "replacement_manifest.json"
+    decision_sheet_path = workspace_tmp_dir / "decision-sheet.md"
+
+    _write_source_plan(source_plan_path, calibration_manifest_path=source_calibration_path)
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=source_calibration_path,
+        seed=20260418,
+        per_hop_count=1,
+    )
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=replacement_manifest_path,
+        seed=20260418,
+        per_hop_count=1,
+        exclude_question_ids=(
+            "2hop__86458_20273",
+            "3hop1__222979_40769_64047",
+        ),
+    )
+    _write_source_run_summary(workspace_tmp_dir / "source-exports" / "run_summary.json")
+    _write_decision_sheet(
+        decision_sheet_path,
+        run_id="phase1-cohort-test-followup",
+        approved_followup_action="replace_only",
+        question_decisions={
+            "2hop__86458_20273": "drop_and_replace",
+            "3hop1__222979_40769_64047": "keep",
+        },
+    )
+
+    output_root = workspace_tmp_dir / "followup-package"
+    report = build_followup_package(
+        source_plan_path=source_plan_path,
+        replacement_manifest_path=replacement_manifest_path,
+        output_root=output_root,
+        decision_sheet_path=decision_sheet_path,
+    )
+
+    assert report["approval"]["status"] == "question_decision_mismatch"
+    assert report["approval"]["execution_ready"] is False
+
+
 def _selected_question_ids(payload: dict) -> list[str]:
     return [str(entry["question_id"]) for entry in payload["selected_questions"]]

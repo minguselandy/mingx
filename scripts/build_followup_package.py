@@ -30,7 +30,7 @@ def main() -> int:
     parser.add_argument(
         "--decision-sheet",
         default=None,
-        help="Optional operator decision sheet used for lineage only.",
+        help="Optional operator decision sheet used for lineage plus approval-state validation.",
     )
     parser.add_argument(
         "--json-out",
