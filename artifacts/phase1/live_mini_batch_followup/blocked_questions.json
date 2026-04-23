@@ -1,0 +1,12 @@
+{
+  "blocked_question_ids": [
+    "2hop__86458_20273",
+    "3hop1__222979_40769_64047",
+    "4hop1__76111_624859_355213_203322"
+  ],
+  "updated_at_utc": "2026-04-23T08:25:02.279082+00:00",
+  "reason_code": "approved_drop_list",
+  "replacement_policy": "same_hop_next_rank_on_resume_v1",
+  "source_plan_path": "/home/mingxiaoyu/mingx/configs/runs/live-mini-batch.json",
+  "replacement_manifest_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/replacement_manifest.json"
+}

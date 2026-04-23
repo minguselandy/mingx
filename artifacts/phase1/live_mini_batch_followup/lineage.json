@@ -1,0 +1,68 @@
+{
+  "package_version": "phase1_followup_package_v1",
+  "generated_at_utc": "2026-04-23T08:25:02.279303+00:00",
+  "source_plan_path": "/home/mingxiaoyu/mingx/configs/runs/live-mini-batch.json",
+  "source_scope_mode": "pilot_reduced_scope",
+  "source_calibration_manifest_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/calibration_manifest.json",
+  "source_blocked_questions_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/blocked_questions.json",
+  "decision_sheet_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/contamination_operator_decision_sheet.md",
+  "replacement_manifest_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/replacement_manifest.json",
+  "seed": 20260418,
+  "per_hop_count": 1,
+  "preserved_blocked_question_ids": [],
+  "dropped_question_ids": [
+    "2hop__86458_20273",
+    "3hop1__222979_40769_64047",
+    "4hop1__76111_624859_355213_203322"
+  ],
+  "newly_added_drop_ids": [
+    "2hop__86458_20273",
+    "3hop1__222979_40769_64047",
+    "4hop1__76111_624859_355213_203322"
+  ],
+  "selection_alignment": {
+    "status": "matches_replacement_manifest",
+    "replacement_manifest_selected_question_ids": [
+      "2hop__132929_684936",
+      "3hop1__409517_547811_80702",
+      "4hop3__373866_5189_38229_86687"
+    ],
+    "generated_followup_selected_question_ids": [
+      "2hop__132929_684936",
+      "3hop1__409517_547811_80702",
+      "4hop3__373866_5189_38229_86687"
+    ]
+  },
+  "source_selected_by_hop": {
+    "2hop": [
+      "2hop__86458_20273"
+    ],
+    "3hop": [
+      "3hop1__222979_40769_64047"
+    ],
+    "4hop": [
+      "4hop1__76111_624859_355213_203322"
+    ]
+  },
+  "followup_selected_by_hop": {
+    "2hop": [
+      "2hop__132929_684936"
+    ],
+    "3hop": [
+      "3hop1__409517_547811_80702"
+    ],
+    "4hop": [
+      "4hop3__373866_5189_38229_86687"
+    ]
+  },
+  "new_selected_question_ids": [
+    "2hop__132929_684936",
+    "3hop1__409517_547811_80702",
+    "4hop3__373866_5189_38229_86687"
+  ],
+  "removed_question_ids": [
+    "2hop__86458_20273",
+    "3hop1__222979_40769_64047",
+    "4hop1__76111_624859_355213_203322"
+  ]
+}

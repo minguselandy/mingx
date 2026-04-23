@@ -1,0 +1,33 @@
+{
+  "status": "green",
+  "package_version": "phase1_followup_package_v1",
+  "output_root": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch_followup",
+  "followup_plan_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch_followup/followup_plan.json",
+  "calibration_manifest_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch_followup/calibration_manifest.json",
+  "blocked_questions_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch_followup/blocked_questions.json",
+  "lineage_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch_followup/lineage.json",
+  "readme_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch_followup/README.md",
+  "dropped_question_ids": [
+    "2hop__86458_20273",
+    "3hop1__222979_40769_64047",
+    "4hop1__76111_624859_355213_203322"
+  ],
+  "new_selected_question_ids": [
+    "2hop__132929_684936",
+    "3hop1__409517_547811_80702",
+    "4hop3__373866_5189_38229_86687"
+  ],
+  "selection_alignment": {
+    "status": "matches_replacement_manifest",
+    "replacement_manifest_selected_question_ids": [
+      "2hop__132929_684936",
+      "3hop1__409517_547811_80702",
+      "4hop3__373866_5189_38229_86687"
+    ],
+    "generated_followup_selected_question_ids": [
+      "2hop__132929_684936",
+      "3hop1__409517_547811_80702",
+      "4hop3__373866_5189_38229_86687"
+    ]
+  }
+}

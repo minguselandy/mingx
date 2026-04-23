@@ -16,9 +16,8 @@ def _selection_score(seed: int, question_id: str) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def build_calibration_manifest(
+def build_calibration_payload(
     bundle: ManifestBundle,
-    output_path: str | Path,
     *,
     seed: int,
     per_hop_count: int = 10,
@@ -63,6 +62,23 @@ def build_calibration_manifest(
         "selected_questions": selected_questions,
     }
 
+    return payload
+
+
+def build_calibration_manifest(
+    bundle: ManifestBundle,
+    output_path: str | Path,
+    *,
+    seed: int,
+    per_hop_count: int = 10,
+    exclude_question_ids: tuple[str, ...] = (),
+) -> dict:
+    payload = build_calibration_payload(
+        bundle,
+        seed=seed,
+        per_hop_count=per_hop_count,
+        exclude_question_ids=exclude_question_ids,
+    )
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")

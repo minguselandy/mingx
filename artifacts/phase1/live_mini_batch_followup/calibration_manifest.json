@@ -1,0 +1,36 @@
+{
+  "source_manifest_path": "/home/mingxiaoyu/mingx/artifacts/phase0/sample_manifest_v1.json",
+  "source_manifest_hash": "68f0d9d39ad6b45f25454cc8bb385fe8a4eeac373708751a58891d01a98d6880",
+  "source_manifest_fingerprint": "sha256:68f0d9d39ad6b45f25454cc8bb385fe8a4eeac373708751a58891d01a98d6880",
+  "source_dataset_hash": "1fe3df848a525f62933498b158dd58fe87bb3a21afb30940a2c4cfaa78a81225",
+  "seed": 20260418,
+  "per_hop_counts": {
+    "2hop": 1,
+    "3hop": 1,
+    "4hop": 1
+  },
+  "selection_algorithm_version": "calibration_by_hop_questionid_sha256_v1",
+  "excluded_question_ids": [
+    "2hop__86458_20273",
+    "3hop1__222979_40769_64047",
+    "4hop1__76111_624859_355213_203322"
+  ],
+  "replacement_policy": "same_hop_next_rank_on_resume_v1",
+  "selected_questions": [
+    {
+      "question_id": "2hop__132929_684936",
+      "hop_depth": "2hop",
+      "selection_score": "16004b50469c16631c5905ff48369fad99c515c96bf6264a515f3e8b150f4ff0"
+    },
+    {
+      "question_id": "3hop1__409517_547811_80702",
+      "hop_depth": "3hop",
+      "selection_score": "1067cd9da2197f8d54cd76900819d5dbc3a75a49ba94c0d75685bffe6b154aa8"
+    },
+    {
+      "question_id": "4hop3__373866_5189_38229_86687",
+      "hop_depth": "4hop",
+      "selection_score": "1110c27860549edadd3def3ba6894cae80001ab79ef9357c4f7fa86c0751ebdd"
+    }
+  ]
+}

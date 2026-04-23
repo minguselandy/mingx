@@ -31,14 +31,17 @@ The following implementation work is already complete:
 - contamination escalation bundle export
 - AI-assisted contamination review packet export
 - single-question question-only reprobe helper
+- approved replacement -> follow-up package helper
 
 Relevant code and scripts:
 
 - `cps/runtime/cohort.py`
 - `cps/analysis/contamination_review.py`
 - `cps/analysis/reprobe.py`
+- `cps/runtime/followup.py`
 - `scripts/export_contamination_review_packet.py`
 - `scripts/run_question_only_reprobe.py`
+- `scripts/build_followup_package.py`
 
 ## Live Mini-Batch Status
 
