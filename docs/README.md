@@ -13,9 +13,15 @@ long-lived `phase0` / `phase1` code roots.
 - [phase1-live-mini-batch-report.md](./phase1-live-mini-batch-report.md)
   Summarizes the completed reduced-scope live mini-batch run and its current
   scientific gate outcome.
+- [current-work-summary.md](./current-work-summary.md)
+  Consolidated summary of the currently completed runtime, triage, reprobe, and
+  replacement work.
 - [project-reading-prompt.md](./project-reading-prompt.md)
   Copy-paste onboarding prompt for another AI agent to read the repository in
   the right order and with the right gate semantics.
+- [recent-change-handoff-prompt.md](./recent-change-handoff-prompt.md)
+  Copy-paste prompt focused on the recent repo modifications and current
+  runtime assumptions.
 - [phase1-usable-models.md](./phase1-usable-models.md)
   Regenerated live probe report listing models that currently satisfy the
   Phase 1 logprob contract.

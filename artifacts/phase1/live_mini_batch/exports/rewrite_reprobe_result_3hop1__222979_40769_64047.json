@@ -1,0 +1,23 @@
+{
+  "status": "green",
+  "question_id": "3hop1__222979_40769_64047",
+  "mode": "question_only_reprobe",
+  "backend": "live",
+  "api_profile": "dashscope-qwen-phase1",
+  "provider": "dashscope",
+  "backend_id": "dashscope_openai_chat",
+  "model_role": "frontier",
+  "model_id": "qwen3.6-plus",
+  "question_text": "When did worldwide sales begin for the facelifted 350 variant of the crossover sold by the luxury division of the company that owned Scion?",
+  "answer_text": "Sales began worldwide in April 2012",
+  "baseline_logp": -0.00028821608191265113,
+  "baseline_probability": 0.9997118254483522,
+  "threshold_logp": -0.6931471805599453,
+  "threshold_probability": 0.5,
+  "passes_contamination_threshold": false,
+  "recommended_disposition": "drop_and_replace",
+  "response_status": "200",
+  "request_fingerprint": "70d7a6913b484836672ed521e8a0ac95dce8f4d92c4f0b1c12e0f24ee5ca17a7",
+  "token_count": 10,
+  "nonzero_token_count": 10
+}
