@@ -35,7 +35,7 @@ class MockScoringBackend:
     backend_id = "mock_forced_decode"
     provider_name = "mock"
 
-    def __init__(self, model_id: str = "qwen3-14b") -> None:
+    def __init__(self, model_id: str = "qwen3.6-flash") -> None:
         self.model_id = model_id
 
     @staticmethod

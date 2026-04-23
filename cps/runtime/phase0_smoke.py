@@ -12,7 +12,7 @@ from cps.store.measurement import (
     snapshot_path_for,
 )
 
-PHASE0_SMOKE_MODEL_ID = "qwen3-14b"
+PHASE0_SMOKE_MODEL_ID = "qwen3.6-flash"
 
 
 def _build_synthetic_ordering_events(bundle, question, run_id: str) -> list[dict[str, Any]]:

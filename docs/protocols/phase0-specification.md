@@ -144,7 +144,7 @@ The following design invariants must be preserved in Phase 1 so that Phase 4 (op
 - **Computational budget:** approximately 9,600 forward passes, approximately 25% frontier-tier and 75% smaller-tier.
 - **Infrastructure status:** openWorker trace-field audit parallel-tracked, non-blocking.
 
-**Provider and V-selection lock.** The execution environment fixes the provider/model family for Phase 1. V_frontier is Qwen3-32B (`qwen3-32b`) and V_small is Qwen3-14B (`qwen3-14b`), both accessed through DashScope's OpenAI-compatible endpoint with `enable_thinking = false` and token-level log-probability extraction enabled. In the repository implementation, this lock is surfaced as the default API profile `dashscope-qwen-phase1` under `api/settings.py`; the implementation abstraction does not relax the protocol lock. This is an infrastructural lock, not a remaining protocol-authoring choice.
+**Provider and V-selection lock.** The execution environment fixes the provider/model family for Phase 1. V_frontier is Qwen3.6-Plus (`qwen3.6-plus`) and V_small is Qwen3.6-Flash (`qwen3.6-flash`), both accessed through DashScope's OpenAI-compatible endpoint with `enable_thinking = false` and token-level log-probability extraction enabled. In the repository implementation, this lock is surfaced as the default API profile `dashscope-qwen-phase1` under `api/settings.py`; the implementation abstraction does not relax the protocol lock. This is an infrastructural lock, not a remaining protocol-authoring choice.
 
 **MuSiQue split.** Development set, preserved as the scientific working split with an explicit contamination caveat under Qwen3.
 

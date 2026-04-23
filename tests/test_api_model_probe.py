@@ -33,7 +33,7 @@ def _resolved_profile() -> ResolvedApiProfile:
         api_key_env="DASHSCOPE_API_KEY",
         base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
         api_key="sk-test",
-        role_models={"frontier": "qwen3-32b", "small": "qwen3-14b", "coding": "qwen3-coder-plus"},
+        role_models={"frontier": "qwen3.6-plus", "small": "qwen3.6-flash", "coding": "qwen3-coder-plus"},
         phase1_logprob_ready=True,
         note="test",
     )
@@ -64,12 +64,12 @@ def test_extract_token_logprobs_rejects_all_zero_values():
 
 
 def test_probe_model_marks_nonzero_logprobs_as_green():
-    client = _FakeClient({"qwen3-32b": _response_payload([-0.1, -0.2])}, ["qwen3-32b"])
+    client = _FakeClient({"qwen3.6-plus": _response_payload([-0.1, -0.2])}, ["qwen3.6-plus"])
 
     payload = probe_model(
         client,
         resolved_profile=_resolved_profile(),
-        model_id="qwen3-32b",
+        model_id="qwen3.6-plus",
         timeout=5,
     )
 
@@ -107,12 +107,12 @@ def test_format_probe_markdown_lists_usable_models():
             "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
             "visible_model_count": 2,
             "usable_model_count": 1,
-            "usable_models": ["qwen3-32b"],
+            "usable_models": ["qwen3.6-plus"],
         },
         command="python scripts/list_phase1_usable_models.py --env .env",
         json_report_path="artifacts/phase1/model_probe/usable_models.json",
     )
 
     assert "# Phase 1 Usable Models" in markdown
-    assert "`qwen3-32b`" in markdown
+    assert "`qwen3.6-plus`" in markdown
     assert "usable_models.json" in markdown

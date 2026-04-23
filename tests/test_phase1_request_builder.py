@@ -30,7 +30,7 @@ def test_dashscope_request_builder_uses_phase1_logprob_contract(workspace_tmp_di
         ordered_paragraphs=[],
     )
 
-    assert payload["model"] == "qwen3-14b"
+    assert payload["model"] == "qwen3.6-flash"
     assert payload["temperature"] == 0.0
     assert payload["seed"] == 20260418
     assert payload["logprobs"] is True

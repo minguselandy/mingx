@@ -46,8 +46,8 @@ def test_load_phase1_context_prefers_environment_over_env_file(workspace_tmp_dir
     assert context.provider.phase1_logprob_ready is True
     assert context.provider.base_url == "https://dashscope.aliyuncs.com/compatible-mode/v1"
     assert context.provider.api_key == "sk-from-process-env"
-    assert context.models["frontier"].model == "qwen3-32b"
-    assert context.models["small"].model == "qwen3-14b"
+    assert context.models["frontier"].model == "qwen3.6-plus"
+    assert context.models["small"].model == "qwen3.6-flash"
     assert context.scoring.permutation_count == 5
     assert "sk-from-process-env" not in repr(context.provider)
     assert context.provider.masked_api_key in repr(context.provider)
@@ -114,8 +114,8 @@ def test_load_phase1_context_supports_generic_api_overrides(workspace_tmp_dir):
                 "API_PROFILE=dashscope-qwen-phase1",
                 "API_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1",
                 "API_KEY=sk-from-generic-api-env",
-                "API_FRONTIER_MODEL=qwen3-32b",
-                "API_SMALL_MODEL=qwen3-14b",
+                "API_FRONTIER_MODEL=qwen3.6-plus",
+                "API_SMALL_MODEL=qwen3.6-flash",
                 "API_CODING_MODEL=qwen3-coder-plus",
             ]
         ),
@@ -133,6 +133,6 @@ def test_load_phase1_context_supports_generic_api_overrides(workspace_tmp_dir):
     assert context.provider.phase1_logprob_ready is True
     assert context.provider.base_url == "https://dashscope.aliyuncs.com/compatible-mode/v1"
     assert context.provider.api_key == "sk-from-generic-api-env"
-    assert context.models["frontier"].model == "qwen3-32b"
-    assert context.models["small"].model == "qwen3-14b"
+    assert context.models["frontier"].model == "qwen3.6-plus"
+    assert context.models["small"].model == "qwen3.6-flash"
     assert context.models["coding"].model == "qwen3-coder-plus"

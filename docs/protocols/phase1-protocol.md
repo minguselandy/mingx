@@ -38,7 +38,7 @@ For each sampled question, the full paragraph pool is extracted in its native or
 
 ### B.1 V_frontier and V_small model specifications
 
-The frontier predictive family is instantiated as Qwen3-32B (`qwen3-32b`) and the smaller predictive family is instantiated as Qwen3-14B (`qwen3-14b`), both accessed via DashScope's OpenAI-compatible `/chat/completions` endpoint. Both models are queried with `temperature = 0`, `logprobs = true`, `top_logprobs = 0`, `n = 1`, `stream = false`, and `enable_thinking = false` so that forced-decode log-probability extraction yields deterministic point estimates per paragraph ordering. Exact model strings, provider base URL, and decoding parameters are recorded in the execution log.
+The frontier predictive family is instantiated as Qwen3.6-Plus (`qwen3.6-plus`) and the smaller predictive family is instantiated as Qwen3.6-Flash (`qwen3.6-flash`), both accessed via DashScope's OpenAI-compatible `/chat/completions` endpoint. Both models are queried with `temperature = 0`, `logprobs = true`, `top_logprobs = 0`, `n = 1`, `stream = false`, and `enable_thinking = false` so that forced-decode log-probability extraction yields deterministic point estimates per paragraph ordering. Exact model strings, provider base URL, and decoding parameters are recorded in the execution log.
 
 Implementation note: the repository now routes provider/profile resolution through `api/settings.py` and backend selection through `api/backends.py`, but the default active profile remains `dashscope-qwen-phase1`. This code-level abstraction does not change the scientific lock stated in this protocol section.
 
@@ -227,9 +227,9 @@ The implementation-level decisions carried over from Phase 0 are locked as follo
 
 **Provider and endpoint:** DashScope OpenAI-compatible Chat Completions API, surfaced in the repository as the default API profile `dashscope-qwen-phase1`.
 
-**V_frontier specific model:** Qwen3-32B (`qwen3-32b`).
+**V_frontier specific model:** Qwen3.6-Plus (`qwen3.6-plus`).
 
-**V_small specific model:** Qwen3-14B (`qwen3-14b`).
+**V_small specific model:** Qwen3.6-Flash (`qwen3.6-flash`).
 
 **Decoding discipline:** `temperature = 0`, `top_p = 1.0`, `logprobs = true`, `top_logprobs = 0`, `n = 1`, `stream = false`, `max_completion_tokens` bounded to the forced-decode target, and `enable_thinking = false`.
 

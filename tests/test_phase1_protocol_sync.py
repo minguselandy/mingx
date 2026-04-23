@@ -22,8 +22,8 @@ def test_protocol_docs_are_synced_to_qwen3_and_contamination_gate() -> None:
 
     assert "claude-opus-4-7" not in combined
     assert "claude-haiku-4-5-20251001" not in combined
-    assert "qwen3-32b" in combined
-    assert "qwen3-14b" in combined
+    assert "qwen3.6-plus" in combined
+    assert "qwen3.6-flash" in combined
     assert "enable_thinking = false" in combined
     assert "contamination diagnostic" in combined.lower()
 

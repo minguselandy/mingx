@@ -11,7 +11,7 @@ provider:
 
 models:
   frontier:
-    model: qwen3-32b
+    model: qwen3.6-plus
     purpose: ["bridge_subsample", "calibration_replay", "arbitration"]
     decoding:
       temperature: 0.0
@@ -26,7 +26,7 @@ models:
       top_logprobs: 0
 
   small:
-    model: qwen3-14b
+    model: qwen3.6-flash
     purpose: ["full_n_replay", "lower_cost_delta_loo"]
     decoding:
       temperature: 0.0

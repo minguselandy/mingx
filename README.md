@@ -26,8 +26,8 @@ New imports and new runtime entrypoints should prefer `cps.*`.
 
 - Protocol lock remains:
   DashScope OpenAI-compatible Chat API
-  `frontier = qwen3-32b`
-  `small = qwen3-14b`
+  `frontier = qwen3.6-plus`
+  `small = qwen3.6-flash`
   `coding = qwen3-coder-plus`
 - Runtime provider/model resolution now lives under `api/`:
   `api/settings.py` owns active API profiles and role-model mapping

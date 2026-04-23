@@ -991,6 +991,18 @@ def run_phase1_cohort(
         "run_id": run_id,
         "backend": backend_name,
         "scope_mode": scope_mode,
+        "resolved_runtime": {
+            "api_profile": context.provider.profile_name or "",
+            "provider_name": context.provider.name,
+            "roles": {
+                model_role: {
+                    "backend_id": backends[model_role].backend_id,
+                    "provider_name": backends[model_role].provider_name,
+                    "model_id": context.models[model_role].model,
+                }
+                for model_role in ("small", "frontier")
+            },
+        },
         "annotation_mode": annotation_file_status["annotation_mode"],
         "training_manifest_path": annotation_report["training_manifest_path"],
         "calibration_manifest_path": str(calibration_manifest_path),

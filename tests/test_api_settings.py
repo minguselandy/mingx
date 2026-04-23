@@ -12,7 +12,7 @@ def test_default_api_profile_is_dashscope_qwen_phase1():
     profile = get_api_profile(DEFAULT_API_PROFILE)
 
     assert profile.provider_name == "dashscope"
-    assert profile.role_models["frontier"] == "qwen3-32b"
+    assert profile.role_models["frontier"] == "qwen3.6-plus"
     assert profile.phase1_logprob_ready is True
 
 
@@ -24,15 +24,15 @@ def test_build_phase1_env_overrides_for_dashscope_profile_uses_locked_models():
 
     assert overrides["API_PROFILE"] == "dashscope-qwen-phase1"
     assert overrides["API_BASE_URL"] == "https://dashscope.aliyuncs.com/compatible-mode/v1"
-    assert overrides["API_FRONTIER_MODEL"] == "qwen3-32b"
-    assert overrides["API_SMALL_MODEL"] == "qwen3-14b"
+    assert overrides["API_FRONTIER_MODEL"] == "qwen3.6-plus"
+    assert overrides["API_SMALL_MODEL"] == "qwen3.6-flash"
 
 
 def test_format_phase1_env_overrides_contains_shell_ready_lines():
     text = format_phase1_env_overrides("dashscope-qwen-phase1")
 
     assert "API_PROFILE=dashscope-qwen-phase1" in text
-    assert "API_SMALL_MODEL=qwen3-14b" in text
+    assert "API_SMALL_MODEL=qwen3.6-flash" in text
     assert "API_CODING_MODEL=qwen3-coder-plus" in text
 
 

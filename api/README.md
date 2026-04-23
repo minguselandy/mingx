@@ -25,8 +25,8 @@
 仓库当前默认的正式 Phase 1 仍然是：
 
 - `API_PROFILE=dashscope-qwen-phase1`
-- `frontier = qwen3-32b`
-- `small = qwen3-14b`
+- `frontier = qwen3.6-plus`
+- `small = qwen3.6-flash`
 - `coding = qwen3-coder-plus`
 
 这些协议锁定值来自 [phase1.yaml](../phase1.yaml) 和

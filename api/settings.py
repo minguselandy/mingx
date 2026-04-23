@@ -53,12 +53,12 @@ API_PROVIDER_PROFILES = {
         api_key_env="DASHSCOPE_API_KEY",
         default_base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
         role_models={
-            "frontier": "qwen3-32b",
-            "small": "qwen3-14b",
+            "frontier": "qwen3.6-plus",
+            "small": "qwen3.6-flash",
             "coding": "qwen3-coder-plus",
         },
         phase1_logprob_ready=True,
-        note="当前仓库既有的 Phase 1 正式锁定配置，仍然是默认方案。",
+        note="当前仓库默认的 Phase 1 live 配置。",
     ),
 }
 

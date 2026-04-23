@@ -88,7 +88,7 @@ def test_phase1_cohort_runner_rebuilds_missing_derivations_without_rescoring(wor
         "hop_depth": question.hop_depth,
         "provider": "dashscope",
         "backend_id": "mock_forced_decode",
-        "model_id": "qwen3-14b",
+        "model_id": "qwen3.6-flash",
         "model_role": "small",
         "manifest_hash": bundle.manifest_hash,
         "sampling_seed": 20260418,
@@ -255,6 +255,12 @@ def test_phase1_cohort_runner_ignores_checkpoint_if_event_log_is_incomplete(work
     assert report["summary"]["pipeline_status"] == "pipeline_validated"
     assert report["summary"]["measurement_status"] == "pilot_only"
     assert report["summary"]["annotation_mode"] == "synthetic_passthrough"
+    assert report["summary"]["resolved_runtime"]["api_profile"] == "dashscope-qwen-phase1"
+    assert report["summary"]["resolved_runtime"]["provider_name"] == "dashscope"
+    assert report["summary"]["resolved_runtime"]["roles"]["small"]["backend_id"] == "mock_forced_decode"
+    assert report["summary"]["resolved_runtime"]["roles"]["small"]["model_id"] == "qwen3.6-flash"
+    assert report["summary"]["resolved_runtime"]["roles"]["frontier"]["backend_id"] == "mock_forced_decode"
+    assert report["summary"]["resolved_runtime"]["roles"]["frontier"]["model_id"] == "qwen3.6-plus"
     assert Path(report["calibration_manifest_path"]).exists()
     assert report["summary"]["model_roles"]["small"]["planned"] == 3
     assert report["summary"]["model_roles"]["small"]["completed"] == 3
@@ -421,7 +427,7 @@ def test_phase1_cohort_runner_stops_measurement_validation_when_contamination_ga
     class ContaminatedFrontierBackend(MockScoringBackend):
         def score_answer(self, question_text, answer_text, ordered_paragraphs):
             result = super().score_answer(question_text, answer_text, ordered_paragraphs)
-            if not ordered_paragraphs and self.model_id == "qwen3-32b":
+            if not ordered_paragraphs and self.model_id == "qwen3.6-plus":
                 return ScoreResult(
                     logprob_sum=CONTAMINATION_THRESHOLD_LOGP + 0.5,
                     raw_content=result.raw_content,
@@ -433,7 +439,7 @@ def test_phase1_cohort_runner_stops_measurement_validation_when_contamination_ga
             return result
 
     def _fake_build_backend(context, backend_name, model_role):
-        model_id = "qwen3-32b" if model_role == "frontier" else "qwen3-14b"
+        model_id = "qwen3.6-plus" if model_role == "frontier" else "qwen3.6-flash"
         return ContaminatedFrontierBackend(model_id=model_id)
 
     monkeypatch.setattr(phase1_run_module, "_build_backend", _fake_build_backend)
@@ -624,7 +630,7 @@ def test_phase1_cohort_runner_does_not_skip_when_preexisting_orderings_match_onl
         "hop_depth": question.hop_depth,
         "provider": "dashscope",
         "backend_id": "mock_forced_decode",
-        "model_id": "qwen3-14b",
+        "model_id": "qwen3.6-flash",
         "model_role": "small",
         "manifest_hash": bundle.manifest_hash,
         "sampling_seed": 20260418,
