@@ -35,6 +35,22 @@ def _write_source_plan(path: Path, *, calibration_manifest_path: Path) -> None:
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def _write_source_run_summary(path: Path, *, run_id: str = "phase1-cohort-test-followup") -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(
+            {
+                "run_id": run_id,
+                "backend": "live",
+                "scope_mode": "pilot_reduced_scope",
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+
 def test_followup_package_builds_ready_to_run_plan_and_lineage(workspace_tmp_dir):
     bundle = load_manifest(FIXTURE_MANIFEST)
     source_plan_path = workspace_tmp_dir / "source-plan.json"
@@ -61,6 +77,7 @@ def test_followup_package_builds_ready_to_run_plan_and_lineage(workspace_tmp_dir
         ),
     )
     decision_sheet_path.write_text("# approved", encoding="utf-8")
+    _write_source_run_summary(workspace_tmp_dir / "source-exports" / "run_summary.json")
 
     output_root = workspace_tmp_dir / "followup-package"
     report = build_followup_package(
@@ -89,8 +106,12 @@ def test_followup_package_builds_ready_to_run_plan_and_lineage(workspace_tmp_dir
     assert blocked_questions["blocked_question_ids"] == replacement_manifest["excluded_question_ids"]
     assert blocked_questions["replacement_policy"] == "same_hop_next_rank_on_resume_v1"
     assert _selected_question_ids(followup_calibration) == _selected_question_ids(replacement_manifest)
+    assert report["approval"]["execution_ready"] is True
     assert lineage["selection_alignment"]["status"] == "matches_replacement_manifest"
     assert lineage["new_selected_question_ids"] == _selected_question_ids(replacement_manifest)
+    assert lineage["source_run_id"] == "phase1-cohort-test-followup"
+    assert Path(lineage["source_run_summary_path"]).exists()
+    assert str(Path(lineage["source_events_path"]).name) == "events.jsonl"
     assert "python -m cps.runtime.cohort" in readme
 
 
@@ -125,8 +146,12 @@ def test_followup_package_merges_existing_blocked_ids_with_new_drop_list(workspa
         output_path=replacement_manifest_path,
         seed=20260418,
         per_hop_count=1,
-        exclude_question_ids=("3hop1__222979_40769_64047",),
+        exclude_question_ids=(
+            "2hop__86458_20273",
+            "3hop1__222979_40769_64047",
+        ),
     )
+    _write_source_run_summary(workspace_tmp_dir / "source-exports" / "run_summary.json")
 
     output_root = workspace_tmp_dir / "followup-package"
     build_followup_package(
@@ -150,6 +175,120 @@ def test_followup_package_merges_existing_blocked_ids_with_new_drop_list(workspa
         "3hop1__409517_547811_80702",
         "4hop1__76111_624859_355213_203322",
     ]
+
+
+def test_followup_package_rejects_output_root_inside_source_run_root(workspace_tmp_dir):
+    bundle = load_manifest(FIXTURE_MANIFEST)
+    source_plan_path = workspace_tmp_dir / "source-plan.json"
+    source_calibration_path = workspace_tmp_dir / "source-run" / "calibration_manifest.json"
+    replacement_manifest_path = workspace_tmp_dir / "replacement_manifest.json"
+
+    _write_source_plan(source_plan_path, calibration_manifest_path=source_calibration_path)
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=source_calibration_path,
+        seed=20260418,
+        per_hop_count=1,
+    )
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=replacement_manifest_path,
+        seed=20260418,
+        per_hop_count=1,
+        exclude_question_ids=("2hop__86458_20273",),
+    )
+
+    try:
+        build_followup_package(
+            source_plan_path=source_plan_path,
+            replacement_manifest_path=replacement_manifest_path,
+            output_root=source_calibration_path.parent,
+        )
+    except ValueError as exc:
+        assert "output_root must not be the same as or nested under" in str(exc)
+    else:
+        raise AssertionError("expected output_root conflict to raise")
+
+
+def test_followup_package_rejects_seed_mismatch_in_replacement_manifest(workspace_tmp_dir):
+    bundle = load_manifest(FIXTURE_MANIFEST)
+    source_plan_path = workspace_tmp_dir / "source-plan.json"
+    source_calibration_path = workspace_tmp_dir / "source-run" / "calibration_manifest.json"
+    replacement_manifest_path = workspace_tmp_dir / "replacement_manifest.json"
+
+    _write_source_plan(source_plan_path, calibration_manifest_path=source_calibration_path)
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=source_calibration_path,
+        seed=20260418,
+        per_hop_count=1,
+    )
+    replacement_manifest = build_calibration_manifest(
+        bundle=bundle,
+        output_path=replacement_manifest_path,
+        seed=20260418,
+        per_hop_count=1,
+        exclude_question_ids=("2hop__86458_20273",),
+    )
+    replacement_manifest["seed"] = 123
+    replacement_manifest_path.write_text(
+        json.dumps(replacement_manifest, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    try:
+        build_followup_package(
+            source_plan_path=source_plan_path,
+            replacement_manifest_path=replacement_manifest_path,
+            output_root=workspace_tmp_dir / "followup-package",
+        )
+    except ValueError as exc:
+        assert "seed does not match" in str(exc)
+    else:
+        raise AssertionError("expected replacement manifest seed mismatch to raise")
+    assert not (workspace_tmp_dir / "followup-package" / "followup_plan.json").exists()
+
+
+def test_followup_package_marks_pending_decision_sheet_as_not_execution_ready(workspace_tmp_dir):
+    bundle = load_manifest(FIXTURE_MANIFEST)
+    source_plan_path = workspace_tmp_dir / "source-plan.json"
+    source_calibration_path = workspace_tmp_dir / "source-run" / "calibration_manifest.json"
+    replacement_manifest_path = workspace_tmp_dir / "replacement_manifest.json"
+    decision_sheet_path = workspace_tmp_dir / "decision-sheet.md"
+
+    _write_source_plan(source_plan_path, calibration_manifest_path=source_calibration_path)
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=source_calibration_path,
+        seed=20260418,
+        per_hop_count=1,
+    )
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=replacement_manifest_path,
+        seed=20260418,
+        per_hop_count=1,
+        exclude_question_ids=("2hop__86458_20273",),
+    )
+    decision_sheet_path.write_text("Approved follow-up action: `[pending]`\n", encoding="utf-8")
+
+    output_root = workspace_tmp_dir / "followup-package"
+    report = build_followup_package(
+        source_plan_path=source_plan_path,
+        replacement_manifest_path=replacement_manifest_path,
+        output_root=output_root,
+        decision_sheet_path=decision_sheet_path,
+    )
+
+    followup_plan = json.loads((output_root / "followup_plan.json").read_text(encoding="utf-8"))
+    lineage = json.loads((output_root / "lineage.json").read_text(encoding="utf-8"))
+    readme = (output_root / "README.md").read_text(encoding="utf-8")
+
+    assert report["approval"]["status"] == "pending_human_signoff"
+    assert report["approval"]["execution_ready"] is False
+    assert followup_plan["generated_followup"]["decision_sheet_path"] == str(decision_sheet_path.resolve())
+    assert lineage["approval"]["execution_ready"] is False
+    assert "Execution ready: `False`" in readme
 
 
 def _selected_question_ids(payload: dict) -> list[str]:

@@ -6,6 +6,8 @@ This package turns an approved drop list into a ready-to-run follow-up plan.
 - Source plan: `/home/mingxiaoyu/mingx/configs/runs/live-mini-batch.json`
 - Decision sheet: `/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/contamination_operator_decision_sheet.md`
 - Dropped question count: `3`
+- Approval status: `pending_human_signoff`
+- Execution ready: `False`
 - Current package semantics: generate a fresh reduced-scope follow-up batch without mutating the already completed failed run.
 
 ## Generated Files
@@ -15,7 +17,7 @@ This package turns an approved drop list into a ready-to-run follow-up plan.
 - `lineage.json`: human-auditable link between the failed run and the prepared follow-up batch.
 
 ## Execution
-Run the normal cohort entrypoint against the generated plan:
+Run the normal cohort entrypoint against the generated plan only after the decision sheet is approved:
 
 `python -m cps.runtime.cohort --plan /home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch_followup/followup_plan.json --backend live --env .env`
 

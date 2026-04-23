@@ -17,6 +17,11 @@
     "3hop1__409517_547811_80702",
     "4hop3__373866_5189_38229_86687"
   ],
+  "approval": {
+    "status": "pending_human_signoff",
+    "execution_ready": false,
+    "reason": "decision_sheet_contains_pending_placeholders"
+  },
   "selection_alignment": {
     "status": "matches_replacement_manifest",
     "replacement_manifest_selected_question_ids": [

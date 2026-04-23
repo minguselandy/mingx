@@ -29,9 +29,14 @@
   },
   "generated_followup": {
     "package_version": "phase1_followup_package_v1",
-    "generated_at_utc": "2026-04-23T08:25:02.279205+00:00",
+    "generated_at_utc": "2026-04-23T08:49:46.317069+00:00",
     "source_plan_path": "/home/mingxiaoyu/mingx/configs/runs/live-mini-batch.json",
     "replacement_manifest_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/replacement_manifest.json",
-    "decision_sheet_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/contamination_operator_decision_sheet.md"
+    "decision_sheet_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/contamination_operator_decision_sheet.md",
+    "approval": {
+      "status": "pending_human_signoff",
+      "execution_ready": false,
+      "reason": "decision_sheet_contains_pending_placeholders"
+    }
   }
 }
