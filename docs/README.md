@@ -13,6 +13,9 @@ long-lived `phase0` / `phase1` code roots.
 - [phase1-live-mini-batch-report.md](./phase1-live-mini-batch-report.md)
   Summarizes the completed reduced-scope live mini-batch run and its current
   scientific gate outcome.
+- [project-reading-prompt.md](./project-reading-prompt.md)
+  Copy-paste onboarding prompt for another AI agent to read the repository in
+  the right order and with the right gate semantics.
 - [phase1-usable-models.md](./phase1-usable-models.md)
   Regenerated live probe report listing models that currently satisfy the
   Phase 1 logprob contract.
@@ -24,6 +27,9 @@ long-lived `phase0` / `phase1` code roots.
   Highest-priority execution-order and gate document.
 - [protocols/phase1-protocol.md](./protocols/phase1-protocol.md)
   Phase 1 measurement-chain, bridge, and annotation constraints.
+- [protocols/phase1-contamination-triage-and-question-rewrite.md](./protocols/phase1-contamination-triage-and-question-rewrite.md)
+  Human-in-the-loop workflow for AI-assisted contamination judgement and
+  minimal question rewrite planning after gate failure.
 
 ## Documentation Layers
 

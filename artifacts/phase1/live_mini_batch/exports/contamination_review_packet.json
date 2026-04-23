@@ -1,0 +1,154 @@
+{
+  "status": "computed",
+  "review_scope": "above_threshold_questions_only",
+  "automation_policy": {
+    "auto_clear_contamination_gate": false,
+    "auto_rewrite_and_rerun": false,
+    "human_signoff_required": true
+  },
+  "source_paths": {
+    "run_summary": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/run_summary.json",
+    "contamination_report": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/contamination_diagnostics.json",
+    "calibration_manifest": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/calibration_manifest.json",
+    "source_manifest": "/home/mingxiaoyu/mingx/artifacts/phase0/sample_manifest_v1.json"
+  },
+  "threshold": {
+    "logp": -0.6931471805599453,
+    "probability": 0.5,
+    "gate_decision": "fail"
+  },
+  "question_count": 3,
+  "questions": [
+    {
+      "question_id": "2hop__86458_20273",
+      "hop_depth": "2hop",
+      "model_role": "frontier",
+      "model_id": "qwen3.6-plus",
+      "baseline_logp": -0.0003786687871070171,
+      "baseline_probability": 0.9996214028988695,
+      "threshold_logp": -0.6931471805599453,
+      "threshold_probability": 0.5,
+      "logp_margin_vs_threshold": 0.6927685117728383,
+      "probability_margin_vs_threshold": 0.49962140289886947,
+      "question_text": "In what year did the founder of the Presbyterian Church die?",
+      "answer_text": "1572",
+      "answer_aliases": [],
+      "paragraph_count": 20,
+      "supporting_paragraphs": [
+        {
+          "paragraph_id": 7,
+          "title": "Presbyterianism",
+          "text_excerpt": "Presbyterian history is part of the history of Christianity, but the beginning of Presbyterianism as a distinct movement occurred during the 16th - century Protestant Reformation. As the Catholic Church resisted the reformers, several different theological movements splintered fr..."
+        },
+        {
+          "paragraph_id": 15,
+          "title": "Presbyterianism",
+          "text_excerpt": "John Knox (1505–1572), a Scot who had spent time studying under Calvin in Geneva, returned to Scotland and urged his countrymen to reform the Church in line with Calvinist doctrines. After a period of religious convulsion and political conflict culminating in a victory for the Pr..."
+        }
+      ],
+      "heuristic_signals": {
+        "answer_string_appears_in_question": false,
+        "answer_alias_hits_in_question": [],
+        "shared_question_answer_tokens": [],
+        "question_char_length": 60,
+        "question_word_count": 11,
+        "supporting_paragraph_count": 2
+      },
+      "stage1_question_only_prompt": "You are auditing a MuSiQue-style question for contamination risk.\nStage 1 is question-only: do not use any hidden answer, retrieval result, or external notes.\nDecide whether a strong frontier LM could likely answer this question from prior knowledge alone.\nReturn strict JSON with keys:\n  \"question_id\", \"judgement\", \"confidence\", \"primary_mechanism\", \"secondary_mechanisms\", \"reasoning\", \"rewrite_worth_trying\"\nAllowed judgement values: \"likely_contaminated\", \"uncertain\", \"likely_clean\".\nAllowed confidence values: \"high\", \"medium\", \"low\".\nAllowed primary_mechanism values: \"direct_leakage\", \"near_unique_entity_chain\", \"memorized_public_fact\", \"question_collapse\", \"dataset_artifact\", \"unclear\".\n\nquestion_id: 2hop__86458_20273\nhop_depth: 2hop\nquestion_text: In what year did the founder of the Presbyterian Church die?",
+      "stage2_rewrite_prompt": "Stage 2 is rewrite planning.\nYou may now inspect the gold answer and supporting evidence.\nPropose the smallest rewrite that reduces question-only answerability while preserving the same gold answer and hop structure.\nDo not introduce facts not supported by the evidence. Do not change the intended answer.\nReturn strict JSON with keys:\n  \"question_id\", \"rewrite_status\", \"contamination_cause\", \"rewrite_strategy\", \"rewritten_question\", \"answer_preserved\", \"hop_structure_preserved\", \"residual_risk\", \"operator_note\"\nAllowed rewrite_status values: \"rewrite_recommended\", \"drop_and_replace\", \"needs_human_only\".\nAllowed residual_risk values: \"high\", \"medium\", \"low\".\n\nquestion_id: 2hop__86458_20273\nhop_depth: 2hop\noriginal_question: In what year did the founder of the Presbyterian Church die?\ngold_answer: 1572\nsupporting_evidence:\n- paragraph_id=7 | title=Presbyterianism | excerpt=Presbyterian history is part of the history of Christianity, but the beginning of Presbyterianism as a distinct movement occurred during the 16th - century Protestant Reformation. As the Catholic Church resisted the reformers, several different theological movements splintered fr...\n- paragraph_id=15 | title=Presbyterianism | excerpt=John Knox (1505–1572), a Scot who had spent time studying under Calvin in Geneva, returned to Scotland and urged his countrymen to reform the Church in line with Calvinist doctrines. After a period of religious convulsion and political conflict culminating in a victory for the Pr..."
+    },
+    {
+      "question_id": "3hop1__222979_40769_64047",
+      "hop_depth": "3hop",
+      "model_role": "frontier",
+      "model_id": "qwen3.6-plus",
+      "baseline_logp": -0.00018333042157081536,
+      "baseline_probability": 0.999816686382424,
+      "threshold_logp": -0.6931471805599453,
+      "threshold_probability": 0.5,
+      "logp_margin_vs_threshold": 0.6929638501383745,
+      "probability_margin_vs_threshold": 0.49981668638242405,
+      "question_text": "When did the RX 350 from the Scion owner's luxury division change body style?",
+      "answer_text": "Sales began worldwide in April 2012",
+      "answer_aliases": [],
+      "paragraph_count": 20,
+      "supporting_paragraphs": [
+        {
+          "paragraph_id": 1,
+          "title": "Lexus RX",
+          "text_excerpt": "A facelift was designed through late 2010 and patented on 7 January 2011 under design registration number 001845801 - 0004. The facelift was unveiled at the March 2012 Geneva Motor Show with new wheels, interior colors, new head and tail lamps and new grilles. New LED running lig..."
+        },
+        {
+          "paragraph_id": 10,
+          "title": "Scion (automobile)",
+          "text_excerpt": "Scion is a discontinued marque of Toyota that started in 2003. It was designed as an extension of its efforts to appeal towards younger customers. The Scion brand primarily featured sports compact vehicles (primarily badge engineered from Toyota's international models), a simplif..."
+        },
+        {
+          "paragraph_id": 14,
+          "title": "1973 oil crisis",
+          "text_excerpt": "Some buyers lamented the small size of the first Japanese compacts, and both Toyota and Nissan (then known as Datsun) introduced larger cars such as the Toyota Corona Mark II, the Toyota Cressida, the Mazda 616 and Datsun 810, which added passenger space and amenities such as air..."
+        }
+      ],
+      "heuristic_signals": {
+        "answer_string_appears_in_question": false,
+        "answer_alias_hits_in_question": [],
+        "shared_question_answer_tokens": [],
+        "question_char_length": 77,
+        "question_word_count": 14,
+        "supporting_paragraph_count": 3
+      },
+      "stage1_question_only_prompt": "You are auditing a MuSiQue-style question for contamination risk.\nStage 1 is question-only: do not use any hidden answer, retrieval result, or external notes.\nDecide whether a strong frontier LM could likely answer this question from prior knowledge alone.\nReturn strict JSON with keys:\n  \"question_id\", \"judgement\", \"confidence\", \"primary_mechanism\", \"secondary_mechanisms\", \"reasoning\", \"rewrite_worth_trying\"\nAllowed judgement values: \"likely_contaminated\", \"uncertain\", \"likely_clean\".\nAllowed confidence values: \"high\", \"medium\", \"low\".\nAllowed primary_mechanism values: \"direct_leakage\", \"near_unique_entity_chain\", \"memorized_public_fact\", \"question_collapse\", \"dataset_artifact\", \"unclear\".\n\nquestion_id: 3hop1__222979_40769_64047\nhop_depth: 3hop\nquestion_text: When did the RX 350 from the Scion owner's luxury division change body style?",
+      "stage2_rewrite_prompt": "Stage 2 is rewrite planning.\nYou may now inspect the gold answer and supporting evidence.\nPropose the smallest rewrite that reduces question-only answerability while preserving the same gold answer and hop structure.\nDo not introduce facts not supported by the evidence. Do not change the intended answer.\nReturn strict JSON with keys:\n  \"question_id\", \"rewrite_status\", \"contamination_cause\", \"rewrite_strategy\", \"rewritten_question\", \"answer_preserved\", \"hop_structure_preserved\", \"residual_risk\", \"operator_note\"\nAllowed rewrite_status values: \"rewrite_recommended\", \"drop_and_replace\", \"needs_human_only\".\nAllowed residual_risk values: \"high\", \"medium\", \"low\".\n\nquestion_id: 3hop1__222979_40769_64047\nhop_depth: 3hop\noriginal_question: When did the RX 350 from the Scion owner's luxury division change body style?\ngold_answer: Sales began worldwide in April 2012\nsupporting_evidence:\n- paragraph_id=1 | title=Lexus RX | excerpt=A facelift was designed through late 2010 and patented on 7 January 2011 under design registration number 001845801 - 0004. The facelift was unveiled at the March 2012 Geneva Motor Show with new wheels, interior colors, new head and tail lamps and new grilles. New LED running lig...\n- paragraph_id=10 | title=Scion (automobile) | excerpt=Scion is a discontinued marque of Toyota that started in 2003. It was designed as an extension of its efforts to appeal towards younger customers. The Scion brand primarily featured sports compact vehicles (primarily badge engineered from Toyota's international models), a simplif...\n- paragraph_id=14 | title=1973 oil crisis | excerpt=Some buyers lamented the small size of the first Japanese compacts, and both Toyota and Nissan (then known as Datsun) introduced larger cars such as the Toyota Corona Mark II, the Toyota Cressida, the Mazda 616 and Datsun 810, which added passenger space and amenities such as air..."
+    },
+    {
+      "question_id": "4hop1__76111_624859_355213_203322",
+      "hop_depth": "4hop",
+      "model_role": "frontier",
+      "model_id": "qwen3.6-plus",
+      "baseline_logp": -6.44912724965252e-05,
+      "baseline_probability": 0.9999355108070209,
+      "threshold_logp": -0.6931471805599453,
+      "threshold_probability": 0.5,
+      "logp_margin_vs_threshold": 0.6930826892874488,
+      "probability_margin_vs_threshold": 0.4999355108070209,
+      "question_text": "What county shares a border with the county where the singer of Hungry Eyes from the movie Dirty Dancing was born?",
+      "answer_text": "Cabarrus County",
+      "answer_aliases": [],
+      "paragraph_count": 20,
+      "supporting_paragraphs": [
+        {
+          "paragraph_id": 0,
+          "title": "Gold Hill, North Carolina",
+          "text_excerpt": "Gold Hill is a small unincorporated community in southeastern Rowan County, North Carolina near the Cabarrus County line. It is situated near the Yadkin River and is served by U.S. Highway 52 and Old Beatty Ford Road. Gold was found in this small town outside Salisbury in the 19t..."
+        },
+        {
+          "paragraph_id": 7,
+          "title": "The Definitive Collection (Eric Carmen album)",
+          "text_excerpt": "The Definitive Collection is a 1997 greatest hits compilation album of all the singles released by Cleveland, Ohio singer-songwriter Eric Carmen. It features five hits by the Raspberries, a power pop group which he led in the early 1970s. It also contains his versions of two majo..."
+        },
+        {
+          "paragraph_id": 12,
+          "title": "Hungry Eyes",
+          "text_excerpt": "``Hungry Eyes ''is a song performed by American artist Eric Carmen, a former member of the band Raspberries, and was featured in the film Dirty Dancing. The song was recorded at Beachwood Studios in Beachwood, Ohio in 1987.`` Hungry Eyes'' peaked at # 4 on the Billboard Hot 100 c..."
+        },
+        {
+          "paragraph_id": 13,
+          "title": "Cleveland, North Carolina",
+          "text_excerpt": "Cleveland is a town in the Cleveland Township of Rowan County, North Carolina, United States. The population was 871 at the 2010 census."
+        }
+      ],
+      "heuristic_signals": {
+        "answer_string_appears_in_question": false,
+        "answer_alias_hits_in_question": [],
+        "shared_question_answer_tokens": [
+          "county"
+        ],
+        "question_char_length": 114,
+        "question_word_count": 21,
+        "supporting_paragraph_count": 4
+      },
+      "stage1_question_only_prompt": "You are auditing a MuSiQue-style question for contamination risk.\nStage 1 is question-only: do not use any hidden answer, retrieval result, or external notes.\nDecide whether a strong frontier LM could likely answer this question from prior knowledge alone.\nReturn strict JSON with keys:\n  \"question_id\", \"judgement\", \"confidence\", \"primary_mechanism\", \"secondary_mechanisms\", \"reasoning\", \"rewrite_worth_trying\"\nAllowed judgement values: \"likely_contaminated\", \"uncertain\", \"likely_clean\".\nAllowed confidence values: \"high\", \"medium\", \"low\".\nAllowed primary_mechanism values: \"direct_leakage\", \"near_unique_entity_chain\", \"memorized_public_fact\", \"question_collapse\", \"dataset_artifact\", \"unclear\".\n\nquestion_id: 4hop1__76111_624859_355213_203322\nhop_depth: 4hop\nquestion_text: What county shares a border with the county where the singer of Hungry Eyes from the movie Dirty Dancing was born?",
+      "stage2_rewrite_prompt": "Stage 2 is rewrite planning.\nYou may now inspect the gold answer and supporting evidence.\nPropose the smallest rewrite that reduces question-only answerability while preserving the same gold answer and hop structure.\nDo not introduce facts not supported by the evidence. Do not change the intended answer.\nReturn strict JSON with keys:\n  \"question_id\", \"rewrite_status\", \"contamination_cause\", \"rewrite_strategy\", \"rewritten_question\", \"answer_preserved\", \"hop_structure_preserved\", \"residual_risk\", \"operator_note\"\nAllowed rewrite_status values: \"rewrite_recommended\", \"drop_and_replace\", \"needs_human_only\".\nAllowed residual_risk values: \"high\", \"medium\", \"low\".\n\nquestion_id: 4hop1__76111_624859_355213_203322\nhop_depth: 4hop\noriginal_question: What county shares a border with the county where the singer of Hungry Eyes from the movie Dirty Dancing was born?\ngold_answer: Cabarrus County\nsupporting_evidence:\n- paragraph_id=0 | title=Gold Hill, North Carolina | excerpt=Gold Hill is a small unincorporated community in southeastern Rowan County, North Carolina near the Cabarrus County line. It is situated near the Yadkin River and is served by U.S. Highway 52 and Old Beatty Ford Road. Gold was found in this small town outside Salisbury in the 19t...\n- paragraph_id=7 | title=The Definitive Collection (Eric Carmen album) | excerpt=The Definitive Collection is a 1997 greatest hits compilation album of all the singles released by Cleveland, Ohio singer-songwriter Eric Carmen. It features five hits by the Raspberries, a power pop group which he led in the early 1970s. It also contains his versions of two majo...\n- paragraph_id=12 | title=Hungry Eyes | excerpt=``Hungry Eyes ''is a song performed by American artist Eric Carmen, a former member of the band Raspberries, and was featured in the film Dirty Dancing. The song was recorded at Beachwood Studios in Beachwood, Ohio in 1987.`` Hungry Eyes'' peaked at # 4 on the Billboard Hot 100 c...\n- paragraph_id=13 | title=Cleveland, North Carolina | excerpt=Cleveland is a town in the Cleveland Township of Rowan County, North Carolina, United States. The population was 871 at the 2010 census."
+    }
+  ]
+}
