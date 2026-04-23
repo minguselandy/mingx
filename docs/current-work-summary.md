@@ -17,8 +17,8 @@ These defaults are aligned across:
 - active protocol docs
 - runtime/config tests
 
-`run_summary.json` export logic also now includes a `resolved_runtime` block so
-the active profile, backend ids, and role-level model ids can be read without
+Newer `run_summary.json` exports now include a `resolved_runtime` block so the
+active profile, backend ids, and role-level model ids can be read without
 scanning the full event log.
 Historical artifacts generated before that export change may not carry the
 field until they are rerun or explicitly regenerated.

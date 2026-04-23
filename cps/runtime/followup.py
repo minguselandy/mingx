@@ -349,14 +349,6 @@ def build_followup_package(
         exclude_question_ids=tuple(dropped_question_ids),
     )
 
-    followup_storage = {
-        "cache_dir": str((resolved_output_root / "cache").resolve()),
-        "measurement_dir": str((resolved_output_root / "measurements").resolve()),
-        "checkpoint_dir": str((resolved_output_root / "checkpoints").resolve()),
-        "export_dir": str((resolved_output_root / "exports").resolve()),
-    }
-    ensure_directories(*(Path(path) for path in followup_storage.values()))
-
     followup_calibration_path = resolved_output_root / "calibration_manifest.json"
     followup_blocked_questions_path = resolved_output_root / "blocked_questions.json"
     followup_plan_path = resolved_output_root / "followup_plan.json"
@@ -381,6 +373,13 @@ def build_followup_package(
         raise ValueError(
             "generated follow-up calibration does not match the supplied replacement manifest"
         )
+    followup_storage = {
+        "cache_dir": str((resolved_output_root / "cache").resolve()),
+        "measurement_dir": str((resolved_output_root / "measurements").resolve()),
+        "checkpoint_dir": str((resolved_output_root / "checkpoints").resolve()),
+        "export_dir": str((resolved_output_root / "exports").resolve()),
+    }
+    ensure_directories(*(Path(path) for path in followup_storage.values()))
     source_run_summary_path = source_storage_paths["export_dir"] / "run_summary.json"
     source_run_summary = _load_json(source_run_summary_path, required=False) or {}
     source_events_path = events_path_for(source_storage_paths["measurement_dir"])

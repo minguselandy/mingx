@@ -295,6 +295,47 @@ def test_followup_package_rejects_seed_mismatch_in_replacement_manifest(workspac
     assert not (workspace_tmp_dir / "followup-package" / "followup_plan.json").exists()
 
 
+def test_followup_package_rejects_alignment_mismatch_without_creating_followup_tree(workspace_tmp_dir):
+    bundle = load_manifest(FIXTURE_MANIFEST)
+    source_plan_path = workspace_tmp_dir / "source-plan.json"
+    source_calibration_path = workspace_tmp_dir / "source-run" / "calibration_manifest.json"
+    replacement_manifest_path = workspace_tmp_dir / "replacement_manifest.json"
+
+    _write_source_plan(source_plan_path, calibration_manifest_path=source_calibration_path)
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=source_calibration_path,
+        seed=20260418,
+        per_hop_count=1,
+    )
+    replacement_manifest = build_calibration_manifest(
+        bundle=bundle,
+        output_path=replacement_manifest_path,
+        seed=20260418,
+        per_hop_count=1,
+        exclude_question_ids=("2hop__86458_20273",),
+    )
+    replacement_manifest["selected_questions"][0]["question_id"] = "2hop__32254_84601"
+    replacement_manifest_path.write_text(
+        json.dumps(replacement_manifest, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    output_root = workspace_tmp_dir / "followup-package"
+    try:
+        build_followup_package(
+            source_plan_path=source_plan_path,
+            replacement_manifest_path=replacement_manifest_path,
+            output_root=output_root,
+        )
+    except ValueError as exc:
+        assert "does not match the supplied replacement manifest" in str(exc)
+    else:
+        raise AssertionError("expected alignment mismatch to raise")
+
+    assert not output_root.exists()
+
+
 def test_followup_package_marks_pending_decision_sheet_as_not_execution_ready(workspace_tmp_dir):
     bundle = load_manifest(FIXTURE_MANIFEST)
     source_plan_path = workspace_tmp_dir / "source-plan.json"
