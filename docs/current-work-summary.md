@@ -20,6 +20,8 @@ These defaults are aligned across:
 `run_summary.json` export logic also now includes a `resolved_runtime` block so
 the active profile, backend ids, and role-level model ids can be read without
 scanning the full event log.
+Historical artifacts generated before that export change may not carry the
+field until they are rerun or explicitly regenerated.
 
 ## Completed Runtime And Protocol Work
 

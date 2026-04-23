@@ -51,6 +51,42 @@ def _write_source_run_summary(path: Path, *, run_id: str = "phase1-cohort-test-f
     )
 
 
+def _write_decision_sheet(
+    path: Path,
+    *,
+    run_id: str,
+    approved_followup_action: str,
+    question_decisions: dict[str, str],
+) -> None:
+    rows = [
+        f"| `{question_id}` | `drop_and_replace` | `{operator_decision}` | `signed_off` | ok | ok |"
+        for question_id, operator_decision in question_decisions.items()
+    ]
+    path.write_text(
+        "\n".join(
+            [
+                "# Contamination Operator Decision Sheet",
+                "",
+                f"- Run: `{run_id}`",
+                "",
+                "## Question Decisions",
+                "",
+                "| question_id | recommended action | operator decision | status | rationale | rerun precondition |",
+                "| --- | --- | --- | --- | --- | --- |",
+                *rows,
+                "",
+                "## Human Approval Block",
+                "",
+                "- Scientific owner: `owner-a`",
+                "- Runtime owner: `owner-b`",
+                "- Decision timestamp: `2026-04-23T12:00:00+08:00`",
+                f"- Approved follow-up action: `{approved_followup_action}`",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+
 def test_followup_package_builds_ready_to_run_plan_and_lineage(workspace_tmp_dir):
     bundle = load_manifest(FIXTURE_MANIFEST)
     source_plan_path = workspace_tmp_dir / "source-plan.json"
@@ -76,7 +112,16 @@ def test_followup_package_builds_ready_to_run_plan_and_lineage(workspace_tmp_dir
             "4hop1__76111_624859_355213_203322",
         ),
     )
-    decision_sheet_path.write_text("# approved", encoding="utf-8")
+    _write_decision_sheet(
+        decision_sheet_path,
+        run_id="phase1-cohort-test-followup",
+        approved_followup_action="replace_only",
+        question_decisions={
+            "2hop__86458_20273": "drop_and_replace",
+            "3hop1__222979_40769_64047": "drop_and_replace",
+            "4hop1__76111_624859_355213_203322": "drop_and_replace",
+        },
+    )
     _write_source_run_summary(workspace_tmp_dir / "source-exports" / "run_summary.json")
 
     output_root = workspace_tmp_dir / "followup-package"
@@ -107,6 +152,7 @@ def test_followup_package_builds_ready_to_run_plan_and_lineage(workspace_tmp_dir
     assert blocked_questions["replacement_policy"] == "same_hop_next_rank_on_resume_v1"
     assert _selected_question_ids(followup_calibration) == _selected_question_ids(replacement_manifest)
     assert report["approval"]["execution_ready"] is True
+    assert report["approval"]["status"] == "approved_replace_only"
     assert lineage["selection_alignment"]["status"] == "matches_replacement_manifest"
     assert lineage["new_selected_question_ids"] == _selected_question_ids(replacement_manifest)
     assert lineage["source_run_id"] == "phase1-cohort-test-followup"
@@ -289,6 +335,47 @@ def test_followup_package_marks_pending_decision_sheet_as_not_execution_ready(wo
     assert followup_plan["generated_followup"]["decision_sheet_path"] == str(decision_sheet_path.resolve())
     assert lineage["approval"]["execution_ready"] is False
     assert "Execution ready: `False`" in readme
+
+
+def test_followup_package_rejects_execution_ready_when_decision_sheet_run_id_mismatches(workspace_tmp_dir):
+    bundle = load_manifest(FIXTURE_MANIFEST)
+    source_plan_path = workspace_tmp_dir / "source-plan.json"
+    source_calibration_path = workspace_tmp_dir / "source-run" / "calibration_manifest.json"
+    replacement_manifest_path = workspace_tmp_dir / "replacement_manifest.json"
+    decision_sheet_path = workspace_tmp_dir / "decision-sheet.md"
+
+    _write_source_plan(source_plan_path, calibration_manifest_path=source_calibration_path)
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=source_calibration_path,
+        seed=20260418,
+        per_hop_count=1,
+    )
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=replacement_manifest_path,
+        seed=20260418,
+        per_hop_count=1,
+        exclude_question_ids=("2hop__86458_20273",),
+    )
+    _write_source_run_summary(workspace_tmp_dir / "source-exports" / "run_summary.json")
+    _write_decision_sheet(
+        decision_sheet_path,
+        run_id="phase1-cohort-other-run",
+        approved_followup_action="replace_only",
+        question_decisions={"2hop__86458_20273": "drop_and_replace"},
+    )
+
+    output_root = workspace_tmp_dir / "followup-package"
+    report = build_followup_package(
+        source_plan_path=source_plan_path,
+        replacement_manifest_path=replacement_manifest_path,
+        output_root=output_root,
+        decision_sheet_path=decision_sheet_path,
+    )
+
+    assert report["approval"]["status"] == "run_id_mismatch"
+    assert report["approval"]["execution_ready"] is False
 
 
 def _selected_question_ids(payload: dict) -> list[str]:

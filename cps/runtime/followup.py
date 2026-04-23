@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -62,24 +63,92 @@ def _load_json(path: Path, *, required: bool) -> dict[str, Any] | None:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _decision_approval_state(decision_sheet_path: Path | None) -> dict[str, Any]:
+def _parse_decision_sheet(decision_sheet_path: Path) -> dict[str, Any]:
+    content = decision_sheet_path.read_text(encoding="utf-8")
+    run_match = re.search(r"^- Run:\s*`([^`]+)`", content, flags=re.MULTILINE)
+    action_match = re.search(
+        r"^- Approved follow-up action:\s*`([^`]+)`", content, flags=re.MULTILINE
+    )
+    decisions: dict[str, str] = {}
+    for match in re.finditer(
+        r"^\|\s*`([^`]+)`\s*\|\s*`[^`]+`\s*\|\s*`([^`]+)`\s*\|",
+        content,
+        flags=re.MULTILINE,
+    ):
+        question_id, operator_decision = match.groups()
+        decisions[str(question_id)] = str(operator_decision)
+    return {
+        "raw_text": content,
+        "run_id": str(run_match.group(1)) if run_match else "",
+        "approved_followup_action": str(action_match.group(1)) if action_match else "",
+        "question_decisions": decisions,
+    }
+
+
+def _decision_approval_state(
+    decision_sheet_path: Path | None,
+    *,
+    source_run_id: str,
+    dropped_question_ids: list[str],
+) -> dict[str, Any]:
     if decision_sheet_path is None:
         return {
             "status": "not_provided",
             "execution_ready": False,
             "reason": "decision_sheet_not_supplied",
         }
-    content = decision_sheet_path.read_text(encoding="utf-8")
+    parsed = _parse_decision_sheet(decision_sheet_path)
+    content = parsed["raw_text"]
     if "[pending]" in content:
         return {
             "status": "pending_human_signoff",
             "execution_ready": False,
             "reason": "decision_sheet_contains_pending_placeholders",
         }
+    if not parsed["run_id"]:
+        return {
+            "status": "missing_run_id",
+            "execution_ready": False,
+            "reason": "decision_sheet_missing_run_id",
+        }
+    if parsed["run_id"] != str(source_run_id):
+        return {
+            "status": "run_id_mismatch",
+            "execution_ready": False,
+            "reason": "decision_sheet_run_id_mismatch",
+            "decision_sheet_run_id": parsed["run_id"],
+            "source_run_id": str(source_run_id),
+        }
+    if not parsed["approved_followup_action"]:
+        return {
+            "status": "missing_approved_followup_action",
+            "execution_ready": False,
+            "reason": "decision_sheet_missing_approved_followup_action",
+        }
+    if parsed["approved_followup_action"] != "replace_only":
+        return {
+            "status": "unsupported_followup_action",
+            "execution_ready": False,
+            "reason": "decision_sheet_approved_followup_action_not_supported_by_this_helper",
+            "approved_followup_action": parsed["approved_followup_action"],
+        }
+    missing_question_ids = [
+        question_id
+        for question_id in dropped_question_ids
+        if parsed["question_decisions"].get(question_id) != "drop_and_replace"
+    ]
+    if missing_question_ids:
+        return {
+            "status": "question_decision_mismatch",
+            "execution_ready": False,
+            "reason": "decision_sheet_question_decisions_do_not_match_drop_list",
+            "question_ids": missing_question_ids,
+        }
     return {
-        "status": "approved_or_no_pending_placeholders_detected",
+        "status": "approved_replace_only",
         "execution_ready": True,
-        "reason": "no_pending_placeholders_detected",
+        "reason": "decision_sheet_matches_replace_only_followup",
+        "approved_followup_action": parsed["approved_followup_action"],
     }
 
 
@@ -162,7 +231,7 @@ def _followup_readme(
         [
             "# Phase 1 Follow-Up Package",
             "",
-            "This package turns an approved drop list into a ready-to-run follow-up plan.",
+            "This package turns an approved drop list into a prepared follow-up plan.",
             "",
             "## Scope",
             f"- Source plan: `{source_plan_path}`",
@@ -179,7 +248,7 @@ def _followup_readme(
             "- `lineage.json`: human-auditable link between the failed run and the prepared follow-up batch.",
             "",
             "## Execution",
-            "Run the normal cohort entrypoint against the generated plan only after the decision sheet is approved:",
+            "Run the normal cohort entrypoint against the generated plan only after the decision sheet is approved and execution-ready:",
             "",
             f"`python -m cps.runtime.cohort --plan {followup_plan_path} --backend live --env .env`",
             "",
@@ -210,7 +279,6 @@ def build_followup_package(
     replacement_manifest = json.loads(
         resolved_replacement_manifest_path.read_text(encoding="utf-8")
     )
-    approval_state = _decision_approval_state(resolved_decision_sheet_path)
     bundle = load_manifest(
         _resolve_plan_path_value(
             source_plan,
@@ -316,6 +384,11 @@ def build_followup_package(
     source_run_summary_path = source_storage_paths["export_dir"] / "run_summary.json"
     source_run_summary = _load_json(source_run_summary_path, required=False) or {}
     source_events_path = events_path_for(source_storage_paths["measurement_dir"])
+    approval_state = _decision_approval_state(
+        resolved_decision_sheet_path,
+        source_run_id=str(source_run_summary.get("run_id") or ""),
+        dropped_question_ids=dropped_question_ids,
+    )
     followup_plan = dict(source_plan)
     followup_plan["manifest_path"] = str(bundle.manifest_path)
     followup_plan["hash_path"] = str(hash_path)

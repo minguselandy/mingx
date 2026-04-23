@@ -1,6 +1,6 @@
 # Phase 1 Follow-Up Package
 
-This package turns an approved drop list into a ready-to-run follow-up plan.
+This package turns an approved drop list into a prepared follow-up plan.
 
 ## Scope
 - Source plan: `/home/mingxiaoyu/mingx/configs/runs/live-mini-batch.json`
@@ -17,7 +17,7 @@ This package turns an approved drop list into a ready-to-run follow-up plan.
 - `lineage.json`: human-auditable link between the failed run and the prepared follow-up batch.
 
 ## Execution
-Run the normal cohort entrypoint against the generated plan only after the decision sheet is approved:
+Run the normal cohort entrypoint against the generated plan only after the decision sheet is approved and execution-ready:
 
 `python -m cps.runtime.cohort --plan /home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch_followup/followup_plan.json --backend live --env .env`
 

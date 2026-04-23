@@ -17,7 +17,7 @@ First, assume these recent changes are already intentional:
    - `frontier = qwen3.6-plus`
    - `small = qwen3.6-flash`
 6. The repository now includes an AI-assisted contamination triage workflow.
-7. `run_summary.json` now includes a `resolved_runtime` block so runtime overrides are visible without digging through event logs.
+7. Newer `run_summary.json` exports include a `resolved_runtime` block so runtime overrides are visible without digging through event logs. Older historical artifacts may predate this field.
 
 What was recently changed:
 
