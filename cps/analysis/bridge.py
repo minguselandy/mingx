@@ -3,13 +3,30 @@ from __future__ import annotations
 import json
 import math
 import random
+from bisect import bisect_right
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from scipy.stats import shapiro
 
 from cps.analysis.exports import write_csv, write_json, write_jsonl
+
+
+DIAGNOSTIC_SCOPE = "scipy_shapiro_with_pure_python_bridge"
+PASS_THRESHOLDS = {
+    "normality_pvalue": 0.01,
+    "breusch_pagan_pvalue": 0.01,
+    "icc_question_residual": 0.3,
+    "pearson_r": 0.9,
+    "mae_to_sigma_ratio": 0.5,
+}
+BRIDGE_ESCALATION_SEQUENCE = (
+    "linear_ols",
+    "isotonic",
+    "polynomial_quadratic",
+    "frontier_full_n_required",
+)
 
 
 def _quantile(values: list[float], q: float) -> float:
@@ -161,6 +178,137 @@ def _bootstrap_coefficients(
     }
 
 
+def _solve_linear_system(matrix: list[list[float]], vector: list[float]) -> list[float]:
+    size = len(vector)
+    augmented = [row[:] + [value] for row, value in zip(matrix, vector)]
+    for pivot_index in range(size):
+        pivot_row = max(range(pivot_index, size), key=lambda idx: abs(augmented[idx][pivot_index]))
+        pivot_value = augmented[pivot_row][pivot_index]
+        if abs(pivot_value) < 1e-12:
+            raise ValueError("singular matrix")
+        if pivot_row != pivot_index:
+            augmented[pivot_index], augmented[pivot_row] = augmented[pivot_row], augmented[pivot_index]
+
+        normalized = augmented[pivot_index][pivot_index]
+        augmented[pivot_index] = [value / normalized for value in augmented[pivot_index]]
+        for row_index in range(size):
+            if row_index == pivot_index:
+                continue
+            factor = augmented[row_index][pivot_index]
+            augmented[row_index] = [
+                current - (factor * pivot)
+                for current, pivot in zip(augmented[row_index], augmented[pivot_index])
+            ]
+    return [augmented[index][-1] for index in range(size)]
+
+
+def _quadratic_fit(rows: list[dict[str, Any]]) -> tuple[float, float, float]:
+    xs = [float(row["delta_small"]) for row in rows]
+    ys = [float(row["delta_frontier"]) for row in rows]
+    if len({round(value, 12) for value in xs}) < 3:
+        intercept, slope = _ols_fit(rows)
+        return intercept, slope, 0.0
+
+    sums = {
+        "n": float(len(xs)),
+        "x": sum(xs),
+        "x2": sum(value**2 for value in xs),
+        "x3": sum(value**3 for value in xs),
+        "x4": sum(value**4 for value in xs),
+        "y": sum(ys),
+        "xy": sum(x * y for x, y in zip(xs, ys)),
+        "x2y": sum((x**2) * y for x, y in zip(xs, ys)),
+    }
+    matrix = [
+        [sums["n"], sums["x"], sums["x2"]],
+        [sums["x"], sums["x2"], sums["x3"]],
+        [sums["x2"], sums["x3"], sums["x4"]],
+    ]
+    vector = [sums["y"], sums["xy"], sums["x2y"]]
+    try:
+        intercept, slope, quadratic = _solve_linear_system(matrix, vector)
+    except ValueError:
+        intercept, slope = _ols_fit(rows)
+        quadratic = 0.0
+    return intercept, slope, quadratic
+
+
+def _group_duplicate_xs(rows: list[dict[str, Any]]) -> tuple[list[float], list[float], list[float]]:
+    grouped: dict[float, list[float]] = defaultdict(list)
+    for row in rows:
+        grouped[float(row["delta_small"])].append(float(row["delta_frontier"]))
+    ordered_xs = sorted(grouped)
+    ys = [_mean(grouped[x_value]) for x_value in ordered_xs]
+    weights = [float(len(grouped[x_value])) for x_value in ordered_xs]
+    return ordered_xs, ys, weights
+
+
+def _pava(values: list[float], weights: list[float]) -> list[float]:
+    blocks: list[dict[str, Any]] = []
+    for index, (value, weight) in enumerate(zip(values, weights)):
+        blocks.append(
+            {
+                "start": index,
+                "end": index,
+                "weight": float(weight),
+                "value": float(value),
+            }
+        )
+        while len(blocks) >= 2 and blocks[-2]["value"] > blocks[-1]["value"]:
+            right = blocks.pop()
+            left = blocks.pop()
+            merged_weight = left["weight"] + right["weight"]
+            merged_value = (
+                (left["value"] * left["weight"]) + (right["value"] * right["weight"])
+            ) / merged_weight
+            blocks.append(
+                {
+                    "start": left["start"],
+                    "end": right["end"],
+                    "weight": merged_weight,
+                    "value": merged_value,
+                }
+            )
+
+    fitted = [0.0] * len(values)
+    for block in blocks:
+        for index in range(block["start"], block["end"] + 1):
+            fitted[index] = float(block["value"])
+    return fitted
+
+
+def _build_piecewise_predictor(xs: list[float], ys: list[float]) -> Callable[[float], float]:
+    if not xs:
+        return lambda _value: 0.0
+    if len(xs) == 1:
+        return lambda _value, constant=ys[0]: float(constant)
+
+    def _predict(x_value: float) -> float:
+        if x_value <= xs[0]:
+            return float(ys[0])
+        if x_value >= xs[-1]:
+            return float(ys[-1])
+        right_index = bisect_right(xs, x_value)
+        left_index = max(0, right_index - 1)
+        right_index = min(len(xs) - 1, right_index)
+        if xs[right_index] == xs[left_index]:
+            return float(ys[right_index])
+        ratio = (x_value - xs[left_index]) / (xs[right_index] - xs[left_index])
+        return float(ys[left_index] + ((ys[right_index] - ys[left_index]) * ratio))
+
+    return _predict
+
+
+def _fit_isotonic(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], Callable[[float], float]]:
+    xs, ys, weights = _group_duplicate_xs(rows)
+    fitted = _pava(ys, weights)
+    return {
+        "breakpoints_x": xs,
+        "breakpoints_y": fitted,
+        "monotonic_direction": "increasing",
+    }, _build_piecewise_predictor(xs, fitted)
+
+
 def _load_snapshot_rows(measurement_dir: str | Path, model_role: str) -> list[dict[str, Any]]:
     root = Path(measurement_dir) / "questions" / model_role
     rows: list[dict[str, Any]] = []
@@ -181,59 +329,152 @@ def _load_snapshot_rows(measurement_dir: str | Path, model_role: str) -> list[di
     return rows
 
 
-def _fit_per_hop(calibration_rows: list[dict[str, Any]], *, seed: int, bootstrap_resamples: int) -> dict[str, Any]:
+def _build_hop_summary(
+    *,
+    rows: list[dict[str, Any]],
+    coefficients: dict[str, Any],
+    predictor: Callable[[float], float],
+    bridge_coefficient_variance: dict[str, float],
+) -> dict[str, Any]:
+    xs = [float(row["delta_small"]) for row in rows]
+    frontier_values = [float(row["delta_frontier"]) for row in rows]
+    fitted = [predictor(value) for value in xs]
+    residuals = [frontier - estimate for frontier, estimate in zip(frontier_values, fitted)]
+    sigma_calibration = _sample_std(frontier_values)
+    mae_threshold = PASS_THRESHOLDS["mae_to_sigma_ratio"] * sigma_calibration
+    consistency = {
+        "pearson_r": _pearson(xs, frontier_values),
+        "mae": _mean([abs(value) for value in residuals]),
+        "rmse": math.sqrt(_mean([value**2 for value in residuals])) if residuals else 0.0,
+        "sigma_calibration": sigma_calibration,
+        "mae_threshold": mae_threshold,
+    }
+    diagnostics = {
+        "normality_test": "shapiro_wilk",
+        "normality_pvalue": _shapiro_wilk_pvalue(residuals),
+        "breusch_pagan_pvalue": _breusch_pagan_pvalue(xs, residuals),
+        "icc_question_residual": _icc_by_question(rows, residuals),
+    }
+    pass_flags = {
+        "normality_pass": diagnostics["normality_pvalue"] > PASS_THRESHOLDS["normality_pvalue"],
+        "breusch_pagan_pass": (
+            diagnostics["breusch_pagan_pvalue"] > PASS_THRESHOLDS["breusch_pagan_pvalue"]
+        ),
+        "icc_pass": diagnostics["icc_question_residual"] < PASS_THRESHOLDS["icc_question_residual"],
+        "pearson_pass": consistency["pearson_r"] >= PASS_THRESHOLDS["pearson_r"],
+        "mae_pass": consistency["mae"] <= mae_threshold,
+    }
+    pass_flags["diagnostic_triplet_pass"] = (
+        pass_flags["normality_pass"]
+        and pass_flags["breusch_pagan_pass"]
+        and pass_flags["icc_pass"]
+    )
+
+    return {
+        "coefficients": coefficients,
+        "calibration": {
+            "question_count": len({row["question_id"] for row in rows}),
+            "row_count": len(rows),
+        },
+        "consistency": consistency,
+        "diagnostics": diagnostics,
+        "bridge_coefficient_variance": bridge_coefficient_variance,
+        "pass_flags": pass_flags,
+    }
+
+
+def _fit_linear_per_hop(
+    calibration_rows: list[dict[str, Any]],
+    *,
+    seed: int,
+    bootstrap_resamples: int,
+) -> tuple[dict[str, Any], dict[str, Callable[[float], float]]]:
     per_hop: dict[str, Any] = {}
+    predictors: dict[str, Callable[[float], float]] = {}
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in calibration_rows:
         grouped[str(row["hop_depth"])].append(row)
 
     for hop_depth, rows in grouped.items():
         intercept, slope = _ols_fit(rows)
-        fitted = [intercept + (slope * row["delta_small"]) for row in rows]
-        frontier_values = [float(row["delta_frontier"]) for row in rows]
-        residuals = [frontier - estimate for frontier, estimate in zip(frontier_values, fitted)]
-        sigma_calibration = _sample_std(frontier_values)
         bootstrap = _bootstrap_coefficients(
             rows,
             seed=seed + sum(ord(char) for char in hop_depth),
             bootstrap_resamples=bootstrap_resamples,
         )
-        per_hop[hop_depth] = {
-            "coefficients": {
+        predictors[hop_depth] = lambda value, base=intercept, gain=slope: base + (gain * value)
+        per_hop[hop_depth] = _build_hop_summary(
+            rows=rows,
+            coefficients={
                 "intercept": intercept,
                 "slope": slope,
                 "intercept_ci": bootstrap["intercept_ci"],
                 "slope_ci": bootstrap["slope_ci"],
             },
-            "calibration": {
-                "question_count": len({row["question_id"] for row in rows}),
-                "row_count": len(rows),
-            },
-            "consistency": {
-                "pearson_r": _pearson(
-                    [float(row["delta_small"]) for row in rows],
-                    frontier_values,
-                ),
-                "mae": _mean([abs(value) for value in residuals]),
-                "rmse": math.sqrt(_mean([value**2 for value in residuals])) if residuals else 0.0,
-                "sigma_calibration": sigma_calibration,
-                "mae_threshold": 0.5 * sigma_calibration,
-            },
-            "diagnostics": {
-                "normality_test": "shapiro_wilk",
-                "normality_pvalue": _shapiro_wilk_pvalue(residuals),
-                "breusch_pagan_pvalue": _breusch_pagan_pvalue(
-                    [float(row["delta_small"]) for row in rows],
-                    residuals,
-                ),
-                "icc_question_residual": _icc_by_question(rows, residuals),
-            },
-            "bridge_coefficient_variance": {
+            predictor=predictors[hop_depth],
+            bridge_coefficient_variance={
                 "intercept": bootstrap["intercept_variance"],
                 "slope": bootstrap["slope_variance"],
+                "quadratic": 0.0,
             },
-        }
-    return per_hop
+        )
+    return per_hop, predictors
+
+
+def _fit_isotonic_per_hop(
+    calibration_rows: list[dict[str, Any]],
+) -> tuple[dict[str, Any], dict[str, Callable[[float], float]]]:
+    per_hop: dict[str, Any] = {}
+    predictors: dict[str, Callable[[float], float]] = {}
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in calibration_rows:
+        grouped[str(row["hop_depth"])].append(row)
+
+    for hop_depth, rows in grouped.items():
+        coefficients, predictor = _fit_isotonic(rows)
+        predictors[hop_depth] = predictor
+        per_hop[hop_depth] = _build_hop_summary(
+            rows=rows,
+            coefficients=coefficients,
+            predictor=predictor,
+            bridge_coefficient_variance={
+                "intercept": 0.0,
+                "slope": 0.0,
+                "quadratic": 0.0,
+            },
+        )
+    return per_hop, predictors
+
+
+def _fit_quadratic_per_hop(
+    calibration_rows: list[dict[str, Any]],
+) -> tuple[dict[str, Any], dict[str, Callable[[float], float]]]:
+    per_hop: dict[str, Any] = {}
+    predictors: dict[str, Callable[[float], float]] = {}
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in calibration_rows:
+        grouped[str(row["hop_depth"])].append(row)
+
+    for hop_depth, rows in grouped.items():
+        intercept, slope, quadratic = _quadratic_fit(rows)
+        predictors[hop_depth] = (
+            lambda value, a0=intercept, a1=slope, a2=quadratic: a0 + (a1 * value) + (a2 * value * value)
+        )
+        per_hop[hop_depth] = _build_hop_summary(
+            rows=rows,
+            coefficients={
+                "intercept": intercept,
+                "slope": slope,
+                "quadratic": quadratic,
+            },
+            predictor=predictors[hop_depth],
+            bridge_coefficient_variance={
+                "intercept": 0.0,
+                "slope": 0.0,
+                "quadratic": 0.0,
+            },
+        )
+    return per_hop, predictors
 
 
 def _apply_bridge(
@@ -241,15 +482,16 @@ def _apply_bridge(
     small_rows: list[dict[str, Any]],
     frontier_rows: list[dict[str, Any]],
     calibration_question_ids: set[str],
-    coefficients: dict[str, Any],
+    predictors: dict[str, Callable[[float], float]],
+    bridge_form: str,
 ) -> list[dict[str, Any]]:
     frontier_lookup = {
         (row["question_id"], row["paragraph_id"]): float(row["delta_loo"]) for row in frontier_rows
     }
     bridged_rows: list[dict[str, Any]] = []
     for row in small_rows:
-        hop_coefficients = coefficients[str(row["hop_depth"])]["coefficients"]
-        bridged = hop_coefficients["intercept"] + (hop_coefficients["slope"] * float(row["delta_loo"]))
+        predictor = predictors[str(row["hop_depth"])]
+        bridged = predictor(float(row["delta_loo"]))
         key = (row["question_id"], row["paragraph_id"])
         direct_frontier = frontier_lookup.get(key)
         frontier_equivalent = direct_frontier if direct_frontier is not None else bridged
@@ -264,6 +506,7 @@ def _apply_bridge(
                 "delta_loo_frontier_equivalent": frontier_equivalent,
                 "bridge_source": "direct_frontier" if row["question_id"] in calibration_question_ids else "bridged_small",
                 "calibration_member": row["question_id"] in calibration_question_ids,
+                "bridge_form": bridge_form,
             }
         )
     return bridged_rows
@@ -330,6 +573,156 @@ def _compute_tolerance_band(bridged_rows: list[dict[str, Any]]) -> dict[str, Any
     }
 
 
+def _pooled_overlap_summary(
+    calibration_rows: list[dict[str, Any]],
+    predictors: dict[str, Callable[[float], float]],
+) -> dict[str, Any]:
+    xs = [float(row["delta_small"]) for row in calibration_rows]
+    ys = [float(row["delta_frontier"]) for row in calibration_rows]
+    fitted = [predictors[str(row["hop_depth"])](float(row["delta_small"])) for row in calibration_rows]
+    residuals = [frontier - estimate for frontier, estimate in zip(ys, fitted)]
+    sigma_calibration = _sample_std(ys)
+    mae_threshold = PASS_THRESHOLDS["mae_to_sigma_ratio"] * sigma_calibration
+    pearson_r = _pearson(fitted, ys)
+    mae = _mean([abs(value) for value in residuals])
+    return {
+        "pearson_r": pearson_r,
+        "mae": mae,
+        "sigma_calibration": sigma_calibration,
+        "mae_threshold": mae_threshold,
+        "pearson_pass": pearson_r >= PASS_THRESHOLDS["pearson_r"],
+        "mae_pass": mae <= mae_threshold,
+    }
+
+
+def _evaluate_candidate(
+    *,
+    bridge_form: str,
+    per_hop: dict[str, Any],
+    calibration_rows: list[dict[str, Any]],
+    predictors: dict[str, Callable[[float], float]],
+) -> dict[str, Any]:
+    diagnostic_pass_count = sum(
+        1 for payload in per_hop.values() if payload["pass_flags"]["diagnostic_triplet_pass"]
+    )
+    required_diagnostic_passes = min(2, len(per_hop))
+    pooled_consistency = _pooled_overlap_summary(calibration_rows, predictors)
+
+    failure_reasons: list[str] = []
+    if diagnostic_pass_count < required_diagnostic_passes:
+        failure_reasons.append(
+            f"diagnostic_triplet_pass count {diagnostic_pass_count} < required {required_diagnostic_passes}"
+        )
+    if not pooled_consistency["pearson_pass"]:
+        failure_reasons.append(
+            f"pooled Pearson r {pooled_consistency['pearson_r']:.4f} < {PASS_THRESHOLDS['pearson_r']}"
+        )
+    if not pooled_consistency["mae_pass"]:
+        failure_reasons.append(
+            "pooled MAE "
+            f"{pooled_consistency['mae']:.4f} > threshold {pooled_consistency['mae_threshold']:.4f}"
+        )
+
+    overall_pass = not failure_reasons
+    return {
+        "bridge_form": bridge_form,
+        "pass_fail": "pass" if overall_pass else "fail",
+        "diagnostic_pass_count": diagnostic_pass_count,
+        "required_diagnostic_passes": required_diagnostic_passes,
+        "pooled_consistency": pooled_consistency,
+        "failure_reasons": failure_reasons,
+        "recommended_next_action": (
+            "proceed_with_bridge_outputs"
+            if overall_pass
+            else "escalate_to_next_bridge_form"
+        ),
+    }
+
+
+def _build_candidate(
+    *,
+    bridge_form: str,
+    calibration_rows: list[dict[str, Any]],
+    small_rows: list[dict[str, Any]],
+    frontier_rows: list[dict[str, Any]],
+    calibration_question_ids: set[str],
+    seed: int,
+    bootstrap_resamples: int,
+) -> dict[str, Any]:
+    if bridge_form == "linear_ols":
+        per_hop, predictors = _fit_linear_per_hop(
+            calibration_rows,
+            seed=seed,
+            bootstrap_resamples=bootstrap_resamples,
+        )
+    elif bridge_form == "isotonic":
+        per_hop, predictors = _fit_isotonic_per_hop(calibration_rows)
+    elif bridge_form == "polynomial_quadratic":
+        per_hop, predictors = _fit_quadratic_per_hop(calibration_rows)
+    else:
+        raise ValueError(f"Unsupported bridge form: {bridge_form}")
+
+    bridged_rows = _apply_bridge(
+        small_rows=small_rows,
+        frontier_rows=frontier_rows,
+        calibration_question_ids=calibration_question_ids,
+        predictors=predictors,
+        bridge_form=bridge_form,
+    )
+    tolerance_payload = _compute_tolerance_band(bridged_rows)
+    evaluation = _evaluate_candidate(
+        bridge_form=bridge_form,
+        per_hop=per_hop,
+        calibration_rows=calibration_rows,
+        predictors=predictors,
+    )
+    return {
+        "bridge_form": bridge_form,
+        "per_hop": per_hop,
+        "bridged_rows": bridged_rows,
+        "tolerance_payload": tolerance_payload,
+        "evaluation": evaluation,
+    }
+
+
+def _pending_bridge_exports(
+    *,
+    export_root: Path,
+    reason: str,
+) -> dict[str, Any]:
+    diagnostics_path = write_json(
+        export_root / "bridge_diagnostics.json",
+        {
+            "status": "pending_measurement_consumption",
+            "reason": reason,
+            "diagnostic_scope": DIAGNOSTIC_SCOPE,
+            "bridge_escalation_sequence": list(BRIDGE_ESCALATION_SEQUENCE),
+        },
+    )
+    tolerance_path = write_json(
+        export_root / "tolerance_band.json",
+        {
+            "status": "pending_measurement_consumption",
+            "reason": reason,
+        },
+    )
+    variance_path = write_json(
+        export_root / "variance_bias_budget.json",
+        {
+            "status": "pending_measurement_consumption",
+            "reason": reason,
+        },
+    )
+    return {
+        "status": "pending_measurement_consumption",
+        "bridge_diagnostics": str(diagnostics_path),
+        "tolerance_band": str(tolerance_path),
+        "variance_bias_budget": str(variance_path),
+        "bridged_delta_loo_jsonl": "",
+        "bridged_delta_loo_csv": "",
+    }
+
+
 def run_bridge_analysis(
     *,
     measurement_dir: str | Path,
@@ -347,35 +740,10 @@ def run_bridge_analysis(
     small_rows = _load_snapshot_rows(measurement_dir, "small")
     frontier_rows = _load_snapshot_rows(measurement_dir, "frontier")
     if not small_rows or not frontier_rows or not calibration_question_ids:
-        diagnostics_path = write_json(
-            export_root / "bridge_diagnostics.json",
-            {
-                "status": "pending_measurement_consumption",
-                "reason": "small/frontier snapshots or calibration manifest are incomplete",
-            },
+        return _pending_bridge_exports(
+            export_root=export_root,
+            reason="small/frontier snapshots or calibration manifest are incomplete",
         )
-        tolerance_path = write_json(
-            export_root / "tolerance_band.json",
-            {
-                "status": "pending_measurement_consumption",
-                "reason": "bridge output is incomplete",
-            },
-        )
-        variance_path = write_json(
-            export_root / "variance_bias_budget.json",
-            {
-                "status": "pending_measurement_consumption",
-                "reason": "bridge output is incomplete",
-            },
-        )
-        return {
-            "status": "pending_measurement_consumption",
-            "bridge_diagnostics": str(diagnostics_path),
-            "tolerance_band": str(tolerance_path),
-            "variance_bias_budget": str(variance_path),
-            "bridged_delta_loo_jsonl": "",
-            "bridged_delta_loo_csv": "",
-        }
 
     small_lookup = {
         (row["question_id"], row["paragraph_id"]): row for row in small_rows if row["question_id"] in calibration_question_ids
@@ -395,63 +763,91 @@ def run_bridge_analysis(
         for key in shared_keys
     ]
     if not calibration_rows:
-        diagnostics_path = write_json(
-            export_root / "bridge_diagnostics.json",
-            {
-                "status": "pending_measurement_consumption",
-                "reason": "no overlapping calibration rows between small and frontier snapshots",
-            },
+        return _pending_bridge_exports(
+            export_root=export_root,
+            reason="no overlapping calibration rows between small and frontier snapshots",
         )
-        tolerance_path = write_json(
-            export_root / "tolerance_band.json",
-            {
-                "status": "pending_measurement_consumption",
-                "reason": "no overlapping calibration rows between small and frontier snapshots",
-            },
-        )
-        variance_path = write_json(
-            export_root / "variance_bias_budget.json",
-            {
-                "status": "pending_measurement_consumption",
-                "reason": "no overlapping calibration rows between small and frontier snapshots",
-            },
-        )
-        return {
-            "status": "pending_measurement_consumption",
-            "bridge_diagnostics": str(diagnostics_path),
-            "tolerance_band": str(tolerance_path),
-            "variance_bias_budget": str(variance_path),
-            "bridged_delta_loo_jsonl": "",
-            "bridged_delta_loo_csv": "",
-        }
 
-    coefficients = _fit_per_hop(
-        calibration_rows,
-        seed=seed,
-        bootstrap_resamples=bootstrap_resamples,
-    )
-    bridged_rows = _apply_bridge(
-        small_rows=small_rows,
-        frontier_rows=frontier_rows,
-        calibration_question_ids=calibration_question_ids,
-        coefficients=coefficients,
-    )
-    tolerance_payload = _compute_tolerance_band(bridged_rows)
+    attempts: list[dict[str, Any]] = []
+    selected_candidate: dict[str, Any] | None = None
+    for bridge_form in BRIDGE_ESCALATION_SEQUENCE[:-1]:
+        candidate = _build_candidate(
+            bridge_form=bridge_form,
+            calibration_rows=calibration_rows,
+            small_rows=small_rows,
+            frontier_rows=frontier_rows,
+            calibration_question_ids=calibration_question_ids,
+            seed=seed,
+            bootstrap_resamples=bootstrap_resamples,
+        )
+        attempts.append(candidate)
+        if candidate["evaluation"]["pass_fail"] == "pass":
+            selected_candidate = candidate
+            break
+
+    final_status = "computed"
+    selected_bridge_form = selected_candidate["bridge_form"] if selected_candidate else "frontier_full_n_required"
+    diagnostics_pass_fail = "pass"
+    escalation_reason = ""
+    recommended_next_action = "proceed_with_bridge_outputs"
+    export_candidate = selected_candidate or attempts[-1]
+    if selected_candidate is None:
+        final_status = "frontier_full_n_required"
+        diagnostics_pass_fail = "fail"
+        escalation_reason = (
+            "All configured bridge forms failed pass criteria; "
+            f"last attempted form was {export_candidate['bridge_form']}"
+        )
+        recommended_next_action = "execute_v_frontier_on_full_n"
+        export_candidate["tolerance_payload"]["status"] = "provisional_bridge_only"
+        export_candidate["tolerance_payload"]["recommended_next_action"] = recommended_next_action
+    elif selected_candidate["bridge_form"] == "linear_ols":
+        escalation_reason = "linear_ols satisfied the bridge pass criteria"
+    else:
+        escalation_reason = (
+            f"linear_ols failed pass criteria, escalated to {selected_candidate['bridge_form']}"
+        )
 
     diagnostics_payload = {
-        "status": "computed",
-        "bridge_form": "linear_ols",
-        "diagnostic_scope": "scipy_shapiro_with_pure_python_bridge",
+        "status": final_status,
+        "bridge_form": selected_bridge_form,
+        "diagnostic_scope": DIAGNOSTIC_SCOPE,
         "calibration_manifest_path": str(Path(calibration_manifest_path).resolve()),
         "bootstrap_resamples": bootstrap_resamples,
-        "per_hop": coefficients,
+        "pass_fail": diagnostics_pass_fail,
+        "escalation_reason": escalation_reason,
+        "recommended_next_action": recommended_next_action,
+        "bridge_escalation_sequence": list(BRIDGE_ESCALATION_SEQUENCE),
+        "pass_criteria": {
+            "normality_pvalue_gt": PASS_THRESHOLDS["normality_pvalue"],
+            "breusch_pagan_pvalue_gt": PASS_THRESHOLDS["breusch_pagan_pvalue"],
+            "icc_question_residual_lt": PASS_THRESHOLDS["icc_question_residual"],
+            "diagnostic_triplet_passes_required": min(2, len(export_candidate["per_hop"])),
+            "pooled_pearson_r_gte": PASS_THRESHOLDS["pearson_r"],
+            "pooled_mae_lte_ratio_sigma": PASS_THRESHOLDS["mae_to_sigma_ratio"],
+        },
+        "selected_candidate_form": export_candidate["bridge_form"],
+        "candidate_evaluations": [
+            {
+                "bridge_form": candidate["bridge_form"],
+                **candidate["evaluation"],
+            }
+            for candidate in attempts
+        ],
+        "per_hop": export_candidate["per_hop"],
+        "pooled_overlap": export_candidate["evaluation"]["pooled_consistency"],
     }
     variance_payload = {
-        "status": "computed",
+        "status": final_status,
+        "bridge_status": final_status,
+        "bridge_form": selected_bridge_form,
+        "pass_fail": diagnostics_pass_fail,
+        "escalation_reason": escalation_reason,
+        "recommended_next_action": recommended_next_action,
         "calibration_manifest_path": str(Path(calibration_manifest_path).resolve()),
         "per_hop": {
             hop_depth: {
-                "sigma_stratum": tolerance_payload["per_hop"][hop_depth]["sigma"],
+                "sigma_stratum": export_candidate["tolerance_payload"]["per_hop"][hop_depth]["sigma"],
                 "bridge_coefficient_variance": diagnostics["bridge_coefficient_variance"],
                 "calibration_consistency": diagnostics["consistency"],
                 "annotation_reliability": {
@@ -459,14 +855,14 @@ def run_bridge_analysis(
                     "reason": "annotation disagreement rates populate after annotation and kappa ingestion",
                 },
             }
-            for hop_depth, diagnostics in coefficients.items()
+            for hop_depth, diagnostics in export_candidate["per_hop"].items()
         },
     }
 
-    bridged_jsonl_path = write_jsonl(export_root / "bridged_delta_loo.jsonl", bridged_rows)
+    bridged_jsonl_path = write_jsonl(export_root / "bridged_delta_loo.jsonl", export_candidate["bridged_rows"])
     bridged_csv_path = write_csv(
         export_root / "bridged_delta_loo.csv",
-        bridged_rows,
+        export_candidate["bridged_rows"],
         [
             "question_id",
             "hop_depth",
@@ -477,16 +873,17 @@ def run_bridge_analysis(
             "delta_loo_frontier_equivalent",
             "bridge_source",
             "calibration_member",
+            "bridge_form",
             "automated_label",
             "tolerance_flagged",
         ],
     )
     diagnostics_path = write_json(export_root / "bridge_diagnostics.json", diagnostics_payload)
-    tolerance_path = write_json(export_root / "tolerance_band.json", tolerance_payload)
+    tolerance_path = write_json(export_root / "tolerance_band.json", export_candidate["tolerance_payload"])
     variance_path = write_json(export_root / "variance_bias_budget.json", variance_payload)
 
     return {
-        "status": "computed",
+        "status": final_status,
         "bridge_diagnostics": str(diagnostics_path),
         "bridged_delta_loo_jsonl": str(bridged_jsonl_path),
         "bridged_delta_loo_csv": str(bridged_csv_path),

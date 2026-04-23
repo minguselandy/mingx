@@ -1,0 +1,6 @@
+annotation_item_id,question_id,paragraph_id,hop_depth,source,automated_label,draft_expert_label,expert_label,feedback_notes,review_status
+4hop1__76111_624859_355213_203322::3,4hop1__76111_624859_355213_203322,3,4hop,tolerance_flagged,BUFFER,BUFFER,,,expert_review_required
+2hop__86458_20273::2,2hop__86458_20273,2,2hop,face_validity_sample,HIGH,HIGH,,,expert_review_required
+4hop1__76111_624859_355213_203322::1,4hop1__76111_624859_355213_203322,1,4hop,tolerance_flagged,HIGH,HIGH,,,expert_review_required
+2hop__86458_20273::1,2hop__86458_20273,1,2hop,tolerance_flagged,HIGH,HIGH,,,expert_review_required
+3hop1__222979_40769_64047::1,3hop1__222979_40769_64047,1,3hop,tolerance_flagged,HIGH,HIGH,,,expert_review_required

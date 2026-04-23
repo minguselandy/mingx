@@ -6,6 +6,12 @@ from cps.scoring.backends import MockScoringBackend
 
 
 def build_live_backend(context: Phase1Context, model_role: str):
+    if not context.provider.phase1_logprob_ready:
+        profile_name = context.provider.profile_name or context.provider.name or "unknown"
+        raise ValueError(
+            "Selected API profile is not Phase 1 logprob-ready for the live scorer: "
+            f"{profile_name}. {context.provider.note}"
+        )
     api_style = str(context.provider.api_style or "").strip()
     if api_style == "openai_chat_compatible":
         return OpenAICompatibleChatBackend(context=context, model_role=model_role)

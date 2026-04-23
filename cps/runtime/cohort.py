@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -33,6 +34,10 @@ from cps.store.measurement import append_event, events_path_for, materialize_que
 from cps.store.progress import MeasurementUnitSpec, rebuild_measurement_unit_states
 
 
+REFERENCE_PHASE1_PROBE_EQUIVALENT_FORWARD_PASSES = 9600
+RECOMMENDED_BUDGET_HEADROOM_MULTIPLIER = 1.3
+
+
 def _resolve_plan_path(path: str | Path) -> Path:
     return Path(path).resolve()
 
@@ -52,14 +57,23 @@ def _build_question_lookup(bundle) -> dict[str, ManifestQuestion]:
     return {question.question_id: question for question in bundle.sample}
 
 
-def _resolve_question_ids(raw_value, calibration_question_ids: list[str], bundle) -> list[str]:
+def _resolve_question_ids(
+    raw_value,
+    calibration_question_ids: list[str],
+    bundle,
+    *,
+    exclude_question_ids: tuple[str, ...] = (),
+) -> list[str]:
+    excluded = {str(question_id) for question_id in exclude_question_ids}
     if raw_value == "all":
-        return [question.question_id for question in bundle.sample]
-    if raw_value == "calibration_manifest":
-        return list(calibration_question_ids)
-    if isinstance(raw_value, list):
-        return [str(item) for item in raw_value]
-    raise ValueError(f"Unsupported question selection: {raw_value!r}")
+        question_ids = [question.question_id for question in bundle.sample]
+    elif raw_value == "calibration_manifest":
+        question_ids = list(calibration_question_ids)
+    elif isinstance(raw_value, list):
+        question_ids = [str(item) for item in raw_value]
+    else:
+        raise ValueError(f"Unsupported question selection: {raw_value!r}")
+    return [question_id for question_id in question_ids if question_id not in excluded]
 
 
 def _build_backend(context, backend_name: str, model_role: str):
@@ -112,9 +126,91 @@ def _measurement_status(
         return "pilot_only"
     if contamination_gate_decision != "pass":
         return "awaiting_contamination_check"
+    if annotation_mode == "synthetic_passthrough":
+        return "pilot_only"
     if annotation_mode != "human_labels" or kappa_status != "computed":
         return "awaiting_real_annotation"
     return "measurement_validated"
+
+
+def _equivalent_forward_passes(questions: list[ManifestQuestion], *, k_lcb: int) -> int:
+    return sum((question.paragraph_count + 1) * k_lcb for question in questions)
+
+
+def _runner_api_call_estimate(questions: list[ManifestQuestion], *, k_lcb: int) -> int:
+    return sum(1 + ((question.paragraph_count + 1) * k_lcb) for question in questions)
+
+
+def _matches_reference_protocol_full_shape(plan: dict, *, scope_mode: str) -> bool:
+    return (
+        scope_mode == "protocol_full"
+        and plan.get("question_paragraph_limit") is None
+        and _calibration_per_hop_count(plan) == 10
+        and plan.get("small_full_n", {}).get("questions") == "all"
+        and plan.get("frontier_calibration", {}).get("questions") == "calibration_manifest"
+    )
+
+
+def _build_budget_report(
+    *,
+    plan: dict,
+    scope_mode: str,
+    small_questions: list[ManifestQuestion],
+    frontier_questions: list[ManifestQuestion],
+    k_lcb: int,
+) -> dict[str, object]:
+    small_equivalent = _equivalent_forward_passes(small_questions, k_lcb=k_lcb)
+    frontier_equivalent = _equivalent_forward_passes(frontier_questions, k_lcb=k_lcb)
+    small_api_calls = _runner_api_call_estimate(small_questions, k_lcb=k_lcb)
+    frontier_api_calls = _runner_api_call_estimate(frontier_questions, k_lcb=k_lcb)
+
+    current_total_equivalent = small_equivalent + frontier_equivalent
+    current_total_api_calls = small_api_calls + frontier_api_calls
+    full_shape_match = _matches_reference_protocol_full_shape(plan, scope_mode=scope_mode)
+
+    return {
+        "source_document": "phase0-specification.md",
+        "current_plan": {
+            "headroom_multiplier": RECOMMENDED_BUDGET_HEADROOM_MULTIPLIER,
+            "equivalent_forward_passes": {
+                "small": small_equivalent,
+                "frontier": frontier_equivalent,
+                "total": current_total_equivalent,
+            },
+            "runner_api_calls": {
+                "small": small_api_calls,
+                "frontier": frontier_api_calls,
+                "total": current_total_api_calls,
+            },
+            "recommended_provisioned_equivalent_forward_passes": {
+                "small": int(math.ceil(small_equivalent * RECOMMENDED_BUDGET_HEADROOM_MULTIPLIER)),
+                "frontier": int(math.ceil(frontier_equivalent * RECOMMENDED_BUDGET_HEADROOM_MULTIPLIER)),
+                "total": int(math.ceil(current_total_equivalent * RECOMMENDED_BUDGET_HEADROOM_MULTIPLIER)),
+            },
+            "question_counts": {
+                "small": len(small_questions),
+                "frontier": len(frontier_questions),
+            },
+            "notes": [
+                "equivalent_forward_passes follows the protocol budgeting convention of (paragraph_count + 1) * K_LCB per question",
+                "runner_api_calls reflects the current repository implementation, which also performs one baseline call per question",
+            ],
+        },
+        "reference_phase1_probe_budget": {
+            "status": "applicable" if full_shape_match else "not_applicable",
+            "approx_equivalent_forward_passes": (
+                REFERENCE_PHASE1_PROBE_EQUIVALENT_FORWARD_PASSES if full_shape_match else None
+            ),
+            "delta_vs_current_plan_total": (
+                current_total_equivalent - REFERENCE_PHASE1_PROBE_EQUIVALENT_FORWARD_PASSES
+                if full_shape_match
+                else None
+            ),
+            "note": (
+                "the protocol document records an approximate Phase 1 probe budget; current_plan values are computed from the actual manifest paragraph counts and selected question sets"
+            ),
+        },
+    }
 
 
 def _blocked_questions_path(calibration_manifest_path: Path) -> Path:
@@ -142,6 +238,99 @@ def _write_blocked_question_ids(blocked_questions_path: Path, blocked_question_i
             "updated_at_utc": datetime.now(timezone.utc).isoformat(),
             "reason_code": "data_inspection_failed",
             "replacement_policy": "same_hop_next_rank_on_resume_v1",
+        },
+    )
+
+
+def _write_contamination_escalation_bundle(
+    *,
+    export_dir: Path,
+    run_id: str,
+    scope_mode: str,
+    contamination_report: dict[str, object],
+    run_summary_path: Path,
+    bridge_exports: dict[str, object],
+    annotation_report: dict[str, object],
+    kappa_report: dict[str, object],
+) -> Path:
+    contamination_payload = contamination_report["payload"]
+    gate_decision = str(contamination_payload.get("gate_decision") or "warning")
+    bridge_diagnostics_path = str(bridge_exports.get("bridge_diagnostics") or "")
+    kappa_summary_path = str(kappa_report.get("kappa_summary_path") or "")
+
+    status = "not_required"
+    default_operator_action = "continue_normally"
+    recommended_actions: list[dict[str, object]] = []
+    if gate_decision == "fail":
+        status = "manual_decision_required"
+        default_operator_action = "stop_and_escalate"
+        recommended_actions = [
+            {
+                "action": "restrict_to_uncontaminated_subset_if_effective_n_remains_viable",
+                "selected_by_default": False,
+                "requires_manual_decision": True,
+                "rationale": "allowed only as a scientific interpretation decision after manual review",
+            },
+            {
+                "action": "rerun_protocol_full_for_independent_verification",
+                "selected_by_default": False,
+                "requires_manual_decision": True,
+                "rationale": (
+                    "do not auto-rerun; use only if manual review decides an independent rerun is necessary"
+                ),
+            },
+            {
+                "action": "return_to_phase0_revision",
+                "selected_by_default": False,
+                "requires_manual_decision": True,
+                "rationale": "use when contamination severity voids meaningful measurement validation",
+            },
+        ]
+    elif gate_decision == "warning":
+        status = "precondition_incomplete"
+        default_operator_action = "restore_missing_baseline_measurements"
+        recommended_actions = [
+            {
+                "action": "restore_baseline_measurements_before_measurement_interpretation",
+                "selected_by_default": True,
+                "requires_manual_decision": False,
+                "rationale": "contamination gate cannot be interpreted until baseline_scored events exist",
+            }
+        ]
+
+    return write_json(
+        export_dir / "contamination_escalation_bundle.json",
+        {
+            "status": status,
+            "run_id": run_id,
+            "scope_mode": scope_mode,
+            "source_documents": [
+                "phase1-protocol.md",
+                "execution-readiness-checklist.md",
+            ],
+            "gate_decision": gate_decision,
+            "scientific_interpretation_allowed": gate_decision == "pass",
+            "default_operator_action": default_operator_action,
+            "automation_policy": {
+                "auto_restrict_to_uncontaminated_subset": False,
+                "auto_rerun_protocol_full": False,
+                "auto_upgrade_to_measurement_validated": False,
+            },
+            "diagnostic_summary": {
+                "question_count": contamination_payload.get("question_count"),
+                "above_threshold_count": contamination_payload.get("above_threshold_count"),
+                "above_threshold_fraction": contamination_payload.get("above_threshold_fraction"),
+                "threshold_probability": contamination_payload.get("threshold_probability"),
+                "question_ids_above_threshold": contamination_payload.get("question_ids_above_threshold"),
+            },
+            "recommended_actions": recommended_actions,
+            "artifact_paths": {
+                "run_summary": str(run_summary_path),
+                "contamination_diagnostics": str(contamination_report.get("path") or ""),
+                "bridge_diagnostics": bridge_diagnostics_path,
+                "annotation_manifest": str(annotation_report.get("annotation_manifest_path") or ""),
+                "kappa_summary": kappa_summary_path,
+            },
         },
     )
 
@@ -495,11 +684,13 @@ def run_phase1_cohort(
         plan["small_full_n"]["questions"],
         calibration_question_ids,
         bundle,
+        exclude_question_ids=tuple(blocked_question_ids),
     )
     frontier_question_ids = _resolve_question_ids(
         plan["frontier_calibration"]["questions"],
         calibration_question_ids,
         bundle,
+        exclude_question_ids=tuple(blocked_question_ids),
     )
     paragraph_limit = plan.get("question_paragraph_limit")
     small_questions = [
@@ -757,6 +948,7 @@ def run_phase1_cohort(
             "annotation_queue_path": "",
             "annotation_items_path": "",
             "annotation_readme_path": "",
+            "training_manifest_path": "",
             "queue_count": 0,
             "flagged_count": 0,
             "face_validity_count": 0,
@@ -785,12 +977,22 @@ def run_phase1_cohort(
         export_dir=context.storage.export_dir,
         unit_specs=all_specs,
     )
+    budget_report = _build_budget_report(
+        plan=plan,
+        scope_mode=scope_mode,
+        small_questions=small_questions,
+        frontier_questions=frontier_questions,
+        k_lcb=k_lcb,
+    )
+    run_summary_path = context.storage.export_dir / "run_summary.json"
+    contamination_escalation_bundle_path = context.storage.export_dir / "contamination_escalation_bundle.json"
 
     summary = {
         "run_id": run_id,
         "backend": backend_name,
         "scope_mode": scope_mode,
         "annotation_mode": annotation_file_status["annotation_mode"],
+        "training_manifest_path": annotation_report["training_manifest_path"],
         "calibration_manifest_path": str(calibration_manifest_path),
         "calibration_per_hop_count": _calibration_per_hop_count(plan),
         "blocked_questions_path": str(blocked_questions_path),
@@ -800,7 +1002,9 @@ def run_phase1_cohort(
             "status": contamination_report["status"],
             "path": contamination_report["path"],
             "gate_decision": contamination_report["payload"]["gate_decision"],
+            "escalation_bundle_path": str(contamination_escalation_bundle_path),
         },
+        "budget": budget_report,
         "bridge_status": bridge_exports["status"],
         "annotation": {
             "status": annotation_file_status["status"],
@@ -810,6 +1014,7 @@ def run_phase1_cohort(
             "face_validity_count": annotation_report["face_validity_count"],
             "annotation_manifest_path": annotation_report["annotation_manifest_path"],
             "annotation_readme_path": annotation_report["annotation_readme_path"],
+            "training_manifest_path": annotation_report["training_manifest_path"],
             "annotation_status_path": str(annotation_status_path),
         },
         "kappa": {
@@ -867,7 +1072,17 @@ def run_phase1_cohort(
 
     summary["pipeline_status"] = pipeline_status
     summary["measurement_status"] = measurement_status
-    run_summary_path = write_json(context.storage.export_dir / "run_summary.json", summary)
+    run_summary_path = write_json(run_summary_path, summary)
+    contamination_escalation_bundle_path = _write_contamination_escalation_bundle(
+        export_dir=context.storage.export_dir,
+        run_id=run_id,
+        scope_mode=scope_mode,
+        contamination_report=contamination_report,
+        run_summary_path=run_summary_path,
+        bridge_exports=bridge_exports,
+        annotation_report=annotation_report,
+        kappa_report=kappa_report,
+    )
     checkpoint_path = write_json(
         context.storage.checkpoint_dir / f"{run_id}.json",
         {
@@ -897,6 +1112,8 @@ def run_phase1_cohort(
         "checkpoint_path": str(checkpoint_path),
         "annotation_manifest_path": str(annotation_report["annotation_manifest_path"]),
         "annotation_readme_path": str(annotation_report["annotation_readme_path"]),
+        "training_manifest_path": str(annotation_report["training_manifest_path"]),
+        "contamination_escalation_bundle_path": str(contamination_escalation_bundle_path),
         "annotation_status_path": str(annotation_status_path),
         "summary": summary,
         "contamination_report": contamination_report,

@@ -6,6 +6,10 @@
       {
         "configuration_id": "bi_encoder_plus_cross_encoder",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "blocked",
+        "scientific_consumption_allowed": false,
+        "notes": "readiness scaffold only; this configuration is blocked from scientific consumption because it references MuSiQue is_supporting ground truth",
         "ranked_paragraphs": [
           {
             "paragraph_id": 2,
@@ -30,6 +34,10 @@
       {
         "configuration_id": "bi_encoder_plus_cross_encoder",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "blocked",
+        "scientific_consumption_allowed": false,
+        "notes": "readiness scaffold only; this configuration is blocked from scientific consumption because it references MuSiQue is_supporting ground truth",
         "ranked_paragraphs": [
           {
             "paragraph_id": 2,
@@ -66,6 +74,10 @@
       {
         "configuration_id": "bi_encoder_plus_cross_encoder",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "blocked",
+        "scientific_consumption_allowed": false,
+        "notes": "readiness scaffold only; this configuration is blocked from scientific consumption because it references MuSiQue is_supporting ground truth",
         "ranked_paragraphs": [
           {
             "paragraph_id": 2,
@@ -102,6 +114,10 @@
       {
         "configuration_id": "bm25_baseline",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 2,
@@ -126,6 +142,10 @@
       {
         "configuration_id": "bm25_baseline",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 2,
@@ -162,6 +182,10 @@
       {
         "configuration_id": "bm25_baseline",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 2,
@@ -198,6 +222,10 @@
       {
         "configuration_id": "bi_encoder_only",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -222,6 +250,10 @@
       {
         "configuration_id": "bi_encoder_only",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -258,6 +290,10 @@
       {
         "configuration_id": "bi_encoder_only",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -294,6 +330,10 @@
       {
         "configuration_id": "hybrid_rrf",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -318,6 +358,10 @@
       {
         "configuration_id": "hybrid_rrf",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -354,6 +398,10 @@
       {
         "configuration_id": "hybrid_rrf",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -396,6 +444,10 @@
       {
         "configuration_id": "bi_encoder_plus_cross_encoder",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "blocked",
+        "scientific_consumption_allowed": false,
+        "notes": "readiness scaffold only; this configuration is blocked from scientific consumption because it references MuSiQue is_supporting ground truth",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -420,6 +472,10 @@
       {
         "configuration_id": "bi_encoder_plus_cross_encoder",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "blocked",
+        "scientific_consumption_allowed": false,
+        "notes": "readiness scaffold only; this configuration is blocked from scientific consumption because it references MuSiQue is_supporting ground truth",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -456,6 +512,10 @@
       {
         "configuration_id": "bi_encoder_plus_cross_encoder",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "blocked",
+        "scientific_consumption_allowed": false,
+        "notes": "readiness scaffold only; this configuration is blocked from scientific consumption because it references MuSiQue is_supporting ground truth",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -492,6 +552,10 @@
       {
         "configuration_id": "bm25_baseline",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -516,6 +580,10 @@
       {
         "configuration_id": "bm25_baseline",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -552,6 +620,10 @@
       {
         "configuration_id": "bm25_baseline",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 3,
@@ -588,6 +660,10 @@
       {
         "configuration_id": "bi_encoder_only",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 0,
@@ -612,6 +688,10 @@
       {
         "configuration_id": "bi_encoder_only",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 0,
@@ -648,6 +728,10 @@
       {
         "configuration_id": "bi_encoder_only",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 0,
@@ -684,6 +768,10 @@
       {
         "configuration_id": "hybrid_rrf",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 0,
@@ -708,6 +796,10 @@
       {
         "configuration_id": "hybrid_rrf",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 0,
@@ -744,6 +836,10 @@
       {
         "configuration_id": "hybrid_rrf",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 0,
@@ -786,6 +882,10 @@
       {
         "configuration_id": "bi_encoder_plus_cross_encoder",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "blocked",
+        "scientific_consumption_allowed": false,
+        "notes": "readiness scaffold only; this configuration is blocked from scientific consumption because it references MuSiQue is_supporting ground truth",
         "ranked_paragraphs": [
           {
             "paragraph_id": 1,
@@ -810,6 +910,10 @@
       {
         "configuration_id": "bi_encoder_plus_cross_encoder",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "blocked",
+        "scientific_consumption_allowed": false,
+        "notes": "readiness scaffold only; this configuration is blocked from scientific consumption because it references MuSiQue is_supporting ground truth",
         "ranked_paragraphs": [
           {
             "paragraph_id": 1,
@@ -846,6 +950,10 @@
       {
         "configuration_id": "bi_encoder_plus_cross_encoder",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "blocked",
+        "scientific_consumption_allowed": false,
+        "notes": "readiness scaffold only; this configuration is blocked from scientific consumption because it references MuSiQue is_supporting ground truth",
         "ranked_paragraphs": [
           {
             "paragraph_id": 1,
@@ -882,6 +990,10 @@
       {
         "configuration_id": "bm25_baseline",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 1,
@@ -906,6 +1018,10 @@
       {
         "configuration_id": "bm25_baseline",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 1,
@@ -942,6 +1058,10 @@
       {
         "configuration_id": "bm25_baseline",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 1,
@@ -978,6 +1098,10 @@
       {
         "configuration_id": "bi_encoder_only",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 4,
@@ -1002,6 +1126,10 @@
       {
         "configuration_id": "bi_encoder_only",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 4,
@@ -1038,6 +1166,10 @@
       {
         "configuration_id": "bi_encoder_only",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 4,
@@ -1074,6 +1206,10 @@
       {
         "configuration_id": "hybrid_rrf",
         "top_k": 3,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 4,
@@ -1098,6 +1234,10 @@
       {
         "configuration_id": "hybrid_rrf",
         "top_k": 5,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 4,
@@ -1134,6 +1274,10 @@
       {
         "configuration_id": "hybrid_rrf",
         "top_k": 10,
+        "retrieval_mode": "readiness_scaffold",
+        "leakage_guard": "clear",
+        "scientific_consumption_allowed": true,
+        "notes": "readiness scaffold",
         "ranked_paragraphs": [
           {
             "paragraph_id": 4,

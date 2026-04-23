@@ -18,6 +18,8 @@ class ProviderConfig:
     profile_name: str | None
     name: str
     api_style: str
+    phase1_logprob_ready: bool
+    note: str
     base_url_env: str
     api_key_env: str
     base_url: str
@@ -155,6 +157,8 @@ def load_phase1_context(
             profile_name=resolved_api_profile.profile_name,
             name=resolved_api_profile.provider_name,
             api_style=resolved_api_profile.api_style,
+            phase1_logprob_ready=bool(resolved_api_profile.phase1_logprob_ready),
+            note=str(resolved_api_profile.note),
             base_url_env=resolved_api_profile.base_url_env,
             api_key_env=resolved_api_profile.api_key_env,
             base_url=str(resolved_api_profile.base_url),

@@ -6,7 +6,12 @@ from pathlib import Path
 
 from cps.analysis.exports import write_json, write_jsonl
 from cps.data.manifest import load_manifest
-from cps.runtime.annotation import materialize_annotation_artifacts
+from cps.runtime.annotation import (
+    SYNTHETIC_JUSTIFICATION_MARKER,
+    annotation_status_from_files,
+    apply_synthetic_passthrough_labels,
+    materialize_annotation_artifacts,
+)
 
 
 def _write_bridge_exports(
@@ -63,11 +68,6 @@ def _write_bridge_exports(
 def test_materialize_annotation_artifacts_is_order_insensitive_and_writes_templates(workspace_tmp_dir):
     bundle = load_manifest("artifacts/phase0/sample_manifest_v1.json")
     question_lookup = {question.question_id: question for question in bundle.sample}
-    selected_questions = [
-        "2hop__256778_131879",
-        "3hop1__222979_40769_64047",
-        "4hop1__76111_624859_355213_203322",
-    ]
 
     rows = [
         {
@@ -166,12 +166,20 @@ def test_materialize_annotation_artifacts_is_order_insensitive_and_writes_templa
     assert Path(manifest["required_label_paths"]["primary_a"]).exists()
     assert Path(manifest["required_label_paths"]["primary_b"]).exists()
     assert Path(manifest["required_label_paths"]["expert"]).exists()
+    assert "training_package" in manifest
     assert Path(report_a["annotation_readme_path"]) == readme_path
     assert readme_path.exists()
     readme_text = readme_path.read_text(encoding="utf-8")
     assert "HIGH" in readme_text and "LOW" in readme_text and "BUFFER" in readme_text
     assert "primary_a.csv" in readme_text and "expert.csv" in readme_text
     assert "[synthetic_passthrough]" in readme_text
+    assert "training/" in readme_text
+    assert Path(report_a["training_manifest_path"]).exists()
+    assert Path(report_a["annotator_instructions_path"]).exists()
+    assert Path(report_a["worked_examples_path"]).exists()
+    assert Path(report_a["calibration_set_path"]).exists()
+    assert Path(report_a["expert_answer_key_path"]).exists()
+    assert Path(report_a["calibration_feedback_path"]).exists()
 
     items = [
         json.loads(line)
@@ -182,3 +190,46 @@ def test_materialize_annotation_artifacts_is_order_insensitive_and_writes_templa
     assert items[0]["question_text"] == question_lookup[items[0]["question_id"]].question_text
     assert items[0]["answer_text"] == question_lookup[items[0]["question_id"]].answer_text
     assert items[0]["target_paragraph"]["paragraph_id"] in {0, 1}
+
+    training_manifest = json.loads(Path(report_a["training_manifest_path"]).read_text(encoding="utf-8"))
+    assert training_manifest["training_package_version"] == "phase1_annotation_training_v1"
+    assert training_manifest["actual_counts"]["worked_examples"] <= 3
+    assert training_manifest["actual_counts"]["calibration_set"] == 0
+
+
+def test_apply_synthetic_passthrough_labels_marks_runtime_package_as_synthetic(workspace_tmp_dir):
+    bundle = load_manifest("artifacts/phase0/sample_manifest_v1.json")
+    export_dir = workspace_tmp_dir / "exports"
+    bridge_path, bridged_path, tolerance_path = _write_bridge_exports(
+        export_dir,
+        [
+            {
+                "question_id": "2hop__256778_131879",
+                "hop_depth": "2hop",
+                "paragraph_id": 0,
+                "delta_loo_frontier_equivalent": 0.9,
+                "automated_label": "HIGH",
+                "tolerance_flagged": True,
+            }
+        ],
+        flagged_ids={("2hop__256778_131879", 0)},
+    )
+
+    report = materialize_annotation_artifacts(
+        bundle=bundle,
+        export_dir=export_dir,
+        bridge_diagnostics_path=bridge_path,
+        bridged_delta_loo_jsonl_path=bridged_path,
+        tolerance_band_path=tolerance_path,
+        seed=20260418,
+    )
+
+    apply_synthetic_passthrough_labels(report["annotation_manifest_path"])
+    status = annotation_status_from_files(report["annotation_manifest_path"])
+
+    assert status["status"] == "ready_for_ingestion"
+    assert status["annotation_mode"] == "synthetic_passthrough"
+    primary_rows = list(
+        csv.DictReader(Path(report["label_paths"]["primary_a"]).open("r", encoding="utf-8", newline=""))
+    )
+    assert primary_rows[0]["justification"] == SYNTHETIC_JUSTIFICATION_MARKER

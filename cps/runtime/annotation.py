@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import csv
 import hashlib
 import json
@@ -13,6 +14,7 @@ from cps.store.measurement import append_event, iter_events
 
 
 FACE_VALIDITY_ALGORITHM_VERSION = "face_validity_sample_v1"
+TRAINING_PACKAGE_VERSION = "phase1_annotation_training_v1"
 SYNTHETIC_JUSTIFICATION_MARKER = "[synthetic_passthrough]"
 LABEL_FILE_KEYS = ("primary_a", "primary_b", "expert")
 LABEL_COLUMNS = [
@@ -25,10 +27,40 @@ LABEL_COLUMNS = [
     "label",
     "justification",
 ]
+CALIBRATION_COLUMNS = [
+    "annotation_item_id",
+    "question_id",
+    "paragraph_id",
+    "hop_depth",
+    "source",
+    "automated_label",
+    "label",
+    "justification",
+]
+EXPERT_ANSWER_KEY_COLUMNS = [
+    "annotation_item_id",
+    "question_id",
+    "paragraph_id",
+    "hop_depth",
+    "source",
+    "automated_label",
+    "draft_expert_label",
+    "expert_label",
+    "feedback_notes",
+    "review_status",
+]
+TRAINING_TARGET_COUNTS = {
+    "worked_examples": 5,
+    "calibration_set": 10,
+}
 
 
 def _annotation_root(export_dir: str | Path) -> Path:
     return Path(export_dir) / "annotations"
+
+
+def _training_root(export_dir: str | Path) -> Path:
+    return _annotation_root(export_dir) / "training"
 
 
 def _annotation_readme(
@@ -37,6 +69,8 @@ def _annotation_readme(
     flagged_count: int,
     face_validity_count: int,
     label_paths: dict[str, str],
+    training_paths: dict[str, str],
+    training_counts: dict[str, int],
 ) -> str:
     return "\n".join(
         [
@@ -46,7 +80,7 @@ def _annotation_readme(
             f"- 本轮待标注实例总数：`{queue_count}`",
             f"- tolerance-band flagged：`{flagged_count}`",
             f"- face-validity sample：`{face_validity_count}`",
-            "- 你只需要填写 `labels/` 目录下的 3 个 CSV，然后重跑同一条 cohort 命令。",
+            "- 主路径仍然是填写 `labels/` 目录下的 3 个 CSV，然后重跑同一条 cohort 命令。",
             "",
             "## 必须填写的文件",
             f"- `primary_a.csv`: `{label_paths['primary_a']}`",
@@ -67,6 +101,15 @@ def _annotation_readme(
             "- `source = tolerance_flagged` 表示这是容忍带仲裁样本。",
             "- `source = face_validity_sample` 表示这是非 flagged 的抽样核验样本。",
             "",
+            "## 训练材料",
+            f"- `annotator_instructions.md`: `{training_paths['annotator_instructions']}`",
+            f"- `worked_examples.jsonl`: `{training_paths['worked_examples']}`",
+            f"- `calibration_set.csv`: `{training_paths['calibration_set']}`",
+            f"- `expert_answer_key.csv`: `{training_paths['expert_answer_key']}`",
+            f"- `calibration_feedback.md`: `{training_paths['calibration_feedback']}`",
+            f"- 当前自动生成数量：worked examples = `{training_counts['worked_examples']}`，calibration items = `{training_counts['calibration_set']}`",
+            "- `expert_answer_key.csv` 当前使用 automated label 作为 draft placeholder，正式 onboarding 前需要 expert 逐条确认。",
+            "",
             "## 完成后怎么继续",
             "- 填完 3 个 CSV 后，重跑生成这个目录的同一条 cohort 命令。",
             "- 当前仓库的 canonical mock 命令是：",
@@ -75,7 +118,70 @@ def _annotation_readme(
             "",
             "## 完成判定",
             "- 3 个 CSV 全部逐行填完后，runner 会自动 ingest labels、计算 `kappa_summary.json`。",
+            "- 只有 `annotation_mode = human_labels` 且 contamination gate 通过时，protocol-full run 才能进入 `measurement_validated`。",
             "- reduced-scope 或 synthetic 标注路径仍然只会得到 pilot 级 measurement 状态，不会被当成正式 Phase 1 完成。",
+        ]
+    )
+
+
+def _annotator_instructions_text(
+    *,
+    worked_example_count: int,
+    calibration_count: int,
+) -> str:
+    return "\n".join(
+        [
+            "# Phase 1 Annotator Instructions",
+            "",
+            "## 目标",
+            "- 你需要把目标段落标成 `HIGH`、`LOW` 或 `BUFFER`，判断标准是它对回答当前问题的相对价值。",
+            "- `HIGH`：去掉后很可能显著伤害答案概率或多跳链路完整性。",
+            "- `LOW`：去掉后影响很小，主要是背景、重复或弱相关信息。",
+            "- `BUFFER`：价值接近 tertile 边界，或你认为证据不足以稳定判成 HIGH/LOW。",
+            "",
+            "## 使用顺序",
+            f"1. 先看 `{worked_example_count}` 个 worked examples，熟悉标签边界。",
+            f"2. 再做 `{calibration_count}` 个 calibration items。",
+            "3. calibration 完成后，再进入本轮正式 queue。",
+            "",
+            "## 具体操作",
+            "- 每个 item 先读 `question_text` 和 `answer_text`，再看 `target_paragraph`，最后参考整题 `paragraphs[]`。",
+            "- 重点判断 target paragraph 是否承载关键 bridge fact、实体 disambiguation、或多跳链路中的必要中介。",
+            "- 如果你对 HIGH/LOW 犹豫，而且它又靠近边界，优先标 `BUFFER` 并在 expert 讨论环节解释原因。",
+            "",
+            "## Expert 协作约定",
+            "- `expert_answer_key.csv` 当前是 draft scaffold，不是最终 gold。",
+            "- 正式 onboarding 前，expert 需要先确认 calibration gold label，再把反馈写入 `calibration_feedback.md`。",
+        ]
+    )
+
+
+def _calibration_feedback_text(
+    *,
+    calibration_count: int,
+    expert_answer_key_path: str,
+) -> str:
+    return "\n".join(
+        [
+            "# Calibration Feedback Template",
+            "",
+            f"- Calibration item count: `{calibration_count}`",
+            f"- Expert answer key path: `{expert_answer_key_path}`",
+            "",
+            "## 使用方式",
+            "1. Primary annotators 先独立填写 `calibration_set.csv`。",
+            "2. Expert 在 `expert_answer_key.csv` 中确认 draft label，补全 `expert_label` 与 `feedback_notes`。",
+            "3. 对系统性分歧做简短复盘，记录到下面的模板里。",
+            "",
+            "## 需要记录的分歧模式",
+            "- 哪些案例被误判成 HIGH，但其实只是 supporting-adjacent context。",
+            "- 哪些案例应判 LOW，却因实体共现或 lexical overlap 被高估。",
+            "- 哪些案例合理落在 BUFFER，以及它们共享的边界信号。",
+            "",
+            "## 复盘记录",
+            "- 主要误差模式：",
+            "- Expert 修正规则：",
+            "- 是否需要追加 worked example：",
         ]
     )
 
@@ -193,6 +299,125 @@ def _annotation_mode_from_rows(rows_by_annotator: dict[str, list[dict[str, str]]
     return "human_labels"
 
 
+def _rank_training_items(items_rows: list[dict[str, Any]], *, seed: int) -> list[dict[str, Any]]:
+    return sorted(
+        items_rows,
+        key=lambda row: (
+            _stable_digest(
+                TRAINING_PACKAGE_VERSION,
+                seed,
+                row["annotation_item_id"],
+                row["source"],
+            ),
+            row["annotation_item_id"],
+        ),
+    )
+
+
+def _build_training_package(
+    *,
+    export_dir: str | Path,
+    items_rows: list[dict[str, Any]],
+    seed: int,
+) -> dict[str, Any]:
+    training_root = _training_root(export_dir)
+    training_root.mkdir(parents=True, exist_ok=True)
+
+    ranked_items = _rank_training_items(items_rows, seed=seed)
+    worked_example_count = min(TRAINING_TARGET_COUNTS["worked_examples"], len(ranked_items))
+    worked_examples = ranked_items[:worked_example_count]
+    remaining_items = ranked_items[worked_example_count:]
+    calibration_count = min(TRAINING_TARGET_COUNTS["calibration_set"], len(remaining_items))
+    calibration_items = remaining_items[:calibration_count]
+
+    worked_examples_rows = [
+        {
+            **row,
+            "draft_label": row["automated_label"],
+            "trainer_notes_status": "expert_review_required",
+        }
+        for row in worked_examples
+    ]
+    calibration_rows = [
+        {
+            "annotation_item_id": row["annotation_item_id"],
+            "question_id": row["question_id"],
+            "paragraph_id": row["paragraph_id"],
+            "hop_depth": row["hop_depth"],
+            "source": row["source"],
+            "automated_label": row["automated_label"],
+            "label": "",
+            "justification": "",
+        }
+        for row in calibration_items
+    ]
+    expert_answer_key_rows = [
+        {
+            "annotation_item_id": row["annotation_item_id"],
+            "question_id": row["question_id"],
+            "paragraph_id": row["paragraph_id"],
+            "hop_depth": row["hop_depth"],
+            "source": row["source"],
+            "automated_label": row["automated_label"],
+            "draft_expert_label": row["automated_label"],
+            "expert_label": "",
+            "feedback_notes": "",
+            "review_status": "expert_review_required",
+        }
+        for row in calibration_items
+    ]
+
+    paths = {
+        "annotator_instructions": str((training_root / "annotator_instructions.md").resolve()),
+        "worked_examples": str((training_root / "worked_examples.jsonl").resolve()),
+        "calibration_set": str((training_root / "calibration_set.csv").resolve()),
+        "expert_answer_key": str((training_root / "expert_answer_key.csv").resolve()),
+        "calibration_feedback": str((training_root / "calibration_feedback.md").resolve()),
+        "training_manifest": str((training_root / "training_manifest.json").resolve()),
+    }
+    write_text(
+        Path(paths["annotator_instructions"]),
+        _annotator_instructions_text(
+            worked_example_count=worked_example_count,
+            calibration_count=calibration_count,
+        ),
+    )
+    write_jsonl(Path(paths["worked_examples"]), worked_examples_rows)
+    write_csv(Path(paths["calibration_set"]), calibration_rows, CALIBRATION_COLUMNS)
+    write_csv(Path(paths["expert_answer_key"]), expert_answer_key_rows, EXPERT_ANSWER_KEY_COLUMNS)
+    write_text(
+        Path(paths["calibration_feedback"]),
+        _calibration_feedback_text(
+            calibration_count=calibration_count,
+            expert_answer_key_path=paths["expert_answer_key"],
+        ),
+    )
+
+    status = (
+        "ready_for_expert_review"
+        if worked_example_count == TRAINING_TARGET_COUNTS["worked_examples"]
+        and calibration_count == TRAINING_TARGET_COUNTS["calibration_set"]
+        else "partial_reduced_scope"
+    )
+    manifest_payload = {
+        "status": status,
+        "training_package_version": TRAINING_PACKAGE_VERSION,
+        "seed": seed,
+        "target_counts": dict(TRAINING_TARGET_COUNTS),
+        "actual_counts": {
+            "worked_examples": worked_example_count,
+            "calibration_set": calibration_count,
+        },
+        "paths": paths,
+        "notes": [
+            "expert_answer_key.csv ships with automated_label as a draft placeholder",
+            "expert must confirm gold labels before using the package for real annotator onboarding",
+        ],
+    }
+    write_json(Path(paths["training_manifest"]), manifest_payload)
+    return manifest_payload
+
+
 def materialize_annotation_artifacts(
     *,
     bundle: ManifestBundle,
@@ -235,20 +460,6 @@ def materialize_annotation_artifacts(
         source_paths["tolerance_band"],
         *[row["annotation_item_id"] for row in queue_rows],
     )
-    manifest_payload = {
-        "status": "materialized",
-        "seed": seed,
-        "annotation_manifest_hash": manifest_hash,
-        "selection_algorithm_version": FACE_VALIDITY_ALGORITHM_VERSION,
-        "source_paths": source_paths,
-        "counts": {
-            "queue_count": len(queue_rows),
-            "flagged_count": len(flagged_rows),
-            "face_validity_count": len(face_validity_rows),
-        },
-        "required_label_paths": label_paths,
-    }
-    manifest_path = write_json(annotation_root / "annotation_manifest.json", manifest_payload)
     queue_path = write_csv(
         annotation_root / "annotation_queue.csv",
         queue_rows,
@@ -292,6 +503,26 @@ def materialize_annotation_artifacts(
             }
         )
     items_path = write_jsonl(annotation_root / "annotation_items.jsonl", items_rows)
+    training_manifest = _build_training_package(
+        export_dir=export_dir,
+        items_rows=items_rows,
+        seed=seed,
+    )
+    manifest_payload = {
+        "status": "materialized",
+        "seed": seed,
+        "annotation_manifest_hash": manifest_hash,
+        "selection_algorithm_version": FACE_VALIDITY_ALGORITHM_VERSION,
+        "source_paths": source_paths,
+        "counts": {
+            "queue_count": len(queue_rows),
+            "flagged_count": len(flagged_rows),
+            "face_validity_count": len(face_validity_rows),
+        },
+        "required_label_paths": label_paths,
+        "training_package": training_manifest,
+    }
+    manifest_path = write_json(annotation_root / "annotation_manifest.json", manifest_payload)
     readme_path = write_text(
         annotation_root / "README.md",
         _annotation_readme(
@@ -299,6 +530,8 @@ def materialize_annotation_artifacts(
             flagged_count=len(flagged_rows),
             face_validity_count=len(face_validity_rows),
             label_paths=label_paths,
+            training_paths=training_manifest["paths"],
+            training_counts=training_manifest["actual_counts"],
         ),
     )
 
@@ -316,6 +549,12 @@ def materialize_annotation_artifacts(
         "annotation_items_path": str(items_path),
         "annotation_readme_path": str(readme_path),
         "label_paths": label_paths,
+        "training_manifest_path": training_manifest["paths"]["training_manifest"],
+        "annotator_instructions_path": training_manifest["paths"]["annotator_instructions"],
+        "worked_examples_path": training_manifest["paths"]["worked_examples"],
+        "calibration_set_path": training_manifest["paths"]["calibration_set"],
+        "expert_answer_key_path": training_manifest["paths"]["expert_answer_key"],
+        "calibration_feedback_path": training_manifest["paths"]["calibration_feedback"],
         "queue_count": len(queue_rows),
         "flagged_count": len(flagged_rows),
         "face_validity_count": len(face_validity_rows),
@@ -351,6 +590,27 @@ def annotation_status_from_files(annotation_manifest_path: str | Path) -> dict[s
         "annotation_manifest_hash": manifest["annotation_manifest_hash"],
         "completion": completion,
         "counts": manifest["counts"],
+    }
+
+
+def apply_synthetic_passthrough_labels(annotation_manifest_path: str | Path) -> dict[str, Any]:
+    manifest = json.loads(Path(annotation_manifest_path).read_text(encoding="utf-8"))
+    updated_paths: dict[str, str] = {}
+    for annotator_id, raw_path in manifest["required_label_paths"].items():
+        path = Path(raw_path)
+        rows = _read_label_rows(path)
+        for row in rows:
+            row["label"] = row["automated_label"]
+            row["justification"] = SYNTHETIC_JUSTIFICATION_MARKER
+        with path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=LABEL_COLUMNS)
+            writer.writeheader()
+            writer.writerows(rows)
+        updated_paths[annotator_id] = str(path)
+    return {
+        "status": "synthetic_passthrough_written",
+        "annotation_manifest_hash": manifest["annotation_manifest_hash"],
+        "updated_paths": updated_paths,
     }
 
 
@@ -473,3 +733,25 @@ def ingest_annotation_labels(
         "annotation_mode": status["annotation_mode"],
         "ingested_count": ingested_count,
     }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Inspect or prepare Phase 1 annotation artifacts.")
+    parser.add_argument("--annotation-manifest", required=True)
+    parser.add_argument(
+        "--fill-synthetic-passthrough",
+        action="store_true",
+        help="Fill all label CSV rows with automated_label and the synthetic passthrough marker.",
+    )
+    args = parser.parse_args()
+
+    if args.fill_synthetic_passthrough:
+        payload = apply_synthetic_passthrough_labels(args.annotation_manifest)
+    else:
+        payload = annotation_status_from_files(args.annotation_manifest)
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

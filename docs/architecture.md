@@ -33,8 +33,6 @@ Key responsibilities:
 - `backends.py`
   Builds live/mock scoring backends so runtime code does not branch on
   provider names.
-- `evas.py`
-  Keeps EVAS-specific probing, recommendations, and CLI helpers.
 
 ### 3. `cps/`
 
@@ -63,7 +61,7 @@ The implementation now separates protocol locks from transport details.
 3. `api/backends.py` maps the resolved API profile to a concrete scoring
    backend.
 4. `cps/runtime/*` consumes generic `frontier` / `small` / `coding` roles and
-   does not need to know whether the live backend is DashScope or EVAS.
+   does not branch on provider-specific runtime logic.
 5. `cps/providers/openai_compatible.py` contains the concrete OpenAI-compatible
    transport implementation.
 6. `cps/providers/dashscope.py` and `phase1/*` remain compatibility shims for

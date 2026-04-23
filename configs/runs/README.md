@@ -25,9 +25,6 @@ Provider/model resolution:
   `api/settings.py`, typically via `API_PROFILE` plus optional `API_*`
   overrides from `.env`.
 - Default profile: `dashscope-qwen-phase1`
-- Optional exploration profile: `evas-openai`
-  This profile is useful for API smoke tests, but it is not currently
-  Phase 1 logprob-ready.
 
 Current recommended run plans:
 
@@ -50,3 +47,26 @@ Interpretation rules:
 - To switch live provider/model bundles, prefer
   `python -m api --export-phase1-env --profile <profile>`
   rather than editing run plans directly.
+
+Protocol-full execution notes:
+
+- `protocol-full-mock.json` is intentionally a two-stage pre-flight.
+  The first `python -m cps.runtime.cohort --plan configs/runs/protocol-full-mock.json --backend mock`
+  run will usually stop at `status = awaiting_annotation`.
+- For the cheapest synthetic completion path, fill the generated label package with:
+  `python -m cps.runtime.annotation --annotation-manifest <.../exports/annotations/annotation_manifest.json> --fill-synthetic-passthrough`
+  then rerun the same cohort command.
+- Treat the CLI report as the run-level status source of truth.
+  In `exports/run_summary.json`, check `pipeline_status` and `measurement_status`
+  rather than expecting a top-level `status` field.
+- `exports/run_summary.json` now also carries a `budget` block.
+  This records the current-plan equivalent forward-pass estimate, the current
+  runner API-call estimate, and a 1.3x recommended provisioning target.
+- Live readiness is a separate step:
+  1. `python -m api --export-phase1-env --profile dashscope-qwen-phase1`
+  2. `pytest -q tests/test_phase1_request_builder.py tests/test_phase1_backend_runtime.py`
+  3. `PHASE1_ENABLE_LIVE_TESTS=1 pytest -q tests/test_phase1_live_api.py tests/test_phase1_live_run.py`
+- A contamination `gate_decision = fail` is a scientific stop, not an engineering retry signal.
+  Do not auto-restrict to a subset or auto-rerun and still call the run `measurement_validated`.
+- When contamination fails, inspect `exports/contamination_escalation_bundle.json`.
+  It is a manual-decision packet, not an automatic remediation trigger.

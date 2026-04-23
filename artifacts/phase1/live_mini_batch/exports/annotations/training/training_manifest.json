@@ -1,0 +1,25 @@
+{
+  "status": "partial_reduced_scope",
+  "training_package_version": "phase1_annotation_training_v1",
+  "seed": 20260418,
+  "target_counts": {
+    "worked_examples": 5,
+    "calibration_set": 10
+  },
+  "actual_counts": {
+    "worked_examples": 5,
+    "calibration_set": 5
+  },
+  "paths": {
+    "annotator_instructions": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/training/annotator_instructions.md",
+    "worked_examples": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/training/worked_examples.jsonl",
+    "calibration_set": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/training/calibration_set.csv",
+    "expert_answer_key": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/training/expert_answer_key.csv",
+    "calibration_feedback": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/training/calibration_feedback.md",
+    "training_manifest": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/training/training_manifest.json"
+  },
+  "notes": [
+    "expert_answer_key.csv ships with automated_label as a draft placeholder",
+    "expert must confirm gold labels before using the package for real annotator onboarding"
+  ]
+}

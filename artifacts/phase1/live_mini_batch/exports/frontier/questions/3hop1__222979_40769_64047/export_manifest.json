@@ -1,8 +1,8 @@
 {
   "question_id": "3hop1__222979_40769_64047",
   "model_role": "frontier",
-  "delta_loo_jsonl": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_mini_batch\\exports\\frontier\\questions\\3hop1__222979_40769_64047\\delta_loo_lcb.jsonl",
-  "delta_loo_csv": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_mini_batch\\exports\\frontier\\questions\\3hop1__222979_40769_64047\\delta_loo_lcb.csv",
-  "bridge_input": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_mini_batch\\exports\\frontier\\questions\\3hop1__222979_40769_64047\\bridge_input.csv",
+  "delta_loo_jsonl": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/frontier/questions/3hop1__222979_40769_64047/delta_loo_lcb.jsonl",
+  "delta_loo_csv": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/frontier/questions/3hop1__222979_40769_64047/delta_loo_lcb.csv",
+  "bridge_input": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/frontier/questions/3hop1__222979_40769_64047/bridge_input.csv",
   "row_count": 5
 }

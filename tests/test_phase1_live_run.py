@@ -83,8 +83,43 @@ def test_phase1_live_cohort_runner_against_dashscope(workspace_tmp_dir):
         cohort_plan_path=cohort_plan_path,
         env_path=isolated_env_path,
     )
-    assert first_report["status"] == "awaiting_annotation"
     assert first_report["summary"]["measurement_status"] == "pilot_only"
+    assert Path(first_report["run_summary_path"]).exists()
+    assert Path(first_report["checkpoint_path"]).exists()
+    assert Path(first_report["calibration_manifest_path"]).exists()
+    assert Path(workspace_tmp_dir / "measurements" / "questions" / "small" / f"{question_id}.json").exists()
+    assert Path(workspace_tmp_dir / "measurements" / "questions" / "frontier" / f"{question_id}.json").exists()
+    assert Path(
+        workspace_tmp_dir / "exports" / "small" / "questions" / question_id / "export_manifest.json"
+    ).exists()
+    assert Path(
+        workspace_tmp_dir / "exports" / "frontier" / "questions" / question_id / "export_manifest.json"
+    ).exists()
+    assert list((workspace_tmp_dir / "cache" / "requests" / "small").glob("*.json"))
+    assert list((workspace_tmp_dir / "cache" / "parsed" / "small").glob("*.json"))
+    assert list((workspace_tmp_dir / "cache" / "requests" / "frontier").glob("*.json"))
+    assert list((workspace_tmp_dir / "cache" / "parsed" / "frontier").glob("*.json"))
+
+    events_text = Path(first_report["events_path"]).read_text(encoding="utf-8")
+    assert "dashscope_openai_chat" in events_text
+    assert api_key not in events_text
+    assert "masked_api_key" not in events_text
+
+    if first_report["status"] == "red":
+        contamination = first_report["summary"]["contamination"]
+        assert contamination["gate_decision"] == "fail"
+        assert first_report["summary"]["pipeline_status"] == "incomplete"
+        assert first_report["summary"]["annotation"]["status"] == "pending_bridge"
+        assert first_report["annotation_manifest_path"] == ""
+        escalation_bundle = Path(first_report["contamination_escalation_bundle_path"])
+        assert escalation_bundle.exists()
+        bundle = json.loads(escalation_bundle.read_text(encoding="utf-8"))
+        assert bundle["status"] == "manual_decision_required"
+        assert bundle["gate_decision"] == "fail"
+        assert bundle["default_operator_action"] == "stop_and_escalate"
+        return
+
+    assert first_report["status"] == "awaiting_annotation"
     complete_annotation_labels(first_report["annotation_manifest_path"])
 
     report = run_phase1_cohort(
@@ -101,23 +136,3 @@ def test_phase1_live_cohort_runner_against_dashscope(workspace_tmp_dir):
     assert report["summary"]["model_roles"]["small"]["completed"] == 1
     assert report["summary"]["model_roles"]["frontier"]["planned"] == 1
     assert report["summary"]["model_roles"]["frontier"]["completed"] == 1
-    assert Path(report["run_summary_path"]).exists()
-    assert Path(report["checkpoint_path"]).exists()
-    assert Path(report["calibration_manifest_path"]).exists()
-    assert Path(workspace_tmp_dir / "measurements" / "questions" / "small" / f"{question_id}.json").exists()
-    assert Path(workspace_tmp_dir / "measurements" / "questions" / "frontier" / f"{question_id}.json").exists()
-    assert Path(
-        workspace_tmp_dir / "exports" / "small" / "questions" / question_id / "export_manifest.json"
-    ).exists()
-    assert Path(
-        workspace_tmp_dir / "exports" / "frontier" / "questions" / question_id / "export_manifest.json"
-    ).exists()
-    assert list((workspace_tmp_dir / "cache" / "requests" / "small").glob("*.json"))
-    assert list((workspace_tmp_dir / "cache" / "parsed" / "small").glob("*.json"))
-    assert list((workspace_tmp_dir / "cache" / "requests" / "frontier").glob("*.json"))
-    assert list((workspace_tmp_dir / "cache" / "parsed" / "frontier").glob("*.json"))
-
-    events_text = Path(report["events_path"]).read_text(encoding="utf-8")
-    assert "dashscope_openai_chat" in events_text
-    assert api_key not in events_text
-    assert "masked_api_key" not in events_text

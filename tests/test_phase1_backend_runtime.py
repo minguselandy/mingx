@@ -95,6 +95,30 @@ def _response_payload(content="River Great Ouse"):
     }
 
 
+def _response_payload_with_zero_logprobs(content="River Great Ouse"):
+    return {
+        "id": "resp-zero",
+        "model": "qwen3-14b",
+        "choices": [
+            {
+                "message": {
+                    "role": "assistant",
+                    "content": content,
+                    "reasoning_content": "",
+                    "logprobs": {
+                        "content": [
+                            {"token": "River", "logprob": 0.0},
+                            {"token": " Great", "logprob": 0.0},
+                            {"token": " Ouse", "logprob": 0.0},
+                        ]
+                    },
+                },
+                "logprobs": None,
+            }
+        ],
+    }
+
+
 def test_dashscope_backend_uses_parsed_cache_before_network(workspace_tmp_dir, monkeypatch):
     context = _build_context(workspace_tmp_dir)
     backend = OpenAICompatibleChatBackend(context=context, model_role="small")
@@ -158,55 +182,22 @@ def test_dashscope_backend_retries_retryable_http_errors_and_writes_cache(worksp
     assert backend._parsed_cache_path(score.request_fingerprint).exists()
 
 
-def test_openai_compatible_backend_backend_id_tracks_provider_name(workspace_tmp_dir):
-    env_path = workspace_tmp_dir / ".env"
-    env_path.write_text(
-        "\n".join(
-            [
-                "API_PROFILE=evas-openai",
-                "EVAS_API_KEY=sk-test-key",
-            ]
-        ),
-        encoding="utf-8",
-    )
-    run_plan_path = workspace_tmp_dir / "run_plan.json"
-    run_plan_path.write_text(
-        json.dumps(
-            {
-                "experiment_id": "musique_gate1_phase1_v1",
-                "protocol_version": "phase1.v1",
-                "manifest_path": "./artifacts/phase0/sample_manifest_v1.json",
-                "hash_path": "./artifacts/phase0/content_hashes.json",
-                "phase1_config_path": "./phase1.yaml",
-                "smoke_question_id": "2hop__256778_131879",
-                "smoke_paragraph_limit": 5,
-                "scoring": {
-                    "model_role": "small",
-                    "k_lcb": 5,
-                    "lcb_quantile": 0.1,
-                },
-                "storage": {
-                    "measurement_dir": str((workspace_tmp_dir / "measurements").as_posix()),
-                    "export_dir": str((workspace_tmp_dir / "exports").as_posix()),
-                    "checkpoint_dir": str((workspace_tmp_dir / "checkpoints").as_posix()),
-                    "cache_dir": str((workspace_tmp_dir / "cache").as_posix()),
-                },
-            },
-            ensure_ascii=False,
-            indent=2,
-        ),
-        encoding="utf-8",
-    )
-    context = load_phase1_context(
-        phase1_config_path=Path("phase1.yaml"),
-        run_plan_path=run_plan_path,
-        env_path=env_path,
-    )
-
+def test_dashscope_backend_rejects_degenerate_all_zero_logprobs(workspace_tmp_dir, monkeypatch):
+    context = _build_context(workspace_tmp_dir)
     backend = OpenAICompatibleChatBackend(context=context, model_role="small")
 
-    assert backend.backend_id == "evas_openai_chat"
-    assert backend.model_id == "openai/gpt-5.4-mini"
+    monkeypatch.setattr(
+        openai_backend_module.request,
+        "urlopen",
+        lambda http_request, timeout=60: _FakeHTTPResponse(_response_payload_with_zero_logprobs(), status=200),
+    )
+
+    try:
+        backend.score_answer("Which river?", "River Great Ouse", [])
+    except ValueError as exc:
+        assert "degenerate all-zero token logprobs" in str(exc)
+    else:
+        raise AssertionError("expected degenerate all-zero logprobs to be rejected")
 
 
 def test_api_backend_factory_hides_provider_specific_backend_choice(workspace_tmp_dir):

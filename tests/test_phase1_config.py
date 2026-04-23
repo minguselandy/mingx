@@ -43,6 +43,7 @@ def test_load_phase1_context_prefers_environment_over_env_file(workspace_tmp_dir
     )
 
     assert context.provider.name == "dashscope"
+    assert context.provider.phase1_logprob_ready is True
     assert context.provider.base_url == "https://dashscope.aliyuncs.com/compatible-mode/v1"
     assert context.provider.api_key == "sk-from-process-env"
     assert context.models["frontier"].model == "qwen3-32b"
@@ -105,14 +106,17 @@ def test_load_phase1_context_prefers_run_plan_storage_over_env_defaults(workspac
     assert context.storage.checkpoint_dir.parent.name == "live_mini_batch"
     assert context.storage.cache_dir.parent.name == "live_mini_batch"
 
-
-def test_load_phase1_context_supports_provider_profile_overrides(workspace_tmp_dir):
+def test_load_phase1_context_supports_generic_api_overrides(workspace_tmp_dir):
     env_path = workspace_tmp_dir / ".env"
     env_path.write_text(
         "\n".join(
             [
-                "API_PROFILE=evas-openai",
-                "EVAS_API_KEY=sk-from-evas-env",
+                "API_PROFILE=dashscope-qwen-phase1",
+                "API_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1",
+                "API_KEY=sk-from-generic-api-env",
+                "API_FRONTIER_MODEL=qwen3-32b",
+                "API_SMALL_MODEL=qwen3-14b",
+                "API_CODING_MODEL=qwen3-coder-plus",
             ]
         ),
         encoding="utf-8",
@@ -124,10 +128,11 @@ def test_load_phase1_context_supports_provider_profile_overrides(workspace_tmp_d
         env_path=env_path,
     )
 
-    assert context.provider.profile_name == "evas-openai"
-    assert context.provider.name == "evas"
-    assert context.provider.base_url == "https://api.evas.ai/v1"
-    assert context.provider.api_key == "sk-from-evas-env"
-    assert context.models["frontier"].model == "openai/gpt-5.4"
-    assert context.models["small"].model == "openai/gpt-5.4-mini"
-    assert context.models["coding"].model == "openai/gpt-5.3-codex"
+    assert context.provider.profile_name == "dashscope-qwen-phase1"
+    assert context.provider.name == "dashscope"
+    assert context.provider.phase1_logprob_ready is True
+    assert context.provider.base_url == "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    assert context.provider.api_key == "sk-from-generic-api-env"
+    assert context.models["frontier"].model == "qwen3-32b"
+    assert context.models["small"].model == "qwen3-14b"
+    assert context.models["coding"].model == "qwen3-coder-plus"

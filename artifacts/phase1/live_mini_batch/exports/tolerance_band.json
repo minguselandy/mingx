@@ -3,20 +3,20 @@
   "band_width_sigma_multiplier": 0.5,
   "per_hop": {
     "2hop": {
-      "lower_cut": -0.00012426666666666666,
-      "upper_cut": -9.439999999999999e-05,
-      "sigma": 0.0004011614787090106,
+      "lower_cut": -0.0006006,
+      "upper_cut": -0.0005415333333333333,
+      "sigma": 7.561066062401516e-05,
       "lower_band": [
-        -0.00032484740602117194,
-        7.631407268783865e-05
+        -0.0006384053303120075,
+        -0.0005627946696879924
       ],
       "upper_band": [
-        -0.00029498073935450527,
-        0.00010618073935450532
+        -0.0005793386636453409,
+        -0.0005037280030213258
       ],
       "counts": {
         "total": 5,
-        "flagged": 4,
+        "flagged": 3,
         "high": 2,
         "low": 2,
         "buffer": 1
@@ -25,44 +25,38 @@
         {
           "question_id": "2hop__86458_20273",
           "paragraph_id": 0,
-          "delta_loo_frontier_equivalent": -0.000136,
+          "delta_loo_frontier_equivalent": -0.0006221999999999999,
           "automated_label": "LOW"
         },
         {
           "question_id": "2hop__86458_20273",
           "paragraph_id": 1,
-          "delta_loo_frontier_equivalent": -0.00010079999999999998,
-          "automated_label": "BUFFER"
-        },
-        {
-          "question_id": "2hop__86458_20273",
-          "paragraph_id": 2,
-          "delta_loo_frontier_equivalent": -9.12e-05,
+          "delta_loo_frontier_equivalent": -0.0005336,
           "automated_label": "HIGH"
         },
         {
           "question_id": "2hop__86458_20273",
           "paragraph_id": 4,
-          "delta_loo_frontier_equivalent": -0.00019219999999999998,
-          "automated_label": "LOW"
+          "delta_loo_frontier_equivalent": -0.0005574,
+          "automated_label": "BUFFER"
         }
       ]
     },
     "3hop": {
-      "lower_cut": -7.046666666666667e-05,
-      "upper_cut": -1.9666666666666673e-05,
-      "sigma": 0.0006529311357256598,
+      "lower_cut": -8.066666666666667e-06,
+      "upper_cut": -7.33333333333332e-07,
+      "sigma": 3.5681479789941446e-05,
       "lower_band": [
-        -0.0003969322345294966,
-        0.0002559989011961632
+        -2.590740656163739e-05,
+        9.774073228304056e-06
       ],
       "upper_band": [
-        -0.0003461322345294966,
-        0.0003067989011961632
+        -1.8574073228304055e-05,
+        1.710740656163739e-05
       ],
       "counts": {
         "total": 5,
-        "flagged": 4,
+        "flagged": 3,
         "high": 2,
         "low": 2,
         "buffer": 1
@@ -71,44 +65,38 @@
         {
           "question_id": "3hop1__222979_40769_64047",
           "paragraph_id": 0,
-          "delta_loo_frontier_equivalent": -5.9800000000000003e-05,
+          "delta_loo_frontier_equivalent": -4.599999999999997e-06,
           "automated_label": "BUFFER"
         },
         {
           "question_id": "3hop1__222979_40769_64047",
-          "paragraph_id": 2,
-          "delta_loo_frontier_equivalent": -7.58e-05,
-          "automated_label": "LOW"
-        },
-        {
-          "question_id": "3hop1__222979_40769_64047",
-          "paragraph_id": 3,
-          "delta_loo_frontier_equivalent": 4e-07,
+          "paragraph_id": 1,
+          "delta_loo_frontier_equivalent": 1.200000000000002e-06,
           "automated_label": "HIGH"
         },
         {
           "question_id": "3hop1__222979_40769_64047",
-          "paragraph_id": 4,
-          "delta_loo_frontier_equivalent": -7.64e-05,
+          "paragraph_id": 3,
+          "delta_loo_frontier_equivalent": -9.800000000000001e-06,
           "automated_label": "LOW"
         }
       ]
     },
     "4hop": {
-      "lower_cut": -1.2666666666666667e-06,
-      "upper_cut": 1.9999999999999989e-07,
-      "sigma": 1.9235384061671345e-06,
+      "lower_cut": -0.01247573333333333,
+      "upper_cut": -0.011680133333333332,
+      "sigma": 0.0008782107150336981,
       "lower_band": [
-        -2.228435869750234e-06,
-        -3.0489746358309943e-07
+        -0.01291483869085018,
+        -0.01203662797581648
       ],
       "upper_band": [
-        -7.617692030835674e-07,
-        1.1617692030835672e-06
+        -0.012119238690850182,
+        -0.011241027975816482
       ],
       "counts": {
         "total": 5,
-        "flagged": 4,
+        "flagged": 3,
         "high": 2,
         "low": 2,
         "buffer": 1
@@ -116,26 +104,20 @@
       "flagged_instances": [
         {
           "question_id": "4hop1__76111_624859_355213_203322",
-          "paragraph_id": 0,
-          "delta_loo_frontier_equivalent": 6e-07,
+          "paragraph_id": 1,
+          "delta_loo_frontier_equivalent": -0.011533199999999999,
           "automated_label": "HIGH"
         },
         {
           "question_id": "4hop1__76111_624859_355213_203322",
-          "paragraph_id": 1,
-          "delta_loo_frontier_equivalent": -1.8e-06,
+          "paragraph_id": 2,
+          "delta_loo_frontier_equivalent": -0.012726599999999998,
           "automated_label": "LOW"
         },
         {
           "question_id": "4hop1__76111_624859_355213_203322",
           "paragraph_id": 3,
-          "delta_loo_frontier_equivalent": 4e-07,
-          "automated_label": "HIGH"
-        },
-        {
-          "question_id": "4hop1__76111_624859_355213_203322",
-          "paragraph_id": 4,
-          "delta_loo_frontier_equivalent": -2e-07,
+          "delta_loo_frontier_equivalent": -0.011973999999999999,
           "automated_label": "BUFFER"
         }
       ]

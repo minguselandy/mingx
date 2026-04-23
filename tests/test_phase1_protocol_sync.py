@@ -58,3 +58,34 @@ def test_pilot_run_configs_are_explicitly_reduced_scope() -> None:
     ):
         payload = json.loads((RUNS_DIR / name).read_text(encoding="utf-8"))
         assert payload["scope_mode"] == "pilot_reduced_scope"
+
+
+def test_runs_readme_documents_two_stage_protocol_full_and_live_readiness() -> None:
+    runs_readme = _read_text(RUNS_DIR / "README.md")
+
+    assert "two-stage pre-flight" in runs_readme
+    assert "--fill-synthetic-passthrough" in runs_readme
+    assert "pipeline_status" in runs_readme
+    assert "measurement_status" in runs_readme
+    assert "`budget` block" in runs_readme
+    assert "PHASE1_ENABLE_LIVE_TESTS=1" in runs_readme
+    assert "gate_decision = fail" in runs_readme
+    assert "contamination_escalation_bundle.json" in runs_readme
+
+
+def test_openworker_trace_audit_template_tracks_required_fields_and_scope_bands() -> None:
+    template = _read_text(PROTOCOL_DIR / "openworker-trace-audit-template.md")
+
+    for field_name in (
+        "candidate pool",
+        "greedy trace",
+        "selected set",
+        "materialized context",
+        "extraction alignment",
+    ):
+        assert field_name in template
+    for scope_name in ("one-week port", "one-month effort", "multi-month project"):
+        assert scope_name in template
+    assert "already exported" in template
+    assert "partially exported" in template
+    assert "not exported" in template

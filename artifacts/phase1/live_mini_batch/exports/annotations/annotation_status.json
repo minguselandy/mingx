@@ -1,0 +1,29 @@
+{
+  "status": "awaiting_labels",
+  "annotation_mode": "awaiting_labels",
+  "annotation_manifest_hash": "fa34fd57a0e46185648396c1cea3824feaefc1538ef5f4008142a4857cd89697",
+  "annotation_manifest_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/annotation_manifest.json",
+  "annotation_queue_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/annotation_queue.csv",
+  "annotation_items_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/annotation_items.jsonl",
+  "annotation_readme_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/README.md",
+  "queue_count": 10,
+  "flagged_count": 9,
+  "face_validity_count": 1,
+  "completion": {
+    "primary_a": {
+      "path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/labels/primary_a.csv",
+      "total_rows": 10,
+      "completed_rows": 0
+    },
+    "primary_b": {
+      "path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/labels/primary_b.csv",
+      "total_rows": 10,
+      "completed_rows": 0
+    },
+    "expert": {
+      "path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/labels/expert.csv",
+      "total_rows": 10,
+      "completed_rows": 0
+    }
+  }
+}

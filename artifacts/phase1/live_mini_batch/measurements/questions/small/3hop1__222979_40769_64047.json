@@ -1,11 +1,11 @@
 {
   "question_id": "3hop1__222979_40769_64047",
   "hop_depth": "3hop",
-  "V_model": "qwen3-14b",
+  "V_model": "qwen3.6-flash",
   "model_role": "small",
   "provider": "dashscope",
   "backend_id": "dashscope_openai_chat",
-  "baseline_logp": 0.0,
+  "baseline_logp": -0.00022863636479542038,
   "orderings": [
     {
       "ordering_id": "canonical_v1",
@@ -19,33 +19,33 @@
       "paragraphs": [
         {
           "paragraph_id": 0,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037845628179411506,
+          "loo_logp": -0.00018226671107868242,
+          "delta_loo": -0.000196
         },
         {
           "paragraph_id": 1,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037845628179411506,
+          "loo_logp": -0.00041958391608432066,
+          "delta_loo": 4.1e-05
         },
         {
           "paragraph_id": 2,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037845628179411506,
+          "loo_logp": -0.00027977308658933,
+          "delta_loo": -9.9e-05
         },
         {
           "paragraph_id": 3,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037845628179411506,
+          "loo_logp": -0.0004432962317082456,
+          "delta_loo": 6.5e-05
         },
         {
           "paragraph_id": 4,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037845628179411506,
+          "loo_logp": -0.0003415100165398144,
+          "delta_loo": -3.7e-05
         }
       ]
     },
@@ -61,33 +61,33 @@
       "paragraphs": [
         {
           "paragraph_id": 0,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0004608080959940253,
+          "loo_logp": -0.00030956868738485355,
+          "delta_loo": -0.000151
         },
         {
           "paragraph_id": 1,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0004608080959940253,
+          "loo_logp": -0.00041958391608432066,
+          "delta_loo": -4.1e-05
         },
         {
           "paragraph_id": 2,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0004608080959940253,
+          "loo_logp": -0.00028728177931469645,
+          "delta_loo": -0.000174
         },
         {
           "paragraph_id": 3,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0004608080959940253,
+          "loo_logp": -0.00039764744425951903,
+          "delta_loo": -6.3e-05
         },
         {
           "paragraph_id": 4,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0004608080959940253,
+          "loo_logp": -0.0008705641854405144,
+          "delta_loo": 0.00041
         }
       ]
     },
@@ -103,33 +103,33 @@
       "paragraphs": [
         {
           "paragraph_id": 0,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037964986466931805,
+          "loo_logp": -0.0003440122107392085,
+          "delta_loo": -3.6e-05
         },
         {
           "paragraph_id": 1,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037964986466931805,
+          "loo_logp": -0.00034330336660559624,
+          "delta_loo": -3.6e-05
         },
         {
           "paragraph_id": 2,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037964986466931805,
+          "loo_logp": -0.00030039141489623944,
+          "delta_loo": -7.9e-05
         },
         {
           "paragraph_id": 3,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037964986466931805,
+          "loo_logp": -0.0006704081990207555,
+          "delta_loo": 0.000291
         },
         {
           "paragraph_id": 4,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.00037964986466931805,
+          "loo_logp": -0.000430536786183211,
+          "delta_loo": 5.1e-05
         }
       ]
     },
@@ -145,33 +145,33 @@
       "paragraphs": [
         {
           "paragraph_id": 0,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0006762729369071963,
+          "loo_logp": -0.0003030161871038217,
+          "delta_loo": -0.000373
         },
         {
           "paragraph_id": 1,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0006762729369071963,
+          "loo_logp": -0.00045414871203774965,
+          "delta_loo": -0.000222
         },
         {
           "paragraph_id": 2,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0006762729369071963,
+          "loo_logp": -0.00032757020912299595,
+          "delta_loo": -0.000349
         },
         {
           "paragraph_id": 3,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0006762729369071963,
+          "loo_logp": -0.0010395727815364353,
+          "delta_loo": 0.000363
         },
         {
           "paragraph_id": 4,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0006762729369071963,
+          "loo_logp": -0.0008705641854405144,
+          "delta_loo": 0.000194
         }
       ]
     },
@@ -187,33 +187,33 @@
       "paragraphs": [
         {
           "paragraph_id": 0,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0002930027454723927,
+          "loo_logp": -0.0002999148466571455,
+          "delta_loo": 7e-06
         },
         {
           "paragraph_id": 1,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0002930027454723927,
+          "loo_logp": -0.00042851833381973847,
+          "delta_loo": 0.000136
         },
         {
           "paragraph_id": 2,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0002930027454723927,
+          "loo_logp": -0.00035236089274803817,
+          "delta_loo": 5.9e-05
         },
         {
           "paragraph_id": 3,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0002930027454723927,
+          "loo_logp": -0.0005915223777535061,
+          "delta_loo": 0.000299
         },
         {
           "paragraph_id": 4,
-          "full_logp": 0.0,
-          "loo_logp": 0.0,
-          "delta_loo": 0.0
+          "full_logp": -0.0002930027454723927,
+          "loo_logp": -0.00029658022913281457,
+          "delta_loo": 4e-06
         }
       ]
     }
@@ -221,23 +221,23 @@
   "delta_loo_LCB": [
     {
       "paragraph_id": 0,
-      "delta_loo": 0.0
+      "delta_loo": -0.0003022
     },
     {
       "paragraph_id": 1,
-      "delta_loo": 0.0
+      "delta_loo": -0.0001496
     },
     {
       "paragraph_id": 2,
-      "delta_loo": 0.0
+      "delta_loo": -0.000279
     },
     {
       "paragraph_id": 3,
-      "delta_loo": 0.0
+      "delta_loo": -1.1800000000000002e-05
     },
     {
       "paragraph_id": 4,
-      "delta_loo": 0.0
+      "delta_loo": -2.0599999999999996e-05
     }
   ]
 }

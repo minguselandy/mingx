@@ -1,0 +1,55 @@
+{
+  "status": "manual_decision_required",
+  "run_id": "phase1-cohort-20260423033750",
+  "scope_mode": "pilot_reduced_scope",
+  "source_documents": [
+    "phase1-protocol.md",
+    "execution-readiness-checklist.md"
+  ],
+  "gate_decision": "fail",
+  "scientific_interpretation_allowed": false,
+  "default_operator_action": "stop_and_escalate",
+  "automation_policy": {
+    "auto_restrict_to_uncontaminated_subset": false,
+    "auto_rerun_protocol_full": false,
+    "auto_upgrade_to_measurement_validated": false
+  },
+  "diagnostic_summary": {
+    "question_count": 3,
+    "above_threshold_count": 3,
+    "above_threshold_fraction": 1.0,
+    "threshold_probability": 0.5,
+    "question_ids_above_threshold": [
+      "2hop__86458_20273",
+      "3hop1__222979_40769_64047",
+      "4hop1__76111_624859_355213_203322"
+    ]
+  },
+  "recommended_actions": [
+    {
+      "action": "restrict_to_uncontaminated_subset_if_effective_n_remains_viable",
+      "selected_by_default": false,
+      "requires_manual_decision": true,
+      "rationale": "allowed only as a scientific interpretation decision after manual review"
+    },
+    {
+      "action": "rerun_protocol_full_for_independent_verification",
+      "selected_by_default": false,
+      "requires_manual_decision": true,
+      "rationale": "do not auto-rerun; use only if manual review decides an independent rerun is necessary"
+    },
+    {
+      "action": "return_to_phase0_revision",
+      "selected_by_default": false,
+      "requires_manual_decision": true,
+      "rationale": "use when contamination severity voids meaningful measurement validation"
+    }
+  ],
+  "artifact_paths": {
+    "run_summary": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/run_summary.json",
+    "contamination_diagnostics": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/contamination_diagnostics.json",
+    "bridge_diagnostics": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/bridge_diagnostics.json",
+    "annotation_manifest": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/exports/annotations/annotation_manifest.json",
+    "kappa_summary": ""
+  }
+}

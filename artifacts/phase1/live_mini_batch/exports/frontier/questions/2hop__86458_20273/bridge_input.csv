@@ -1,6 +1,6 @@
 question_id,hop_depth,model_role,paragraph_id,delta_loo_lcb
-2hop__86458_20273,2hop,frontier,0,-0.000136
-2hop__86458_20273,2hop,frontier,1,-0.00010079999999999998
-2hop__86458_20273,2hop,frontier,2,-9.12e-05
-2hop__86458_20273,2hop,frontier,3,0.0007626
-2hop__86458_20273,2hop,frontier,4,-0.00019219999999999998
+2hop__86458_20273,2hop,frontier,0,-0.0006221999999999999
+2hop__86458_20273,2hop,frontier,1,-0.0005336
+2hop__86458_20273,2hop,frontier,2,-0.0004612
+2hop__86458_20273,2hop,frontier,3,-0.0006531999999999999
+2hop__86458_20273,2hop,frontier,4,-0.0005574

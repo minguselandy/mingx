@@ -16,16 +16,16 @@ def test_default_api_profile_is_dashscope_qwen_phase1():
     assert profile.phase1_logprob_ready is True
 
 
-def test_build_phase1_env_overrides_for_evas_profile_uses_openai_models():
+def test_build_phase1_env_overrides_for_dashscope_profile_uses_locked_models():
     overrides = build_phase1_env_overrides(
-        "evas-openai",
-        env_values={"EVAS_API_BASE_URL": "https://api.evas.ai/v1"},
+        "dashscope-qwen-phase1",
+        env_values={"DASHSCOPE_BASE_URL": "https://dashscope.aliyuncs.com/compatible-mode/v1"},
     )
 
-    assert overrides["API_PROFILE"] == "evas-openai"
-    assert overrides["API_BASE_URL"] == "https://api.evas.ai/v1"
-    assert overrides["API_FRONTIER_MODEL"] == "openai/gpt-5.4"
-    assert overrides["API_SMALL_MODEL"] == "openai/gpt-5.4-mini"
+    assert overrides["API_PROFILE"] == "dashscope-qwen-phase1"
+    assert overrides["API_BASE_URL"] == "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    assert overrides["API_FRONTIER_MODEL"] == "qwen3-32b"
+    assert overrides["API_SMALL_MODEL"] == "qwen3-14b"
 
 
 def test_format_phase1_env_overrides_contains_shell_ready_lines():
@@ -36,23 +36,23 @@ def test_format_phase1_env_overrides_contains_shell_ready_lines():
     assert "API_CODING_MODEL=qwen3-coder-plus" in text
 
 
-def test_list_api_profiles_contains_dashscope_and_evas():
+def test_list_api_profiles_contains_only_dashscope_profile():
     names = [profile.profile_name for profile in list_api_profiles()]
 
     assert "dashscope-qwen-phase1" in names
-    assert "evas-openai" in names
+    assert names == ["dashscope-qwen-phase1"]
 
 
 def test_resolve_api_profile_uses_generic_api_overrides_first():
     resolved = resolve_api_profile(
         env_values={
-            "API_PROFILE": "evas-openai",
-            "EVAS_API_KEY": "sk-evas",
-            "API_SMALL_MODEL": "openai/gpt-5.4",
+            "API_PROFILE": "dashscope-qwen-phase1",
+            "DASHSCOPE_API_KEY": "sk-dashscope",
+            "API_SMALL_MODEL": "qwen3-32b",
         }
     )
 
-    assert resolved.profile_name == "evas-openai"
-    assert resolved.provider_name == "evas"
-    assert resolved.api_key == "sk-evas"
-    assert resolved.role_models["small"] == "openai/gpt-5.4"
+    assert resolved.profile_name == "dashscope-qwen-phase1"
+    assert resolved.provider_name == "dashscope"
+    assert resolved.api_key == "sk-dashscope"
+    assert resolved.role_models["small"] == "qwen3-32b"

@@ -1,0 +1,67 @@
+{
+  "status": "computed",
+  "provider_family": "qwen3",
+  "threshold_logp": -0.6931471805599453,
+  "threshold_probability": 0.5,
+  "question_count": 3,
+  "above_threshold_count": 3,
+  "above_threshold_fraction": 1.0,
+  "per_hop": {
+    "2hop": {
+      "question_count": 1,
+      "above_threshold_count": 1,
+      "above_threshold_fraction": 1.0,
+      "question_ids_above_threshold": [
+        "2hop__86458_20273"
+      ]
+    },
+    "3hop": {
+      "question_count": 1,
+      "above_threshold_count": 1,
+      "above_threshold_fraction": 1.0,
+      "question_ids_above_threshold": [
+        "3hop1__222979_40769_64047"
+      ]
+    },
+    "4hop": {
+      "question_count": 1,
+      "above_threshold_count": 1,
+      "above_threshold_fraction": 1.0,
+      "question_ids_above_threshold": [
+        "4hop1__76111_624859_355213_203322"
+      ]
+    }
+  },
+  "question_ids_above_threshold": [
+    "2hop__86458_20273",
+    "3hop1__222979_40769_64047",
+    "4hop1__76111_624859_355213_203322"
+  ],
+  "baseline_rows": [
+    {
+      "question_id": "2hop__86458_20273",
+      "hop_depth": "2hop",
+      "baseline_logp": -0.0003786687871070171,
+      "model_role": "frontier",
+      "model_id": "qwen3.6-plus",
+      "above_threshold": true
+    },
+    {
+      "question_id": "3hop1__222979_40769_64047",
+      "hop_depth": "3hop",
+      "baseline_logp": -0.00018333042157081536,
+      "model_role": "frontier",
+      "model_id": "qwen3.6-plus",
+      "above_threshold": true
+    },
+    {
+      "question_id": "4hop1__76111_624859_355213_203322",
+      "hop_depth": "4hop",
+      "baseline_logp": -6.44912724965252e-05,
+      "model_role": "frontier",
+      "model_id": "qwen3.6-plus",
+      "above_threshold": true
+    }
+  ],
+  "gate_decision": "fail"
+}

@@ -99,12 +99,14 @@ class OpenAICompatibleChatBackend:
             payload = json.loads(parsed_cache_path.read_text(encoding="utf-8"))
             metadata = dict(payload.get("metadata") or {})
             metadata["cache_source"] = "parsed_result_cache"
+            token_logprobs = tuple(float(item) for item in payload.get("token_logprobs") or ())
+            self._validate_token_logprobs(token_logprobs)
             return ScoreResult(
                 logprob_sum=float(payload["logprob_sum"]),
                 raw_content=str(payload["raw_content"]),
                 request_fingerprint=str(payload["request_fingerprint"]),
                 response_status="cache_hit_parsed",
-                token_logprobs=tuple(float(item) for item in payload.get("token_logprobs") or ()),
+                token_logprobs=token_logprobs,
                 metadata=metadata,
             )
 
@@ -112,6 +114,7 @@ class OpenAICompatibleChatBackend:
         if self.cache_config.get("request_cache") and request_cache_path.exists():
             response_payload = json.loads(request_cache_path.read_text(encoding="utf-8"))
             logprob_sum, token_logprobs, content, content_match = self._extract_logprob_sum(response_payload)
+            self._validate_token_logprobs(token_logprobs)
             return ScoreResult(
                 logprob_sum=float(logprob_sum),
                 raw_content=content,
@@ -165,6 +168,14 @@ class OpenAICompatibleChatBackend:
         retry_statuses = {int(status) for status in self.retry_config.get("retry_statuses", ())}
         return status_code in retry_statuses
 
+    def _validate_token_logprobs(self, token_logprobs: tuple[float, ...]) -> None:
+        if not token_logprobs:
+            raise ValueError("OpenAI-compatible response did not include token logprobs")
+        if len(token_logprobs) >= 2 and all(abs(value) <= 1e-12 for value in token_logprobs):
+            raise ValueError(
+                f"{self.provider_name} returned degenerate all-zero token logprobs for model {self.model_id}"
+            )
+
     @staticmethod
     def _extract_logprob_sum(response_payload: dict) -> tuple[float, tuple[float, ...], str, bool]:
         choice = response_payload["choices"][0]
@@ -174,8 +185,6 @@ class OpenAICompatibleChatBackend:
         content = message.get("content", "")
         logprobs_block = message.get("logprobs") or choice.get("logprobs") or {}
         logprob_items = (logprobs_block.get("content")) or []
-        if not logprob_items:
-            raise ValueError("OpenAI-compatible response did not include token logprobs")
         token_logprobs = tuple(float(item["logprob"]) for item in logprob_items if "logprob" in item)
         return sum(token_logprobs), token_logprobs, content, True
 
@@ -213,6 +222,7 @@ class OpenAICompatibleChatBackend:
                 with request.urlopen(http_request, timeout=60) as response:
                     response_payload = json.loads(response.read().decode("utf-8"))
                     logprob_sum, token_logprobs, content, content_match = self._extract_logprob_sum(response_payload)
+                    self._validate_token_logprobs(token_logprobs)
                     score = ScoreResult(
                         logprob_sum=float(logprob_sum),
                         raw_content=content,

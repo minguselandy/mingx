@@ -35,7 +35,6 @@ New imports and new runtime entrypoints should prefer `cps.*`.
   `cps/runtime` consumes role models and does not branch on provider names directly
 - Current API profiles:
   `dashscope-qwen-phase1` is the default Phase 1 profile
-  `evas-openai` is an optional OpenAI-compatible profile for exploration and smoke tests
 - Use `.env.example` as the template for secrets and generic `API_*` overrides
 
 Secrets stay in local `.env` and are not committed.

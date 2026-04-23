@@ -1,51 +1,68 @@
 {
   "status": "computed",
-  "calibration_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase1\\live_mini_batch\\calibration_manifest.json",
+  "bridge_status": "computed",
+  "bridge_form": "linear_ols",
+  "pass_fail": "pass",
+  "escalation_reason": "linear_ols satisfied the bridge pass criteria",
+  "recommended_next_action": "proceed_with_bridge_outputs",
+  "calibration_manifest_path": "/home/mingxiaoyu/mingx/artifacts/phase1/live_mini_batch/calibration_manifest.json",
   "per_hop": {
     "2hop": {
-      "sigma_stratum": 0.0004011614787090106,
+      "sigma_stratum": 7.561066062401516e-05,
       "bridge_coefficient_variance": {
         "intercept": 0.0,
-        "slope": 0.0
+        "slope": 0.0,
+        "quadratic": 0.0
       },
       "calibration_consistency": {
-        "pearson_r": 0.0,
-        "mae": 0.000285648,
-        "rmse": 0.00035880973453907293,
-        "sigma_calibration": 0.0004011614787090106,
-        "mae_threshold": 0.0002005807393545053
+        "pearson_r": 0.670497206790577,
+        "mae": 4.2331538637673484e-05,
+        "rmse": 5.017419960656414e-05,
+        "sigma_calibration": 7.561066062401516e-05,
+        "mae_threshold": 3.780533031200758e-05
       },
-      "note": "annotation disagreement rates remain pending until kappa/annotation wiring"
+      "annotation_reliability": {
+        "status": "pending_annotation",
+        "reason": "annotation disagreement rates populate after annotation and kappa ingestion"
+      }
     },
     "3hop": {
-      "sigma_stratum": 0.0006529311357256598,
+      "sigma_stratum": 3.5681479789941446e-05,
       "bridge_coefficient_variance": {
         "intercept": 0.0,
-        "slope": 0.0
+        "slope": 0.0,
+        "quadratic": 0.0
       },
       "calibration_consistency": {
-        "pearson_r": 0.0,
-        "mae": 0.000466656,
-        "rmse": 0.0005839993616434867,
-        "sigma_calibration": 0.0006529311357256598,
-        "mae_threshold": 0.0003264655678628299
+        "pearson_r": 0.5675053376482014,
+        "mae": 2.354103743565806e-05,
+        "rmse": 2.6277421108141524e-05,
+        "sigma_calibration": 3.5681479789941446e-05,
+        "mae_threshold": 1.7840739894970723e-05
       },
-      "note": "annotation disagreement rates remain pending until kappa/annotation wiring"
+      "annotation_reliability": {
+        "status": "pending_annotation",
+        "reason": "annotation disagreement rates populate after annotation and kappa ingestion"
+      }
     },
     "4hop": {
-      "sigma_stratum": 1.9235384061671345e-06,
+      "sigma_stratum": 0.0008782107150336981,
       "bridge_coefficient_variance": {
         "intercept": 0.0,
-        "slope": 0.0
+        "slope": 0.0,
+        "quadratic": 0.0
       },
       "calibration_consistency": {
-        "pearson_r": 0.0,
-        "mae": 1.52e-06,
-        "rmse": 1.7204650534085253e-06,
-        "sigma_calibration": 1.9235384061671345e-06,
-        "mae_threshold": 9.617692030835672e-07
+        "pearson_r": -0.8267915497502596,
+        "mae": 0.0003453797526946956,
+        "rmse": 0.0004418478642481893,
+        "sigma_calibration": 0.0008782107150336981,
+        "mae_threshold": 0.00043910535751684904
       },
-      "note": "annotation disagreement rates remain pending until kappa/annotation wiring"
+      "annotation_reliability": {
+        "status": "pending_annotation",
+        "reason": "annotation disagreement rates populate after annotation and kappa ingestion"
+      }
     }
   }
 }

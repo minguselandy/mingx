@@ -7,6 +7,15 @@ long-lived `phase0` / `phase1` code roots.
 
 - [architecture.md](./architecture.md)
   Explains the code layout, artifact layout, and migration direction.
+- [phase1-implementation-completion-report.md](./phase1-implementation-completion-report.md)
+  Summarizes what has been implemented and locally verified for the current
+  Phase 1 development plan.
+- [phase1-live-mini-batch-report.md](./phase1-live-mini-batch-report.md)
+  Summarizes the completed reduced-scope live mini-batch run and its current
+  scientific gate outcome.
+- [phase1-usable-models.md](./phase1-usable-models.md)
+  Regenerated live probe report listing models that currently satisfy the
+  Phase 1 logprob contract.
 - [../api/README.md](../api/README.md)
   Explains API profiles, backend factories, and provider/model resolution.
 - [../configs/runs/README.md](../configs/runs/README.md)

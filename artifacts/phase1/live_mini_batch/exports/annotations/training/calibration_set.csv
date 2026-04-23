@@ -1,0 +1,6 @@
+annotation_item_id,question_id,paragraph_id,hop_depth,source,automated_label,label,justification
+4hop1__76111_624859_355213_203322::3,4hop1__76111_624859_355213_203322,3,4hop,tolerance_flagged,BUFFER,,
+2hop__86458_20273::2,2hop__86458_20273,2,2hop,face_validity_sample,HIGH,,
+4hop1__76111_624859_355213_203322::1,4hop1__76111_624859_355213_203322,1,4hop,tolerance_flagged,HIGH,,
+2hop__86458_20273::1,2hop__86458_20273,1,2hop,tolerance_flagged,HIGH,,
+3hop1__222979_40769_64047::1,3hop1__222979_40769_64047,1,3hop,tolerance_flagged,HIGH,,

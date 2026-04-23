@@ -1,5 +1,5 @@
 {
-  "source_manifest_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\phase0-config-starter\\phase0-config-starter\\artifacts\\phase0\\sample_manifest_v1.json",
+  "source_manifest_path": "/home/mingxiaoyu/mingx/artifacts/phase0/sample_manifest_v1.json",
   "source_manifest_hash": "68f0d9d39ad6b45f25454cc8bb385fe8a4eeac373708751a58891d01a98d6880",
   "source_manifest_fingerprint": "sha256:68f0d9d39ad6b45f25454cc8bb385fe8a4eeac373708751a58891d01a98d6880",
   "source_dataset_hash": "1fe3df848a525f62933498b158dd58fe87bb3a21afb30940a2c4cfaa78a81225",
@@ -10,6 +10,8 @@
     "4hop": 1
   },
   "selection_algorithm_version": "calibration_by_hop_questionid_sha256_v1",
+  "excluded_question_ids": [],
+  "replacement_policy": "same_hop_next_rank_on_resume_v1",
   "selected_questions": [
     {
       "question_id": "2hop__86458_20273",

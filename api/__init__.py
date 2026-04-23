@@ -1,51 +1,31 @@
-from api.backends import build_live_backend, build_scoring_backend
-from api.evas import (
-    EVAS_DEFAULT_BASE_URL,
-    EVAS_RECOMMENDED_MODELS,
-    PHASE1_LOCK_NOTE,
-    PHASE1_LOGPROB_WARNING,
-    EvasApiSettings,
-    build_recommendation_report,
-    choose_model_for_role,
-    load_evas_settings,
-    load_phase1_locked_models,
-)
-from api.settings import (
-    API_PROVIDER_PROFILES,
-    DEFAULT_API_PROFILE,
-    DEFAULT_EVAS_PROFILE,
-    ApiProviderProfile,
-    ResolvedApiProfile,
-    build_phase1_env_overrides,
-    format_phase1_env_overrides,
-    get_api_profile,
-    list_api_profiles,
-    resolve_api_profile,
-)
-from api.openai_compatible import OpenAICompatibleClient, OpenAICompatibleCredentials
+from __future__ import annotations
 
-__all__ = [
-    "API_PROVIDER_PROFILES",
-    "DEFAULT_API_PROFILE",
-    "EVAS_DEFAULT_BASE_URL",
-    "DEFAULT_EVAS_PROFILE",
-    "EVAS_RECOMMENDED_MODELS",
-    "PHASE1_LOCK_NOTE",
-    "PHASE1_LOGPROB_WARNING",
-    "ApiProviderProfile",
-    "ResolvedApiProfile",
-    "EvasApiSettings",
-    "OpenAICompatibleClient",
-    "OpenAICompatibleCredentials",
-    "build_live_backend",
-    "build_scoring_backend",
-    "build_phase1_env_overrides",
-    "build_recommendation_report",
-    "choose_model_for_role",
-    "format_phase1_env_overrides",
-    "get_api_profile",
-    "load_evas_settings",
-    "load_phase1_locked_models",
-    "list_api_profiles",
-    "resolve_api_profile",
-]
+from importlib import import_module
+
+
+_LAZY_EXPORTS = {
+    "API_PROVIDER_PROFILES": ("api.settings", "API_PROVIDER_PROFILES"),
+    "DEFAULT_API_PROFILE": ("api.settings", "DEFAULT_API_PROFILE"),
+    "ApiProviderProfile": ("api.settings", "ApiProviderProfile"),
+    "ResolvedApiProfile": ("api.settings", "ResolvedApiProfile"),
+    "build_live_backend": ("api.backends", "build_live_backend"),
+    "build_phase1_env_overrides": ("api.settings", "build_phase1_env_overrides"),
+    "build_scoring_backend": ("api.backends", "build_scoring_backend"),
+    "format_phase1_env_overrides": ("api.settings", "format_phase1_env_overrides"),
+    "get_api_profile": ("api.settings", "get_api_profile"),
+    "list_api_profiles": ("api.settings", "list_api_profiles"),
+    "OpenAICompatibleClient": ("api.openai_compatible", "OpenAICompatibleClient"),
+    "OpenAICompatibleCredentials": ("api.openai_compatible", "OpenAICompatibleCredentials"),
+    "resolve_api_profile": ("api.settings", "resolve_api_profile"),
+}
+
+__all__ = sorted(_LAZY_EXPORTS)
+
+
+def __getattr__(name: str):
+    try:
+        module_name, attribute_name = _LAZY_EXPORTS[name]
+    except KeyError as exc:
+        raise AttributeError(f"module 'api' has no attribute {name!r}") from exc
+    module = import_module(module_name)
+    return getattr(module, attribute_name)

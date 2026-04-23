@@ -5,7 +5,6 @@ from typing import Mapping
 
 
 DEFAULT_API_PROFILE = "dashscope-qwen-phase1"
-DEFAULT_EVAS_PROFILE = "evas-openai"
 GENERIC_ROLE_ENV_MAP = {
     "frontier": "API_FRONTIER_MODEL",
     "small": "API_SMALL_MODEL",
@@ -60,21 +59,6 @@ API_PROVIDER_PROFILES = {
         },
         phase1_logprob_ready=True,
         note="当前仓库既有的 Phase 1 正式锁定配置，仍然是默认方案。",
-    ),
-    "evas-openai": ApiProviderProfile(
-        profile_name="evas-openai",
-        provider_name="evas",
-        api_style="openai_chat_compatible",
-        base_url_env="EVAS_API_BASE_URL",
-        api_key_env="EVAS_API_KEY",
-        default_base_url="https://api.evas.ai/v1",
-        role_models={
-            "frontier": "openai/gpt-5.4",
-            "small": "openai/gpt-5.4-mini",
-            "coding": "openai/gpt-5.3-codex",
-        },
-        phase1_logprob_ready=False,
-        note="适合做通用聊天和 API 管理，但当前还不能直接替换 Phase 1 的 logprob scorer。",
     ),
 }
 
