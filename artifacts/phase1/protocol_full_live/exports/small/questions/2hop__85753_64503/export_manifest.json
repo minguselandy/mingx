@@ -1,0 +1,8 @@
+{
+  "question_id": "2hop__85753_64503",
+  "model_role": "small",
+  "delta_loo_jsonl": "/home/mingxiaoyu/mingx/artifacts/phase1/protocol_full_live/exports/small/questions/2hop__85753_64503/delta_loo_lcb.jsonl",
+  "delta_loo_csv": "/home/mingxiaoyu/mingx/artifacts/phase1/protocol_full_live/exports/small/questions/2hop__85753_64503/delta_loo_lcb.csv",
+  "bridge_input": "/home/mingxiaoyu/mingx/artifacts/phase1/protocol_full_live/exports/small/questions/2hop__85753_64503/bridge_input.csv",
+  "row_count": 20
+}
