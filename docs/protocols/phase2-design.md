@@ -1,6 +1,6 @@
 # Phase 2 Experimental Design: Extraction Uniformity Hypothesis Test
 
-**Associated documents:** Phase 0 Specification (`phase0-specification.md`), Phase 1 Probe Protocol (`phase1-protocol.md`), paper draft (`paper-draft-v5_5-taskB-final-gemini-minimal-q7revised-polish2.md`).
+**Associated documents:** Phase 0 Specification (`phase0-specification.md`), Phase 1 Probe Protocol (`phase1-protocol.md`), final paper framing (`../archive/final_paper_context_projection_submission_final_v8.md`).
 
 **Document status:** Phase 2 design specification. Specifies both the full-study extraction audit and the Phase 3 pilot as a specific analytical subset of the full-study design.
 

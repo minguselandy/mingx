@@ -13,11 +13,12 @@ First, assume these recent changes are already intentional:
 2. `api/` owns runtime profile/model/backend resolution.
 3. `events.jsonl` is the append-only source of truth for run state.
 4. `artifacts/` contains time-sensitive run outputs, not stable rules.
-5. The current default live model pair is:
+5. `docs/archive/final_paper_context_projection_submission_final_v8.md` is the current paper-framing anchor. Read its Abstract, Paper contract, Bridge statement, and Runtime Interface Requirements for research boundaries.
+6. The current default live model pair is:
    - `frontier = qwen3.6-plus`
    - `small = qwen3.6-flash`
-6. The repository now includes an AI-assisted contamination triage workflow.
-7. Newer `run_summary.json` exports include a `resolved_runtime` block so runtime overrides are visible without digging through event logs. Older historical artifacts may predate this field.
+7. The repository now includes an AI-assisted contamination triage workflow.
+8. Newer `run_summary.json` exports include a `resolved_runtime` block so runtime overrides are visible without digging through event logs. Older historical artifacts may predate this field.
 
 What was recently changed:
 
@@ -29,6 +30,8 @@ What was recently changed:
   - `cps/analysis/contamination_review.py`
 - A reusable AI onboarding prompt was added:
   - `docs/project-reading-prompt.md`
+- The final v8 paper was promoted to canonical research framing:
+  - `docs/archive/final_paper_context_projection_submission_final_v8.md`
 - A recent reduced-scope live run produced review artifacts:
   - `artifacts/phase1/live_mini_batch/exports/contamination_review_packet.json`
   - `artifacts/phase1/live_mini_batch/exports/contamination_review_packet.md`
@@ -37,12 +40,13 @@ How to read the current state:
 
 1. Read `docs/README.md`
 2. Read `AGENTS.md`
-3. Read `docs/project-reading-prompt.md`
-4. Read `docs/protocols/execution-readiness-checklist.md`
-5. Read `docs/protocols/phase1-protocol.md`
-6. Read `docs/protocols/phase1-contamination-triage-and-question-rewrite.md`
-7. Read `api/README.md`
-8. Read `cps/runtime/cohort.py`
+3. Read `docs/archive/final_paper_context_projection_submission_final_v8.md`
+4. Read `docs/project-reading-prompt.md`
+5. Read `docs/protocols/execution-readiness-checklist.md`
+6. Read `docs/protocols/phase1-protocol.md`
+7. Read `docs/protocols/phase1-contamination-triage-and-question-rewrite.md`
+8. Read `api/README.md`
+9. Read `cps/runtime/cohort.py`
 
 Critical semantic guardrails:
 
@@ -51,6 +55,9 @@ Critical semantic guardrails:
 - AI-generated rewrite advice is advisory only; it does not clear the gate automatically.
 - Do not silently revert the default model pair back to `qwen3-32b / qwen3-14b`.
 - If you see those older model names in historical artifacts or old reports, interpret them as historical state unless current runtime/config files still point to them.
+- The paper controls research framing; protocol docs, run plans, `run_summary.json`, and `events.jsonl` control execution status.
+- Treat `ProjectionPlan`, `BudgetWitness`, and `MaterializedContext` as paper-specified target runtime interfaces, not as current-code guarantees unless the implementation is verified.
+- Rewrite, replacement, compression, and memory-formation work remains sidecar / derived-view work and must not mutate the primary source-question answer path.
 
 What to inspect first if continuing runtime work:
 

@@ -3,6 +3,27 @@
 This document summarizes the currently completed work after the recent Phase 1
 live mini-batch, contamination triage, and runtime-default updates.
 
+## Paper Framing Update
+
+The current canonical paper framing is now:
+
+- `docs/archive/final_paper_context_projection_submission_final_v8.md`
+
+Use it for the research boundary: conditional theory, the
+formal/proxy/pipeline/runtime bridge, verification and escalation, extraction
+as an `M* -> M` bridge risk, and the target auditable runtime interfaces
+`ProjectionPlan`, `BudgetWitness`, and `MaterializedContext`.
+
+Do not use the paper to infer run completion status. Current execution status
+still comes from protocol docs, run plans, `run_summary.json`, `events.jsonl`,
+and exported diagnostics. The current implementation should be read as a Phase
+1 runtime / measurement scaffold, not as a completed full-paper runtime.
+
+The paper's runtime interfaces are alignment targets. Existing artifacts may
+partially cover those surfaces, but the repository should not claim full
+`ProjectionPlan` / `BudgetWitness` / `MaterializedContext` implementation
+without code and artifact verification.
+
 ## Current Stable Runtime Defaults
 
 The repository default Phase 1 live model pair is now:
@@ -117,6 +138,8 @@ This means:
 
 - source questions should be treated as immutable for primary serving
 - derived rewrites/replacements may still exist, but as sidecar artifacts
+- question rewrite and replacement do not modify the primary source-question
+  answer path; they prepare lineage-preserved follow-up or derived-view work
 - contamination has different semantics by lane:
   - scientific stop for measurement interpretation
   - interpretation limit for serving

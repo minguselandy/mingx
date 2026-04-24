@@ -21,7 +21,7 @@
 
 ### Working surface and reuse
 - 当前工作目录 `.`（仓库根目录）是实现、配置和运行入口。
-- `docs/protocols/` 是当前协议主入口；`docs/archive/` 仅作为历史草稿、framing 和归档材料。
+- `docs/protocols/` 是当前协议主入口；`docs/archive/final_paper_context_projection_submission_final_v8.md` 是当前论文 framing anchor，其他 `docs/archive/` 草稿仅作为历史参考。
 - `api/` 是当前 provider/profile、backend 工厂和 API smoke 工具的统一入口；涉及模型切换或 API 接入时优先从这里收口。
 - `artifacts/phase0/`、`configs/runs/`、`reference/files/` 是当前运行输入、run plan 和旧 `files/` 参考材料的主要来源。
 - `.env.example` 记录当前推荐的 secret 与 `API_*` 覆盖模板。
@@ -31,7 +31,7 @@
 - `docs/protocols/phase1-protocol.md`
 - `docs/protocols/phase2-design.md`
 - `docs/protocols/execution-readiness-checklist.md`
-- `docs/archive/paper-draft-v5.5-taskB-final-gemini-minimal-q7revised-polish2.md`
+- `docs/archive/final_paper_context_projection_submission_final_v8.md`
 - `data_prep.py`
 - `reference/files/data_prep.py`
 - `reference/files/data_prep.json`
@@ -46,13 +46,19 @@
 2. `docs/protocols/phase1-protocol.md`
 3. `docs/protocols/phase0-specification.md`
 4. `docs/protocols/phase2-design.md`
-5. `docs/archive/paper-draft-v5.5-taskB-final-gemini-minimal-q7revised-polish2.md`
+5. `docs/archive/final_paper_context_projection_submission_final_v8.md`
 
 规范约束优先级：
 - `docs/protocols/phase0-specification.md` 锁定 domain、granularity、budget、design invariant、known limitation。
 - `docs/protocols/phase2-design.md` 提供 downstream 统计和设计边界；不要在 Gate 1-3 前提前把项目推进成完整 Phase 2/4 平台。
 - `docs/protocols/phase1-protocol.md` 和 `docs/protocols/execution-readiness-checklist.md` 负责把工作落成可执行步骤，但不能静默覆盖 Phase 0 / Phase 2 已锁定的不变量或边界。
-- `docs/archive/paper-draft-v5.5-taskB-final-gemini-minimal-q7revised-polish2.md` 只用于研究 framing、术语和“不该跑偏成什么论文”。
+- `docs/archive/final_paper_context_projection_submission_final_v8.md` 控制当前研究 framing、术语和“不该跑偏成什么论文”；旧 paper draft 只作为 historical archive，不再作为 canonical anchor。
+
+### Paper framing vs execution contract
+- final v8 论文控制研究边界：conditional theory、formal/proxy/pipeline/runtime 分层、bridge statement、verification / monitoring / escalation，以及 extraction 作为 `M* -> M` bridge risk。
+- protocol、run plan、`run_summary.json` 和 `events.jsonl` 控制执行判断：某次 run 是否 complete、green、pilot-only、contamination failed 或 measurement-validated，不由论文措辞直接决定。
+- 若论文 runtime interface 和当前代码之间存在差距，默认把 `ProjectionPlan`、`BudgetWitness`、`MaterializedContext` 理解为目标 auditable interface / future alignment target，不要假定当前实现已经完整具备。
+- 不要为了贴合论文叙事去改 source question 或 primary answer-serving path；rewrite、replacement、compression、memory formation 都应保持 sidecar / derived-view 语义，并带 lineage。
 
 若动作调度优先级与规范约束发生张力，选择“不违反 invariant 的最近一步可执行动作”，并只指出影响当前执行的冲突。
 
@@ -65,10 +71,11 @@
 
 当前论文定位：
 - formal object：per-round、per-agent、token-budgeted context/content selection，目标函数为 predictive V-information
-- conditional theory：weak-submodular / pairwise-additive complementarity regime
-- bridge statement：formal objective / proxy measurement / runtime heuristic 三层分离
+- conditional theory：weak-submodular / pairwise-additive complementarity regime，作为 conditional theory + verification protocol，而不是已证明的 deployed-system end-to-end guarantee
+- bridge statement：formal objective / proxy measurement / runtime heuristic / runtime artifact 四层分离
 - deployment-facing contribution：verification / monitoring / escalation
-- extraction / runtime / memory：仅为 supporting / bridge-risk layers
+- extraction：`M* -> M` bridge risk 和 testable bottleneck，不是 weak-submodular theorem 的自动延伸
+- runtime / memory：仅为 supporting / bridge-risk layers；memory 可以影响 candidate pool，但不是当前形式化主对象
 
 ### File and code strategy
 - 优先小步修改。
@@ -111,39 +118,42 @@
 本节是 current / time-sensitive 内容。若未来项目状态变化，优先更新这一节，而不是改动 `Stable working contract`。
 
 ### Current main target
-当前主目标是：MuSiQue Gate 1 pre-execution provisioning 和 Phase 0/1 scaffold alignment。
+当前主目标是：Phase 1 reduced-scope runtime hardening、contamination triage / follow-up sidecar 收口，以及 final v8 论文 framing 与现有 runtime artifact / protocol 的边界对齐。
 
 ### Current execution order
-1. 锁定并验证 Phase 0 / Gate 1 上游 artifact：
-   `artifacts/phase0/content_hashes.json`、`artifacts/phase0/sample_manifest_v1.json`、最小 smoke validation。
-2. 建立 sample manifest loader 和基础 schema 对齐。
-3. 建立 forced-decode answer log-prob scoring interface。
-4. 建立 paragraph-order permutation 下的 `delta_loo` / LCB aggregation。
-5. 建立 bridge regression、tertile stratification、tolerance band 流水线。
-6. 仅在 Gate 1-3 条件满足后，再推进 retrieval simulation 和 Phase 3 analytical post-processing。
+1. 先把当前 live / reduced-scope artifacts 解释清楚：工程链路可运行不等于 scientific pass，contamination-failed 或 partial protocol-full-live artifacts 不得写成 `measurement_validated`。
+2. 继续收紧 contamination triage、operator decision、same-hop replacement 和 follow-up package 的 sidecar workflow；不得修改已经完成的 failed source run。
+3. 核对 `run_summary.json`、`events.jsonl`、contamination / bridge / annotation exports 是否能表达当前 runtime resolution、gate status、lineage 和 approval state。
+4. 将 final v8 的 runtime interface 要求映射到现有 artifact 表面，优先形成最小对齐说明；不要提前重构为完整 `ProjectionPlan` / `BudgetWitness` / `MaterializedContext` 平台。
+5. 只有在 reduced-scope follow-up 的人审批准、lineage 和最小安全检查齐备后，才考虑新的 follow-up run。
+6. protocol-full live 或 Phase 2/3 解释必须等待对应 gate 条件成立，不从 partial artifact 或 paper framing 越级推出科学结论。
 
 ### Current sidecar
-- openWorker infrastructure audit
-- candidate pool / greedy trace / selected set / materialized context / extraction alignment 的可观测性核对
+- contamination review / rewrite / replacement / follow-up package lane
+- compression、memory formation、derived-view 相关的双路语义核对
+- openWorker candidate pool / greedy trace / selected set / materialized context / extraction alignment 的可观测性核对
 
 ### Current do-not-do-yet
 - sidecar 不能阻塞主线程。
 - 不要先搭大而全实验平台。
 - 不要提前把项目推进成完整 Phase 2/4 full-study 平台。
-- 不要把大量时间花在论文措辞打磨上，除非用户明确要求。
+- 不要把 partial `artifacts/phase1/protocol_full_live/` 或 reduced-scope live run 当作 completed scientific result。
+- 不要把论文 runtime interface 直接写成已实现 API。
+- 不要为了让回答更容易而修改 primary source question；问题 rewrite / replacement 只能作为带 lineage 的 sidecar / follow-up 工作。
 
 ### Current phase and gate boundary interpretation
 - `Phase 0 / Gate 1` 的目标是数据锁定、可复现和执行前 provisioning；优先完成 MuSiQue data acquisition / loading、content hash 固定、hop-stratified sample manifest 复现、Phase 0 artifact 校验，以及 Phase 1 所需依赖、接口、预算、存储和最小 smoke test。
 - `Phase 1` 的目标是 measurement apparatus / feasibility probe。它验证 measurement chain 的稳定性、bridge 可用性、automated-to-expert substitution fidelity；不要误写成已经完成 extraction-uniformity hypothesis test。当前默认 variance source 仍锁定为 paragraph-order permutation；若引入 composition variation，必须明确说明是在做扩展而非当前默认协议。
 - `Phase 2 / Phase 3` 主要用于 downstream design / pilot analytical post-processing。在 Gate 1-3 尚未完成前，不要提前写 retrieval simulation 的正式结论或 full-study 平台。
 
-## Gate completion / definition of done (current Gate 1)
+## Gate completion / definition of done (current Phase 1 reduced-scope / follow-up)
 
 本节同样是 current / time-sensitive；如果当前 gate 目标变化，应优先更新这里。
 
-当前 `Gate 1` 至少在满足以下条件时，才算完成并可进入下一步：
-- `artifacts/phase0/content_hashes.json` 可校验：仓库内加载的 MuSiQue working split、`phase0.yaml` 的 `split` / `seed` 配置、以及 `content_hashes.json` 中记录的 dataset hash / manifest version / sampling seed 之间没有未解释的不一致。
-- `artifacts/phase0/sample_manifest_v1.json` 可加载且 schema 对齐：至少可以被仓库现有 loader / validator（如 `phase0.load_manifest`、`phase0.validate_manifest`）读取，并与当前 `phase1.v1` manifest 结构、hop-stratified 计数、paragraph pool range、以及基础 question / paragraph 字段保持一致。
-- 最小 smoke validation 可运行：仓库现有 smoke 入口能够在不改协议假设的前提下完成一次最小闭环，验证 manifest、hash、基础 measurement / export 路径与事件存储可以贯通。
-- Phase 1 所需依赖 / 接口 / 预算 / 存储具备最小可执行闭环：至少已经打通 provider/profile 解析、forced-decode log-prob 接口、append-only measurement/event store、基础 run plan wiring、以及最小恢复 / 重跑路径；可以进入真正的 Phase 1 scaffold implementation，而不是停留在静态规格阶段。
-- Gate 1 的完成仍只表示 provisioning 和 execution-readiness 成立；不能把当前结果表述成 hypothesis test 已完成，也不能写成 extraction-uniformity 已被验证。
+当前阶段至少在满足以下条件时，才算完成并可进入下一步：
+- 当前 reduced-scope / partial live artifacts 已被正确标注：`pipeline_status`、`measurement_status`、contamination gate、annotation state、bridge state 和 `resolved_runtime`（若为新导出）能在 `run_summary.json` / `events.jsonl` / exports 中追踪；旧 artifact 缺字段时必须明确说明是历史导出而非协议变化。
+- contamination-failed run 保持 scientific stop：不得自动 rerun、不得自动 restrict、不得自动升级到 `measurement_validated`；review / rewrite / replacement 只能作为 human-in-the-loop sidecar。
+- follow-up package 若继续使用，必须具备最小安全闭环：source run 不被改写、same-hop replacement lineage 可审计、operator signoff 状态明确、`execution_ready` 不被误读、失败 source run 的 scientific status 不被 retroactively 修改。
+- final v8 论文 framing 已映射到文档入口：formal/proxy/pipeline/runtime 分层、`M* -> M` extraction risk、verification / escalation，以及 `ProjectionPlan` / `BudgetWitness` / `MaterializedContext` 作为目标 runtime interface 的边界被清楚写出。
+- protocol-full live 或 Phase 2/3 推进前，必须重新核对 active protocol、run plan、budget、annotation、contamination 和 bridge gate；partial artifact 或 reduced-scope pilot 不能被当作 full scientific completion。
+- 当前阶段完成仍只表示 runtime scaffold / triage / follow-up readiness 成立；不能把结果表述成 hypothesis test 已完成，也不能写成 extraction-uniformity 已被验证。

@@ -13,21 +13,24 @@ Your job:
 Reading order:
 1. docs/README.md
 2. AGENTS.md
-3. docs/protocols/execution-readiness-checklist.md
-4. docs/protocols/phase1-protocol.md
-5. docs/protocols/phase1-contamination-triage-and-question-rewrite.md
-6. configs/runs/README.md
-7. api/README.md
-8. docs/architecture.md
-9. cps/runtime/cohort.py
-10. cps/analysis/bridge.py
-11. cps/analysis/contamination.py
-12. cps/runtime/annotation.py
+3. docs/archive/final_paper_context_projection_submission_final_v8.md
+   - Focus on the Abstract, Paper contract, Bridge statement, and Runtime Interface Requirements.
+4. docs/protocols/execution-readiness-checklist.md
+5. docs/protocols/phase1-protocol.md
+6. docs/protocols/phase1-contamination-triage-and-question-rewrite.md
+7. configs/runs/README.md
+8. api/README.md
+9. docs/architecture.md
+10. cps/runtime/cohort.py
+11. cps/analysis/bridge.py
+12. cps/analysis/contamination.py
+13. cps/runtime/annotation.py
 
 How to interpret the repo:
 - `cps/` is the canonical implementation package.
 - `api/` owns provider/model profiles, backend factories, and live probe helpers.
 - `docs/protocols/` contains active execution contracts.
+- `docs/archive/final_paper_context_projection_submission_final_v8.md` is the current paper-framing anchor.
 - `artifacts/` contains run outputs. Treat these as time-sensitive state, not stable rules.
 - `events.jsonl` is the runtime source of truth for a run.
 
@@ -38,6 +41,8 @@ Non-negotiable constraints:
 - Reuse existing artifacts, manifests, scripts, and protocol documents before adding new abstractions.
 - Do not silently reinterpret a run as hypothesis validation when the protocol says it is only measurement validation or pilot-only.
 - A contamination gate fail is a scientific stop, not an engineering retry signal.
+- The final v8 paper controls research framing, not run completion status.
+- `ProjectionPlan`, `BudgetWitness`, and `MaterializedContext` are target auditable runtime interfaces from the paper; do not assume the current code fully implements them unless you verify it locally.
 
 Document precedence:
 - Execution scheduling follows the checklist / active run-plan documents.
@@ -47,6 +52,7 @@ Current project semantics to keep in mind:
 - The repo already supports live model probing, bridge diagnostics, annotation package export, and contamination escalation bundles.
 - Reduced-scope live runs may be engineering-successful while still being scientifically blocked by contamination.
 - AI-assisted contamination review is advisory only; it cannot clear the gate automatically.
+- Rewrite, replacement, compression, and memory-formation work belongs to a sidecar / derived-view lane and must preserve source-run lineage.
 
 What to inspect in run outputs:
 - Start from `exports/run_summary.json`.
@@ -59,6 +65,7 @@ What not to do:
 - Do not auto-upgrade any run to `measurement_validated`.
 - Do not auto-rerun from rewritten questions without human approval and lineage tracking.
 - Do not add a new external annotation system unless the user explicitly asks for it.
+- Do not modify primary source questions to make the answer-serving path easier; question rewrite/replacement is sidecar follow-up work only.
 
 Expected output style:
 - Summarize findings in terms of gates, artifacts, and executable next steps.

@@ -1,6 +1,6 @@
 ﻿# Phase 0 Specification: Context Projection Selection — Experimental Cycle Lock-In
 
-**Associated paper:** Context Projection Selection in Multi-Agent Systems: Conditional Weak-Submodular Theory and Regime Diagnostics (`paper-draft-v5_5-taskB-final-gemini-minimal-q7revised-polish2.md`)
+**Associated paper:** Context Projection Selection in Multi-Agent Systems: Conditional Theory, Bridge Statement, and Measurable Verification (`../archive/final_paper_context_projection_submission_final_v8.md`)
 
 **Document status:** Phase 0 exit artifact, pending user confirmation on budget parameters (§4, §5).
 

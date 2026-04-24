@@ -1,7 +1,8 @@
-# MuSiQue Gate 1 Project
+# Context Projection Selection / MuSiQue Gate 1 Runtime Scaffold
 
-This repository now contains the local implementation scaffold for MuSiQue
-Gate 1 as a runnable project, with `cps/` as the canonical code package.
+This repository contains the runnable Phase 0/1 measurement and runtime
+scaffold for the Context Projection Selection project, using MuSiQue as the
+current Gate 1 / Phase 1 domain. `cps/` is the canonical code package.
 
 It currently covers:
 
@@ -18,6 +19,21 @@ Project entrypoints:
 - [docs/protocols/execution-readiness-checklist.md](./docs/protocols/execution-readiness-checklist.md)
 - [configs/runs/README.md](./configs/runs/README.md)
 - [api/README.md](./api/README.md)
+
+## Paper Context
+
+The current canonical paper framing is
+[docs/archive/final_paper_context_projection_submission_final_v8.md](./docs/archive/final_paper_context_projection_submission_final_v8.md).
+That paper defines the research object and boundary: conditional theory,
+the formal/proxy/pipeline/runtime bridge, verification and escalation, and
+extraction as a separate bridge risk.
+
+This repository is not a full paper implementation. It implements and records
+the Phase 0/1 measurement/runtime scaffold needed to exercise that framing.
+Protocol docs, run plans, `run_summary.json`, and `events.jsonl` decide current
+execution status. `artifacts/` are time-sensitive run outputs; reduced-scope,
+partial, or contamination-failed live artifacts must not be described as
+completed scientific validation.
 
 The `phase0/` and `phase1/` directories now act as compatibility shims.
 New imports and new runtime entrypoints should prefer `cps.*`.

@@ -1,6 +1,6 @@
 ﻿# Phase 1 Probe Protocol: Extraction Uniformity Measurement on MuSiQue
 
-**Associated documents:** Phase 0 Specification (`phase0-specification.md`), paper draft (`paper-draft-v5_5-taskB-final-gemini-minimal-q7revised-polish2.md`).
+**Associated documents:** Phase 0 Specification (`phase0-specification.md`), final paper framing (`../archive/final_paper_context_projection_submission_final_v8.md`).
 
 **Document status:** Phase 1 execution protocol, ready for implementation pending confirmation of the four implementation-level decisions documented in the Phase 0 protocol-authoring parameter resolution.
 
@@ -42,7 +42,7 @@ The frontier predictive family is instantiated as Qwen3.6-Plus (`qwen3.6-plus`) 
 
 Implementation note: the repository now routes provider/profile resolution through `api/settings.py` and backend selection through `api/backends.py`, but the default active profile remains `dashscope-qwen-phase1`. This code-level abstraction does not change the scientific lock stated in this protocol section.
 
-The choice of intra-family tiering (Qwen3-32B and Qwen3-14B both from the dense Qwen3 family) preserves tokenizer, architectural class, and pretraining-lineage coherence between V_frontier and V_small, which is the structural condition under which the linear-per-stratum bridge function is most likely to hold.
+The choice of intra-family tiering (Qwen3.6-Plus and Qwen3.6-Flash from the Qwen3.6 family) preserves provider, tokenizer-family, and pretraining-lineage coherence between V_frontier and V_small, which is the structural condition under which the linear-per-stratum bridge function is most likely to hold.
 
 ### B.2 Forced-decode log-probability extraction protocol
 

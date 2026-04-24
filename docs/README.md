@@ -7,6 +7,9 @@ long-lived `phase0` / `phase1` code roots.
 
 - [architecture.md](./architecture.md)
   Explains the code layout, artifact layout, and migration direction.
+- [archive/final_paper_context_projection_submission_final_v8.md](./archive/final_paper_context_projection_submission_final_v8.md)
+  Current canonical paper framing: conditional theory, bridge statement,
+  runtime observability requirements, and extraction as a separate bridge risk.
 - [phase1-implementation-completion-report.md](./phase1-implementation-completion-report.md)
   Summarizes what has been implemented and locally verified for the current
   Phase 1 development plan.
@@ -42,8 +45,9 @@ long-lived `phase0` / `phase1` code roots.
 - `protocols/`
   Active protocol documents that guide implementation and execution.
 - `archive/`
-  Research drafts and historical reference material, not the default
-  implementation entrypoint.
+  The final v8 paper is the current research-framing anchor. Older paper
+  drafts in this directory are historical reference material, not default
+  implementation entrypoints.
 
 ## Code Semantics
 
