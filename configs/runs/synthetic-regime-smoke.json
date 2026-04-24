@@ -1,0 +1,25 @@
+{
+  "experiment_id": "synthetic_regime_benchmark_v1",
+  "protocol_version": "synthetic_regime.v1",
+  "run_id": "synthetic-regime-smoke-20260418",
+  "seed": 20260418,
+  "output_dir": "./artifacts/experiments/synthetic_regime_smoke",
+  "regimes": [
+    "redundancy_dominated",
+    "sparse_pairwise_synergy",
+    "higher_order_synergy"
+  ],
+  "instances_per_regime": 1,
+  "top_l": 8,
+  "policy_thresholds": {
+    "monitored_greedy": {
+      "gamma_hat_gte": 0.75,
+      "synergy_fraction_lte": 0.1,
+      "greedy_augmented_gap_lte": 0.05
+    },
+    "seeded_augmented_greedy": {
+      "gamma_hat_gte": 0.45,
+      "greedy_augmented_gap_lte": 0.15
+    }
+  }
+}

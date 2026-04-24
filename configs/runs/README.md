@@ -38,6 +38,8 @@ Current recommended run plans:
   [live-mini-batch.json](./live-mini-batch.json),
   [live-calibration-p2.json](./live-calibration-p2.json),
   [live-calibration-p3.json](./live-calibration-p3.json)
+- Experimental sidecar configs:
+  [synthetic-regime-smoke.json](./synthetic-regime-smoke.json)
 
 Interpretation rules:
 
@@ -70,3 +72,18 @@ Protocol-full execution notes:
   Do not auto-restrict to a subset or auto-rerun and still call the run `measurement_validated`.
 - When contamination fails, inspect `exports/contamination_escalation_bundle.json`.
   It is a manual-decision packet, not an automatic remediation trigger.
+
+Synthetic regime benchmark:
+
+- The synthetic benchmark is a sidecar diagnostic scaffold for controlled set
+  functions. It does not run a scheduler, memory system, openWorker port, or
+  live model benchmark.
+- Canonical smoke command:
+  `python -m cps.experiments.synthetic_benchmark --config configs/runs/synthetic-regime-smoke.json --output-dir artifacts/experiments/synthetic_regime_smoke`
+- Expected outputs are `events.jsonl`, `candidate_pools.jsonl`,
+  `projection_plans.jsonl`, `budget_witnesses.jsonl`,
+  `materialized_contexts.jsonl`, `diagnostics.jsonl`, `summary.json`, and
+  `report.md`.
+- Interpret `gamma_hat`, synergy fraction, and greedy-vs-augmented gap as
+  provisional proxy-layer diagnostics only. They are not theorem inheritance
+  and not a system-level performance claim.

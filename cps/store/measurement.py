@@ -23,6 +23,12 @@ ALLOWED_EVENT_TYPES = {
     "annotation_label_ingested",
     "expert_arbitration_ingested",
     "kappa_materialized",
+    "candidate_pool_materialized",
+    "projection_plan_materialized",
+    "budget_witness_materialized",
+    "materialized_context_materialized",
+    "projection_diagnostics_materialized",
+    "synthetic_benchmark_summary_materialized",
 }
 EVENT_FIELDS = (
     "event_type",
