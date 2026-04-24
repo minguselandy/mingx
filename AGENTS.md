@@ -1,159 +1,182 @@
 # Project Agent Contract
 
-本文件是供 Codex / agent 长期遵循的协作契约。
-- `Stable working contract` 放长期有效规则。
-- `Current run brief` 与 `Gate completion / definition of done` 放当前阶段、time-sensitive 内容。
-- 若未来项目状态变化，优先更新 time-sensitive 小节，而不是改动稳定协作规则。
-- 发生张力时：当前执行顺序以 current run brief 和 checklist 决定；长期边界、设计不变量和安全基线以 stable contract 与锁定协议为准。
+This file is a long-term collaboration contract for Codex / agents.
+
+* Put long-term rules in `Stable working contract`.
+* Put current-stage and time-sensitive content in `Current run brief` and `Gate completion / definition of done`.
+* If the project state changes in the future, prioritize updating the time-sensitive sections rather than changing the stable collaboration rules.
+* If tensions arise: the current execution order is determined by the current run brief and checklist; long-term boundaries, design invariants, and safety baselines are governed by the stable contract and locked protocols.
 
 ## Stable working contract
 
-### Language and collaboration mode
-- 默认使用中文交流。
-- 默认进入 implementation-first / vibe coding 协作模式，但若用户明确要求 review、纯分析、brainstorming 或问答，则以用户意图为准。
+### Collaboration mode
+
+* Default to implementation-first / vibe coding collaboration mode, but if the user explicitly asks for review, pure analysis, brainstorming, or Q&A, follow the user’s intent.
 
 ### Execution posture
-- 优先给出最小可运行闭环，不先做大而全抽象。
-- 顺着 gate 和依赖图推进：先上游、后下游；先可运行、后优雅。
-- 优先复用仓库内已有 protocol、script、run plan 和 artifact，而不是重新发明接口或重新录入规格。
-- 每一步尽量产出可复用 artifact，例如 `json`、`csv`、`parquet`、`md`、`script`。
-- 每完成一个模块，优先补 smoke test 或最小验证脚本。
+
+* Prioritize the smallest runnable closed loop; do not start with large, comprehensive abstractions.
+* Move according to gates and dependency graph: upstream before downstream; runnable before elegant.
+* Prefer reusing existing protocols, scripts, run plans, and artifacts in the repo rather than reinventing interfaces or re-entering specs.
+* Each step should, where possible, produce reusable artifacts such as `json`, `csv`, `parquet`, `md`, or `script`.
+* After completing each module, prioritize adding a smoke test or minimal validation script.
 
 ### Working surface and reuse
-- 当前工作目录 `.`（仓库根目录）是实现、配置和运行入口。
-- `docs/protocols/` 是当前协议主入口；`docs/archive/final_paper_context_projection_submission_final_v8.md` 是当前论文 framing anchor，其他 `docs/archive/` 草稿仅作为历史参考。
-- `api/` 是当前 provider/profile、backend 工厂和 API smoke 工具的统一入口；涉及模型切换或 API 接入时优先从这里收口。
-- `artifacts/phase0/`、`configs/runs/`、`reference/files/` 是当前运行输入、run plan 和旧 `files/` 参考材料的主要来源。
-- `.env.example` 记录当前推荐的 secret 与 `API_*` 覆盖模板。
 
-优先读取的现有 artifact：
-- `docs/protocols/phase0-specification.md`
-- `docs/protocols/phase1-protocol.md`
-- `docs/protocols/phase2-design.md`
-- `docs/protocols/execution-readiness-checklist.md`
-- `docs/archive/final_paper_context_projection_submission_final_v8.md`
-- `data_prep.py`
-- `reference/files/data_prep.py`
-- `reference/files/data_prep.json`
-- `artifacts/phase0/sample_manifest_v1.json`
-- `artifacts/phase0/content_hashes.json`
+* Current working directory `.` is the repo root and the entry point for implementation, configuration, and execution.
+* `docs/protocols/` is the current primary protocol entry point; `docs/archive/final_paper_context_projection_submission_final_v8.md` is the current paper framing anchor. Other drafts in `docs/archive/` are historical references only.
+* `api/` is the unified entry point for current provider/profile settings, backend factory, and API smoke tools. For model switching or API integration, consolidate changes here first.
+* `artifacts/phase0/`, `configs/runs/`, and `reference/files/` are the main sources for current run inputs, run plans, and old `files/` reference material.
+* `.env.example` records the current recommended secret and `API_*` override template.
+
+Existing artifacts to read first:
+
+* `docs/protocols/phase0-specification.md`
+* `docs/protocols/phase1-protocol.md`
+* `docs/protocols/phase2-design.md`
+* `docs/protocols/execution-readiness-checklist.md`
+* `docs/archive/final_paper_context_projection_submission_final_v8.md`
+* `data_prep.py`
+* `reference/files/data_prep.py`
+* `reference/files/data_prep.json`
+* `artifacts/phase0/sample_manifest_v1.json`
+* `artifacts/phase0/content_hashes.json`
 
 ### Document precedence and conflict handling
-把优先级拆成两层，避免把执行清单误读成可以覆盖设计不变量。
 
-执行动作调度优先级：
+Split priority into two layers to avoid misreading execution checklists as allowed to override design invariants.
+
+Execution-action scheduling priority:
+
 1. `docs/protocols/execution-readiness-checklist.md`
 2. `docs/protocols/phase1-protocol.md`
 3. `docs/protocols/phase0-specification.md`
 4. `docs/protocols/phase2-design.md`
 5. `docs/archive/final_paper_context_projection_submission_final_v8.md`
 
-规范约束优先级：
-- `docs/protocols/phase0-specification.md` 锁定 domain、granularity、budget、design invariant、known limitation。
-- `docs/protocols/phase2-design.md` 提供 downstream 统计和设计边界；不要在 Gate 1-3 前提前把项目推进成完整 Phase 2/4 平台。
-- `docs/protocols/phase1-protocol.md` 和 `docs/protocols/execution-readiness-checklist.md` 负责把工作落成可执行步骤，但不能静默覆盖 Phase 0 / Phase 2 已锁定的不变量或边界。
-- `docs/archive/final_paper_context_projection_submission_final_v8.md` 控制当前研究 framing、术语和“不该跑偏成什么论文”；旧 paper draft 只作为 historical archive，不再作为 canonical anchor。
+Normative constraint priority:
+
+* `docs/protocols/phase0-specification.md` locks domain, granularity, budget, design invariants, and known limitations.
+* `docs/protocols/phase2-design.md` provides downstream statistics and design boundaries; do not prematurely turn the project into a full Phase 2/4 platform before Gates 1–3.
+* `docs/protocols/phase1-protocol.md` and `docs/protocols/execution-readiness-checklist.md` turn the work into executable steps, but cannot silently override invariants or boundaries already locked by Phase 0 / Phase 2.
+* `docs/archive/final_paper_context_projection_submission_final_v8.md` controls the current research framing, terminology, and “what this paper should not drift into”; old paper drafts are only historical archives and are no longer canonical anchors.
 
 ### Paper framing vs execution contract
-- final v8 论文控制研究边界：conditional theory、formal/proxy/pipeline/runtime 分层、bridge statement、verification / monitoring / escalation，以及 extraction 作为 `M* -> M` bridge risk。
-- protocol、run plan、`run_summary.json` 和 `events.jsonl` 控制执行判断：某次 run 是否 complete、green、pilot-only、contamination failed 或 measurement-validated，不由论文措辞直接决定。
-- 若论文 runtime interface 和当前代码之间存在差距，默认把 `ProjectionPlan`、`BudgetWitness`、`MaterializedContext` 理解为目标 auditable interface / future alignment target，不要假定当前实现已经完整具备。
-- 不要为了贴合论文叙事去改 source question 或 primary answer-serving path；rewrite、replacement、compression、memory formation 都应保持 sidecar / derived-view 语义，并带 lineage。
 
-若动作调度优先级与规范约束发生张力，选择“不违反 invariant 的最近一步可执行动作”，并只指出影响当前执行的冲突。
+* final v8 paper controls the research boundary: conditional theory, formal/proxy/pipeline/runtime layering, bridge statement, verification / monitoring / escalation, and extraction as an `M* -> M` bridge risk.
+* Protocols, run plans, `run_summary.json`, and `events.jsonl` control execution judgments: whether a run is complete, green, pilot-only, contamination failed, or measurement-validated is not determined directly by paper wording.
+* If there is a gap between the paper runtime interface and the current code, treat `ProjectionPlan`, `BudgetWitness`, and `MaterializedContext` by default as target auditable interfaces / future alignment targets; do not assume the current implementation already fully supports them.
+* Do not modify the source question or primary answer-serving path just to fit the paper narrative; rewrite, replacement, compression, and memory formation should all remain sidecar / derived-view semantics with lineage.
+
+If execution-action priority and normative constraints conflict, choose the nearest executable action that does not violate invariants, and only point out conflicts that affect current execution.
 
 ### Research framing guardrails
-论文定位已经锁定，不要把项目推进成：
-- system paper
-- memory paper
-- 泛 context engineering paper
-- PID paper
 
-当前论文定位：
-- formal object：per-round、per-agent、token-budgeted context/content selection，目标函数为 predictive V-information
-- conditional theory：weak-submodular / pairwise-additive complementarity regime，作为 conditional theory + verification protocol，而不是已证明的 deployed-system end-to-end guarantee
-- bridge statement：formal objective / proxy measurement / runtime heuristic / runtime artifact 四层分离
-- deployment-facing contribution：verification / monitoring / escalation
-- extraction：`M* -> M` bridge risk 和 testable bottleneck，不是 weak-submodular theorem 的自动延伸
-- runtime / memory：仅为 supporting / bridge-risk layers；memory 可以影响 candidate pool，但不是当前形式化主对象
+The paper positioning is locked. Do not push the project into becoming:
+
+* a system paper
+* a memory paper
+* a generic context engineering paper
+* a PID paper
+
+Current paper positioning:
+
+* formal object: per-round, per-agent, token-budgeted context/content selection, with predictive V-information as the objective function
+* conditional theory: weak-submodular / pairwise-additive complementarity regime, framed as conditional theory + verification protocol, not as a proven deployed-system end-to-end guarantee
+* bridge statement: separation of four layers — formal objective / proxy measurement / runtime heuristic / runtime artifact
+* deployment-facing contribution: verification / monitoring / escalation
+* extraction: `M* -> M` bridge risk and testable bottleneck, not an automatic extension of the weak-submodular theorem
+* runtime / memory: only supporting / bridge-risk layers; memory may affect the candidate pool, but it is not the current formalized main object
 
 ### File and code strategy
-- 优先小步修改。
-- 优先改当前 gate 最相关文件，不做无关重构。
-- 不要在没有明确收益时扩目录树。
-- 涉及 provider/model 或 API 切换时，优先修改 `api/settings.py`、`api/backends.py`、`api/README.md`，不要把 provider 分支散落到 `cps/runtime`。
-- 优先复用仓库内现有脚本和 artifact，尤其是 `docs/protocols/`、`docs/archive/`、`artifacts/phase0/`、`configs/runs/`、`reference/files/` 下的内容，再决定是否迁移或精简。
-- measurement/event store 使用 append-only 思路。
-- 确定性派生产物可以 overwrite，或明确做 versioned snapshot；不要把所有中间文件都做成追加式。
-- checkpoint 只做恢复辅助，event log 才是 source of truth。
+
+* Prefer small-step edits.
+* Prefer modifying files most relevant to the current gate; avoid unrelated refactors.
+* Do not expand the directory tree without clear benefit.
+* For provider/model or API switching, prioritize modifying `api/settings.py`, `api/backends.py`, and `api/README.md`; do not scatter provider branches into `cps/runtime`.
+* Prefer reusing existing scripts and artifacts in the repo, especially material under `docs/protocols/`, `docs/archive/`, `artifacts/phase0/`, `configs/runs/`, and `reference/files/`, before deciding whether to migrate or simplify them.
+* Measurement/event store should follow an append-only approach.
+* Deterministic derived artifacts may be overwritten, or explicitly saved as versioned snapshots; do not make every intermediate file append-only.
+* Checkpoints are only for recovery assistance; the event log is the source of truth.
 
 ### Multi-agent / delegation policy
-借鉴 ECC 的管理思想，但在 Codex 中只做最小角色化管理。
-- 主线程阻塞任务优先本地直接完成，不先委派。
-- 只把明确、边界清晰、非关键路径任务交给 sidecar role。
-- `explorer`：只读探索
-- `reviewer`：只读审查
-- `docs_researcher`：只读文档 / 规格核对
 
-不要为了“看起来更 agentic”而过度拆任务。sidecar 不能阻塞主线程。
+Borrow ECC-style management ideas, but only use minimal role-based management in Codex.
+
+* Prioritize completing main-thread blocking tasks locally; do not delegate first.
+* Only delegate clearly bounded, non-critical-path tasks to sidecar roles.
+* `explorer`: read-only exploration
+* `reviewer`: read-only review
+* `docs_researcher`: read-only documentation / spec checking
+
+Do not over-split tasks just to “look more agentic.” Sidecars must not block the main thread.
 
 ### Output preference
-默认响应格式：
-1. 极简复述当前状态
-2. 给出 3-6 步最小开发计划
-3. 明确下一步 artifact
-4. 直接进入代码、脚本、目录结构、数据流推进
 
-除非用户要求，否则不要先写长篇分析。
+Default response format:
+
+1. Very brief restatement of the current state
+2. A 3–6 step minimal development plan
+3. Clear next artifact
+4. Directly proceed with code, scripts, directory structure, and data-flow work
+
+Unless the user asks otherwise, do not start with a long analysis.
 
 ### Git and delivery baseline
-- 默认在本轮完成代码与验证后整理出可审阅的本地改动；如合适，可以直接准备本地 commit。
-- 只有在用户未禁止、最小安全检查通过、且远端策略允许时才执行 push。
-- push 前仍需检查：不要提交 `.env`、API key、cache、checkpoint、临时文件或其他本地 secret。
-- 若当前机器上的 `git` 不在 PATH 中，可以使用已安装的 `git` 绝对路径继续完成本地提交；不要因为 PATH 问题中断交付。
-- 若 push 失败，保留已完成的本地 commit，并优先汇报阻塞原因。
+
+* By default, after completing code and validation in the current round, organize local changes for review; if appropriate, prepare a local commit directly.
+* Only push if the user has not forbidden it, minimal safety checks pass, and the remote policy allows it.
+* Before pushing, still check: do not commit `.env`, API keys, caches, checkpoints, temporary files, or other local secrets.
+* If `git` is not in PATH on the current machine, use the installed absolute path for `git` to continue completing the local commit; do not stop delivery because of a PATH issue.
+* If push fails, keep the completed local commit and prioritize reporting the blocking reason.
 
 ## Current run brief (time-sensitive)
 
-本节是 current / time-sensitive 内容。若未来项目状态变化，优先更新这一节，而不是改动 `Stable working contract`。
+This section is current / time-sensitive. If the current gate target changes in the future, update this section first rather than changing `Stable working contract`.
 
 ### Current main target
-当前主目标是：Phase 1 reduced-scope runtime hardening、contamination triage / follow-up sidecar 收口，以及 final v8 论文 framing 与现有 runtime artifact / protocol 的边界对齐。
+
+The current main target is: Phase 1 reduced-scope runtime hardening, closing out contamination triage / follow-up sidecar, and aligning final v8 paper framing with the existing runtime artifacts / protocol boundaries.
 
 ### Current execution order
-1. 先把当前 live / reduced-scope artifacts 解释清楚：工程链路可运行不等于 scientific pass，contamination-failed 或 partial protocol-full-live artifacts 不得写成 `measurement_validated`。
-2. 继续收紧 contamination triage、operator decision、same-hop replacement 和 follow-up package 的 sidecar workflow；不得修改已经完成的 failed source run。
-3. 核对 `run_summary.json`、`events.jsonl`、contamination / bridge / annotation exports 是否能表达当前 runtime resolution、gate status、lineage 和 approval state。
-4. 将 final v8 的 runtime interface 要求映射到现有 artifact 表面，优先形成最小对齐说明；不要提前重构为完整 `ProjectionPlan` / `BudgetWitness` / `MaterializedContext` 平台。
-5. 只有在 reduced-scope follow-up 的人审批准、lineage 和最小安全检查齐备后，才考虑新的 follow-up run。
-6. protocol-full live 或 Phase 2/3 解释必须等待对应 gate 条件成立，不从 partial artifact 或 paper framing 越级推出科学结论。
+
+1. First clarify the current live / reduced-scope artifacts: an engineering chain being runnable does not equal scientific pass; contamination-failed or partial protocol-full-live artifacts must not be described as `measurement_validated`.
+2. Continue tightening the sidecar workflow for contamination triage, operator decision, same-hop replacement, and follow-up package; do not modify the already completed failed source run.
+3. Check whether `run_summary.json`, `events.jsonl`, contamination / bridge / annotation exports can express the current runtime resolution, gate status, lineage, and approval state.
+4. Map final v8’s runtime interface requirements to the existing artifact surface, prioritizing a minimal alignment note; do not prematurely refactor into a full `ProjectionPlan` / `BudgetWitness` / `MaterializedContext` platform.
+5. Only consider a new follow-up run after reduced-scope follow-up human review approval, lineage, and minimal safety checks are in place.
+6. Any protocol-full live or Phase 2/3 interpretation must wait until the corresponding gate conditions are met; do not infer scientific conclusions from partial artifacts or paper framing.
 
 ### Current sidecar
-- contamination review / rewrite / replacement / follow-up package lane
-- compression、memory formation、derived-view 相关的双路语义核对
-- openWorker candidate pool / greedy trace / selected set / materialized context / extraction alignment 的可观测性核对
+
+* contamination review / rewrite / replacement / follow-up package lane
+* dual semantics check for compression, memory formation, and derived-view related work
+* observability check for openWorker candidate pool / greedy trace / selected set / materialized context / extraction alignment
 
 ### Current do-not-do-yet
-- sidecar 不能阻塞主线程。
-- 不要先搭大而全实验平台。
-- 不要提前把项目推进成完整 Phase 2/4 full-study 平台。
-- 不要把 partial `artifacts/phase1/protocol_full_live/` 或 reduced-scope live run 当作 completed scientific result。
-- 不要把论文 runtime interface 直接写成已实现 API。
-- 不要为了让回答更容易而修改 primary source question；问题 rewrite / replacement 只能作为带 lineage 的 sidecar / follow-up 工作。
+
+* Sidecars must not block the main thread.
+* Do not build a large, comprehensive experimental platform first.
+* Do not prematurely push the project into a full Phase 2/4 full-study platform.
+* Do not treat partial `artifacts/phase1/protocol_full_live/` or reduced-scope live run as a completed scientific result.
+* Do not write the paper runtime interface directly as an already implemented API.
+* Do not modify the primary source question just to make the answer easier; question rewrite / replacement may only be sidecar / follow-up work with lineage.
 
 ### Current phase and gate boundary interpretation
-- `Phase 0 / Gate 1` 的目标是数据锁定、可复现和执行前 provisioning；优先完成 MuSiQue data acquisition / loading、content hash 固定、hop-stratified sample manifest 复现、Phase 0 artifact 校验，以及 Phase 1 所需依赖、接口、预算、存储和最小 smoke test。
-- `Phase 1` 的目标是 measurement apparatus / feasibility probe。它验证 measurement chain 的稳定性、bridge 可用性、automated-to-expert substitution fidelity；不要误写成已经完成 extraction-uniformity hypothesis test。当前默认 variance source 仍锁定为 paragraph-order permutation；若引入 composition variation，必须明确说明是在做扩展而非当前默认协议。
-- `Phase 2 / Phase 3` 主要用于 downstream design / pilot analytical post-processing。在 Gate 1-3 尚未完成前，不要提前写 retrieval simulation 的正式结论或 full-study 平台。
+
+* The goal of `Phase 0 / Gate 1` is data locking, reproducibility, and pre-execution provisioning; prioritize completing MuSiQue data acquisition / loading, fixed content hashes, reproducible hop-stratified sample manifest, Phase 0 artifact validation, and Phase 1 dependencies, interfaces, budget, storage, and minimal smoke tests.
+* The goal of `Phase 1` is measurement apparatus / feasibility probe. It validates the stability of the measurement chain, bridge usability, and automated-to-expert substitution fidelity; do not misdescribe it as a completed extraction-uniformity hypothesis test. The current default variance source remains locked to paragraph-order permutation; if composition variation is introduced, explicitly state that it is an extension rather than the current default protocol.
+* `Phase 2 / Phase 3` mainly support downstream design / pilot analytical post-processing. Before Gates 1–3 are complete, do not prematurely write formal conclusions for retrieval simulation or a full-study platform.
 
 ## Gate completion / definition of done (current Phase 1 reduced-scope / follow-up)
 
-本节同样是 current / time-sensitive；如果当前 gate 目标变化，应优先更新这里。
+This section is also current / time-sensitive; if the current gate target changes, update this section first.
 
-当前阶段至少在满足以下条件时，才算完成并可进入下一步：
-- 当前 reduced-scope / partial live artifacts 已被正确标注：`pipeline_status`、`measurement_status`、contamination gate、annotation state、bridge state 和 `resolved_runtime`（若为新导出）能在 `run_summary.json` / `events.jsonl` / exports 中追踪；旧 artifact 缺字段时必须明确说明是历史导出而非协议变化。
-- contamination-failed run 保持 scientific stop：不得自动 rerun、不得自动 restrict、不得自动升级到 `measurement_validated`；review / rewrite / replacement 只能作为 human-in-the-loop sidecar。
-- follow-up package 若继续使用，必须具备最小安全闭环：source run 不被改写、same-hop replacement lineage 可审计、operator signoff 状态明确、`execution_ready` 不被误读、失败 source run 的 scientific status 不被 retroactively 修改。
-- final v8 论文 framing 已映射到文档入口：formal/proxy/pipeline/runtime 分层、`M* -> M` extraction risk、verification / escalation，以及 `ProjectionPlan` / `BudgetWitness` / `MaterializedContext` 作为目标 runtime interface 的边界被清楚写出。
-- protocol-full live 或 Phase 2/3 推进前，必须重新核对 active protocol、run plan、budget、annotation、contamination 和 bridge gate；partial artifact 或 reduced-scope pilot 不能被当作 full scientific completion。
-- 当前阶段完成仍只表示 runtime scaffold / triage / follow-up readiness 成立；不能把结果表述成 hypothesis test 已完成，也不能写成 extraction-uniformity 已被验证。
+The current stage counts as complete and ready to move forward only when at least the following conditions are met:
+
+* Current reduced-scope / partial live artifacts are correctly labeled: `pipeline_status`, `measurement_status`, contamination gate, annotation state, bridge state, and `resolved_runtime` if newly exported, are traceable in `run_summary.json` / `events.jsonl` / exports; when old artifacts lack fields, explicitly state that they are historical exports, not a protocol change.
+* The contamination-failed run remains a scientific stop: do not automatically rerun, automatically restrict, or automatically upgrade it to `measurement_validated`; review / rewrite / replacement may only be a human-in-the-loop sidecar.
+* If the follow-up package continues to be used, it must have a minimal safety loop: the source run is not rewritten, same-hop replacement lineage is auditable, operator signoff state is explicit, `execution_ready` is not misread, and the failed source run’s scientific status is not retroactively modified.
+* final v8 paper framing has been mapped to the documentation entry point: formal/proxy/pipeline/runtime layering, `M* -> M` extraction risk, verification / escalation, and the boundary around `ProjectionPlan` / `BudgetWitness` / `MaterializedContext` as target runtime interfaces are clearly written out.
+* Before protocol-full live or Phase 2/3 advancement, re-check the active protocol, run plan, budget, annotation, contamination, and bridge gate; partial artifacts or reduced-scope pilot cannot be treated as full scientific completion.
+* Completion of the current stage still only means runtime scaffold / triage / follow-up readiness is in place; it must not be described as a completed hypothesis test or as extraction-uniformity having been validated.
