@@ -21,6 +21,9 @@ The phases are intentionally layered:
   dispatch traces.
 - Phase C tests context projection behavior on realistic tasks and benchmarks.
 
+The relation between this Phase A/B/C stack and the Phase 0/1/2/3/4
+measurement-validity stack is specified in `docs/phase-tree-crosswalk.md`.
+
 None of these phases should be interpreted as a claim that the context selector is
 globally optimal, that a scheduler is correct, or that synthetic diagnostics prove
 deployed LLM behavior.
@@ -139,6 +142,10 @@ Engineering claim:
 - Phase B validates the observability requirements needed for replay, audit, and
   escalation analysis.
 
+The replay contract, required trace fields, recomputation path, and missing-field
+status labels are specified in
+`docs/protocols/phase-b-replay-protocol.md`.
+
 Risks:
 
 - insufficient trace completeness
@@ -189,6 +196,10 @@ Scientific claim:
 - Phase C tests whether diagnostic-guided context projection correlates with task
   behavior on realistic distributions.
 - It does not claim state-of-the-art results or general agent superiority.
+
+When Phase C uses MuSiQue, it may share data and artifacts with the
+measurement-validity protocol stack, but it asks a different question. The
+distinction is recorded in `docs/phase-tree-crosswalk.md`.
 
 ## 4. Minimal viable experimental path
 

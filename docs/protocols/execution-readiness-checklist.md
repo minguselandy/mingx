@@ -8,7 +8,7 @@
 
 ## Structural Overview
 
-This checklist operationalizes the three-document specification suite into an execution sequence. The five sequential gates establish logical ordering: each gate's entry criteria are the exit criteria of the preceding gate, and each gate's completion is verifiable independently of downstream gates. The parallel workstream (openWorker infrastructure audit) executes concurrently with Gate 2 (Phase 1 execution) and feeds Gate 5 decisions (pilot-to-full-study transition) without blocking upstream gates.
+This checklist operationalizes the three-document specification suite into an execution sequence. The five sequential gates establish logical ordering: each gate's entry criteria are the exit criteria of the preceding gate, and each gate's completion is verifiable independently of downstream gates. The openWorker infrastructure audit executes concurrently with Gate 2 (Phase 1 execution), feeds Gate 5 decisions (pilot-to-full-study transition), and is part of the Gate 2 completion package. It does not block live Phase 1 measurement execution, but the Gate 2 package is not complete until the trace-field availability map or an explicit no-code-path blocker record is attached.
 
 The checklist uses four status categories per item. "Specified" indicates the item is defined in the specification suite and requires only verification that the definition has been read and understood by the executor. "Provisioned" indicates the item requires resource allocation (infrastructure, access, personnel) before execution proceeds. "Tested" indicates the item requires a functional verification run before production use. "Executed" indicates the item is a Phase 1 or Phase 3 execution step that produces data or decisions.
 
@@ -47,6 +47,8 @@ Gate 2 is the Phase 1 probe execution itself, spanning approximately three to fo
 **Annotation execution.** Primary annotator training must be completed with the five worked examples and ten-instance calibration set. Primary annotation on arbitration-flagged and face-validity-subsampled instances must be executed in parallel by both primary annotators. Expert arbitration on flagged instances (approximately 18 at N = 90) must be completed in a single batched session with written justifications preserved.
 
 **Reliability measurement execution.** The three κ values (κ_primary, κ_primary-expert for each primary annotator, κ_automated-expert) must be computed with bootstrapped 95% confidence intervals. Per-stratum decomposition must be computed by hop depth. Phase 1 Tier classification must be applied using the Phase 2-binding κ ≥ 0.7 threshold specified in Phase 2 Design Section 2.2, superseding the provisional Landis-Koch reference in the Phase 1 Protocol Section F.4.
+
+**openWorker trace-audit completion record.** Gate 2 completion must include the trace-field availability map for at least one concrete candidate openWorker codebase, using `openworker-trace-audit-template.md`, or an explicit record that no concrete openWorker code path was available to audit. This requirement does not block the automated MuSiQue measurement run, bridge fitting, contamination diagnostic, or annotation execution. It prevents the openWorker audit from remaining optional and supplies the Phase B replay and Phase 4 feasibility inputs needed downstream.
 
 ---
 
@@ -94,13 +96,15 @@ Gate 5 applies the pilot-to-full-study decision rule and either warrants full-st
 
 ## Parallel Workstream: openWorker Infrastructure Audit
 
-The parallel workstream executes concurrently with Gates 1 through 4 and feeds Gate 5 optionally.
+The parallel workstream executes concurrently with Gate 2 and may continue through later gates. Its first output, the trace-field availability map or no-code-path blocker record, is a Gate 2 completion-package item. Later refinements can still feed Gate 5, but the initial availability conclusion is no longer optional.
 
 **Trace-field availability mapping.** The five trace fields from the migration analysis (candidate pool, greedy trace, selected set, materialized context, extraction alignment) must be audited in the current openWorker codebase. For each field, the audit records availability status (already exported, partially exported, not exported), engineering effort estimate for full export, and any coupling to other infrastructure changes. This audit is specified as the early deliverable per Phase 0 Specification §6 and Phase 1 Protocol Appendix C.
 
 **Engineering effort aggregation.** The per-field effort estimates must be aggregated into a total engineering-scope assessment with classification as "one-week port," "one-month effort," or "multi-month engineering project" per the Phase 0 Specification §6 taxonomy.
 
 **Phase 4 feasibility documentation.** The infrastructure audit output must be documented as a Phase 4 feasibility input regardless of the Gate 5 decision outcome. If Gate 5 warrants full-study on MuSiQue, the infrastructure audit informs the downstream Phase 4 openWorker migration. If Gate 5 does not warrant full-study, the infrastructure audit still informs the Phase 4 direct-audit path that bypasses MuSiQue.
+
+If no concrete openWorker code path is accessible, the audit output must state that blocker explicitly and must not infer any availability status from templates or adjacent systems.
 
 ---
 

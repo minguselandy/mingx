@@ -75,6 +75,8 @@ The aggregated per-paragraph δ_loo is computed as the LCB quantile at q = 0.1:
 
 This matches the estimator form specified in the paper's Section 4.1. The LCB construction controls silent overestimation under paragraph-order variation.
 
+**CI-Value operationalization.** In the paper's calibration architecture, this `delta_loo` estimator is the CI-Value operationalization under log-loss utility, fixed model tier, and paragraph-order-only variance. The fixed V_frontier/V_small model choices define the predictive family for the measurement, and the forced-decode log-probability difference defines the utility change. Composition-robustness is not measured by this Phase 1 estimator and remains deferred to Phase 2 or later sensitivity analysis.
+
 ### B.4 K_LCB repetition via paragraph-order permutation
 
 The K_LCB = 5 repetitions correspond to 5 paragraph orderings drawn as follows. The first ordering is always `canonical_order` as provided by MuSiQue. The remaining 4 orderings are drawn as random permutations of the paragraph pool, seeded deterministically from the question_id so that the same 5 orderings are reproducible across execution runs. The full ordering set is recorded per question in the execution log.

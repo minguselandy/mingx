@@ -10,6 +10,11 @@ long-lived `phase0` / `phase1` code roots.
 - [archive/final_paper_context_projection_submission_final_v8.md](./archive/final_paper_context_projection_submission_final_v8.md)
   Current canonical paper framing: conditional theory, bridge statement,
   runtime observability requirements, and extraction as a separate bridge risk.
+- [experiment-design-overview.md](./experiment-design-overview.md)
+  High-level Phase A/B/C experiment design for context-projection diagnostics.
+- [phase-tree-crosswalk.md](./phase-tree-crosswalk.md)
+  Crosswalk between the Phase A/B/C experiment stack and the Phase 0/1/2/3/4
+  measurement-validity stack.
 - [phase1-implementation-completion-report.md](./phase1-implementation-completion-report.md)
   Summarizes what has been implemented and locally verified for the current
   Phase 1 development plan.
@@ -34,8 +39,13 @@ long-lived `phase0` / `phase1` code roots.
   Lists the canonical run-plan entrypoints.
 - [protocols/execution-readiness-checklist.md](./protocols/execution-readiness-checklist.md)
   Highest-priority execution-order and gate document.
+- [protocols/phase-b-replay-protocol.md](./protocols/phase-b-replay-protocol.md)
+  Phase B offline replay contract for dispatch traces and diagnostic
+  recomputation.
 - [protocols/phase1-protocol.md](./protocols/phase1-protocol.md)
   Phase 1 measurement-chain, bridge, and annotation constraints.
+- [protocols/phase4-design-skeleton.md](./protocols/phase4-design-skeleton.md)
+  Forward-planning skeleton for post-Gate-5 full-study or direct-audit branches.
 - [protocols/phase1-contamination-triage-and-question-rewrite.md](./protocols/phase1-contamination-triage-and-question-rewrite.md)
   Human-in-the-loop workflow for AI-assisted contamination judgement and
   minimal question rewrite planning after gate failure.
