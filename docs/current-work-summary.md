@@ -5,24 +5,26 @@ live mini-batch, contamination triage, and runtime-default updates.
 
 ## Paper Framing Update
 
-The current canonical paper framing is now:
+The current paper framing is now the revised v10 framing:
 
-- `docs/archive/final_paper_context_projection_submission_final_v8.md`
+- `docs/archive/context_projection_revised_v10.md`
+- `docs/paper-alignment-v10.md`
 
-Use it for the research boundary: conditional theory, the
-formal/proxy/pipeline/runtime bridge, verification and escalation, extraction
-as an `M* -> M` bridge risk, and the target auditable runtime interfaces
-`ProjectionPlan`, `BudgetWitness`, and `MaterializedContext`.
+Use it for the research boundary: conditional V-information theory, the
+formal/proxy/pipeline/runtime/metric-bridge/extraction layering, verification
+and escalation, extraction as an `M* -> M` bridge risk, and the target auditable
+runtime interfaces `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`,
+and `MetricBridgeWitness`.
 
 Do not use the paper to infer run completion status. Current execution status
 still comes from protocol docs, run plans, `run_summary.json`, `events.jsonl`,
 and exported diagnostics. The current implementation should be read as a Phase
 1 runtime / measurement scaffold, not as a completed full-paper runtime.
 
-The paper's runtime interfaces are alignment targets. Existing artifacts may
-partially cover those surfaces, but the repository should not claim full
-`ProjectionPlan` / `BudgetWitness` / `MaterializedContext` implementation
-without code and artifact verification.
+The paper's runtime interfaces are alignment targets. Phase A synthetic runs now
+materialize `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`, and
+`MetricBridgeWitness` artifacts, but broader runtime or deployed-interface
+claims still require code and artifact verification in the relevant lane.
 
 ## Current Stable Runtime Defaults
 

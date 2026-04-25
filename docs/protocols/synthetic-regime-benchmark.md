@@ -33,6 +33,7 @@ The output directory contains:
 - `projection_plans.jsonl`
 - `budget_witnesses.jsonl`
 - `materialized_contexts.jsonl`
+- `metric_bridge_witnesses.jsonl`
 - `diagnostics.jsonl`
 - `summary.json`
 - `report.md`
@@ -44,19 +45,35 @@ artifact files are derived audit views for inspection.
 
 The benchmark reports:
 
-- `gamma_hat`
-- synergy fraction
+- block-ratio LCB family where available:
+  `block_ratio_lcb_b2`, `block_ratio_lcb_star`, `block_ratio_lcb_b3`
+- interaction mass
+- triple-excess diagnostics where available
 - greedy-vs-seeded-augmented gap
-- policy recommendation
+- `metric_claim_level`
+- `selector_regime_label`
+- `selector_action`
 
-Default provisional policy bins:
+Triple-excess flags use `positive`, `none_detected`, `ambiguous`, or
+`not_evaluable`. Higher-order-risk instances with missing triple/block evidence
+must be escalated or marked ambiguous; pairwise-healthy diagnostics alone are
+not enough to emit a high-confidence greedy-valid label.
 
-- `monitored_greedy`: `gamma_hat >= 0.75`, synergy fraction `<= 0.10`, gap `<= 0.05`
-- `seeded_augmented_greedy`: `gamma_hat >= 0.45`, gap `<= 0.15`
-- `interaction_aware_local_search`: fallback when the above bins do not apply
+Default selector-regime labels are limited to `greedy_valid`, `escalate`, and
+`ambiguous`. Default provisional selector actions:
+
+- `monitored_greedy`: high block-ratio LCB, low interaction mass, and small gap
+- `seeded_augmented_greedy`: moderate block-ratio LCB and bounded gap
+- `interaction_aware_local_search`: positive higher-order evidence requiring
+  stronger search
+- `no_certified_switch`: missing, stale, or insufficient bridge/diagnostic
+  evidence
 
 These are calibration bins for synthetic experiments only. They should not be
-reported as production thresholds.
+reported as production thresholds. Legacy synthetic configs may still contain
+old trace-ratio threshold field names; read those as compatibility inputs for
+the pre-registered validity gate, not as headline weak-submodularity
+diagnostics.
 
 ## Non-Goals
 

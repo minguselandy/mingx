@@ -10,6 +10,12 @@ Phase 4 is the deferred full-study or deployment-facing audit stage. This
 skeleton exists so a positive Gate 5 decision does not bottleneck on deciding the
 basic branch structure.
 
+Phase 4 direct audits report extraction-completeness and `M* -> M bridge risk`
+status separately from projection diagnostics. They can support
+`MetricBridgeWitness` qualification or extraction-risk reporting, but they do
+not prove selector-regime validity and do not extend the weak-submodular theorem
+from `M` to `M*`.
+
 Phase 4 inherits the Phase 2 Section 7.2 handoff parameters:
 
 - pilot `Delta_hat` point estimate and variance

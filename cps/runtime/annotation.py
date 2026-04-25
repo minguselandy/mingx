@@ -63,6 +63,10 @@ def _training_root(export_dir: str | Path) -> Path:
     return _annotation_root(export_dir) / "training"
 
 
+def _display_path(path: str | Path) -> str:
+    return Path(path).as_posix()
+
+
 def _annotation_readme(
     *,
     queue_count: int,
@@ -83,9 +87,9 @@ def _annotation_readme(
             "- 主路径仍然是填写 `labels/` 目录下的 3 个 CSV，然后重跑同一条 cohort 命令。",
             "",
             "## 必须填写的文件",
-            f"- `primary_a.csv`: `{label_paths['primary_a']}`",
-            f"- `primary_b.csv`: `{label_paths['primary_b']}`",
-            f"- `expert.csv`: `{label_paths['expert']}`",
+            f"- `primary_a.csv`: `{_display_path(label_paths['primary_a'])}`",
+            f"- `primary_b.csv`: `{_display_path(label_paths['primary_b'])}`",
+            f"- `expert.csv`: `{_display_path(label_paths['expert'])}`",
             "",
             "## 字段规则",
             "- 只能填写 `HIGH`、`LOW`、`BUFFER` 这三个标签。",
@@ -102,11 +106,11 @@ def _annotation_readme(
             "- `source = face_validity_sample` 表示这是非 flagged 的抽样核验样本。",
             "",
             "## 训练材料",
-            f"- `annotator_instructions.md`: `{training_paths['annotator_instructions']}`",
-            f"- `worked_examples.jsonl`: `{training_paths['worked_examples']}`",
-            f"- `calibration_set.csv`: `{training_paths['calibration_set']}`",
-            f"- `expert_answer_key.csv`: `{training_paths['expert_answer_key']}`",
-            f"- `calibration_feedback.md`: `{training_paths['calibration_feedback']}`",
+            f"- `annotator_instructions.md`: `{_display_path(training_paths['annotator_instructions'])}`",
+            f"- `worked_examples.jsonl`: `{_display_path(training_paths['worked_examples'])}`",
+            f"- `calibration_set.csv`: `{_display_path(training_paths['calibration_set'])}`",
+            f"- `expert_answer_key.csv`: `{_display_path(training_paths['expert_answer_key'])}`",
+            f"- `calibration_feedback.md`: `{_display_path(training_paths['calibration_feedback'])}`",
             f"- 当前自动生成数量：worked examples = `{training_counts['worked_examples']}`，calibration items = `{training_counts['calibration_set']}`",
             "- `expert_answer_key.csv` 当前使用 automated label 作为 draft placeholder，正式 onboarding 前需要 expert 逐条确认。",
             "",

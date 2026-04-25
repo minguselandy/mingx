@@ -1,8 +1,28 @@
-# Context Projection Selection / MuSiQue Gate 1 Runtime Scaffold
+# Context Projection Selection / Measurement and Runtime-Audit Scaffold
 
-This repository contains the runnable Phase 0/1 measurement and runtime
-scaffold for the Context Projection Selection project, using MuSiQue as the
-current Gate 1 / Phase 1 domain. `cps/` is the canonical code package.
+This repository is the companion measurement and runtime-audit scaffold for the
+revised Context Projection Selection paper, currently archived at
+[docs/archive/context_projection_revised_v10.md](./docs/archive/context_projection_revised_v10.md).
+`cps/` is the canonical code package.
+
+The revised paper separates six layers:
+
+1. Formal layer: conditional V-information theory for per-round, per-agent,
+   token-budgeted content selection
+2. Proxy layer: CI, replay, log-loss, or utility finite-difference measurements
+   under explicit bridge conditions
+3. Pipeline layer: retrieval, reranking, MMR, packing, and other heuristics
+4. Runtime layer: auditable artifacts and replay/monitoring interfaces
+5. Metric bridge: claim-level gates between V-information proxy claims,
+   calibrated proxy claims, operational-utility-only claims, and ambiguity
+6. Extraction layer: a separate `M* -> M` bridge-risk audit, not an extension of
+   the weak-submodular guarantee
+
+This repository implements measurement scaffolds, proxy diagnostics, replay
+artifacts, synthetic structural tests, bridge-calibration scaffolds, and
+extraction-audit infrastructure. It does not certify deployed V-information weak
+submodularity, and it does not provide theorem inheritance for heuristic
+pipelines.
 
 It currently covers:
 
@@ -11,10 +31,12 @@ It currently covers:
 3. Append-only measurement storage with `events.jsonl` as source of truth
 4. Cohort runner support for mock and live API-profile-backed runs
 5. Bridge and export scaffolds for calibration batches
+6. Synthetic structural diagnostics and replayable projection artifacts
 
 Project entrypoints:
 
 - [docs/README.md](./docs/README.md)
+- [docs/paper-alignment-v10.md](./docs/paper-alignment-v10.md)
 - [docs/architecture.md](./docs/architecture.md)
 - [docs/protocols/execution-readiness-checklist.md](./docs/protocols/execution-readiness-checklist.md)
 - [configs/runs/README.md](./configs/runs/README.md)
@@ -22,18 +44,17 @@ Project entrypoints:
 
 ## Paper Context
 
-The current canonical paper framing is
-[docs/archive/final_paper_context_projection_submission_final_v8.md](./docs/archive/final_paper_context_projection_submission_final_v8.md).
-That paper defines the research object and boundary: conditional theory,
-the formal/proxy/pipeline/runtime bridge, verification and escalation, and
-extraction as a separate bridge risk.
+The current research framing is the revised conditional-theory,
+metric-bridge, and proxy-regime framing in
+[docs/archive/context_projection_revised_v10.md](./docs/archive/context_projection_revised_v10.md).
+For the repository-to-paper map, start with
+[docs/paper-alignment-v10.md](./docs/paper-alignment-v10.md).
 
-This repository is not a full paper implementation. It implements and records
-the Phase 0/1 measurement/runtime scaffold needed to exercise that framing.
-Protocol docs, run plans, `run_summary.json`, and `events.jsonl` decide current
-execution status. `artifacts/` are time-sensitive run outputs; reduced-scope,
-partial, or contamination-failed live artifacts must not be described as
-completed scientific validation.
+This repository is not a full paper implementation. Protocol docs, run plans,
+`run_summary.json`, and `events.jsonl` decide current execution status.
+`artifacts/` are time-sensitive run outputs; reduced-scope, partial, or
+contamination-failed live artifacts must not be described as completed
+scientific validation.
 
 The `phase0/` and `phase1/` directories now act as compatibility shims.
 New imports and new runtime entrypoints should prefer `cps.*`.
@@ -55,7 +76,7 @@ New imports and new runtime entrypoints should prefer `cps.*`.
 
 Secrets stay in local `.env` and are not committed.
 
-## Suggested commands
+## Suggested Commands
 
 ### Windows PowerShell
 ```powershell
@@ -69,7 +90,7 @@ uv run python -m cps.runtime.phase1_smoke --backend mock --run-plan configs/runs
 uv run python -m cps.runtime.cohort --plan configs/runs/live-calibration-p3.json --backend live --env .env
 ```
 
-### WSL / bash
+### WSL / Bash
 ```bash
 uv venv
 source .venv/bin/activate

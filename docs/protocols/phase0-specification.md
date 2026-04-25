@@ -1,6 +1,6 @@
 ﻿# Phase 0 Specification: Context Projection Selection — Experimental Cycle Lock-In
 
-**Associated paper:** Context Projection Selection in Multi-Agent Systems: Conditional Theory, Bridge Statement, and Measurable Verification (`../archive/final_paper_context_projection_submission_final_v8.md`)
+**Associated paper:** revised Context Projection Selection framing (`../archive/context_projection_revised_v10.md`) and repository alignment map (`../paper-alignment-v10.md`)
 
 **Document status:** Phase 0 exit artifact, pending user confirmation on budget parameters (§4, §5).
 

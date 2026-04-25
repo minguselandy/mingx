@@ -27,6 +27,7 @@ ALLOWED_EVENT_TYPES = {
     "projection_plan_materialized",
     "budget_witness_materialized",
     "materialized_context_materialized",
+    "metric_bridge_witness_materialized",
     "projection_diagnostics_materialized",
     "synthetic_benchmark_summary_materialized",
 }

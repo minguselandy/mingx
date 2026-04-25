@@ -11,3 +11,6 @@ max_depth = 1
 [agents.protocol_guard]
 description = "Read-only protocol checker for Phase 0/1 execution alignment against locked project specs."
 config_file = "agents/protocol-guard.toml"
+
+[sandbox_workspace_write]
+network_access = true

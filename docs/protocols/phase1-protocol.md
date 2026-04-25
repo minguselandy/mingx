@@ -1,6 +1,6 @@
 ﻿# Phase 1 Probe Protocol: Extraction Uniformity Measurement on MuSiQue
 
-**Associated documents:** Phase 0 Specification (`phase0-specification.md`), final paper framing (`../archive/final_paper_context_projection_submission_final_v8.md`).
+**Associated documents:** Phase 0 Specification (`phase0-specification.md`), revised paper framing (`../archive/context_projection_revised_v10.md`), repository alignment map (`../paper-alignment-v10.md`).
 
 **Document status:** Phase 1 execution protocol, ready for implementation pending confirmation of the four implementation-level decisions documented in the Phase 0 protocol-authoring parameter resolution.
 
@@ -11,6 +11,10 @@
 This document specifies the executable procedure for the Phase 1 instrumentation-feasibility probe. The probe tests three of the four links in the measurement validity chain identified at Phase 0 exit: V_small measurement stability (Link 1), V_frontier-to-V_small bridge validity (Link 2), and automated-to-expert classification substitution fidelity (Link 3). Link 4 (MuSiQue-to-openWorker transfer) is structurally untestable in Phase 1 and is addressed through Phase 4 re-audit.
 
 The probe is not a hypothesis test on the extraction uniformity assumption itself, which is the purpose of Phase 3 pilot execution and Phase 4 full-study execution. The probe is a measurement-apparatus validation: it establishes whether the instrumentation produces stable, interpretable, and reliable measurements before annotation or inference budget is committed to the hypothesis test proper.
+
+Extraction-bridge boundary: Phase 1 supports the `M* -> M bridge risk` program by validating the measurement apparatus, contamination handling, bridge usability, and annotation reliability. It can support later extraction-risk reporting and `MetricBridgeWitness` evidence, but it does not test selector-regime validity, does not prove selector-regime validity, and does not extend the weak-submodular theorem from `M` to `M*`.
+
+Extraction vocabulary passed forward from this probe includes `p_simple`, `c_high`, `c_low`, `c_effective`, `Delta_hat`, annotation reliability, and contamination status. Phase 1 primarily measures prerequisites for these quantities; Phase 2/3/4 estimate, stress, or report them as bridge-risk evidence.
 
 ---
 

@@ -13,12 +13,12 @@
   "top_l": 8,
   "policy_thresholds": {
     "monitored_greedy": {
-      "gamma_hat_gte": 0.75,
+      "block_ratio_lcb_star_gte": 0.75,
       "synergy_fraction_lte": 0.1,
       "greedy_augmented_gap_lte": 0.05
     },
     "seeded_augmented_greedy": {
-      "gamma_hat_gte": 0.45,
+      "block_ratio_lcb_star_gte": 0.45,
       "greedy_augmented_gap_lte": 0.15
     }
   }
