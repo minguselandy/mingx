@@ -9,6 +9,7 @@ from cps.experiments.artifacts import (
     BudgetWitness,
     CandidatePool,
     MaterializedContext,
+    MetricBridgeWitness,
     ProjectionDiagnostics,
     ProjectionPlan,
     append_jsonl,
@@ -19,6 +20,7 @@ from cps.experiments.artifacts import (
     write_json,
     write_text,
 )
+from cps.experiments.decision import resolve_selector_thresholds
 from cps.experiments.diagnostics import DEFAULT_POLICY_THRESHOLDS, compute_diagnostics
 from cps.experiments.reporting import format_synthetic_benchmark_report
 from cps.experiments.selection import (
@@ -36,8 +38,17 @@ ARTIFACT_FILENAMES = {
     "projection_plan_materialized": "projection_plans.jsonl",
     "budget_witness_materialized": "budget_witnesses.jsonl",
     "materialized_context_materialized": "materialized_contexts.jsonl",
+    "metric_bridge_witness_materialized": "metric_bridge_witnesses.jsonl",
     "projection_diagnostics_materialized": "diagnostics.jsonl",
 }
+REQUIRED_ARTIFACT_COUNT_KEYS = (
+    "candidate_pools",
+    "projection_plans",
+    "budget_witnesses",
+    "materialized_contexts",
+    "metric_bridge_witnesses",
+    "diagnostics",
+)
 
 
 def _load_config(config_path: str | Path) -> dict[str, Any]:
@@ -52,6 +63,12 @@ def _reset_derived_jsonl(paths: dict[str, Path]) -> None:
     for path in paths.values():
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("", encoding="utf-8")
+
+
+def _reset_event_log(output_dir: Path) -> None:
+    events_path = output_dir / "events.jsonl"
+    events_path.parent.mkdir(parents=True, exist_ok=True)
+    events_path.write_text("", encoding="utf-8")
 
 
 def _selected_result_for_policy(policy: str, greedy_result, augmented_result, local_result):
@@ -84,6 +101,222 @@ def _write_artifact_and_event(
         payload=payload,
         notes=notes,
     )
+
+
+def _as_float(row: dict[str, Any], field: str, default: float | None = None) -> float | None:
+    value = row.get(field)
+    if value is None:
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _dispatch_ids(rows: list[dict[str, Any]]) -> list[str]:
+    return [str(row.get("dispatch_id", "unknown")) for row in rows]
+
+
+def _rows_for_regime(rows: list[dict[str, Any]], regime: str) -> list[dict[str, Any]]:
+    return [row for row in rows if row.get("regime") == regime]
+
+
+def _artifact_completeness_passed(rebuilt_summary: dict[str, Any]) -> bool:
+    dispatch_count = int(rebuilt_summary.get("dispatch_count", 0) or 0)
+    artifact_counts = dict(rebuilt_summary.get("artifact_counts") or {})
+    counts_match = all(int(artifact_counts.get(key, -1) or -1) == dispatch_count for key in REQUIRED_ARTIFACT_COUNT_KEYS)
+    return bool(rebuilt_summary.get("complete_artifact_sets")) and counts_match
+
+
+def _record_failure(
+    failures: list[dict[str, Any]],
+    *,
+    gate: str,
+    reason: str,
+    rows: list[dict[str, Any]] | None = None,
+    details: dict[str, Any] | None = None,
+) -> None:
+    payload: dict[str, Any] = {
+        "gate": gate,
+        "reason": reason,
+    }
+    if rows is not None:
+        payload["dispatch_ids"] = _dispatch_ids(rows)
+    if details:
+        payload["details"] = details
+    failures.append(payload)
+
+
+def _redundancy_signature_passes(row: dict[str, Any], thresholds: dict[str, Any]) -> bool:
+    monitored = thresholds["monitored_greedy"]
+    block_ratio = _as_float(row, "block_ratio_lcb_star")
+    synergy = _as_float(row, "synergy_fraction", 0.0) or 0.0
+    gap = _as_float(row, "greedy_augmented_gap", 0.0) or 0.0
+    return (
+        block_ratio is not None
+        and block_ratio >= float(monitored["block_ratio_lcb_star_gte"])
+        and synergy <= float(monitored["synergy_fraction_lte"])
+        and gap <= float(monitored["greedy_augmented_gap_lte"])
+        and row.get("selector_regime_label") == "greedy_valid"
+        and row.get("selector_action") == "monitored_greedy"
+    )
+
+
+def _pairwise_signature_passes(
+    row: dict[str, Any],
+    *,
+    redundancy_b2_lcb: float | None,
+    thresholds: dict[str, Any],
+) -> bool:
+    monitored = thresholds["monitored_greedy"]
+    interaction_mass = _as_float(row, "positive_interaction_mass_ucb", 0.0) or 0.0
+    pair_b2 = _as_float(row, "block_ratio_lcb_b2")
+    synergy = _as_float(row, "synergy_fraction", 0.0) or 0.0
+    augmented_value = _as_float(row, "augmented_value", 0.0) or 0.0
+    greedy_value = _as_float(row, "greedy_value", 0.0) or 0.0
+    complementarity_sensitive = (
+        row.get("selector_regime_label") == "escalate"
+        or synergy > float(monitored["synergy_fraction_lte"])
+        or (pair_b2 is not None and redundancy_b2_lcb is not None and pair_b2 < redundancy_b2_lcb)
+    )
+    seeded_or_escalated = (
+        row.get("selector_action") in {"seeded_augmented_greedy", "interaction_aware_local_search"}
+        or augmented_value > greedy_value
+    )
+    return interaction_mass > 0.0 and complementarity_sensitive and seeded_or_escalated
+
+
+def _higher_order_safety_passes(row: dict[str, Any]) -> bool:
+    return row.get("selector_regime_label") != "greedy_valid" and row.get("selector_action") != "monitored_greedy"
+
+
+def _triple_excess_gate_passes(row: dict[str, Any]) -> bool:
+    return (
+        row.get("triple_excess_flag") == "positive"
+        or bool(row.get("higher_order_ambiguity_flag"))
+        or row.get("selector_regime_label") == "ambiguous"
+    )
+
+
+def evaluate_pre_registered_validity_gate(
+    diagnostics_rows: list[dict[str, Any]],
+    rebuilt_summary: dict[str, Any],
+    thresholds: dict[str, Any] | None,
+) -> dict[str, Any]:
+    resolved_thresholds = resolve_selector_thresholds(thresholds)
+    rows = list(diagnostics_rows)
+    failures: list[dict[str, Any]] = []
+    gate_results: dict[str, Any] = {}
+
+    artifact_passed = _artifact_completeness_passed(rebuilt_summary)
+    gate_results["artifact_completeness"] = {
+        "passed": artifact_passed,
+        "artifact_counts": dict(rebuilt_summary.get("artifact_counts") or {}),
+    }
+    if not artifact_passed:
+        _record_failure(
+            failures,
+            gate="artifact_completeness",
+            reason="every dispatch must materialize candidate pool, projection plan, budget witness, materialized context, metric bridge witness, and diagnostics",
+        )
+
+    ambiguity_rows = [row for row in rows if row.get("selector_regime_label") == "ambiguous"]
+    ambiguity_count = len(ambiguity_rows)
+    gate_results["ambiguity_accounting"] = {
+        "passed": ambiguity_count == 0,
+        "ambiguity_count": ambiguity_count,
+        "dispatch_ids": _dispatch_ids(ambiguity_rows),
+    }
+    if ambiguity_count:
+        _record_failure(
+            failures,
+            gate="ambiguity_accounting",
+            reason="ambiguous labels are reported separately and do not count as benchmark success",
+            rows=ambiguity_rows,
+        )
+
+    redundancy_rows = _rows_for_regime(rows, "redundancy_dominated")
+    redundancy_passed_rows = [row for row in redundancy_rows if _redundancy_signature_passes(row, resolved_thresholds)]
+    gate_results["redundancy_signature"] = {
+        "passed": bool(redundancy_rows) and len(redundancy_passed_rows) == len(redundancy_rows),
+        "dispatch_ids": _dispatch_ids(redundancy_rows),
+    }
+    if not redundancy_rows:
+        _record_failure(failures, gate="redundancy_signature", reason="missing redundancy_dominated rows")
+    elif len(redundancy_passed_rows) != len(redundancy_rows):
+        failed_rows = [row for row in redundancy_rows if row not in redundancy_passed_rows]
+        _record_failure(
+            failures,
+            gate="redundancy_signature",
+            reason="redundancy rows must show high block-ratio LCB, low synergy, small gap, greedy_valid label, and monitored_greedy action",
+            rows=failed_rows,
+        )
+
+    redundancy_b2_values = [
+        value
+        for value in (_as_float(row, "block_ratio_lcb_b2") for row in redundancy_rows)
+        if value is not None
+    ]
+    redundancy_b2_lcb = min(redundancy_b2_values) if redundancy_b2_values else None
+    pairwise_rows = _rows_for_regime(rows, "sparse_pairwise_synergy")
+    pairwise_passed_rows = [
+        row
+        for row in pairwise_rows
+        if _pairwise_signature_passes(row, redundancy_b2_lcb=redundancy_b2_lcb, thresholds=resolved_thresholds)
+    ]
+    gate_results["pairwise_synergy_signature"] = {
+        "passed": bool(pairwise_rows) and len(pairwise_passed_rows) == len(pairwise_rows),
+        "dispatch_ids": _dispatch_ids(pairwise_rows),
+        "redundancy_b2_lcb": redundancy_b2_lcb,
+    }
+    if not pairwise_rows:
+        _record_failure(failures, gate="pairwise_synergy_signature", reason="missing sparse_pairwise_synergy rows")
+    elif len(pairwise_passed_rows) != len(pairwise_rows):
+        failed_rows = [row for row in pairwise_rows if row not in pairwise_passed_rows]
+        _record_failure(
+            failures,
+            gate="pairwise_synergy_signature",
+            reason="pairwise rows must show interaction mass, complementarity sensitivity, and seeded/escalated action or augmented improvement",
+            rows=failed_rows,
+        )
+
+    higher_order_rows = _rows_for_regime(rows, "higher_order_synergy")
+    higher_order_passed_rows = [row for row in higher_order_rows if _higher_order_safety_passes(row)]
+    gate_results["higher_order_safety"] = {
+        "passed": bool(higher_order_rows) and len(higher_order_passed_rows) == len(higher_order_rows),
+        "dispatch_ids": _dispatch_ids(higher_order_rows),
+    }
+    if not higher_order_rows:
+        _record_failure(failures, gate="higher_order_safety", reason="missing higher_order_synergy rows")
+    elif len(higher_order_passed_rows) != len(higher_order_rows):
+        failed_rows = [row for row in higher_order_rows if row not in higher_order_passed_rows]
+        _record_failure(
+            failures,
+            gate="higher_order_safety",
+            reason="higher-order rows must not be labeled high-confidence greedy_valid",
+            rows=failed_rows,
+        )
+
+    triple_passed_rows = [row for row in higher_order_rows if _triple_excess_gate_passes(row)]
+    gate_results["triple_excess_detection"] = {
+        "passed": bool(higher_order_rows) and len(triple_passed_rows) == len(higher_order_rows),
+        "dispatch_ids": _dispatch_ids(higher_order_rows),
+    }
+    if higher_order_rows and len(triple_passed_rows) != len(higher_order_rows):
+        failed_rows = [row for row in higher_order_rows if row not in triple_passed_rows]
+        _record_failure(
+            failures,
+            gate="triple_excess_detection",
+            reason="higher-order rows require positive triple-excess evidence or ambiguity instead of false certification",
+            rows=failed_rows,
+        )
+
+    return {
+        "pre_registered_gate_passed": not failures,
+        "pre_registered_gate_failures": failures,
+        "pre_registered_gate_results": gate_results,
+        "ambiguity_count": ambiguity_count,
+    }
 
 
 def _run_instance(
@@ -147,7 +380,7 @@ def _run_instance(
         thresholds=thresholds,
     )
     selected_result = _selected_result_for_policy(
-        diagnostics.policy_recommendation,
+        diagnostics.selector_action,
         greedy_result,
         augmented_result,
         local_result,
@@ -220,15 +453,73 @@ def _run_instance(
         artifact_paths=artifact_paths,
     )
 
+    metric_bridge_witness = MetricBridgeWitness(
+        **{key: common[key] for key in ("dispatch_id", "agent_id", "round_id", "regime")},
+        calibration_epoch=None,
+        active_stratum={"regime": instance.regime},
+        model_tier=None,
+        utility_metric="synthetic_oracle_value",
+        metric_class="synthetic_oracle",
+        materialization_policy={
+            "algorithm": selected_result.algorithm,
+            "selector_action": diagnostics.selector_action,
+            "policy_recommendation": diagnostics.policy_recommendation,
+            "budget_tokens": instance.budget_tokens,
+            "selected_count": len(selected_ids),
+            "excluded_count": len(excluded_ids),
+        },
+        decoding_policy={
+            "mode": "synthetic_oracle",
+            "value_source": "synthetic_oracle",
+            "temperature": None,
+        },
+        bridge_scale=None,
+        bridge_residual_zeta=None,
+        effective_sample_size=None,
+        drift_status="not_applicable",
+        diagnostic_mode="synthetic_oracle",
+        diagnostic_claim_level="structural_synthetic_only",
+    )
+    metric_bridge_payload = {
+        **to_payload(metric_bridge_witness),
+        **common,
+        "candidate_pool_hash": pool_hash,
+        "context_hash": materialized_context.context_hash,
+    }
+    _write_artifact_and_event(
+        output_dir=output_dir,
+        run_id=run_id,
+        event_type="metric_bridge_witness_materialized",
+        payload=metric_bridge_payload,
+        notes="synthetic metric bridge witness materialized",
+        artifact_paths=artifact_paths,
+    )
+
     diagnostic_record = ProjectionDiagnostics(
         **{key: common[key] for key in ("dispatch_id", "agent_id", "round_id", "regime")},
+        block_ratio_lcb_b2=diagnostics.block_ratio_lcb_b2,
+        block_ratio_lcb_star=diagnostics.block_ratio_lcb_star,
+        block_ratio_lcb_b3=diagnostics.block_ratio_lcb_b3,
+        block_ratio_uninformative_count=diagnostics.block_ratio_uninformative_count,
+        block_ratio_sample_count=diagnostics.block_ratio_sample_count,
+        trace_decay_proxy=diagnostics.trace_decay_proxy,
         gamma_hat=diagnostics.gamma_hat,
         synergy_fraction=diagnostics.synergy_fraction,
+        positive_interaction_mass_ucb=diagnostics.positive_interaction_mass_ucb,
+        triple_excess_lcb_max=diagnostics.triple_excess_lcb_max,
+        triple_excess_flag=diagnostics.triple_excess_flag,
+        higher_order_ambiguity_flag=diagnostics.higher_order_ambiguity_flag,
         greedy_augmented_gap=diagnostics.greedy_augmented_gap,
+        metric_claim_level=diagnostics.metric_claim_level,
+        selector_regime_label=diagnostics.selector_regime_label,
+        selector_action=diagnostics.selector_action,
         policy_recommendation=diagnostics.policy_recommendation,
         greedy_value=greedy_result.value,
         augmented_value=augmented_result.value,
         local_search_value=local_result.value,
+        pairwise_samples=diagnostics.pairwise_samples,
+        block_ratio_samples=diagnostics.block_ratio_samples,
+        triple_samples=diagnostics.triple_samples,
         thresholds=diagnostics.thresholds,
         notes=diagnostics.notes,
     )
@@ -245,7 +536,8 @@ def _run_instance(
         "realized_tokens": realized_tokens,
         "within_budget": realized_tokens <= instance.budget_tokens,
         "expected_policy": instance.expected_policy,
-        "policy_matches_expected": diagnostics.policy_recommendation == instance.expected_policy,
+        "policy_matches_expected": diagnostics.selector_action == instance.expected_policy,
+        "gamma_hat_semantics": "legacy_trace_decay_proxy_not_submodularity_ratio",
         "pairwise_sample_count": len(diagnostics.pairwise_samples),
         "pairwise_synergy_count": sum(1 for row in diagnostics.pairwise_samples if row["label"] == "synergy"),
     }
@@ -269,6 +561,7 @@ def run_synthetic_benchmark(
     resolved_output_dir = Path(output_dir or config["output_dir"]).resolve()
     resolved_output_dir.mkdir(parents=True, exist_ok=True)
     artifact_paths = _artifact_paths(resolved_output_dir)
+    _reset_event_log(resolved_output_dir)
     _reset_derived_jsonl(artifact_paths)
 
     seed = int(config.get("seed", 20260418))
@@ -294,9 +587,11 @@ def run_synthetic_benchmark(
     ]
     rebuilt = rebuild_projection_summary_from_events(resolved_output_dir, run_id=run_id)
     expected_matches = sum(1 for row in diagnostics_rows if row["policy_matches_expected"])
-    status = "green" if rebuilt["complete_artifact_sets"] and expected_matches == len(diagnostics_rows) else "red"
+    gate_evaluation = evaluate_pre_registered_validity_gate(diagnostics_rows, rebuilt, thresholds)
+    status = "green" if gate_evaluation["pre_registered_gate_passed"] else "red"
     summary = {
         **rebuilt,
+        **gate_evaluation,
         "status": status,
         "run_id": run_id,
         "config_path": str(Path(config_path).resolve()),

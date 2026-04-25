@@ -67,6 +67,35 @@ The implementation now separates protocol locks from transport details.
 6. `cps/providers/dashscope.py` and `phase1/*` remain compatibility shims for
    older imports.
 
+## Runtime Projection Chain
+
+The revised paper treats runtime observability as an auditable projection chain:
+
+1. `ProjectionPlan`
+   Records selected and excluded candidate ids, algorithm metadata, score
+   configuration, and replay trace links.
+2. `BudgetWitness`
+   Records token or cost budget, estimated and realized token counts,
+   within-budget status, and tolerance violations.
+3. `MaterializedContext`
+   Records the realized prompt or context sequence, section order, content hash,
+   truncation or clipping record, and selected ids.
+4. `MetricBridgeWitness`
+   Records the claim level attached to diagnostics: V-information proxy claim,
+   calibrated proxy claim, operational-utility-only claim, or ambiguity.
+
+`CandidatePool` is required for replay support because it reconstructs the
+available `M` and candidate hashes. It is not one of the four core paper
+runtime artifacts; it is the substrate that allows `ProjectionPlan` and later
+diagnostics to be interpreted.
+
+Pipeline scoring in this repository should be read as heuristic scoring over
+retrieval, reranking, MMR, packing, or synthetic utility tables. These pipeline
+steps are not theorem-level optimizers. Proxy diagnostics require explicit
+metric-bridge qualification before they can be reported as V-information proxy
+claims; otherwise they remain calibrated proxy claims, operational-utility-only
+signals, or ambiguous diagnostics.
+
 ## Compatibility Policy
 
 `phase0/` and `phase1/` now act as compatibility shims over `cps/`.

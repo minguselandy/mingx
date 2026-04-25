@@ -1,6 +1,6 @@
 # Phase 2 Experimental Design: Extraction Uniformity Hypothesis Test
 
-**Associated documents:** Phase 0 Specification (`phase0-specification.md`), Phase 1 Probe Protocol (`phase1-protocol.md`), final paper framing (`../archive/final_paper_context_projection_submission_final_v8.md`).
+**Associated documents:** Phase 0 Specification (`phase0-specification.md`), Phase 1 Probe Protocol (`phase1-protocol.md`), revised paper framing (`../archive/context_projection_revised_v10.md`), repository alignment map (`../paper-alignment-v10.md`).
 
 **Document status:** Phase 2 design specification. Specifies both the full-study extraction audit and the Phase 3 pilot as a specific analytical subset of the full-study design.
 
@@ -16,17 +16,61 @@ A structural efficiency is exploited throughout: the Phase 1 probe data already 
 
 ---
 
+## Extraction-Bridge Boundary and Vocabulary
+
+Formal approximation statements apply to optimization over extracted candidate
+pool `M`. The upstream extraction process from `M*` to `M` is a separate
+`M* -> M bridge risk` question about whether the candidate pool preserves the
+evidence needed for projection diagnostics to be meaningful.
+
+Core terms:
+
+- `M*`: the underlying information space before extraction.
+- `M`: the extracted candidate pool available to the selector.
+- `p_simple`: the share of items whose source evidence is simple enough that
+  extraction is expected to preserve the core content under the current
+  annotation rubric.
+- `c_high`: completeness rate for the high-value stratum.
+- `c_low`: completeness rate for the low-value stratum.
+- `c_effective`: simple/complex mixture completeness used for bridge-risk
+  reporting.
+- `Delta_hat`: observed extraction-completeness divergence, usually reported as
+  the concerning direction `c_low - c_high`.
+
+Unless a later executable protocol locks a different estimator, the effective
+completeness formula is:
+
+    c_effective = p_simple * c_high + (1 - p_simple) * c_low
+
+Capture labels for annotation and audit records:
+
+- `captured`
+- `captured_with_overgeneralization_core_preserved`
+- `captured_with_overgeneralization_core_changed`
+- `missing`
+
+Extraction-risk reports must also carry annotation reliability and contamination status.
+`c_effective`, extraction completeness, and extraction-uniformity
+findings do not extend the weak-submodular theorem from `M` to `M*`; they only
+quantify bridge risk. Phase 1/2/3/4 support metric, contamination, annotation,
+bridge, and extraction-validity infrastructure; they do not prove
+selector-regime validity.
+
+Extraction uniformity is a testable assumption, not a theorem.
+
+---
+
 ## Section 1: Hypothesis Formalization
 
 ### 1.1 The extraction uniformity assumption as a statistical hypothesis
 
-The paper's Section 5 claims that the formal weak-submodular guarantees apply to optimization over the extracted candidate pool M rather than over the underlying information space M*. The extraction uniformity assumption states that extraction completeness is approximately uniform across value strata, which is the condition under which M-level guarantees transfer approximately to M*-level performance. The hypothesis test operationalizes this as a directional null hypothesis on completeness rate divergence.
+The paper's Section 5 states that the formal weak-submodular approximation claim applies to optimization over the extracted candidate pool M rather than over the underlying information space M*. The extraction uniformity assumption states that extraction completeness is approximately uniform across value strata. The hypothesis test operationalizes this as a directional null hypothesis on completeness rate divergence and reports whether the upstream M* -> M bridge risk is material; it is not a theorem extension from M to M*.
 
 **H_0 (uniformity):** c_high − c_low ≈ 0, where c_high and c_low are the completeness rates (fraction of stratum members admitted to M from M*) for the high-value and low-value tertiles respectively.
 
 **H_1 (preferential removal of high-value):** c_high − c_low < 0, indicating that extraction preferentially drops high-value findings.
 
-The test is one-sided because the concerning direction is specifically c_high < c_low. The opposite direction (c_high > c_low, extraction preferentially preserves high-value findings) is not concerning for the theorem-to-deployment chain: it means extraction is doing useful filtering work, which is the designer's intent.
+The test is one-sided because the concerning direction is specifically c_high < c_low. The opposite direction (c_high > c_low, extraction preferentially preserves high-value findings) is less concerning for bridge-risk reporting: it means extraction is doing useful filtering work, which is the designer's intent.
 
 ### 1.2 Operationalization on MuSiQue
 
@@ -41,7 +85,7 @@ The question-level rates are aggregated across questions via weighted averaging 
 
 ### 1.3 Directionality rationale and scope limitation
 
-The directional test targets the failure mode that matters operationally. A uniformity failure in the opposite direction (c_high > c_low) would still warrant documentation because it shifts the interpretation of the retrieval system, but it does not invalidate the paper's theorem-to-deployment chain. The Phase 2 full-study report will document the observed direction regardless of statistical significance to support retrospective analysis.
+The directional test targets the failure mode that matters operationally. A uniformity failure in the opposite direction (c_high > c_low) would still warrant documentation because it shifts the interpretation of the retrieval system, but it does not create the same candidate-pool quality risk. The Phase 2 full-study report will document the observed direction regardless of statistical significance to support retrospective analysis.
 
 The scope limitation inherited from Phase 1 is that the audited extraction process is the retrieval-plus-reranking stage on MuSiQue rather than the openWorker extraction gate. This operational-layer substitution was named as a known limitation in Phase 0 Specification §8 and must be re-stated as a Phase 2 result caveat: a uniformity finding on MuSiQue retrieval does not imply uniformity on openWorker extraction, and a rejection finding on MuSiQue retrieval does not imply rejection on openWorker extraction. Phase 4 re-audit on openWorker traces is required to close this gap.
 
@@ -59,7 +103,7 @@ The rejection threshold Δ_reject = 0.10 corresponds to a 10 percentage point di
 
 The severe-violation threshold Δ_severe = 0.20 corresponds to a 20 percentage point divergence, which would indicate that extraction bias is a primary rather than secondary source of performance loss and would trigger a more substantive revision of the paper's Section 5.3 claims.
 
-These thresholds are Phase 2 design parameters rather than empirically-derived quantities. They are selected based on the judgment that completeness differences below 5% are within typical measurement noise and implementation variance, while differences above 10% cross the boundary of operational meaningfulness for the theorem-to-deployment bridge claim.
+These thresholds are Phase 2 design parameters rather than empirically-derived quantities. They are selected based on the judgment that completeness differences below 5% are within typical measurement noise and implementation variance, while differences above 10% cross the boundary of operational meaningfulness for extraction bridge-risk reporting.
 
 ### 2.2 Derivation of the binding κ threshold from effect size
 
@@ -77,7 +121,7 @@ At κ = 0.7, ε ≈ 0.15 and the attenuation factor ≈ 0.70. A true Δ_min = 0.
 
 At κ = 0.8, ε ≈ 0.10 and the attenuation factor ≈ 0.80. A true Δ_min = 0.05 attenuates to Δ_obs ≈ 0.040.
 
-The Phase 2 binding κ threshold is specified as **κ ≥ 0.7**, which corresponds to acceptance of up to 30% effect-size attenuation. This choice reflects a moderately conservative position: the more lenient Landis-Koch threshold of 0.6 would accept 40% attenuation, which approaches the boundary at which Δ_min becomes undetectable against sampling noise. The more stringent threshold of 0.8 would be preferable for publication-critical hypothesis tests but is not operationally necessary for the Phase 2 goal of determining whether the extraction uniformity assumption is a material risk factor in the theorem-to-deployment chain.
+The Phase 2 binding κ threshold is specified as **κ ≥ 0.7**, which corresponds to acceptance of up to 30% effect-size attenuation. This choice reflects a moderately conservative position: the more lenient Landis-Koch threshold of 0.6 would accept 40% attenuation, which approaches the boundary at which Δ_min becomes undetectable against sampling noise. The more stringent threshold of 0.8 would be preferable for publication-critical hypothesis tests but is not operationally necessary for the Phase 2 goal of determining whether the extraction uniformity assumption is a material bridge-risk factor.
 
 This derivation supersedes the provisional Landis-Koch reference used in the Phase 1 protocol. Phase 1 outcomes are re-interpreted under the κ ≥ 0.7 criterion: Phase 1 Tier 1 (unconditional pass) now requires κ ≥ 0.7 rather than κ ≥ 0.6, and Tier 2 (conditional pass) covers 0.6 ≤ κ < 0.7.
 
@@ -147,7 +191,7 @@ Per-stratum decomposition is reported by hop depth, with one-sided 95% confidenc
 
 The full-study outcome is categorized into one of three classes based on the relationship between the observed effect and the specified thresholds.
 
-**Reject uniformity** is declared when Δ̂ ≥ Δ_reject = 0.10 and the 95% confidence interval lower bound exceeds 0. This outcome indicates that extraction bias is operationally meaningful, and the paper's Section 5.3 claims must incorporate the measured bias magnitude as a correction factor for the theorem-to-deployment bridge.
+**Reject uniformity** is declared when Δ̂ ≥ Δ_reject = 0.10 and the 95% confidence interval lower bound exceeds 0. This outcome indicates that extraction bias is operationally meaningful, and the paper's Section 5.3 discussion must report the measured bias magnitude as bridge-risk evidence rather than as theorem inheritance.
 
 **Fail to reject uniformity** is declared when the 95% confidence interval upper bound falls below Δ_min = 0.05. This outcome indicates that the uniformity approximation is practically adequate at the tested effect-size resolution, and the paper's Section 5.3 claims stand without correction.
 
@@ -209,7 +253,7 @@ The limitations carried forward from Phase 0 and Phase 1 remain binding. The ope
 
 ## Appendix A: Effect-Size Derivation Reasoning
 
-The effect-size thresholds were selected by reference to the specific mechanism by which extraction bias threatens the paper's claims. The paper's Section 5.3 claims concern the *relative approximation ratio* of the greedy algorithm on the extracted pool M, not absolute performance metrics. Uniform scaling between M and M* (proportional item removal across all value strata) does not affect the relative approximation ratio because both the M-optimum and the M*-optimum scale by the same factor. The operationally-meaningful failure mode is therefore **non-uniform bias**: extraction that preferentially removes high-value items produces an M-optimum that is structurally different from the M*-optimum rather than a proportional shadow of it, which breaks the theorem-to-deployment bridge in a way that uniform removal does not.
+The effect-size thresholds were selected by reference to the specific mechanism by which extraction bias threatens the paper's deployment-facing interpretation. The paper's formal approximation discussion concerns the *relative approximation ratio* of the greedy algorithm on the extracted pool M, not absolute performance metrics over M*. Uniform scaling between M and M* (proportional item removal across all value strata) is treated as lower bridge risk than non-uniform loss. The operationally-meaningful failure mode is therefore **non-uniform bias**: extraction that preferentially removes high-value items produces an M-optimum that is structurally different from the M*-optimum rather than a proportional shadow of it, which must be reported as extraction bridge risk rather than as a selector-regime theorem result.
 
 Under this mechanism, the relevant effect size is the stratum-wise completeness divergence c_low − c_high, which directly measures the fraction of high-value items disproportionately absent from M relative to low-value items. A 5 percentage point divergence roughly corresponds to a 5% probability that a given M*-optimal item is absent from M while its low-value competitor is retained, which translates to approximation-quality degradation of comparable magnitude for the specific greedy-selection claims in the paper.
 

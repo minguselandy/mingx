@@ -7,9 +7,12 @@ long-lived `phase0` / `phase1` code roots.
 
 - [architecture.md](./architecture.md)
   Explains the code layout, artifact layout, and migration direction.
-- [archive/final_paper_context_projection_submission_final_v8.md](./archive/final_paper_context_projection_submission_final_v8.md)
-  Current canonical paper framing: conditional theory, bridge statement,
-  runtime observability requirements, and extraction as a separate bridge risk.
+- [paper-alignment-v10.md](./paper-alignment-v10.md)
+  Repo-facing map for the revised paper framing, claim levels, and terminology.
+- [archive/context_projection_revised_v10.md](./archive/context_projection_revised_v10.md)
+  Current revised paper framing: conditional theory, metric bridge,
+  proxy-regime diagnostics, auditable runtime artifacts, and extraction as a
+  separate bridge risk.
 - [experiment-design-overview.md](./experiment-design-overview.md)
   High-level Phase A/B/C experiment design for context-projection diagnostics.
 - [phase-tree-crosswalk.md](./phase-tree-crosswalk.md)
@@ -55,9 +58,9 @@ long-lived `phase0` / `phase1` code roots.
 - `protocols/`
   Active protocol documents that guide implementation and execution.
 - `archive/`
-  The final v8 paper is the current research-framing anchor. Older paper
-  drafts in this directory are historical reference material, not default
-  implementation entrypoints.
+  `context_projection_revised_v10.md` is the current research-framing anchor.
+  Older paper drafts, including final v8, are historical reference material,
+  not default implementation entrypoints.
 
 ## Code Semantics
 

@@ -1,6 +1,6 @@
 ﻿# Execution-Readiness Checklist: Context Projection Selection Experimental Program
 
-**Associated documents:** Phase 0 Specification (`phase0-specification.md`), Phase 1 Probe Protocol (`phase1-protocol.md`), Phase 2 Experimental Design (`phase2-design.md`), final paper framing (`../archive/final_paper_context_projection_submission_final_v8.md`).
+**Associated documents:** Phase 0 Specification (`phase0-specification.md`), Phase 1 Probe Protocol (`phase1-protocol.md`), Phase 2 Experimental Design (`phase2-design.md`), revised paper framing (`../archive/context_projection_revised_v10.md`), repository alignment map (`../paper-alignment-v10.md`).
 
 **Document status:** Integration artifact consolidating execution preconditions across the three-document specification suite. Organized as five sequential gates plus one parallel workstream.
 

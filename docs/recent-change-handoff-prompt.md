@@ -13,7 +13,7 @@ First, assume these recent changes are already intentional:
 2. `api/` owns runtime profile/model/backend resolution.
 3. `events.jsonl` is the append-only source of truth for run state.
 4. `artifacts/` contains time-sensitive run outputs, not stable rules.
-5. `docs/archive/final_paper_context_projection_submission_final_v8.md` is the current paper-framing anchor. Read its Abstract, Paper contract, Bridge statement, and Runtime Interface Requirements for research boundaries.
+5. `docs/archive/context_projection_revised_v10.md` is the current paper-framing anchor. Read it with `docs/paper-alignment-v10.md` for research boundaries, metric-bridge claim levels, runtime artifacts, and extraction bridge-risk semantics.
 6. The current default live model pair is:
    - `frontier = qwen3.6-plus`
    - `small = qwen3.6-flash`
@@ -30,8 +30,9 @@ What was recently changed:
   - `cps/analysis/contamination_review.py`
 - A reusable AI onboarding prompt was added:
   - `docs/project-reading-prompt.md`
-- The final v8 paper was promoted to canonical research framing:
-  - `docs/archive/final_paper_context_projection_submission_final_v8.md`
+- The revised v10 paper framing is now the canonical research framing:
+  - `docs/archive/context_projection_revised_v10.md`
+  - `docs/paper-alignment-v10.md`
 - A recent reduced-scope live run produced review artifacts:
   - `artifacts/phase1/live_mini_batch/exports/contamination_review_packet.json`
   - `artifacts/phase1/live_mini_batch/exports/contamination_review_packet.md`
@@ -40,13 +41,14 @@ How to read the current state:
 
 1. Read `docs/README.md`
 2. Read `AGENTS.md`
-3. Read `docs/archive/final_paper_context_projection_submission_final_v8.md`
-4. Read `docs/project-reading-prompt.md`
-5. Read `docs/protocols/execution-readiness-checklist.md`
-6. Read `docs/protocols/phase1-protocol.md`
-7. Read `docs/protocols/phase1-contamination-triage-and-question-rewrite.md`
-8. Read `api/README.md`
-9. Read `cps/runtime/cohort.py`
+3. Read `docs/paper-alignment-v10.md`
+4. Read `docs/archive/context_projection_revised_v10.md`
+5. Read `docs/project-reading-prompt.md`
+6. Read `docs/protocols/execution-readiness-checklist.md`
+7. Read `docs/protocols/phase1-protocol.md`
+8. Read `docs/protocols/phase1-contamination-triage-and-question-rewrite.md`
+9. Read `api/README.md`
+10. Read `cps/runtime/cohort.py`
 
 Critical semantic guardrails:
 
@@ -56,7 +58,8 @@ Critical semantic guardrails:
 - Do not silently revert the default model pair back to `qwen3-32b / qwen3-14b`.
 - If you see those older model names in historical artifacts or old reports, interpret them as historical state unless current runtime/config files still point to them.
 - The paper controls research framing; protocol docs, run plans, `run_summary.json`, and `events.jsonl` control execution status.
-- Treat `ProjectionPlan`, `BudgetWitness`, and `MaterializedContext` as paper-specified target runtime interfaces, not as current-code guarantees unless the implementation is verified.
+- Treat `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`, and `MetricBridgeWitness` as paper-specified target runtime interfaces, not as current-code guarantees unless the implementation is verified.
+- Treat legacy `gamma_hat` fields as trace-decay or compatibility signals unless a current report reconstructs block-ratio LCB and assigns a metric-bridge claim level.
 - Rewrite, replacement, compression, and memory-formation work remains sidecar / derived-view work and must not mutate the primary source-question answer path.
 
 What to inspect first if continuing runtime work:

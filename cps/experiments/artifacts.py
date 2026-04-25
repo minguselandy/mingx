@@ -14,6 +14,7 @@ PROJECTION_EVENT_TYPES = {
     "projection_plan_materialized",
     "budget_witness_materialized",
     "materialized_context_materialized",
+    "metric_bridge_witness_materialized",
     "projection_diagnostics_materialized",
 }
 
@@ -73,18 +74,55 @@ class MaterializedContext:
 
 
 @dataclass(frozen=True)
+class MetricBridgeWitness:
+    dispatch_id: str
+    agent_id: str
+    round_id: str
+    regime: str
+    calibration_epoch: str | None
+    active_stratum: dict[str, Any]
+    model_tier: str | None
+    utility_metric: str
+    metric_class: str
+    materialization_policy: dict[str, Any]
+    decoding_policy: dict[str, Any]
+    bridge_scale: float | None
+    bridge_residual_zeta: float | None
+    effective_sample_size: float | None
+    drift_status: str
+    diagnostic_mode: str
+    diagnostic_claim_level: str
+
+
+@dataclass(frozen=True)
 class ProjectionDiagnostics:
     dispatch_id: str
     agent_id: str
     round_id: str
     regime: str
-    gamma_hat: float
+    block_ratio_lcb_b2: float | None
+    block_ratio_lcb_star: float | None
+    block_ratio_lcb_b3: float | None
+    block_ratio_uninformative_count: int
+    block_ratio_sample_count: int
+    trace_decay_proxy: float | None
+    gamma_hat: float | None
     synergy_fraction: float
+    positive_interaction_mass_ucb: float | None
+    triple_excess_lcb_max: float | None
+    triple_excess_flag: str
+    higher_order_ambiguity_flag: bool
     greedy_augmented_gap: float
+    metric_claim_level: str
+    selector_regime_label: str
+    selector_action: str
     policy_recommendation: str
     greedy_value: float
     augmented_value: float
     local_search_value: float
+    pairwise_samples: list[dict[str, Any]]
+    block_ratio_samples: list[dict[str, Any]]
+    triple_samples: list[dict[str, Any]]
     thresholds: dict[str, Any]
     notes: str
 
@@ -191,6 +229,7 @@ def rebuild_projection_summary_from_events(
     projection_plans = 0
     budget_witnesses = 0
     materialized_contexts = 0
+    metric_bridge_witnesses: list[dict[str, Any]] = []
 
     for event in iter_events(store_dir):
         if run_id is not None and event.get("run_id") != run_id:
@@ -204,39 +243,97 @@ def rebuild_projection_summary_from_events(
             budget_witnesses += 1
         elif event_type == "materialized_context_materialized":
             materialized_contexts += 1
+        elif event_type == "metric_bridge_witness_materialized":
+            metric_bridge_witnesses.append(dict(event.get("payload") or {}))
         elif event_type == "projection_diagnostics_materialized":
             diagnostics.append(dict(event.get("payload") or {}))
 
     per_regime: dict[str, dict[str, Any]] = {}
-    policy_counts: dict[str, int] = {}
+    selector_action_counts: dict[str, int] = {}
+    selector_regime_label_counts: dict[str, int] = {}
+    metric_claim_level_counts: dict[str, int] = {}
+    metric_claim_rows = metric_bridge_witnesses or diagnostics
+    for row in metric_claim_rows:
+        claim_level = row.get("metric_claim_level") or row.get("diagnostic_claim_level")
+        if claim_level:
+            key = str(claim_level)
+            metric_claim_level_counts[key] = metric_claim_level_counts.get(key, 0) + 1
+
     for row in diagnostics:
         regime = str(row.get("regime", "unknown"))
-        policy = str(row.get("policy_recommendation", "unknown"))
+        selector_action = str(row.get("selector_action") or row.get("policy_recommendation", "unknown"))
+        selector_regime_label = str(row.get("selector_regime_label", "unknown"))
+        metric_claim_level = str(row.get("metric_claim_level", "unknown"))
         bucket = per_regime.setdefault(
             regime,
             {
                 "dispatch_count": 0,
-                "avg_gamma_hat": 0.0,
+                "avg_block_ratio_lcb_b2": 0.0,
+                "avg_block_ratio_lcb_star": 0.0,
+                "avg_block_ratio_lcb_b3": 0.0,
+                "avg_trace_decay_proxy": 0.0,
                 "avg_synergy_fraction": 0.0,
+                "avg_positive_interaction_mass_ucb": 0.0,
                 "avg_greedy_augmented_gap": 0.0,
-                "policy_recommendations": {},
+                "selector_actions": {},
+                "selector_regime_labels": {},
+                "metric_claim_levels": {},
+                "_avg_counts": {
+                    "block_ratio_lcb_b2": 0,
+                    "block_ratio_lcb_star": 0,
+                    "block_ratio_lcb_b3": 0,
+                    "trace_decay_proxy": 0,
+                    "positive_interaction_mass_ucb": 0,
+                },
             },
         )
         bucket["dispatch_count"] += 1
-        bucket["avg_gamma_hat"] += float(row.get("gamma_hat", 0.0))
+        for field in (
+            "block_ratio_lcb_b2",
+            "block_ratio_lcb_star",
+            "block_ratio_lcb_b3",
+            "trace_decay_proxy",
+            "positive_interaction_mass_ucb",
+        ):
+            value = row.get(field)
+            if value is not None:
+                bucket[f"avg_{field}"] += float(value)
+                bucket["_avg_counts"][field] += 1
         bucket["avg_synergy_fraction"] += float(row.get("synergy_fraction", 0.0))
         bucket["avg_greedy_augmented_gap"] += float(row.get("greedy_augmented_gap", 0.0))
-        bucket["policy_recommendations"][policy] = bucket["policy_recommendations"].get(policy, 0) + 1
-        policy_counts[policy] = policy_counts.get(policy, 0) + 1
+        bucket["selector_actions"][selector_action] = bucket["selector_actions"].get(selector_action, 0) + 1
+        bucket["selector_regime_labels"][selector_regime_label] = (
+            bucket["selector_regime_labels"].get(selector_regime_label, 0) + 1
+        )
+        bucket["metric_claim_levels"][metric_claim_level] = bucket["metric_claim_levels"].get(metric_claim_level, 0) + 1
+        selector_action_counts[selector_action] = selector_action_counts.get(selector_action, 0) + 1
+        selector_regime_label_counts[selector_regime_label] = (
+            selector_regime_label_counts.get(selector_regime_label, 0) + 1
+        )
 
     for bucket in per_regime.values():
         count = max(1, int(bucket["dispatch_count"]))
-        bucket["avg_gamma_hat"] = round(bucket["avg_gamma_hat"] / count, 6)
+        avg_counts = bucket.pop("_avg_counts")
+        for field in (
+            "block_ratio_lcb_b2",
+            "block_ratio_lcb_star",
+            "block_ratio_lcb_b3",
+            "trace_decay_proxy",
+            "positive_interaction_mass_ucb",
+        ):
+            avg_key = f"avg_{field}"
+            field_count = int(avg_counts[field])
+            bucket[avg_key] = None if field_count == 0 else round(bucket[avg_key] / field_count, 6)
         bucket["avg_synergy_fraction"] = round(bucket["avg_synergy_fraction"] / count, 6)
         bucket["avg_greedy_augmented_gap"] = round(bucket["avg_greedy_augmented_gap"] / count, 6)
 
     complete_artifact_sets = (
-        candidate_pools == projection_plans == budget_witnesses == materialized_contexts == len(diagnostics)
+        candidate_pools
+        == projection_plans
+        == budget_witnesses
+        == materialized_contexts
+        == len(metric_bridge_witnesses)
+        == len(diagnostics)
     )
     return {
         "source_of_truth": "event_log",
@@ -247,9 +344,13 @@ def rebuild_projection_summary_from_events(
             "projection_plans": projection_plans,
             "budget_witnesses": budget_witnesses,
             "materialized_contexts": materialized_contexts,
+            "metric_bridge_witnesses": len(metric_bridge_witnesses),
             "diagnostics": len(diagnostics),
         },
         "complete_artifact_sets": complete_artifact_sets,
-        "policy_counts": dict(sorted(policy_counts.items())),
+        "selector_action_counts": dict(sorted(selector_action_counts.items())),
+        "selector_regime_label_counts": dict(sorted(selector_regime_label_counts.items())),
+        "policy_counts": dict(sorted(selector_action_counts.items())),
+        "metric_claim_level_counts": dict(sorted(metric_claim_level_counts.items())),
         "per_regime": {key: per_regime[key] for key in sorted(per_regime)},
     }

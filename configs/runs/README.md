@@ -79,11 +79,25 @@ Synthetic regime benchmark:
   functions. It does not run a scheduler, memory system, openWorker port, or
   live model benchmark.
 - Canonical smoke command:
-  `python -m cps.experiments.synthetic_benchmark --config configs/runs/synthetic-regime-smoke.json --output-dir artifacts/experiments/synthetic_regime_smoke`
+  `uv run python -m cps.experiments.synthetic_benchmark --config configs/runs/synthetic-regime-smoke.json --output-dir artifacts/experiments/synthetic_regime_smoke`
 - Expected outputs are `events.jsonl`, `candidate_pools.jsonl`,
   `projection_plans.jsonl`, `budget_witnesses.jsonl`,
-  `materialized_contexts.jsonl`, `diagnostics.jsonl`, `summary.json`, and
-  `report.md`.
-- Interpret `gamma_hat`, synergy fraction, and greedy-vs-augmented gap as
-  provisional proxy-layer diagnostics only. They are not theorem inheritance
-  and not a system-level performance claim.
+  `materialized_contexts.jsonl`, `metric_bridge_witnesses.jsonl`,
+  `diagnostics.jsonl`, `summary.json`, and `report.md`.
+- Revised headline diagnostics should be reported as
+  `block_ratio_lcb_b2`, `block_ratio_lcb_star`, `block_ratio_lcb_b3`,
+  interaction mass, triple-excess diagnostics, greedy-vs-augmented gap,
+  `metric_claim_level`, `selector_regime_label`, and `selector_action`.
+- Synthetic benchmark `status` is driven by the pre-registered structural
+  validity gate, not by legacy expected-policy matching. `expected_policy`
+  fields may remain as compatibility details only.
+- `summary.json` reports `pre_registered_gate_passed`,
+  `pre_registered_gate_failures`, `ambiguity_count`,
+  `metric_claim_level_counts`, `selector_regime_label_counts`, and
+  `selector_action_counts`.
+- Legacy trace-ratio fields in old synthetic outputs are compatibility signals
+  only. Treat them as `trace_decay_proxy` or `legacy_trace_ratio`, not as a
+  headline weak-submodularity diagnostic.
+- Interpret all synthetic-regime outputs as proxy-layer diagnostics and
+  pre-registered validity gates only. They are not theorem inheritance and not
+  a system-level performance claim.

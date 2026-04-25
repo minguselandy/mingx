@@ -51,7 +51,7 @@ def test_synthetic_regime_diagnostics_choose_expected_policy():
             augmented_result=augmented,
             top_l=8,
         )
-        policies[instance.regime] = diagnostics.policy_recommendation
+        policies[instance.regime] = diagnostics.selector_action
 
     assert policies == {
         "redundancy_dominated": "monitored_greedy",
