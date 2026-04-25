@@ -75,6 +75,7 @@ def test_trace_decay_proxy_replaces_legacy_gamma_estimator():
         {"singleton_gain": 5.0, "marginal_gain": 1.0, "source": "greedy_completion"},
     ]
 
+    assert compute_trace_decay_proxy(trace) == 0.26
     assert compute_trace_decay_proxy(trace) == estimate_gamma_hat(trace)
     assert "legacy" in estimate_gamma_hat.__doc__.lower()
     assert "not a submodularity-ratio estimator" in estimate_gamma_hat.__doc__.lower()
@@ -171,6 +172,7 @@ def test_compute_diagnostics_headlines_block_ratio_fields():
 
     assert diagnostics.block_ratio_lcb_b2 is not None
     assert diagnostics.block_ratio_lcb_star is not None
+    assert diagnostics.block_ratio_lcb_star_semantics == "placeholder_conservative_min_b2_b3_not_degree_adaptive_star"
     assert diagnostics.block_ratio_sample_count > 0
     assert diagnostics.trace_decay_proxy == diagnostics.gamma_hat
     assert diagnostics.selector_action == "seeded_augmented_greedy"

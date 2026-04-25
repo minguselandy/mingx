@@ -66,6 +66,7 @@ def _valid_gate_row(regime: str, **overrides) -> dict:
         "regime": regime,
         "block_ratio_lcb_b2": 1.0,
         "block_ratio_lcb_star": 1.0,
+        "block_ratio_lcb_star_semantics": "placeholder_conservative_min_b2_b3_not_degree_adaptive_star",
         "block_ratio_lcb_b3": 1.0,
         "block_ratio_sample_count": 4,
         "block_ratio_uninformative_count": 0,
@@ -127,6 +128,7 @@ def test_gamma_hat_active_occurrences_are_legacy_or_nonheadline() -> None:
             "not a submodularity-ratio",
             "not a true gamma estimator",
             "gamma_hat_semantics",
+            "legacy_trace_decay_alias_not_submodularity_ratio",
         ),
     )
 
@@ -156,6 +158,7 @@ def test_primary_decision_outputs_are_documented_and_reported() -> None:
     assert "Avg gamma_hat" not in report_source
     for field_name in ("metric_claim_level", "selector_regime_label", "selector_action"):
         assert field_name in report_source
+    assert "placeholder_conservative_min_b2_b3_not_degree_adaptive_star" in report_source
 
 
 def test_metric_bridge_decision_guardrails() -> None:
@@ -173,6 +176,7 @@ def test_higher_order_not_evaluable_guardrail_prevents_greedy_valid() -> None:
     diagnostics = {
         "block_ratio_lcb_b2": 1.0,
         "block_ratio_lcb_star": 1.0,
+        "block_ratio_lcb_star_semantics": "placeholder_conservative_min_b2_b3_not_degree_adaptive_star",
         "block_ratio_lcb_b3": None,
         "block_ratio_sample_count": 3,
         "block_ratio_uninformative_count": 0,

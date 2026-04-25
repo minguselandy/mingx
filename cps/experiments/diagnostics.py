@@ -21,9 +21,10 @@ DEFAULT_POLICY_THRESHOLDS = {
     name: dict(values)
     for name, values in DEFAULT_SELECTOR_THRESHOLDS.items()
 }
+STAR_BLOCK_PLACEHOLDER_SEMANTICS = "placeholder_conservative_min_b2_b3_not_degree_adaptive_star"
 SYNTHETIC_ORACLE_METRIC_BRIDGE = {
     "metric_class": "synthetic_oracle",
-    "drift_status": "not_applicable",
+    "drift_status": "fresh",
 }
 
 
@@ -31,6 +32,7 @@ SYNTHETIC_ORACLE_METRIC_BRIDGE = {
 class DiagnosticResult:
     block_ratio_lcb_b2: float | None
     block_ratio_lcb_star: float | None
+    block_ratio_lcb_star_semantics: str
     block_ratio_lcb_b3: float | None
     block_ratio_uninformative_count: int
     block_ratio_sample_count: int
@@ -238,10 +240,9 @@ def compute_trace_decay_proxy(greedy_trace: Sequence[dict], *, quantile: float =
             continue
         singleton = float(row.get("singleton_gain") or 0.0)
         marginal = float(row.get("marginal_gain") or 0.0)
-        if singleton <= 0 or marginal <= 0:
+        if singleton <= 0:
             continue
-        ratio = singleton / max(singleton, marginal)
-        ratios.append(max(0.0, min(1.0, ratio)))
+        ratios.append(marginal / singleton)
     if not ratios:
         return 1.0
     return _quantile(ratios, quantile)
@@ -493,6 +494,7 @@ def compute_diagnostics(
     return DiagnosticResult(
         block_ratio_lcb_b2=block_ratio_lcb_b2,
         block_ratio_lcb_star=block_ratio_lcb_star,
+        block_ratio_lcb_star_semantics=STAR_BLOCK_PLACEHOLDER_SEMANTICS,
         block_ratio_lcb_b3=block_ratio_lcb_b3,
         block_ratio_uninformative_count=sum(1 for row in block_ratio_samples if row["denominator_uninformative"]),
         block_ratio_sample_count=len(block_ratio_samples),
@@ -514,8 +516,10 @@ def compute_diagnostics(
         thresholds=resolved_thresholds,
         notes=(
             "Synthetic proxy-layer diagnostic; block-ratio LCB is the headline "
-            "weak-submodularity diagnostic. gamma_hat is retained only as a "
-            "legacy trace_decay_proxy compatibility alias and is not a "
+            "weak-submodularity diagnostic. block_ratio_lcb_star is a "
+            "placeholder conservative min over b=2/b=3 diagnostics, not a "
+            "degree-adaptive star-block estimator. gamma_hat is retained only "
+            "as a legacy trace_decay_proxy compatibility alias and is not a "
             "Das-Kempe submodularity-ratio estimator."
         ),
     )

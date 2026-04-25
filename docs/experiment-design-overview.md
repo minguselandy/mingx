@@ -35,7 +35,7 @@ prove deployed LLM behavior.
 | candidate pool `M` | synthetic items in Phase A; replayed candidates in Phase B; task-derived context items in Phase C | Phase A implemented; Phase B planned; Phase C planned |
 | selected subset `S_i` | selected context ids emitted by the selector or reconstructed from replay | Phase A implemented; Phase B planned; Phase C planned |
 | token budget `B_i` | synthetic cost budget in Phase A; replay or task budget in later phases | Phase A implemented; Phase B planned; Phase C planned |
-| block-ratio LCB | proxy diagnostic family for local weak-submodularity behavior: `block_ratio_lcb_b2`, `block_ratio_lcb_star`, `block_ratio_lcb_b3` | Phase A implemented for deterministic synthetic samples; Phase B/C require replayable block utility signals |
+| block-ratio LCB | proxy diagnostic family for local weak-submodularity behavior: `block_ratio_lcb_b2`, `block_ratio_lcb_star`, `block_ratio_lcb_b3` | Phase A currently implements deterministic b=2/b=3 synthetic samples; `block_ratio_lcb_star` is a conservative placeholder, not a degree-adaptive star-block estimator |
 | interaction mass | pairwise interaction diagnostic over sampled or enumerated candidate pairs | Phase A implemented; Phase B planned; Phase C planned |
 | triple-excess diagnostics | higher-order interaction diagnostic for prerequisite-chain regimes | Phase A implemented for synthetic oracle triples; Phase B/C require cached triple or block utility records |
 | greedy-vs-augmented gap | escalation diagnostic comparing greedy selection against seeded augmented greedy | Phase A implemented; Phase B planned; Phase C planned |
@@ -90,7 +90,8 @@ Engineering claim:
 Current status:
 
 - Implemented as a synthetic benchmark sidecar.
-- Smoke-tested with green status.
+- Current synthetic smoke passes under the pre-registered structural gate when
+  tests are run.
 - Regimes separate as intended under the current selector-action labels:
   redundancy maps to `monitored_greedy`, sparse pairwise synergy maps to
   `seeded_augmented_greedy`, and higher-order synergy maps to
