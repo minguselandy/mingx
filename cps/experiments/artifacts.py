@@ -102,6 +102,7 @@ class ProjectionDiagnostics:
     regime: str
     block_ratio_lcb_b2: float | None
     block_ratio_lcb_star: float | None
+    block_ratio_lcb_star_semantics: str
     block_ratio_lcb_b3: float | None
     block_ratio_uninformative_count: int
     block_ratio_sample_count: int

@@ -83,6 +83,7 @@ def test_synthetic_benchmark_cli_function_writes_replayable_artifacts(workspace_
             "within_budget",
             "block_ratio_lcb_b2",
             "block_ratio_lcb_star",
+            "block_ratio_lcb_star_semantics",
             "trace_decay_proxy",
             "synergy_fraction",
             "positive_interaction_mass_ucb",
@@ -94,14 +95,15 @@ def test_synthetic_benchmark_cli_function_writes_replayable_artifacts(workspace_
             assert key in row
         assert row["within_budget"] is True
         assert row["gamma_hat"] == row["trace_decay_proxy"]
-        assert row["gamma_hat_semantics"] == "legacy_trace_decay_proxy_not_submodularity_ratio"
+        assert row["gamma_hat_semantics"] == "legacy_trace_decay_alias_not_submodularity_ratio"
+        assert row["block_ratio_lcb_star_semantics"] == "placeholder_conservative_min_b2_b3_not_degree_adaptive_star"
         assert row["policy_recommendation"] == row["selector_action"]
 
     witnesses = _jsonl_rows(output_dir / "metric_bridge_witnesses.jsonl")
     for row in witnesses:
         assert row["metric_class"] == "synthetic_oracle"
         assert row["diagnostic_claim_level"] == "structural_synthetic_only"
-        assert row["drift_status"] == "not_applicable"
+        assert row["drift_status"] == "fresh"
         assert row["utility_metric"] == "synthetic_oracle_value"
         assert row["diagnostic_mode"] == "synthetic_oracle"
         assert row["calibration_epoch"] is None
@@ -127,6 +129,7 @@ def test_synthetic_benchmark_cli_function_writes_replayable_artifacts(workspace_
     assert "gamma_hat" not in report_text
     assert "Avg gamma_hat" not in report_text
     assert "Block-ratio LCB" in report_text
+    assert "placeholder_conservative_min_b2_b3_not_degree_adaptive_star" in report_text
     assert "Triple flag" in report_text
 
 

@@ -68,6 +68,7 @@ def format_synthetic_benchmark_report(
             f"- Gate passed: `{summary['pre_registered_gate_passed']}`",
             f"- Failure count: `{len(gate_failures)}`",
             "- Block-ratio LCB diagnostics are reported through the `block_ratio_lcb_b2`, `block_ratio_lcb_star`, and `block_ratio_lcb_b3` fields.",
+            "- `block_ratio_lcb_star` is currently `placeholder_conservative_min_b2_b3_not_degree_adaptive_star`, not a paper-grade degree-adaptive star-block estimator.",
             "",
             "| Gate | Passed |",
             "|---|---|",
@@ -90,8 +91,8 @@ def format_synthetic_benchmark_report(
             "",
             "## Regime diagnostics table",
             "",
-            "| Dispatch | Regime | block_ratio_lcb_b2 | block_ratio_lcb_star | block_ratio_lcb_b3 | trace_decay_proxy | synergy_fraction | positive_interaction_mass_ucb | triple_excess_flag | higher_order_ambiguity_flag | greedy_augmented_gap | metric_claim_level | selector_regime_label | selector_action |",
-            "|---|---|---:|---:|---:|---:|---:|---:|---|---|---:|---|---|---|",
+            "| Dispatch | Regime | block_ratio_lcb_b2 | block_ratio_lcb_star | block_ratio_lcb_star_semantics | block_ratio_lcb_b3 | trace_decay_proxy | synergy_fraction | positive_interaction_mass_ucb | triple_excess_flag | higher_order_ambiguity_flag | greedy_augmented_gap | metric_claim_level | selector_regime_label | selector_action |",
+            "|---|---|---:|---:|---|---:|---:|---:|---:|---|---|---:|---|---|---|",
         ]
     )
     for row in diagnostics_rows:
@@ -101,6 +102,7 @@ def format_synthetic_benchmark_report(
             f"{row['regime']} | "
             f"{_fmt(row['block_ratio_lcb_b2'])} | "
             f"{_fmt(row['block_ratio_lcb_star'])} | "
+            f"{row['block_ratio_lcb_star_semantics']} | "
             f"{_fmt(row['block_ratio_lcb_b3'])} | "
             f"{_fmt(row['trace_decay_proxy'])} | "
             f"{_fmt(row['synergy_fraction'])} | "

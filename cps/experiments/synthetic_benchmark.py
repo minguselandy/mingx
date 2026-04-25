@@ -476,7 +476,7 @@ def _run_instance(
         bridge_scale=None,
         bridge_residual_zeta=None,
         effective_sample_size=None,
-        drift_status="not_applicable",
+        drift_status="fresh",
         diagnostic_mode="synthetic_oracle",
         diagnostic_claim_level="structural_synthetic_only",
     )
@@ -499,6 +499,7 @@ def _run_instance(
         **{key: common[key] for key in ("dispatch_id", "agent_id", "round_id", "regime")},
         block_ratio_lcb_b2=diagnostics.block_ratio_lcb_b2,
         block_ratio_lcb_star=diagnostics.block_ratio_lcb_star,
+        block_ratio_lcb_star_semantics=diagnostics.block_ratio_lcb_star_semantics,
         block_ratio_lcb_b3=diagnostics.block_ratio_lcb_b3,
         block_ratio_uninformative_count=diagnostics.block_ratio_uninformative_count,
         block_ratio_sample_count=diagnostics.block_ratio_sample_count,
@@ -537,7 +538,7 @@ def _run_instance(
         "within_budget": realized_tokens <= instance.budget_tokens,
         "expected_policy": instance.expected_policy,
         "policy_matches_expected": diagnostics.selector_action == instance.expected_policy,
-        "gamma_hat_semantics": "legacy_trace_decay_proxy_not_submodularity_ratio",
+        "gamma_hat_semantics": "legacy_trace_decay_alias_not_submodularity_ratio",
         "pairwise_sample_count": len(diagnostics.pairwise_samples),
         "pairwise_synergy_count": sum(1 for row in diagnostics.pairwise_samples if row["label"] == "synergy"),
     }

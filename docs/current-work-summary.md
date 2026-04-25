@@ -21,10 +21,12 @@ still comes from protocol docs, run plans, `run_summary.json`, `events.jsonl`,
 and exported diagnostics. The current implementation should be read as a Phase
 1 runtime / measurement scaffold, not as a completed full-paper runtime.
 
-The paper's runtime interfaces are alignment targets. Phase A synthetic runs now
-materialize `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`, and
-`MetricBridgeWitness` artifacts, but broader runtime or deployed-interface
-claims still require code and artifact verification in the relevant lane.
+The paper's runtime interfaces are alignment targets. Current Phase A synthetic
+smoke runs materialize `ProjectionPlan`, `BudgetWitness`,
+`MaterializedContext`, and `MetricBridgeWitness` artifacts and pass the
+pre-registered structural gate when tests are run, but broader runtime or
+deployed-interface claims still require code and artifact verification in the
+relevant lane.
 
 ## Current Stable Runtime Defaults
 
