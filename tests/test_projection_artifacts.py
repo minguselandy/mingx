@@ -137,6 +137,14 @@ def test_projection_artifacts_round_trip_through_event_log(workspace_tmp_dir):
             notes="fixture",
         )
 
+    append_projection_event(
+        store_dir=store_dir,
+        event_type="projection_bundle_materialized",
+        run_id="run-1",
+        payload={**common, "bundle_version": "ProjectionBundleV1", "canonical_hash": "bundle-hash"},
+        notes="fixture",
+    )
+
     summary = rebuild_projection_summary_from_events(store_dir, run_id="run-1")
 
     assert Path(store_dir / "events.jsonl").exists()
@@ -144,6 +152,7 @@ def test_projection_artifacts_round_trip_through_event_log(workspace_tmp_dir):
     assert summary["dispatch_count"] == 1
     assert summary["complete_artifact_sets"] is True
     assert summary["artifact_counts"]["metric_bridge_witnesses"] == 1
+    assert summary["artifact_counts"]["projection_bundles"] == 1
     assert summary["metric_claim_level_counts"] == {"structural_synthetic_only": 1}
     assert summary["selector_regime_label_counts"] == {"greedy_valid": 1}
     assert summary["selector_action_counts"] == {"monitored_greedy": 1}
@@ -269,4 +278,38 @@ def test_projection_summary_requires_metric_bridge_witness(workspace_tmp_dir):
     summary = rebuild_projection_summary_from_events(store_dir, run_id="run-1")
 
     assert summary["artifact_counts"]["metric_bridge_witnesses"] == 0
+    assert summary["complete_artifact_sets"] is False
+
+
+def test_projection_summary_requires_projection_bundle_event(workspace_tmp_dir):
+    store_dir = workspace_tmp_dir / "projection_run_missing_bundle"
+    common = {
+        "dispatch_id": "dispatch-1",
+        "agent_id": "agent-a",
+        "round_id": "round-1",
+        "regime": "redundancy_dominated",
+        "seed": 20260418,
+        "protocol_version": "synthetic_regime.v1",
+    }
+
+    for event_type in (
+        "candidate_pool_materialized",
+        "projection_plan_materialized",
+        "budget_witness_materialized",
+        "materialized_context_materialized",
+        "metric_bridge_witness_materialized",
+        "projection_diagnostics_materialized",
+    ):
+        append_projection_event(
+            store_dir=store_dir,
+            event_type=event_type,
+            run_id="run-1",
+            payload={**common, "metric_claim_level": "structural_synthetic_only"},
+            notes="fixture",
+        )
+
+    summary = rebuild_projection_summary_from_events(store_dir, run_id="run-1")
+
+    assert summary["dispatch_count"] == 1
+    assert summary["artifact_counts"]["projection_bundles"] == 0
     assert summary["complete_artifact_sets"] is False

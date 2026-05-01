@@ -23,6 +23,7 @@ from cps.runtime.annotation import (
 )
 from cps.runtime.calibration import build_calibration_manifest
 from cps.runtime.config import load_phase1_context
+from cps.runtime.projection_export import build_projection_run_id, emit_projection_artifact_events
 from cps.runtime.retrieval import build_retrieval_dry_run
 from cps.scoring.delta_loo import (
     append_delta_materialized_event,
@@ -752,6 +753,17 @@ def run_phase1_cohort(
         export_dir=context.storage.export_dir,
         unit_specs=all_specs,
     )
+    projection_run_id = build_projection_run_id(
+        experiment_id=str(context.experiment["id"]),
+        protocol_version=str(context.experiment["protocol_version"]),
+        manifest_hash=bundle.manifest_hash,
+        backend_name=backend_name,
+        scope_mode=scope_mode,
+        seed=int(context.experiment["seed"]),
+        small_question_ids=small_question_ids,
+        frontier_question_ids=frontier_question_ids,
+        k_lcb=k_lcb,
+    )
 
     run_id = f"phase1-cohort-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
     for model_role, backend in backends.items():
@@ -866,6 +878,21 @@ def run_phase1_cohort(
             question=question,
             manifest_hash=bundle.manifest_hash,
             export_paths=export_paths,
+        )
+        emit_projection_artifact_events(
+            store_dir=context.storage.measurement_dir,
+            context=context,
+            backend=backend,
+            model_role=spec.model_role,
+            spec=spec,
+            question=question,
+            snapshot=snapshot,
+            manifest_hash=bundle.manifest_hash,
+            cohort_run_id=run_id,
+            projection_run_id=projection_run_id,
+            scope_mode=scope_mode,
+            k_lcb=k_lcb,
+            source_mode=backend_name,
         )
 
     contamination_report = run_contamination_analysis(

@@ -16,6 +16,7 @@ PROJECTION_EVENT_TYPES = {
     "materialized_context_materialized",
     "metric_bridge_witness_materialized",
     "projection_diagnostics_materialized",
+    "projection_bundle_materialized",
 }
 
 
@@ -231,6 +232,7 @@ def rebuild_projection_summary_from_events(
     budget_witnesses = 0
     materialized_contexts = 0
     metric_bridge_witnesses: list[dict[str, Any]] = []
+    projection_bundles = 0
 
     for event in iter_events(store_dir):
         if run_id is not None and event.get("run_id") != run_id:
@@ -248,6 +250,8 @@ def rebuild_projection_summary_from_events(
             metric_bridge_witnesses.append(dict(event.get("payload") or {}))
         elif event_type == "projection_diagnostics_materialized":
             diagnostics.append(dict(event.get("payload") or {}))
+        elif event_type == "projection_bundle_materialized":
+            projection_bundles += 1
 
     per_regime: dict[str, dict[str, Any]] = {}
     selector_action_counts: dict[str, int] = {}
@@ -328,26 +332,22 @@ def rebuild_projection_summary_from_events(
         bucket["avg_synergy_fraction"] = round(bucket["avg_synergy_fraction"] / count, 6)
         bucket["avg_greedy_augmented_gap"] = round(bucket["avg_greedy_augmented_gap"] / count, 6)
 
-    complete_artifact_sets = (
-        candidate_pools
-        == projection_plans
-        == budget_witnesses
-        == materialized_contexts
-        == len(metric_bridge_witnesses)
-        == len(diagnostics)
-    )
+    artifact_counts = {
+        "candidate_pools": candidate_pools,
+        "projection_plans": projection_plans,
+        "budget_witnesses": budget_witnesses,
+        "materialized_contexts": materialized_contexts,
+        "metric_bridge_witnesses": len(metric_bridge_witnesses),
+        "diagnostics": len(diagnostics),
+        "projection_bundles": projection_bundles,
+    }
+    required_counts = tuple(artifact_counts.values())
+    complete_artifact_sets = len(set(required_counts)) == 1 and required_counts[0] > 0
     return {
         "source_of_truth": "event_log",
         "run_id": run_id,
         "dispatch_count": len(diagnostics),
-        "artifact_counts": {
-            "candidate_pools": candidate_pools,
-            "projection_plans": projection_plans,
-            "budget_witnesses": budget_witnesses,
-            "materialized_contexts": materialized_contexts,
-            "metric_bridge_witnesses": len(metric_bridge_witnesses),
-            "diagnostics": len(diagnostics),
-        },
+        "artifact_counts": artifact_counts,
         "complete_artifact_sets": complete_artifact_sets,
         "selector_action_counts": dict(sorted(selector_action_counts.items())),
         "selector_regime_label_counts": dict(sorted(selector_regime_label_counts.items())),
