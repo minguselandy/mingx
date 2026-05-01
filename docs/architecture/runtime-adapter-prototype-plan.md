@@ -74,6 +74,12 @@ CPS owns:
 
 The adapter must not let runtime success modify scientific claim gates. Runtime execution status and CPS measurement validity are separate.
 
+## Provider candidate normalization
+
+Provider candidate normalization is an engineering compatibility layer between provider-style CPS candidates and older selector or materializer paths. It harmonizes field aliases for `candidate_id`/`item_id`, `content`/`text`, and `token_cost`/`token_estimate` so runtime candidates can enter downstream projection code without losing identity, content, or token budget fields.
+
+Normalization does not validate measurement, certify V-information, certify submodularity, certify metric bridge freshness, certify deployment claims, change conservative claim gates, or unblock P04 or P09.
+
 ## Minimal adapter flow
 
 1. Runtime emits a dispatch event.

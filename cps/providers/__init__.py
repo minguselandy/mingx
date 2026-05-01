@@ -11,6 +11,7 @@ from cps.providers.langextract_provider import (
     langextract_record_to_candidate,
     langextract_span_to_candidate,
 )
+from cps.providers.normalizer import normalize_candidate_payload, normalize_candidate_pool
 from cps.providers.openai_compatible import OpenAICompatibleChatBackend
 
 __all__ = [
@@ -22,4 +23,6 @@ __all__ = [
     "langextract_extraction_to_candidate",
     "langextract_record_to_candidate",
     "langextract_span_to_candidate",
+    "normalize_candidate_payload",
+    "normalize_candidate_pool",
 ]
