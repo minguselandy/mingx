@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import argparse
 import json
 import re
+import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -479,3 +481,81 @@ def build_followup_package(
         "approval": approval_state,
         "selection_alignment": lineage_payload["selection_alignment"],
     }
+
+
+def _cli_report(report: dict[str, Any]) -> dict[str, Any]:
+    approval = dict(report.get("approval") or {})
+    selection_alignment = dict(report.get("selection_alignment") or {})
+    return {
+        "status": report.get("status"),
+        "package_version": report.get("package_version"),
+        "execution_ready": bool(approval.get("execution_ready")),
+        "approval_status": approval.get("status"),
+        "approval_reason": approval.get("reason"),
+        "output_root": report.get("output_root"),
+        "followup_plan_path": report.get("followup_plan_path"),
+        "calibration_manifest_path": report.get("calibration_manifest_path"),
+        "blocked_questions_path": report.get("blocked_questions_path"),
+        "lineage_path": report.get("lineage_path"),
+        "readme_path": report.get("readme_path"),
+        "dropped_question_ids": list(report.get("dropped_question_ids") or []),
+        "new_selected_question_ids": list(report.get("new_selected_question_ids") or []),
+        "selection_alignment_status": selection_alignment.get("status"),
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Build and validate a Phase 1 follow-up package without running cohorts."
+    )
+    parser.add_argument("--source-plan", required=True)
+    parser.add_argument("--replacement-manifest", required=True)
+    parser.add_argument("--decision-sheet", required=True)
+    parser.add_argument("--output-root", required=True)
+    try:
+        args = parser.parse_args(argv)
+    except SystemExit as exc:
+        return int(exc.code) if isinstance(exc.code, int) else 1
+
+    try:
+        report = build_followup_package(
+            source_plan_path=args.source_plan,
+            replacement_manifest_path=args.replacement_manifest,
+            decision_sheet_path=args.decision_sheet,
+            output_root=args.output_root,
+        )
+    except Exception as exc:
+        print(
+            json.dumps(
+                {
+                    "status": "error",
+                    "error": str(exc),
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            ),
+            file=sys.stderr,
+        )
+        return 1
+
+    compact = _cli_report(report)
+    print(json.dumps(compact, ensure_ascii=False, indent=2, sort_keys=True))
+    if compact["execution_ready"] is not True:
+        print(
+            json.dumps(
+                {
+                    "status": "not_execution_ready",
+                    "reason": compact["approval_reason"],
+                    "approval_status": compact["approval_status"],
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            ),
+            file=sys.stderr,
+        )
+        return 2
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

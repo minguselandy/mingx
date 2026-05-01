@@ -19,6 +19,16 @@ class SelectionResult:
     trace: list[dict]
 
 
+@dataclass(frozen=True)
+class OracleSelectionResult:
+    algorithm: str
+    selected_ids: list[str]
+    token_cost: int
+    value: float | None
+    trace: list[dict]
+    oracle_status: str
+
+
 def item_costs(items: Sequence[SyntheticItem]) -> dict[str, int]:
     return {item.item_id: int(item.token_cost) for item in items}
 
@@ -230,4 +240,57 @@ def bounded_local_search(
         token_cost=total_cost(selected, costs),
         value=round(value_fn(selected), 6),
         trace=trace,
+    )
+
+
+def brute_force_optimal_select(
+    *,
+    items: Sequence[SyntheticItem],
+    budget_tokens: int,
+    value_fn: ValueFunction,
+    max_items: int = 20,
+) -> OracleSelectionResult:
+    if len(items) > max_items:
+        return OracleSelectionResult(
+            algorithm="brute_force_optimal",
+            selected_ids=[],
+            token_cost=0,
+            value=None,
+            trace=[],
+            oracle_status="skipped_large_n",
+        )
+
+    costs = item_costs(items)
+    item_ids = [item.item_id for item in items]
+    best_ids: tuple[str, ...] = ()
+    best_cost = 0
+    best_value = 0.0
+
+    for subset_size in range(len(item_ids) + 1):
+        for subset in combinations(item_ids, subset_size):
+            subset_cost = total_cost(subset, costs)
+            if subset_cost > budget_tokens:
+                continue
+            subset_value = round(value_fn(subset), 6)
+            candidate_key = (subset_value, -subset_cost, tuple(sorted(subset)))
+            best_key = (best_value, -best_cost, tuple(sorted(best_ids)))
+            if candidate_key > best_key:
+                best_ids = tuple(subset)
+                best_cost = subset_cost
+                best_value = subset_value
+
+    return OracleSelectionResult(
+        algorithm="brute_force_optimal",
+        selected_ids=list(best_ids),
+        token_cost=best_cost,
+        value=round(best_value, 6),
+        trace=[
+            {
+                "oracle_status": "available",
+                "max_items": max_items,
+                "candidate_count": len(item_ids),
+                "evaluated_subsets": 2 ** len(item_ids),
+            }
+        ],
+        oracle_status="available",
     )

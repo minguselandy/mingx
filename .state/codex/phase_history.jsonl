@@ -1,0 +1,23 @@
+{"phase_id":"P00","event":"initialized","status":"READY"}
+{"phase_id":"P00","event":"review_completed","verdict":"ACCEPT"}
+{"phase_id":"P01","event":"activated","status":"READY"}
+{"phase_id":"P01","event":"review_completed","verdict":"ACCEPT"}
+{"phase_id":"P02","event":"activated","status":"READY"}
+{"phase_id":"P02","event":"review_completed","verdict":"ACCEPT"}
+{"phase_id":"P03","event":"activated","status":"READY"}
+{"phase_id":"P03","event":"review_completed","verdict":"ACCEPT"}
+{"phase_id":"P04","event":"activated","status":"READY","requires_operator":true}
+{"phase_id":"P04","event":"runbook_review_completed","verdict":"BLOCKED_OPERATOR_REQUIRED","status":"BLOCKED_OPERATOR_REQUIRED"}
+{"phase_id":"P04","event":"runbook_audit_completed","verdict":"BLOCKED_OPERATOR_REQUIRED","status":"BLOCKED_OPERATOR_REQUIRED"}
+{"phase_id":"P04","event":"execution_deferred_by_operator","status":"BLOCKED_OPERATOR_REQUIRED","reason":"operator decision: defer real P04 execution; no live API, labels, kappa, bridge validation, or measurement_validated claim performed"}
+{"phase_id":"P05","event":"activated","status":"READY","mode":"offline_engineering_only"}
+{"phase_id":"P05","event":"review_completed","verdict":"ACCEPT"}
+{"phase_id":"P06","event":"activated","status":"READY"}
+{"phase_id":"P06","event":"review_completed","verdict":"ACCEPT"}
+{"phase_id":"P07","event":"activated","status":"READY"}
+{"phase_id":"P07","event":"review_completed","verdict":"ACCEPT"}
+{"phase_id":"P08","event":"activated","status":"READY"}
+{"phase_id":"P08","event":"review_completed","verdict":"ACCEPT"}
+{"phase_id":"P09","event":"activated","status":"READY","requires_operator":true}
+{"phase_id":"P09","event":"plan_created","status":"BLOCKED_OPERATOR_REQUIRED","operator_required":true}
+{"phase_id":"AUTO-REVIEW-P1-FIX","event":"review_fix_completed","verdict":"ACCEPT","current_phase_remains":"P09"}

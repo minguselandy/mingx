@@ -1,0 +1,11 @@
+{
+  "framework": "lightweight-agentic-development-framework",
+  "phase_id": "P09",
+  "phase_title": "Runtime adapter prototype",
+  "status": "BLOCKED_OPERATOR_REQUIRED",
+  "safe_auto_advance": false,
+  "next_phase_id": null,
+  "blocked": true,
+  "requires_operator": true,
+  "last_review": "docs/reviews/P09-plan-review.md"
+}

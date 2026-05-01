@@ -25,12 +25,17 @@ from cps.experiments.diagnostics import DEFAULT_POLICY_THRESHOLDS, compute_diagn
 from cps.experiments.reporting import format_synthetic_benchmark_report
 from cps.experiments.selection import (
     bounded_local_search,
+    brute_force_optimal_select,
     greedy_select,
     item_costs,
     seeded_augmented_greedy,
     total_cost,
 )
 from cps.experiments.synthetic_regimes import SyntheticInstance, build_synthetic_instances
+from cps.selectors.common import OracleAdapterResult, SelectorAdapterResult
+from cps.selectors.ortools_oracle import solve_knapsack_with_ortools
+from cps.selectors.submodlib_selector import select_with_submodlib
+from cps.schema.projection_bundle_v1 import ProjectionBundleV1
 
 
 ARTIFACT_FILENAMES = {
@@ -40,6 +45,7 @@ ARTIFACT_FILENAMES = {
     "materialized_context_materialized": "materialized_contexts.jsonl",
     "metric_bridge_witness_materialized": "metric_bridge_witnesses.jsonl",
     "projection_diagnostics_materialized": "diagnostics.jsonl",
+    "projection_bundle_materialized": "projection_bundles.jsonl",
 }
 REQUIRED_ARTIFACT_COUNT_KEYS = (
     "candidate_pools",
@@ -48,6 +54,7 @@ REQUIRED_ARTIFACT_COUNT_KEYS = (
     "materialized_contexts",
     "metric_bridge_witnesses",
     "diagnostics",
+    "projection_bundles",
 )
 
 
@@ -77,6 +84,135 @@ def _selected_result_for_policy(policy: str, greedy_result, augmented_result, lo
     if policy == "seeded_augmented_greedy":
         return augmented_result
     return local_result
+
+
+def _similarity_matrix_for_instance(instance: SyntheticInstance) -> list[list[float]]:
+    matrix: list[list[float]] = []
+    for left in instance.items:
+        row: list[float] = []
+        for right in instance.items:
+            if left.item_id == right.item_id:
+                row.append(1.0)
+            elif left.cluster_id is not None and left.cluster_id == right.cluster_id:
+                row.append(0.8)
+            else:
+                row.append(0.1)
+        matrix.append(row)
+    return matrix
+
+
+def _native_selector_adapter_result(
+    *,
+    selected_ids: list[str],
+    excluded_ids: list[str],
+    realized_tokens: int,
+    budget_tokens: int,
+    trace: list[dict[str, Any]],
+) -> SelectorAdapterResult:
+    return SelectorAdapterResult(
+        selected_ids=list(selected_ids),
+        excluded_ids=list(excluded_ids),
+        selected_token_cost=int(realized_tokens),
+        budget_tokens=int(budget_tokens),
+        selector_name="native_greedy",
+        selector_available=True,
+        score_trace=list(trace),
+        reason="native benchmark selector path",
+        unavailable_reason=None,
+    )
+
+
+def _optional_selector_adapter_result(
+    *,
+    instance: SyntheticInstance,
+    selector_backend: str,
+    selected_ids: list[str],
+    excluded_ids: list[str],
+    realized_tokens: int,
+    selection_trace: list[dict[str, Any]],
+    strict: bool,
+) -> SelectorAdapterResult:
+    if selector_backend == "native_greedy":
+        return _native_selector_adapter_result(
+            selected_ids=selected_ids,
+            excluded_ids=excluded_ids,
+            realized_tokens=realized_tokens,
+            budget_tokens=instance.budget_tokens,
+            trace=selection_trace,
+        )
+    if selector_backend == "submodlib":
+        costs = item_costs(instance.items)
+        return select_with_submodlib(
+            candidate_ids=[item.item_id for item in instance.items],
+            token_costs=costs,
+            budget_tokens=instance.budget_tokens,
+            similarity_matrix=_similarity_matrix_for_instance(instance),
+            selector_config={"optimizer": "NaiveGreedy"},
+            strict=strict,
+        )
+    raise ValueError(f"unknown selector_backend: {selector_backend}")
+
+
+def _native_oracle_adapter_result(
+    *,
+    selected_ids: list[str],
+    objective_value: float | None,
+    selected_token_cost: int,
+    budget_tokens: int,
+    oracle_status: str,
+) -> OracleAdapterResult:
+    return OracleAdapterResult(
+        selected_ids=list(selected_ids),
+        objective_value=objective_value,
+        selected_token_cost=int(selected_token_cost),
+        budget_tokens=int(budget_tokens),
+        solver_status=oracle_status,
+        optimality_gap=0.0 if oracle_status == "available" else None,
+        oracle_name="brute_force",
+        oracle_available=oracle_status == "available",
+        unavailable_reason=None,
+        reason="stdlib brute-force oracle",
+    )
+
+
+def _optional_oracle_adapter_result(
+    *,
+    instance: SyntheticInstance,
+    oracle_backend: str,
+    native_oracle_result,
+    strict: bool,
+) -> OracleAdapterResult:
+    if oracle_backend == "brute_force":
+        return _native_oracle_adapter_result(
+            selected_ids=list(native_oracle_result.selected_ids),
+            objective_value=native_oracle_result.value,
+            selected_token_cost=native_oracle_result.token_cost,
+            budget_tokens=instance.budget_tokens,
+            oracle_status=native_oracle_result.oracle_status,
+        )
+    if oracle_backend == "none":
+        return OracleAdapterResult(
+            selected_ids=[],
+            objective_value=None,
+            selected_token_cost=0,
+            budget_tokens=instance.budget_tokens,
+            solver_status="disabled",
+            optimality_gap=None,
+            oracle_name="none",
+            oracle_available=True,
+            unavailable_reason=None,
+            reason="optional oracle disabled by config",
+        )
+    if oracle_backend == "ortools":
+        return solve_knapsack_with_ortools(
+            candidate_ids=[item.item_id for item in instance.items],
+            token_costs=item_costs(instance.items),
+            singleton_values={item.item_id: item.singleton_value for item in instance.items},
+            budget_tokens=instance.budget_tokens,
+            pairwise_bonuses=instance.pairwise_bonuses,
+            strict=strict,
+        )
+    raise ValueError(f"unknown oracle_backend: {oracle_backend}")
 
 
 def _materialized_content(instance: SyntheticInstance, selected_ids: list[str]) -> str:
@@ -125,7 +261,7 @@ def _artifact_completeness_passed(rebuilt_summary: dict[str, Any]) -> bool:
     dispatch_count = int(rebuilt_summary.get("dispatch_count", 0) or 0)
     artifact_counts = dict(rebuilt_summary.get("artifact_counts") or {})
     counts_match = all(int(artifact_counts.get(key, -1) or -1) == dispatch_count for key in REQUIRED_ARTIFACT_COUNT_KEYS)
-    return bool(rebuilt_summary.get("complete_artifact_sets")) and counts_match
+    return dispatch_count > 0 and bool(rebuilt_summary.get("complete_artifact_sets")) and counts_match
 
 
 def _record_failure(
@@ -217,7 +353,7 @@ def evaluate_pre_registered_validity_gate(
         _record_failure(
             failures,
             gate="artifact_completeness",
-            reason="every dispatch must materialize candidate pool, projection plan, budget witness, materialized context, metric bridge witness, and diagnostics",
+            reason="every dispatch must materialize candidate pool, projection plan, budget witness, materialized context, metric bridge witness, diagnostics, and projection bundle",
         )
 
     ambiguity_rows = [row for row in rows if row.get("selector_regime_label") == "ambiguous"]
@@ -328,6 +464,9 @@ def _run_instance(
     top_l: int,
     thresholds: dict[str, Any],
     artifact_paths: dict[str, Path],
+    selector_backend: str,
+    oracle_backend: str,
+    strict_optional_dependencies: bool,
 ) -> dict[str, Any]:
     item_payloads = instance.item_payloads()
     pool_hash = instance.candidate_pool_hash()
@@ -385,8 +524,34 @@ def _run_instance(
         augmented_result,
         local_result,
     )
+    oracle_result = brute_force_optimal_select(
+        items=instance.items,
+        budget_tokens=instance.budget_tokens,
+        value_fn=instance.value,
+    )
+    oracle_value = oracle_result.value if oracle_result.oracle_status == "available" else None
+    oracle_gap = None
+    if oracle_value is not None and oracle_value > 0:
+        oracle_gap = round(max(0.0, oracle_value - greedy_result.value) / oracle_value, 6)
     selected_ids = list(selected_result.selected_ids)
     excluded_ids = sorted(item.item_id for item in instance.items if item.item_id not in selected_ids)
+    costs = item_costs(instance.items)
+    realized_tokens = total_cost(selected_ids, costs)
+    optional_selector_result = _optional_selector_adapter_result(
+        instance=instance,
+        selector_backend=selector_backend,
+        selected_ids=selected_ids,
+        excluded_ids=excluded_ids,
+        realized_tokens=realized_tokens,
+        selection_trace=selected_result.trace,
+        strict=strict_optional_dependencies,
+    )
+    optional_oracle_result = _optional_oracle_adapter_result(
+        instance=instance,
+        oracle_backend=oracle_backend,
+        native_oracle_result=oracle_result,
+        strict=strict_optional_dependencies,
+    )
 
     projection_plan = ProjectionPlan(
         **{key: common[key] for key in ("dispatch_id", "agent_id", "round_id", "regime")},
@@ -400,6 +565,8 @@ def _run_instance(
             "value_source": "synthetic_oracle",
             "top_l_pairwise_diagnostic": top_l,
             "policy_thresholds": thresholds,
+            "selector_backend": selector_backend,
+            "oracle_backend": oracle_backend,
         },
     )
     projection_payload = {**to_payload(projection_plan), **common, "candidate_count": len(item_payloads)}
@@ -412,8 +579,6 @@ def _run_instance(
         artifact_paths=artifact_paths,
     )
 
-    costs = item_costs(instance.items)
-    realized_tokens = total_cost(selected_ids, costs)
     budget_witness = BudgetWitness(
         **{key: common[key] for key in ("dispatch_id", "agent_id", "round_id", "regime")},
         budget_tokens=instance.budget_tokens,
@@ -467,6 +632,11 @@ def _run_instance(
             "budget_tokens": instance.budget_tokens,
             "selected_count": len(selected_ids),
             "excluded_count": len(excluded_ids),
+            "oracle_status": oracle_result.oracle_status,
+            "optional_selector_backend": selector_backend,
+            "optional_selector_available": optional_selector_result.selector_available,
+            "optional_oracle_backend": oracle_backend,
+            "optional_oracle_status": optional_oracle_result.solver_status,
         },
         decoding_policy={
             "mode": "synthetic_oracle",
@@ -541,6 +711,24 @@ def _run_instance(
         "gamma_hat_semantics": "legacy_trace_decay_alias_not_submodularity_ratio",
         "pairwise_sample_count": len(diagnostics.pairwise_samples),
         "pairwise_synergy_count": sum(1 for row in diagnostics.pairwise_samples if row["label"] == "synergy"),
+        "pairwise_synergy_mass": diagnostics.positive_interaction_mass_ucb,
+        "triple_excess_mass": diagnostics.triple_excess_lcb_max,
+        "selector_regime_label_synthetic": f"{diagnostics.selector_regime_label}_synthetic",
+        "metric_claim_level_synthetic": diagnostics.metric_claim_level,
+        "oracle_status": oracle_result.oracle_status,
+        "oracle_value": oracle_value,
+        "oracle_gap": oracle_gap,
+        "oracle_selected_ids": list(oracle_result.selected_ids),
+        "oracle_token_cost": oracle_result.token_cost,
+        "optional_selector_backend": selector_backend,
+        "optional_selector_available": optional_selector_result.selector_available,
+        "optional_selector_unavailable_reason": optional_selector_result.unavailable_reason,
+        "optional_selector_result": optional_selector_result.to_dict(),
+        "optional_oracle_backend": oracle_backend,
+        "optional_oracle_available": optional_oracle_result.oracle_available,
+        "optional_oracle_status": optional_oracle_result.solver_status,
+        "optional_oracle_unavailable_reason": optional_oracle_result.unavailable_reason,
+        "optional_oracle_result": optional_oracle_result.to_dict(),
     }
     _write_artifact_and_event(
         output_dir=output_dir,
@@ -550,6 +738,41 @@ def _run_instance(
         notes="synthetic projection diagnostics materialized",
         artifact_paths=artifact_paths,
     )
+    bundle = ProjectionBundleV1(
+        run_id=run_id,
+        dispatch_id=instance.instance_id,
+        agent_id=instance.agent_id,
+        round_id=instance.round_id,
+        candidate_pool=candidate_pool_payload,
+        projection_plan=projection_payload,
+        budget_witness=witness_payload,
+        materialized_context=context_payload,
+        metric_bridge_witness=metric_bridge_payload,
+        diagnostics=diagnostic_payload,
+        source_mode="synthetic",
+    )
+    bundle_payload = ProjectionBundleV1(
+        run_id=run_id,
+        dispatch_id=instance.instance_id,
+        agent_id=instance.agent_id,
+        round_id=instance.round_id,
+        candidate_pool=candidate_pool_payload,
+        projection_plan=projection_payload,
+        budget_witness=witness_payload,
+        materialized_context=context_payload,
+        metric_bridge_witness=metric_bridge_payload,
+        diagnostics=diagnostic_payload,
+        source_mode="synthetic",
+        canonical_hash_value=bundle.canonical_hash(),
+    ).to_dict()
+    _write_artifact_and_event(
+        output_dir=output_dir,
+        run_id=run_id,
+        event_type="projection_bundle_materialized",
+        payload=bundle_payload,
+        notes="synthetic projection bundle materialized",
+        artifact_paths=artifact_paths,
+    )
     return diagnostic_payload
 
 
@@ -557,22 +780,38 @@ def run_synthetic_benchmark(
     *,
     config_path: str | Path,
     output_dir: str | Path | None = None,
+    output_root: str | Path | None = None,
+    seed: int | None = None,
+    n_items: int | None = None,
+    budget_tokens: int | None = None,
 ) -> dict[str, Any]:
     config = _load_config(config_path)
-    resolved_output_dir = Path(output_dir or config["output_dir"]).resolve()
+    if output_dir is not None and output_root is not None and Path(output_dir) != Path(output_root):
+        raise ValueError("use only one of output_dir or output_root")
+    resolved_output_dir = Path(output_dir or output_root or config["output_dir"]).resolve()
     resolved_output_dir.mkdir(parents=True, exist_ok=True)
     artifact_paths = _artifact_paths(resolved_output_dir)
     _reset_event_log(resolved_output_dir)
     _reset_derived_jsonl(artifact_paths)
 
-    seed = int(config.get("seed", 20260418))
+    resolved_seed = int(seed if seed is not None else config.get("seed", 20260418))
     protocol_version = str(config.get("protocol_version", "synthetic_regime.v1"))
-    run_id = str(config.get("run_id") or f"synthetic-regime-smoke-{seed}")
+    run_id = str(config.get("run_id") or f"synthetic-regime-smoke-{resolved_seed}")
     thresholds = dict(config.get("policy_thresholds") or DEFAULT_POLICY_THRESHOLDS)
+    selector_backend = str(config.get("selector_backend", "native_greedy"))
+    oracle_backend = str(config.get("oracle_backend", "brute_force"))
+    strict_optional_dependencies = bool(config.get("strict_optional_dependencies", False))
     instances = build_synthetic_instances(
         regimes=config["regimes"],
         instances_per_regime=int(config.get("instances_per_regime", 1)),
-        seed=seed,
+        seed=resolved_seed,
+        n_items=n_items,
+        budget_tokens=budget_tokens,
+        token_cost_range=tuple(config["token_cost_range"]) if config.get("token_cost_range") is not None else None,
+        cluster_count=config.get("cluster_count"),
+        pairwise_degree=config.get("pairwise_degree"),
+        triple_count=config.get("triple_count"),
+        noise_level=float(config.get("noise_level", 0.0)),
     )
     diagnostics_rows = [
         _run_instance(
@@ -583,11 +822,20 @@ def run_synthetic_benchmark(
             top_l=int(config.get("top_l", 8)),
             thresholds=thresholds,
             artifact_paths=artifact_paths,
+            selector_backend=selector_backend,
+            oracle_backend=oracle_backend,
+            strict_optional_dependencies=strict_optional_dependencies,
         )
         for instance in instances
     ]
     rebuilt = rebuild_projection_summary_from_events(resolved_output_dir, run_id=run_id)
     expected_matches = sum(1 for row in diagnostics_rows if row["policy_matches_expected"])
+    optional_unavailable_count = sum(
+        1
+        for row in diagnostics_rows
+        for field in ("optional_selector_unavailable_reason", "optional_oracle_unavailable_reason")
+        if row.get(field)
+    )
     gate_evaluation = evaluate_pre_registered_validity_gate(diagnostics_rows, rebuilt, thresholds)
     status = "green" if gate_evaluation["pre_registered_gate_passed"] else "red"
     summary = {
@@ -598,6 +846,14 @@ def run_synthetic_benchmark(
         "config_path": str(Path(config_path).resolve()),
         "output_dir": str(resolved_output_dir),
         "expected_policy_matches": expected_matches,
+        "optional_backends": {
+            "selector_backend": selector_backend,
+            "oracle_backend": oracle_backend,
+            "strict_optional_dependencies": strict_optional_dependencies,
+            "unavailable_count": optional_unavailable_count,
+            "selector_available_count": sum(1 for row in diagnostics_rows if row.get("optional_selector_available")),
+            "oracle_available_count": sum(1 for row in diagnostics_rows if row.get("optional_oracle_available")),
+        },
         "artifact_paths": {
             "events": str(resolved_output_dir / "events.jsonl"),
             **{event_type: str(path) for event_type, path in artifact_paths.items()},
@@ -621,7 +877,7 @@ def run_synthetic_benchmark(
         run_id=run_id,
         payload={
             "run_id": run_id,
-            "seed": seed,
+            "seed": resolved_seed,
             "protocol_version": protocol_version,
             "status": status,
             "dispatch_count": len(diagnostics_rows),
@@ -644,9 +900,20 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run the synthetic context-projection regime benchmark.")
     parser.add_argument("--config", default="configs/runs/synthetic-regime-smoke.json")
     parser.add_argument("--output-dir", default=None)
+    parser.add_argument("--output-root", default=None)
+    parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument("--n-items", type=int, default=None)
+    parser.add_argument("--budget-tokens", type=int, default=None)
     args = parser.parse_args()
 
-    report = run_synthetic_benchmark(config_path=args.config, output_dir=args.output_dir)
+    report = run_synthetic_benchmark(
+        config_path=args.config,
+        output_dir=args.output_dir,
+        output_root=args.output_root,
+        seed=args.seed,
+        n_items=args.n_items,
+        budget_tokens=args.budget_tokens,
+    )
     print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0 if report["status"] == "green" else 1
 
