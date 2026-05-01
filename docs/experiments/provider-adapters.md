@@ -23,6 +23,12 @@ Optional fields include `source_offsets`, `temporal_validity`, `confidence`, `ex
 
 `content_hash` and fallback `candidate_id` values are deterministic. If a caller does not provide `token_cost`, the adapters use a deterministic stdlib token-like split. No external tokenizer is required.
 
+## Provider candidate normalization
+
+`cps.providers.normalizer` provides a deterministic compatibility layer for downstream selector and materializer paths that still expect legacy item fields. It harmonizes aliases between `candidate_id` and `item_id`, `content` and `text`, and `token_cost` and `token_estimate` without mutating the input payload or changing provider provenance.
+
+This layer is engineering compatibility only. It does not validate measurement, certify V-information, certify submodularity, certify metric bridge freshness, certify deployment claims, change conservative claim gates, or unblock P04 or P09.
+
 ## Graphiti-style adapter
 
 `cps.providers.graphiti_provider` converts fake or local Graphiti-style dicts, dataclasses, and attribute objects into CPS candidates:
