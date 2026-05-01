@@ -3,6 +3,8 @@
 This protocol defines the Phase A synthetic diagnostic benchmark for controlled
 context-projection set functions.
 
+The current P05 experiment note is `docs/experiments/synthetic-regime-benchmark.md`.
+
 ## Purpose
 
 The benchmark checks whether proxy-layer diagnostics separate three controlled
@@ -24,6 +26,9 @@ python -m cps.experiments.synthetic_benchmark \
   --output-dir artifacts/experiments/synthetic_regime_smoke
 ```
 
+The runner also accepts `--output-root`, `--seed`, `--n-items`, and
+`--budget-tokens` for offline test and calibration runs.
+
 ## Outputs
 
 The output directory contains:
@@ -35,11 +40,14 @@ The output directory contains:
 - `materialized_contexts.jsonl`
 - `metric_bridge_witnesses.jsonl`
 - `diagnostics.jsonl`
+- `projection_bundles.jsonl`
 - `summary.json`
 - `report.md`
 
 `events.jsonl` is the source of truth for replaying the run summary. The JSONL
 artifact files are derived audit views for inspection.
+`projection_bundles.jsonl` contains deterministic `ProjectionBundleV1` rows
+with canonical hashes for replay and export checks.
 
 ## Diagnostics
 
