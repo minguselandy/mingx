@@ -56,8 +56,11 @@ def format_synthetic_benchmark_report(
         "materialized_contexts",
         "metric_bridge_witnesses",
         "diagnostics",
+        "projection_bundles",
     ):
         display_name = "MetricBridgeWitness" if artifact_name == "metric_bridge_witnesses" else artifact_name
+        if artifact_name == "projection_bundles":
+            display_name = "ProjectionBundleV1"
         lines.append(f"| {display_name} | {artifact_counts.get(artifact_name, 0)} |")
 
     lines.extend(
@@ -91,8 +94,8 @@ def format_synthetic_benchmark_report(
             "",
             "## Regime diagnostics table",
             "",
-            "| Dispatch | Regime | block_ratio_lcb_b2 | block_ratio_lcb_star | block_ratio_lcb_star_semantics | block_ratio_lcb_b3 | trace_decay_proxy | synergy_fraction | positive_interaction_mass_ucb | triple_excess_flag | higher_order_ambiguity_flag | greedy_augmented_gap | metric_claim_level | selector_regime_label | selector_action |",
-            "|---|---|---:|---:|---|---:|---:|---:|---:|---|---|---:|---|---|---|",
+            "| Dispatch | Regime | block_ratio_lcb_b2 | block_ratio_lcb_star | block_ratio_lcb_star_semantics | block_ratio_lcb_b3 | trace_decay_proxy | synergy_fraction | positive_interaction_mass_ucb | triple_excess_flag | higher_order_ambiguity_flag | greedy_augmented_gap | oracle_status | oracle_gap | metric_claim_level | selector_regime_label | selector_action |",
+            "|---|---|---:|---:|---|---:|---:|---:|---:|---|---|---:|---|---:|---|---|---|",
         ]
     )
     for row in diagnostics_rows:
@@ -110,6 +113,8 @@ def format_synthetic_benchmark_report(
             f"{row['triple_excess_flag']} | "
             f"{row['higher_order_ambiguity_flag']} | "
             f"{row['greedy_augmented_gap']:.6f} | "
+            f"{row.get('oracle_status', 'n/a')} | "
+            f"{_fmt(row.get('oracle_gap'))} | "
             f"{row['metric_claim_level']} | "
             f"{row['selector_regime_label']} | "
             f"{row['selector_action']} |"
