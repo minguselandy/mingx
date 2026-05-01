@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import cps.runtime.followup as followup_module
 from cps.data.manifest import load_manifest
 from cps.runtime.calibration import build_calibration_manifest
 from cps.runtime.followup import FOLLOWUP_PACKAGE_VERSION, build_followup_package
@@ -85,6 +86,176 @@ def _write_decision_sheet(
         ),
         encoding="utf-8",
     )
+
+
+def _prepare_cli_inputs(
+    workspace_tmp_dir: Path,
+    *,
+    approved_followup_action: str = "replace_only",
+    question_decisions: dict[str, str] | None = None,
+    decision_run_id: str = "phase1-cohort-test-followup",
+) -> dict[str, Path]:
+    bundle = load_manifest(FIXTURE_MANIFEST)
+    dropped_question_ids = ("2hop__86458_20273",)
+    source_plan_path = workspace_tmp_dir / "source-plan.json"
+    source_calibration_path = workspace_tmp_dir / "source-run" / "calibration_manifest.json"
+    replacement_manifest_path = workspace_tmp_dir / "replacement_manifest.json"
+    decision_sheet_path = workspace_tmp_dir / "decision-sheet.md"
+
+    _write_source_plan(source_plan_path, calibration_manifest_path=source_calibration_path)
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=source_calibration_path,
+        seed=20260418,
+        per_hop_count=1,
+    )
+    build_calibration_manifest(
+        bundle=bundle,
+        output_path=replacement_manifest_path,
+        seed=20260418,
+        per_hop_count=1,
+        exclude_question_ids=dropped_question_ids,
+    )
+    _write_decision_sheet(
+        decision_sheet_path,
+        run_id=decision_run_id,
+        approved_followup_action=approved_followup_action,
+        question_decisions=question_decisions
+        if question_decisions is not None
+        else {"2hop__86458_20273": "drop_and_replace"},
+    )
+    _write_source_run_summary(workspace_tmp_dir / "source-exports" / "run_summary.json")
+
+    return {
+        "source_plan": source_plan_path,
+        "replacement_manifest": replacement_manifest_path,
+        "decision_sheet": decision_sheet_path,
+        "output_root": workspace_tmp_dir / "followup-package",
+    }
+
+
+def test_followup_cli_builds_execution_ready_package_and_prints_output_paths(
+    workspace_tmp_dir, capsys, monkeypatch
+):
+    import cps.runtime.cohort as cohort_module
+
+    def fail_if_cohort_runs(*_args, **_kwargs):
+        raise AssertionError("follow-up CLI must not run cohort execution")
+
+    monkeypatch.setattr(cohort_module, "run_phase1_cohort", fail_if_cohort_runs)
+    paths = _prepare_cli_inputs(workspace_tmp_dir)
+
+    exit_code = followup_module.main(
+        [
+            "--source-plan",
+            str(paths["source_plan"]),
+            "--replacement-manifest",
+            str(paths["replacement_manifest"]),
+            "--decision-sheet",
+            str(paths["decision_sheet"]),
+            "--output-root",
+            str(paths["output_root"]),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out)
+    assert exit_code == 0
+    assert payload["status"] == "green"
+    assert payload["execution_ready"] is True
+    assert payload["output_root"] == str(paths["output_root"].resolve())
+    assert Path(payload["followup_plan_path"]).exists()
+    assert Path(payload["calibration_manifest_path"]).exists()
+    assert Path(payload["blocked_questions_path"]).exists()
+    assert Path(payload["lineage_path"]).exists()
+    assert Path(payload["readme_path"]).exists()
+    assert "cps.runtime.cohort" not in captured.err
+
+
+def test_followup_cli_returns_nonzero_for_missing_required_input(workspace_tmp_dir, capsys):
+    paths = _prepare_cli_inputs(workspace_tmp_dir)
+
+    exit_code = followup_module.main(
+        [
+            "--source-plan",
+            str(paths["source_plan"]),
+            "--replacement-manifest",
+            str(paths["replacement_manifest"]),
+            "--output-root",
+            str(paths["output_root"]),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert exit_code != 0
+    assert "--decision-sheet" in captured.err
+    assert not paths["output_root"].exists()
+
+
+def test_followup_cli_returns_nonzero_for_invalid_replacement_manifest(
+    workspace_tmp_dir, capsys
+):
+    paths = _prepare_cli_inputs(workspace_tmp_dir)
+    replacement_manifest = json.loads(
+        paths["replacement_manifest"].read_text(encoding="utf-8")
+    )
+    replacement_manifest["seed"] = 123
+    paths["replacement_manifest"].write_text(
+        json.dumps(replacement_manifest, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    exit_code = followup_module.main(
+        [
+            "--source-plan",
+            str(paths["source_plan"]),
+            "--replacement-manifest",
+            str(paths["replacement_manifest"]),
+            "--decision-sheet",
+            str(paths["decision_sheet"]),
+            "--output-root",
+            str(paths["output_root"]),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    error_payload = json.loads(captured.err)
+    assert exit_code != 0
+    assert error_payload["status"] == "error"
+    assert "seed does not match" in error_payload["error"]
+    assert not paths["output_root"].exists()
+
+
+def test_followup_cli_returns_nonzero_for_non_execution_ready_package(
+    workspace_tmp_dir, capsys
+):
+    paths = _prepare_cli_inputs(
+        workspace_tmp_dir,
+        question_decisions={"2hop__86458_20273": "keep"},
+    )
+
+    exit_code = followup_module.main(
+        [
+            "--source-plan",
+            str(paths["source_plan"]),
+            "--replacement-manifest",
+            str(paths["replacement_manifest"]),
+            "--decision-sheet",
+            str(paths["decision_sheet"]),
+            "--output-root",
+            str(paths["output_root"]),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    output_payload = json.loads(captured.out)
+    error_payload = json.loads(captured.err)
+    assert exit_code != 0
+    assert output_payload["execution_ready"] is False
+    assert output_payload["approval_status"] == "question_decision_mismatch"
+    assert error_payload["status"] == "not_execution_ready"
+    assert error_payload["reason"] == "decision_sheet_question_decisions_do_not_match_drop_list"
+    assert (paths["output_root"] / "followup_plan.json").exists()
 
 
 def test_followup_package_builds_ready_to_run_plan_and_lineage(workspace_tmp_dir):
