@@ -12,6 +12,8 @@ We do not prove the key regime hypothesis for deployed frontier models. Instead,
 
 Finally, we isolate a separate bridge risk between the formal objective and end-to-end performance. The formal approximation statements apply to optimization over the extracted candidate pool $M$, not the underlying information space $M^*$. We therefore treat extraction quality as a testable end-to-end bottleneck, not as an extension of the weak-submodular guarantee, and specify a value-stratified audit protocol to measure whether extraction failures disproportionately remove high-value findings.
 
+The current evidence status is deliberately limited: the manuscript is supported by conditional theory and deterministic offline runtime-audit evidence, not by scientific validation, live deployment validation, or `measurement_validated` evidence.
+
 ## 1. Introduction
 
 Multi-agent LLM systems often fail not because the underlying model lacks capability, but because the wrong information is projected into the wrong agent at the wrong time. Chase (2025) argues that many agent failures are context failures rather than model failures. Anthropic frames this as a context-engineering problem: curating the smallest possible set of high-signal tokens under a finite attention budget. METR (2025a) reports that current frontier agents achieve almost 100% success on tasks taking human experts less than 4 minutes, but less than 10% success on tasks taking more than around 4 hours. AgentTaxo (Wang et al., 2025a) measured 53–86% token duplication across multi-agent systems, and AgentDropout (Wang et al., 2025b) showed that *removing* context can improve performance. Together, these observations suggest that current systems often suffer from context pollution, not just context scarcity.
@@ -43,6 +45,8 @@ We assume an enclosing orchestrator-worker runtime in which a scheduler decides 
 2. **Supporting contribution A — structural theory.** We prove that the submodularity ratio $\gamma$ and supermodular degree $d$ are independent for general monotone set functions. We then derive a robust absolute-increase lower bound for local block ratios under pairwise-additive complementarity, with the fractional $1/(1+d\delta_{\max})$ form recovered only as a round-local active-context corollary.
 
 3. **Supporting contribution B — runtime interfaces, metric witnesses, and extraction QA.** We specify the minimum auditable runtime interfaces required by a verifiable deployment setting, including ProjectionPlan, BudgetWitness, MaterializedContext, and MetricBridgeWitness artifacts. The MetricBridgeWitness records the calibration epoch, active stratum, metric class, bridge residual, drift status, and diagnostic claim level so that V-information proxy labels cannot be silently reported under operational-only metrics. We also isolate extraction quality as a separate bridge-risk bottleneck with a value-stratified audit protocol. These support layers make the proxy-labeling protocol executable, but they are not parallel theory claims.
+
+**Evidence status.** The implemented scaffold currently demonstrates deterministic offline audit plumbing and manuscript-facing evidence summaries. It does not execute the human-label, kappa, contamination-closure, fresh metric-bridge, live API, or runtime-integration work required for measurement validation.
 
 ## 2. Problem Formulation
 
@@ -250,16 +254,11 @@ The claim gate is conservative by construction. Missing evidence lowers the allo
 | Evidence condition | Allowed claim boundary | Denied claim |
 |---|---|---|
 | contamination failure | `pilot_only` | `measurement_validated` |
-| missing human labels | not `measurement_validated` | `measurement_validated` |
-| missing kappa | not `measurement_validated` | `measurement_validated` |
-| stale metric bridge | `operational_utility_only` or `ambiguous` | measurement validation |
-| missing metric bridge | `operational_utility_only` or `ambiguous` | measurement validation |
+| missing human labels or missing kappa | not `measurement_validated` | `measurement_validated` |
+| stale or missing metric bridge | `operational_utility_only` or `ambiguous` | measurement validation |
 | synthetic-only evidence | `synthetic_structural_only` | deployed V-information certification |
-| engineering-only evidence | `engineering_smoke_only` | scientific validation |
-| replay package completeness | `replayable_artifact_evidence` | scientific validation |
-| paper-facing summary | no claim upgrade | measurement validation |
-| live API success alone | operational evidence only | measurement validation |
-| external runtime success alone | operational evidence only | measurement validation |
+| engineering, replay, or paper-summary evidence | engineering/replay evidence only; no claim upgrade | scientific validation |
+| live API or external runtime success alone | operational evidence only | measurement validation |
 
 **Formal layer.** The object analyzed in Section 3 is the V-information value function $f_i(S)$. All approximation statements, including Theorem 1 and its corollaries, apply to this formal object. They do not directly apply to an implementation that scores items with heuristics.
 
@@ -506,7 +505,7 @@ The first axis says what the diagnostics are allowed to claim about the measurem
 
 | Metric bridge status | Selector signal | Reported label |
 |---|---|---|
-| log-loss aligned | high block-ratio LCB, low synergy, small augmented-greedy gap | certified proxy-greedy-valid under a fresh metric bridge |
+| log-loss aligned | high block-ratio LCB, low synergy, small augmented-greedy gap | proxy-greedy-valid diagnostic state under fresh metric-bridge evidence |
 | bridge-calibrated | same, after $\zeta_s$ degradation | calibrated proxy-greedy-valid |
 | bridge stale | any signal | ambiguous; recalibrate |
 | operational-only | high utility block-ratio, low utility synergy | utility-greedy-valid only |
@@ -521,11 +520,11 @@ and
 \[
 (\texttt{operational\_utility\_only},\texttt{escalate})
 \]
-are not interchangeable. The former is a calibrated proxy statement about the formal objective only under validated metric bridge conditions. The latter is an operational utility signal about the deployed metric.
+are not interchangeable. The former is a diagnostic label name for a calibrated proxy statement about the formal objective only under validated metric bridge conditions. It is not a deployed V-information certificate. The latter is an operational utility signal about the deployed metric.
 
 The selector-regime label has three possible values:
 
-1. **proxy-greedy-valid under the active metric-claim regime**: the bridge is valid, block-ratio LCB is above threshold, synergy and higher-order excess are below threshold, and the augmented-greedy gap is small;
+1. **proxy-greedy-valid diagnostic state under the active metric-claim regime**: the bridge is valid, block-ratio LCB is above threshold, synergy and higher-order excess are below threshold, and the augmented-greedy gap is small;
 2. **diagnostics-supported escalation under sufficient bridge and sample evidence**: low block-ratio evidence, elevated synergy, higher-order excess, or a large augmented-greedy gap is detected with sufficient confidence;
 3. **ambiguous**: bridge stale, insufficient samples, cascade audit failure, low denominator signal, or conflicting diagnostics.
 
@@ -579,7 +578,7 @@ The pre-registered interpretation table is:
 
 | Benchmark outcome | Interpretation | Required paper response |
 |---|---|---|
-| Oracle regimes separate; proxy regimes separate | Minimal empirical anchor succeeds | Maintain conservative proxy-regime certification claim, not deployed certification |
+| Oracle regimes separate; proxy regimes separate | Minimal empirical anchor succeeds | Maintain conservative proxy-regime diagnostic claim, not deployed certification |
 | Oracle regimes separate; proxy regimes fail | Measurement-layer calibration failure | Downgrade to oracle-only structural evidence or increase calibration budget |
 | Oracle regimes fail | Diagnostic stack lacks structural validity | Revise diagnostics before deployment-facing claim |
 | Diagnostics flag complementarity; escalation improves | Escalation claim supported | Keep escalation protocol |
@@ -589,25 +588,21 @@ The pre-registered interpretation table is:
 
 Minimal pass conditions are: oracle-layer signature separation for most instances in each family; no high-confidence greedy-valid label on higher-order-synergy instances; seeded augmented greedy closes a meaningful fraction of the greedy-optimal gap on pairwise-synergy instances; proxy-layer label instability remains below a declared tolerance or the paper reports the required sample-size increase; and ambiguous labels are reported separately rather than counted as successful regime discrimination.
 
-The implemented offline runtime-audit evidence chain exercises this scaffold without making a scientific validation claim. It normalizes provider-style candidates, runs a fake/local provider-to-selector smoke path, materializes `ProjectionBundleV1` artifacts, rebuilds an evidence ledger, applies the conservative claim gate and metric bridge gate, emits a proxy-regime matrix, packages replay evidence, and produces paper-facing summaries. This is replayable engineering evidence for the audit surface only: P17 is not scientific validation, synthetic benchmark success does not certify deployed V-information submodularity, and replay package completeness is not scientific validation.
+The implemented offline runtime-audit evidence chain exercises the audit plumbing around this scaffold without making a scientific validation claim. It normalizes provider-style candidates, runs a fake/local provider-to-selector smoke path, materializes `ProjectionBundleV1` artifacts, rebuilds an evidence ledger, applies the conservative claim gate and metric bridge gate, emits a proxy-regime matrix, packages replay evidence, and produces paper-facing summaries. It does not execute the benchmark's pre-registered scientific pass conditions. This is replayable engineering evidence for the audit surface only: P17 is not scientific validation, synthetic benchmark success does not certify deployed V-information submodularity, and replay package completeness is not scientific validation.
 
 The proxy-regime matrix records the diagnostic scope and failure boundaries that accompany the synthetic benchmark. Its rows should be read as proxy-regime diagnostic behavior, not as deployed V-information certification.
 
-| Regime | Expected diagnostic behavior | Allowed claim | Denied claim | Certification scope |
+| Regime | Expected diagnostic behavior | Allowed claim | Denied claim | Diagnostic scope |
 |---|---|---|---|---|
 | redundancy-dominated | high block-ratio LCB, low synergy, small augmented-greedy gap | proxy diagnostic evidence | deployed V-information certification | proxy-regime diagnostic only |
 | pairwise-synergy | detected pairwise interaction mass, lower pair-block ratio, seeded greedy improves | synthetic structural evidence | deployed V-information certification | synthetic/proxy structural only |
 | higher-order-synergy / prerequisite | triple-excess or block-3 test fires; greedy-valid label withheld | synthetic structural evidence | deployed V-information certification | synthetic/proxy structural only |
-| contamination-failed | contamination failure overrides other evidence | `pilot_only` | `measurement_validated` | pilot only |
-| missing-human-labels | label evidence absent | not `measurement_validated` | `measurement_validated` | ambiguous |
-| missing-kappa | agreement evidence absent | not `measurement_validated` | `measurement_validated` | ambiguous |
-| stale-metric-bridge | bridge freshness insufficient | `operational_utility_only` or `ambiguous` | measurement validation | operational or ambiguous |
-| missing-metric-bridge | bridge witness absent | `operational_utility_only` or `ambiguous` | measurement validation | operational or ambiguous |
-| artifact-incomplete | required replay artifacts missing or inconsistent | `ambiguous` | scientific validation | fail-closed ambiguous |
+
+Boundary cases such as contamination failure, missing labels, missing kappa, stale or missing bridge evidence, and incomplete artifacts are handled by the conservative claim gate rather than counted as successful proxy-regime rows. They remain denied or downgraded claims, not evidence of measurement validation.
 
 This benchmark is the structural-validity floor of a richer empirical stack. A natural next layer is offline replay over real dispatch traces, which would test the selector under realistic workflow distributions.
 
-### 4.4 Adaptive calibration, metric scope, and composite proxy-regime certification
+### 4.4 Adaptive calibration, metric scope, and composite proxy-regime evidence gate
 
 This subsection separates two distinct failure modes.
 
@@ -635,7 +630,7 @@ n_{eff}
 \]
 If overlap or effective sample size is inadequate, the label is ambiguous until recalibration.
 
-Composite proxy-regime certification uses a transparent union bound in the main text. Let events $E_\gamma,E_{cas},E_3,E_\zeta,E_{seed},E_{drift}$ denote validity of the block-ratio LCB, cascade missed-mass bound, third-order test, metric bridge, seeded-greedy certificate, and drift sentinel. If each has failure probability $\alpha_j$, then
+The composite proxy-regime evidence gate uses a transparent union bound in the main text. Let events $E_\gamma,E_{cas},E_3,E_\zeta,E_{seed},E_{drift}$ denote validity of the block-ratio LCB, cascade missed-mass bound, third-order test, metric bridge, seeded-greedy certificate, and drift sentinel. If each has failure probability $\alpha_j$, then
 \[
 \Pr\left[\bigcap_j E_j\right]\ge 1-\sum_j\alpha_j.
 \]
@@ -682,6 +677,8 @@ The protocol produces three numbers:
 where p_simple is the fraction of simple findings, c_high is completeness for simple findings, and c_low is completeness for complex findings. Human annotators classify each ground-truth finding by complexity (extraction difficulty) and each extraction outcome as captured, captured-with-overgeneralization (sub-classified as "core preserved" or "core materially changed"), or missing.
 
 This replaces the uniform \(c\) with a testable mixture model. The purpose of the protocol is not merely to obtain a more nuanced score, but to test whether extraction failures are approximately uniform across strata or concentrated in the complex/high-value stratum. Human annotation remains the ground-truth protocol for this audit. In a practical system, one may additionally maintain automated probes based on extraction-time metadata such as confidence or compression diagnostics, but such signals should be treated as supplementary monitors rather than substitutes for the value-stratified audit itself. We leave full execution to future work; the contribution here is designing the right diagnostic measurement where none existed.
+
+This extraction audit is designed, not executed in the current evidence package. Its results remain part of the missing scientific closure needed before any measurement-validation claim.
 
 ---
 
@@ -762,15 +759,8 @@ The offline audit scaffold extends this four-artifact chain into a compact evide
 | `MaterializedContext` | realized context payload | fixes ordering and context inventory for replay | audit interface only |
 | `MetricBridgeWitness` | measurement-claim witness | records metric class, freshness, and diagnostic scope | claim-level gate, not validation by itself |
 | `ProjectionBundleV1` | canonical bundle | ties plan, budget, context, bridge witness, and diagnostics with stable hashes | replay evidence only |
-| `EvidenceLedger` | evidence summary | records artifact counts and missing required artifacts | audit/reporting only |
-| `ClaimGateReport` | conservative claim report | denies unsupported validation and certification claims | claim gate, not a new claim |
-| `MetricBridgeGate` | bridge-specific gate | checks bridge freshness, labels, kappa, contamination, and evidence mode | conservative bridge boundary |
-| `ProxyRegimeMatrix` | proxy/synthetic diagnostic matrix | summarizes expected and observed regime signatures | not deployed V-information certification |
-| `ReplayEvidencePackage` | stable evidence package | packages hashes, ledger, claim report, and optional matrix | completeness is not scientific validation |
-| `PaperEvidenceSummary` | manuscript-facing summary | converts evidence packages into paper tables and limitations | no claim upgrade |
-| `EndToEndEvidenceDemo` | offline evidence-chain demo | wires provider normalization through paper evidence summary | engineering evidence only |
 
-Detailed replay-package outputs, paper-evidence summaries, and integration notes are kept in the companion evidence patch at `docs/paper/context_projection_v10_p18_tables_and_experiment_patch.md`.
+The implementation also contains supporting evidence-ledger, claim-gate, metric-bridge-gate, proxy-matrix, replay-package, paper-summary, and end-to-end demo outputs. Those implementation artifacts are companion evidence rather than main-body claims. Detailed replay-package outputs, paper-evidence summaries, and integration notes are kept in the companion evidence patch at `docs/paper/context_projection_v10_p18_tables_and_experiment_patch.md`.
 
 ### 6.3 Three-stage scoring pipeline
 
@@ -885,7 +875,7 @@ Taken together, these literatures establish value-weighted evaluation, fine-grai
 
 Across the adjacent literatures surveyed in this section — single-agent budgeted selection, multi-agent optimization over agents or links, learned proxy-level routing or memory systems, and adjacent diagnostic and extraction-evaluation frameworks — the same pattern emerges. Our contribution lies at their intersection: a formal value function for **per-agent content selection** under heterogeneous token budgets, conditional structural theory for that formal object, an explicit bridge statement separating theorem, proxy, and runtime layers, and a measurable proxy-regime labeling protocol for deciding when monitored greedy-style selection is credible.
 
-The gap is therefore not the absence of multi-agent scheduling mechanisms, but the absence of a formal context-allocation object inside those mechanisms.
+The gap is therefore not the absence of multi-agent scheduling mechanisms, but the absence of a formal context-allocation object inside those mechanisms. The reviewer-facing contribution is this narrower measurement protocol: a formal per-agent content-selection object, explicit bridge conditions, and auditable claim boundaries for proxy-regime diagnostics.
 
 ---
 
@@ -901,7 +891,7 @@ The present paper stops at a formal, per-round selector and a calibrated proxy-r
 
 **Calibration and policy search.** The calibration architecture assumes that a lightweight model may approximate CI Value or log-loss marginal estimates from pipeline signals. The offline-to-online transfer pattern demonstrated by EvolKV (Yu & Chai, 2025) for KV cache budget allocation could be applied to evolving scoring pipeline parameters, diagnostic thresholds, and escalation policies. Such adaptation must respect the fixed-within-epoch reference distribution and drift-sentinel rules of Section 4.4.
 
-**Synthetic benchmark execution and replay.** The benchmark in Section 4.3.1 is the minimal empirical anchor. Executing it under the pre-registered validity table would establish whether the diagnostic stack has structural validity on controlled regimes. A subsequent offline replay pilot over real dispatch traces would test whether the bridge, proxy, and runtime artifacts behave under realistic workflow distributions.
+**Synthetic benchmark execution and replay.** The benchmark in Section 4.3.1 is the minimal empirical anchor. Executing it under the pre-registered validity table would establish whether the diagnostic stack has structural validity on controlled regimes. A subsequent offline replay pilot over real dispatch traces would test whether the bridge, proxy, and runtime artifacts behave under realistic workflow distributions. The highest-priority empirical closure work is P04-style human labels, kappa, contamination closure, and fresh metric-bridge review, followed by P09 operator-approved runtime integration.
 
 **Extraction metadata and machine-auditable runtimes.** A practical next step is to enrich the extraction gate and projection artifacts with lightweight runtime metadata derived from upstream free-form reasoning, such as confidence tags, conflict markers, or coarse compression diagnostics. Such signals may support automated monitors, replay triage, or coarse routing policies over auditable runtime states. In the current paper, these signals are future proxy-layer instrumentation rather than extensions of the theory.
 
@@ -931,7 +921,7 @@ Eighth, the extraction gate is a potential attack surface: a malicious or malfun
 
 Ninth, the runtime-interface requirements presume observability that some hosted frontier runtimes may not expose, including excluded candidates, materialization order, bridge calibration state, and replay-compatible evaluation traces. In such systems the protocol can still guide design, but it cannot certify proxy-regime labels without the required artifacts.
 
-The current runtime-audit scaffold does not close the missing scientific evidence. P04 remains deferred/operator-required, P09 remains `BLOCKED_OPERATOR_REQUIRED`, and `measurement_validated` is not claimed. Engineering success is not scientific validation, replay package completeness is not scientific validation, paper-facing summaries do not upgrade claim levels, and live API or external runtime success alone is not measurement validation.
+The current runtime-audit scaffold does not close the missing scientific evidence. No human-label set, kappa evidence, contamination closure, or fresh deployed metric bridge sufficient for `measurement_validated` is supplied here. P04 remains deferred/operator-required, P09 remains `BLOCKED_OPERATOR_REQUIRED`, and `measurement_validated` is not claimed. Engineering success is not scientific validation, synthetic and replay evidence remain proxy/offline evidence, replay package completeness is not scientific validation, paper-facing summaries do not upgrade claim levels, and live API or external runtime success alone is not measurement validation.
 
 We do not claim to propose an optimal scheduler, solve the critical-path problem, establish multi-agent superiority over single-agent systems, or provide system-level correctness guarantees. The paper formalizes the context-allocation sub-layer that arises when an orchestrator-worker runtime has already chosen to dispatch a worker.
 
@@ -949,7 +939,7 @@ The main risk is false confidence. Formal guarantees over the V-information obje
 
 We have formalized context projection selection as monotone set-function maximization under token-budget constraints, formalized the independence of the submodularity ratio and supermodular degree in the $(\gamma,d)$ coordinate system, and derived a pairwise-regime lower bound that is robust to zero singleton marginals through an absolute-increase parameterization. The fractional $1/(1+d\delta)$ form survives only as a round-local active-context corollary.
 
-The deployment contribution is correspondingly modest and explicit. The protocol does not verify true deployment-time V-information weak submodularity in general. It provides conservative proxy-regime certification, not deployed V-information certification, when the metric bridge is valid, and operational-utility escalation signals when it is not. The immediate next empirical steps are to execute the pre-registered synthetic regime benchmark, run an offline replay pilot on real dispatch traces, and perform the value-stratified extraction audit. The central open theoretical question — whether V-information with bounded neural network families is approximately submodular on natural language distributions — remains the key target for upgrading Condition A from an architectural argument to a formal guarantee.
+The deployment contribution is correspondingly modest and explicit. The protocol does not verify true deployment-time V-information weak submodularity in general. It provides conservative proxy-regime diagnostic evidence, not deployed V-information certification, when the metric bridge is valid, and operational-utility escalation signals when it is not. The immediate next empirical steps are to execute the pre-registered synthetic regime benchmark, run an offline replay pilot on real dispatch traces, and perform the value-stratified extraction audit. The central open theoretical question — whether V-information with bounded neural network families is approximately submodular on natural language distributions — remains the key target for upgrading Condition A from an architectural argument to a formal guarantee.
 
 ---
 
