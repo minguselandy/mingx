@@ -6,6 +6,8 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
+from cps.experiments.metric_bridge_gate import BRIDGE_REASON_ORDER, evaluate_metric_bridge_gate
+
 
 CLAIM_LEVELS = (
     "engineering_compatibility_only",
@@ -18,16 +20,7 @@ CLAIM_LEVELS = (
     "measurement_validated",
 )
 REASON_ORDER = (
-    "contamination_failed",
-    "missing_required_artifacts",
-    "missing_projection_bundles",
-    "missing_metric_bridge",
-    "stale_metric_bridge",
-    "missing_human_labels",
-    "missing_kappa",
-    "synthetic_only_not_deployed_certification",
-    "engineering_evidence_only",
-    "operator_required_phase",
+    *BRIDGE_REASON_ORDER,
     "external_runtime_not_used",
 )
 DENIED_CLAIMS = (
@@ -71,8 +64,9 @@ def _base_claim_level(ledger: Mapping[str, Any]) -> str:
 
 def build_claim_gate_report(ledger: Mapping[str, Any]) -> dict[str, Any]:
     payload = deepcopy(dict(ledger))
-    reasons: set[str] = set()
-    denied_claims = set(DENIED_CLAIMS)
+    metric_bridge_gate = evaluate_metric_bridge_gate(payload)
+    reasons: set[str] = set(metric_bridge_gate["reason_codes"])
+    denied_claims = set(DENIED_CLAIMS) | set(metric_bridge_gate["denied_claims"])
     contamination_status = str(payload.get("contamination_status", "unknown"))
     bridge_freshness = str(payload.get("bridge_freshness", "missing"))
     p04_status = str(payload.get("p04_status", "BLOCKED_OPERATOR_REQUIRED"))
@@ -106,15 +100,7 @@ def build_claim_gate_report(ledger: Mapping[str, Any]) -> dict[str, Any]:
     if not bool(payload.get("external_runtime_used", False)):
         reasons.add("external_runtime_not_used")
 
-    measurement_validated_allowed = (
-        contamination_status == "passed"
-        and bool(payload.get("human_labels_present"))
-        and bool(payload.get("kappa_present"))
-        and bridge_freshness == "fresh"
-        and bool(payload.get("required_artifacts_present"))
-        and bool(payload.get("measurement_validation_evidence_present", False))
-        and p04_status == "ACCEPT"
-    )
+    measurement_validated_allowed = bool(metric_bridge_gate["measurement_validated_allowed"])
     if measurement_validated_allowed:
         allowed_claim_level = "measurement_validated"
         denied_claims.discard("measurement_validated")
@@ -143,6 +129,9 @@ def build_claim_gate_report(ledger: Mapping[str, Any]) -> dict[str, Any]:
         "denied_claims": sorted(denied_claims),
         "reason_codes": reason_codes,
         "reason_code_order": list(REASON_ORDER),
+        "metric_bridge_gate_status": metric_bridge_gate["bridge_gate_status"],
+        "allowed_bridge_claim_level": metric_bridge_gate["allowed_bridge_claim_level"],
+        "metric_bridge_reason_codes": metric_bridge_gate["reason_codes"],
         "measurement_validated_allowed": measurement_validated_allowed,
         "p04_status": p04_status,
         "p09_status": p09_status,
@@ -163,6 +152,8 @@ def format_claim_gate_markdown(report: Mapping[str, Any]) -> str:
         f"- measurement_validated_allowed: {str(report['measurement_validated_allowed']).lower()}",
         f"- P04 status: `{report['p04_status']}`",
         f"- P09 status: `{report['p09_status']}`",
+        f"- Metric bridge gate status: `{report.get('metric_bridge_gate_status', 'unknown')}`",
+        f"- Allowed bridge claim level: `{report.get('allowed_bridge_claim_level', 'ambiguous')}`",
         "",
         "## Reason codes",
         "",
@@ -174,6 +165,18 @@ def format_claim_gate_markdown(report: Mapping[str, Any]) -> str:
     lines.extend(["", "## Denied claims", ""])
     if denied_claims:
         lines.extend(f"- `{claim}`" for claim in denied_claims)
+    else:
+        lines.append("- `none`")
+    lines.extend(
+        [
+            "",
+            "## Metric bridge gate",
+            "",
+        ]
+    )
+    metric_bridge_reason_codes = list(report.get("metric_bridge_reason_codes") or [])
+    if metric_bridge_reason_codes:
+        lines.extend(f"- `{reason}`" for reason in metric_bridge_reason_codes)
     else:
         lines.append("- `none`")
     lines.extend(
