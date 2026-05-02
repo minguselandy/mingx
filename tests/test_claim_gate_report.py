@@ -28,6 +28,7 @@ def test_complete_engineering_smoke_evidence_does_not_allow_measurement_validati
     report = build_claim_gate_report(_complete_ledger())
 
     assert report["allowed_claim_level"] == "engineering_smoke_only"
+    assert report["metric_bridge_gate_status"] == "missing_bridge"
     assert report["measurement_validated_allowed"] is False
     assert "measurement_validated" in report["denied_claims"]
     assert "engineering_evidence_only" in report["reason_codes"]
@@ -124,6 +125,8 @@ def test_p04_and_p09_blocked_status_remains_visible():
 
     assert report["p04_status"] == "BLOCKED_OPERATOR_REQUIRED"
     assert report["p09_status"] == "BLOCKED_OPERATOR_REQUIRED"
+    assert report["metric_bridge_gate_status"] == "missing_bridge"
+    assert "missing_metric_bridge" in report["metric_bridge_reason_codes"]
     assert "P04 remains BLOCKED_OPERATOR_REQUIRED" in report["summary"]
     assert "P09 remains BLOCKED_OPERATOR_REQUIRED" in report["summary"]
 
