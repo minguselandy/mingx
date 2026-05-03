@@ -1,0 +1,72 @@
+{
+  "abort_policy": {
+    "abort_on_artifact_capture_failure": true,
+    "abort_on_budget_cap_exceeded": true,
+    "abort_on_missing_model_condition_identifier": true,
+    "abort_on_prompt_or_case_change": true,
+    "max_retries_per_case": "<operator_filled_retry_limit>"
+  },
+  "artifact_retention_policy": {
+    "retention_path": "<operator_filled_artifact_retention_path>",
+    "retain_case_artifacts": true,
+    "retain_manifest": true,
+    "retain_model_outputs": true
+  },
+  "budget_cap": "<operator_filled_budget_cap>",
+  "claim_gate_required": true,
+  "conditions": [
+    "no_cps_baseline",
+    "heuristic_selector_baseline",
+    "cps_runtime_audit_scaffold"
+  ],
+  "contamination_audit_required": true,
+  "decision_status": "DO_NOT_RUN",
+  "dry_run_rehearsal_required": true,
+  "evidence_level": "EV2_controlled_live_pilot",
+  "external_runtime_used": false,
+  "forbidden_claims": [
+    "measurement_validated",
+    "scientific_validation",
+    "deployed_v_information_certification",
+    "deployed_v_information_submodularity_certified",
+    "production_integration_complete"
+  ],
+  "human_labels_required_for_measurement_validated": true,
+  "kappa_required_for_measurement_validated": true,
+  "live_api_used": false,
+  "max_cases": "<operator_filled_max_cases>",
+  "metric_bridge_freshness_required": true,
+  "mode": "dry_run",
+  "model_conditions": [
+    {
+      "case_count": "<operator_filled_flash_case_count>",
+      "case_subset_policy": "full_initial_case_set",
+      "model_alias": "deepseek_v4_flash",
+      "model_endpoint": "<operator_filled_deepseek_v4_flash_endpoint>",
+      "model_name": "<operator_filled_deepseek_v4_flash_model_name>",
+      "model_role": "primary_pilot_model"
+    },
+    {
+      "case_count": "<operator_filled_pro_case_count>",
+      "case_subset_policy": "matched_audit_subset_after_flash_pipeline_succeeds",
+      "model_alias": "deepseek_v4_pro",
+      "model_endpoint": "<operator_filled_deepseek_v4_pro_endpoint>",
+      "model_name": "<operator_filled_deepseek_v4_pro_model_name>",
+      "model_role": "strong_model_audit_subset"
+    }
+  ],
+  "operator_approval": false,
+  "operator_inputs": {
+    "api_credential_location_outside_repo": "<operator_filled_external_credential_location>",
+    "api_provider_account_ready": false,
+    "approval_date": "<operator_filled_approval_date>",
+    "contamination_audit_reviewer": "<operator_filled_contamination_reviewer>",
+    "labeler_availability": "<operator_filled_labeler_availability>",
+    "metric_bridge_reviewer": "<operator_filled_metric_bridge_reviewer>",
+    "operator_name_or_initials": "<operator_filled_operator>"
+  },
+  "output_root": "<operator_filled_output_root>",
+  "prompt_template_id": "<operator_filled_prompt_template_id>",
+  "run_id": "<operator_filled_run_id>",
+  "temperature": "<operator_filled_temperature>"
+}

@@ -1,0 +1,702 @@
+from __future__ import annotations
+
+import json
+from collections.abc import Mapping
+from copy import deepcopy
+from pathlib import Path
+from typing import Any
+
+from cps.experiments.claim_gate_report import build_claim_gate_report
+from cps.experiments.contamination_audit import evaluate_contamination_audit
+from cps.experiments.evidence_ledger import build_evidence_ledger_from_summary
+
+
+EMPIRICAL_EVIDENCE_PACKAGE_SCHEMA_VERSION = "EmpiricalEvidencePackageV1"
+SOURCE_PHASE = "P28"
+REASON_CODE_ORDER = (
+    "no_live_run",
+    "route_b_model_adjudicated",
+    "live_run_without_labels",
+    "missing_human_labels",
+    "missing_kappa",
+    "human_labels_not_required_for_route_b",
+    "human_labels_missing_for_measurement_validation",
+    "human_kappa_missing_for_measurement_validation",
+    "model_adjudicated_labels_not_human_labels",
+    "codex_adjudication_not_human_review",
+    "low_kappa",
+    "contamination_failed",
+    "contamination_unknown",
+    "contamination_incomplete",
+    "stale_metric_bridge",
+    "missing_metric_bridge",
+    "incomplete_artifacts",
+    "live_api_alone_not_validation",
+    "kappa_alone_not_validation",
+    "contamination_pass_alone_not_validation",
+    "fresh_metric_bridge_required",
+    "contamination_required_for_stronger_claim",
+    "fresh_metric_bridge_required_for_stronger_claim",
+    "claim_gate_allow_required",
+    "measurement_validated_denied_for_route_b",
+    "model_adjudicated_pilot_only",
+    "route_b_max_claim_boundary",
+    "operator_required_phase",
+)
+DENIED_CLAIMS = (
+    "measurement_validated",
+    "human_labeled_validation",
+    "human_human_kappa_established",
+    "scientific_validation",
+    "scientific_validation_completed",
+    "deployed_v_information_certification",
+    "deployed_v_information_submodularity_certified",
+    "runtime_integration_complete",
+)
+
+
+def _stable_json(payload: Any) -> str:
+    return json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True)
+
+
+def _stable_write_json(path: str | Path, payload: Any) -> Path:
+    output_path = Path(path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(_stable_json(payload), encoding="utf-8")
+    return output_path
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _jsonl_count(path: Path) -> int:
+    return sum(1 for line in path.read_text(encoding="utf-8").splitlines() if line.strip())
+
+
+def _ordered_reason_codes(reasons: set[str]) -> list[str]:
+    order = {reason: index for index, reason in enumerate(REASON_CODE_ORDER)}
+    return sorted(reasons, key=lambda reason: (order.get(reason, len(order)), reason))
+
+
+def _default_completeness_report() -> dict[str, Any]:
+    return {
+        "labels_complete": False,
+        "reason_codes": ["missing_human_labels", "incomplete_label_coverage"],
+    }
+
+
+def _default_kappa_report() -> dict[str, Any]:
+    return {
+        "human_labels_present": False,
+        "labels_complete": False,
+        "kappa_present": False,
+        "kappa_status": "kappa_missing",
+        "macro_average_kappa": None,
+        "reason_codes": ["missing_human_labels", "missing_kappa"],
+    }
+
+
+def _default_contamination_report(run_id: str = "") -> dict[str, Any]:
+    return evaluate_contamination_audit([], run_id=run_id)
+
+
+def _load_source(source: Mapping[str, Any] | Path) -> dict[str, Any]:
+    if isinstance(source, Mapping):
+        return deepcopy(dict(source))
+    source_dir = Path(source)
+    payload: dict[str, Any] = {}
+    for filename, key in (
+        ("run_manifest.json", "run_manifest"),
+        ("pilot_summary.json", "live_pilot_summary"),
+        ("claim_gate_report.json", "source_claim_gate_report"),
+        ("evidence_ledger.json", "source_evidence_ledger"),
+        ("human_label_completeness_report.json", "human_label_completeness_report"),
+        ("kappa_report.json", "kappa_report"),
+        ("contamination_report.json", "contamination_report"),
+        ("subagent_audit_report.json", "subagent_audit_report"),
+        ("codex_adjudication_report.json", "codex_adjudication_report"),
+        ("model_adjudicated_label_summary.json", "model_adjudicated_label_summary"),
+    ):
+        path = source_dir / filename
+        if path.exists():
+            payload[key] = _read_json(path)
+    llm_prelabels_path = source_dir / "llm_prelabels.jsonl"
+    if llm_prelabels_path.exists():
+        payload["llm_prelabels_present"] = True
+        payload["llm_prelabel_count"] = _jsonl_count(llm_prelabels_path)
+    model_adjudicated_labels_path = source_dir / "model_adjudicated_labels.jsonl"
+    if model_adjudicated_labels_path.exists():
+        payload["model_adjudicated_labels_present"] = True
+        payload["model_adjudicated_label_count"] = _jsonl_count(model_adjudicated_labels_path)
+    if "run_manifest" in payload and "run_id" not in payload:
+        payload["run_id"] = payload["run_manifest"].get("run_id", "")
+    if "source_evidence_ledger" in payload:
+        payload.setdefault("metric_bridge_freshness", payload["source_evidence_ledger"].get("bridge_freshness"))
+    if "live_pilot_summary" in payload:
+        payload.setdefault("artifact_completeness_status", _artifact_status_from_pilot(payload["live_pilot_summary"]))
+    return payload
+
+
+def _route_b_artifacts(payload: Mapping[str, Any]) -> dict[str, Any]:
+    model_summary = dict(payload.get("model_adjudicated_label_summary") or {})
+    codex_report = dict(payload.get("codex_adjudication_report") or {})
+    llm_count = int(payload.get("llm_prelabel_count") or payload.get("llm_prelabels_count") or 0)
+    model_label_count = int(
+        payload.get("model_adjudicated_label_count")
+        or payload.get("model_adjudicated_labels_count")
+        or model_summary.get("total_labels")
+        or codex_report.get("total_labels")
+        or 0
+    )
+    llm_prelabels_present = bool(payload.get("llm_prelabels_present", False) or llm_count > 0)
+    subagent_audit_present = bool(payload.get("subagent_audit_present", False) or payload.get("subagent_audit_report"))
+    codex_adjudication_report_present = bool(
+        payload.get("codex_adjudication_report_present", False) or payload.get("codex_adjudication_report")
+    )
+    model_adjudicated_label_summary_present = bool(
+        payload.get("model_adjudicated_label_summary_present", False) or payload.get("model_adjudicated_label_summary")
+    )
+    model_adjudicated_labels_present = bool(
+        payload.get("model_adjudicated_labels_present", False)
+        or model_summary.get("model_adjudicated_labels_present", False)
+        or model_label_count > 0
+    )
+    return {
+        "llm_prelabels_present": llm_prelabels_present,
+        "llm_prelabel_count": llm_count,
+        "subagent_audit_present": subagent_audit_present,
+        "codex_adjudication_report_present": codex_adjudication_report_present,
+        "model_adjudicated_labels_present": model_adjudicated_labels_present,
+        "model_adjudicated_label_count": model_label_count,
+        "model_adjudicated_label_summary_present": model_adjudicated_label_summary_present,
+        "model_adjudicated_label_summary": model_summary,
+    }
+
+
+def _is_route_b(payload: Mapping[str, Any], route_b_artifacts: Mapping[str, Any]) -> bool:
+    return (
+        str(payload.get("route_type", "")) == "model_adjudicated"
+        or str(payload.get("evaluation_route", "")) == "Route_B_model_adjudicated"
+        or any(
+            bool(route_b_artifacts.get(key))
+            for key in (
+                "llm_prelabels_present",
+                "subagent_audit_present",
+                "codex_adjudication_report_present",
+                "model_adjudicated_labels_present",
+                "model_adjudicated_label_summary_present",
+            )
+        )
+    )
+
+
+def _route_b_core_present(route_b_artifacts: Mapping[str, Any]) -> bool:
+    return bool(
+        route_b_artifacts.get("llm_prelabels_present")
+        and route_b_artifacts.get("subagent_audit_present")
+        and route_b_artifacts.get("model_adjudicated_labels_present")
+    )
+
+
+def _artifact_status_from_pilot(pilot_summary: Mapping[str, Any]) -> str:
+    case_count = int(pilot_summary.get("case_artifact_count", 0) or 0)
+    dispatch_count = int(pilot_summary.get("dispatch_count", 0) or 0)
+    return "complete" if case_count > 0 and case_count == dispatch_count else "incomplete"
+
+
+def _live_pilot_summary(source: Mapping[str, Any]) -> dict[str, Any]:
+    summary = deepcopy(dict(source.get("live_pilot_summary") or source.get("pilot_summary") or {}))
+    manifest = deepcopy(dict(source.get("run_manifest") or {}))
+    if manifest and not summary:
+        summary = {
+            "run_id": manifest.get("run_id", ""),
+            "evidence_level": manifest.get("evidence_level", "EV2_controlled_live_pilot"),
+            "mode": manifest.get("mode", "dry_run"),
+            "live_api_used": bool(manifest.get("live_api_used", False)),
+            "external_runtime_used": bool(manifest.get("external_runtime_used", False)),
+            "dispatch_count": 0,
+            "case_artifact_count": 0,
+            "conditions": list(manifest.get("conditions") or []),
+            "human_labels_present": False,
+            "kappa_present": False,
+            "p04_status": manifest.get("p04_status", "deferred/operator-required"),
+            "p09_status": manifest.get("p09_status", "BLOCKED_OPERATOR_REQUIRED"),
+        }
+    return summary
+
+
+def _contamination_for_ledger(status: str) -> str:
+    if status == "pass":
+        return "passed"
+    if status == "failed":
+        return "failed"
+    return "unknown"
+
+
+def _metric_bridge_missing_reason(metric_bridge_freshness: str) -> str | None:
+    if metric_bridge_freshness == "stale":
+        return "stale_metric_bridge"
+    if metric_bridge_freshness in {"missing", "", "unknown", "none"}:
+        return "missing_metric_bridge"
+    return None
+
+
+def _build_empirical_claim_gate_report(
+    *,
+    run_id: str,
+    live_api_used: bool,
+    artifact_completeness_status: str,
+    dispatch_count: int,
+    human_labels_present: bool,
+    kappa_present: bool,
+    contamination_status: str,
+    metric_bridge_freshness: str,
+    p04_status: str,
+    p09_status: str,
+) -> dict[str, Any]:
+    count = dispatch_count if artifact_completeness_status == "complete" else 0
+    summary = {
+        "run_id": run_id,
+        "evidence_mode": "pilot_only" if live_api_used else "engineering_smoke_only",
+        "source_phase": SOURCE_PHASE,
+        "dispatch_count": count,
+        "artifact_counts": {
+            "candidate_pools": count,
+            "projection_plans": count,
+            "budget_witnesses": count,
+            "materialized_contexts": count,
+            "metric_bridge_witnesses": count,
+            "diagnostics": count,
+            "projection_bundles": count,
+        },
+        "contamination_status": _contamination_for_ledger(contamination_status),
+        "human_labels_present": human_labels_present,
+        "kappa_present": kappa_present,
+        "bridge_freshness": metric_bridge_freshness,
+        "metric_class": "measurement_candidate" if metric_bridge_freshness == "fresh" else "operational_only",
+        "diagnostic_claim_level": (
+            "measurement_validation_candidate" if metric_bridge_freshness == "fresh" else "operational_utility_only"
+        ),
+        "live_api_used": live_api_used,
+        "external_runtime_used": False,
+        "p04_status": p04_status,
+        "p09_status": p09_status,
+    }
+    ledger = build_evidence_ledger_from_summary(
+        summary,
+        metric_bridge_witness_count=count,
+        metric_class=summary["metric_class"],
+        diagnostic_claim_level=summary["diagnostic_claim_level"],
+        measurement_validation_evidence_present=True,
+    )
+    return build_claim_gate_report(ledger)
+
+
+def _is_operator_ready(p04_status: str, p09_status: str) -> bool:
+    return p04_status == "ACCEPT" and p09_status == "ACCEPT"
+
+
+def _allowed_level(
+    *,
+    controlled_live_run_present: bool,
+    human_labels_present: bool,
+    labels_complete: bool,
+    kappa_present: bool,
+    kappa_status: str,
+    contamination_status: str,
+    metric_bridge_freshness: str,
+    artifact_completeness_status: str,
+    claim_gate_allows_measurement_validated: bool,
+    operator_ready: bool,
+) -> tuple[str, bool]:
+    if not controlled_live_run_present:
+        return "not_empirical_validation", False
+    if contamination_status == "failed":
+        return "pilot_only", False
+    if kappa_status == "pilot_only":
+        return "pilot_only", False
+    if kappa_status == "weak_evidence_not_measurement_validated":
+        return "weak_evidence_not_measurement_validated", False
+    if metric_bridge_freshness == "stale":
+        return "operational_utility_only", False
+    if metric_bridge_freshness in {"missing", "", "unknown", "none"}:
+        return "ambiguous", False
+    if not human_labels_present or not labels_complete or not kappa_present:
+        return "controlled_live_pilot_only", False
+    if contamination_status in {"unknown", "incomplete"}:
+        return "controlled_live_pilot_only", False
+    if artifact_completeness_status != "complete":
+        return "ambiguous", False
+    if claim_gate_allows_measurement_validated and operator_ready:
+        return "measurement_validated", True
+    return "measurement_validated_candidate", False
+
+
+def _allowed_route_b_level(
+    *,
+    route_b_core_present: bool,
+    contamination_status: str,
+    metric_bridge_freshness: str,
+    artifact_completeness_status: str,
+) -> str:
+    if contamination_status == "failed":
+        return "pilot_only"
+    if metric_bridge_freshness == "stale":
+        return "operational_utility_only"
+    if metric_bridge_freshness in {"missing", "", "unknown", "none"}:
+        return "ambiguous"
+    if not route_b_core_present or artifact_completeness_status != "complete":
+        return "ambiguous"
+    return "model_adjudicated_pilot_only"
+
+
+def build_empirical_evidence_package(
+    source: Mapping[str, Any] | Path,
+    output_root: Path | None = None,
+) -> dict[str, Any]:
+    payload = _load_source(source)
+    route_b_artifacts = _route_b_artifacts(payload)
+    is_route_b = _is_route_b(payload, route_b_artifacts)
+    route_b_core_present = _route_b_core_present(route_b_artifacts)
+    pilot_summary = _live_pilot_summary(payload)
+    run_id = str(payload.get("run_id") or pilot_summary.get("run_id") or "")
+    completeness_report = deepcopy(dict(payload.get("human_label_completeness_report") or _default_completeness_report()))
+    kappa_report = deepcopy(dict(payload.get("kappa_report") or _default_kappa_report()))
+    contamination_report = deepcopy(dict(payload.get("contamination_report") or _default_contamination_report(run_id)))
+
+    live_api_used = bool(pilot_summary.get("live_api_used", False))
+    controlled_live_run_present = live_api_used and str(pilot_summary.get("mode", "")) == "live_operator_approved"
+    human_labels_present = bool(kappa_report.get("human_labels_present", False))
+    labels_complete = bool(
+        completeness_report.get("labels_complete", kappa_report.get("labels_complete", False))
+    )
+    kappa_present = bool(kappa_report.get("kappa_present", False))
+    kappa_status = str(kappa_report.get("kappa_status", "kappa_missing") or "kappa_missing")
+    macro_average_kappa = kappa_report.get("macro_average_kappa")
+    if is_route_b:
+        human_labels_present = False
+        labels_complete = False
+        kappa_present = False
+        kappa_status = "kappa_missing"
+        macro_average_kappa = None
+    contamination_status = str(contamination_report.get("contamination_status", "incomplete") or "incomplete")
+    metric_bridge_freshness = str(payload.get("metric_bridge_freshness") or payload.get("bridge_freshness") or "missing")
+    artifact_completeness_status = str(
+        payload.get("artifact_completeness_status")
+        or _artifact_status_from_pilot(pilot_summary)
+        or "incomplete"
+    )
+    p04_status = str(payload.get("p04_status") or pilot_summary.get("p04_status") or "deferred/operator-required")
+    p09_status = str(payload.get("p09_status") or pilot_summary.get("p09_status") or "BLOCKED_OPERATOR_REQUIRED")
+    dispatch_count = int(pilot_summary.get("dispatch_count", 0) or 0)
+    claim_gate_allows_measurement_validated = bool(
+        payload.get("claim_gate_allows_measurement_validated", False)
+        or (payload.get("source_claim_gate_report") or {}).get("measurement_validated_allowed", False)
+    )
+    empirical_claim_gate_report = _build_empirical_claim_gate_report(
+        run_id=run_id,
+        live_api_used=live_api_used,
+        artifact_completeness_status=artifact_completeness_status,
+        dispatch_count=dispatch_count,
+        human_labels_present=human_labels_present,
+        kappa_present=kappa_present,
+        contamination_status=contamination_status,
+        metric_bridge_freshness=metric_bridge_freshness,
+        p04_status=p04_status,
+        p09_status=p09_status,
+    )
+    operator_ready = _is_operator_ready(p04_status, p09_status)
+    if is_route_b:
+        allowed_empirical_claim_level = _allowed_route_b_level(
+            route_b_core_present=route_b_core_present,
+            contamination_status=contamination_status,
+            metric_bridge_freshness=metric_bridge_freshness,
+            artifact_completeness_status=artifact_completeness_status,
+        )
+        measurement_validated_allowed = False
+    else:
+        allowed_empirical_claim_level, measurement_validated_allowed = _allowed_level(
+            controlled_live_run_present=controlled_live_run_present,
+            human_labels_present=human_labels_present,
+            labels_complete=labels_complete,
+            kappa_present=kappa_present,
+            kappa_status=kappa_status,
+            contamination_status=contamination_status,
+            metric_bridge_freshness=metric_bridge_freshness,
+            artifact_completeness_status=artifact_completeness_status,
+            claim_gate_allows_measurement_validated=claim_gate_allows_measurement_validated
+            and bool(empirical_claim_gate_report.get("measurement_validated_allowed", False)),
+            operator_ready=operator_ready,
+        )
+    if is_route_b:
+        empirical_claim_gate_report = deepcopy(dict(empirical_claim_gate_report))
+        empirical_claim_gate_report.update(
+            {
+                "route_type": "model_adjudicated",
+                "evaluation_route": "Route_B_model_adjudicated",
+                "model_adjudicated_labels_present": bool(route_b_artifacts["model_adjudicated_labels_present"]),
+                "human_labels_present": False,
+                "kappa_present": False,
+                "human_human_kappa_established": False,
+                "measurement_validated_allowed": False,
+                "allowed_empirical_claim_level": allowed_empirical_claim_level,
+                "claim_boundary": (
+                    "Route B model-adjudicated labels are not human labels; Codex adjudication is not human review; "
+                    "measurement_validated remains denied."
+                ),
+            }
+        )
+
+    reasons: set[str] = set()
+    if not controlled_live_run_present:
+        reasons.add("no_live_run")
+    if is_route_b:
+        reasons.update(
+            {
+                "route_b_model_adjudicated",
+                "model_adjudicated_labels_not_human_labels",
+                "codex_adjudication_not_human_review",
+                "human_labels_not_required_for_route_b",
+                "human_labels_missing_for_measurement_validation",
+                "human_kappa_missing_for_measurement_validation",
+                "measurement_validated_denied_for_route_b",
+                "route_b_max_claim_boundary",
+            }
+        )
+        if allowed_empirical_claim_level == "model_adjudicated_pilot_only":
+            reasons.add("model_adjudicated_pilot_only")
+    if controlled_live_run_present and not human_labels_present and not is_route_b:
+        reasons.add("live_run_without_labels")
+    if not human_labels_present or not labels_complete:
+        reasons.add("missing_human_labels")
+    if not kappa_present:
+        reasons.add("missing_kappa")
+    if kappa_status in {"pilot_only", "weak_evidence_not_measurement_validated"} and kappa_present:
+        reasons.add("low_kappa")
+    if contamination_status == "failed":
+        reasons.add("contamination_failed")
+    if contamination_status == "unknown":
+        reasons.add("contamination_unknown")
+    if contamination_status == "incomplete":
+        reasons.add("contamination_incomplete")
+    if is_route_b and contamination_status != "pass":
+        reasons.add("contamination_required_for_stronger_claim")
+    bridge_reason = _metric_bridge_missing_reason(metric_bridge_freshness)
+    if bridge_reason:
+        reasons.add(bridge_reason)
+    if is_route_b and metric_bridge_freshness not in {"fresh", "current", "bridge_fresh_enough_for_measurement_review"}:
+        reasons.add("fresh_metric_bridge_required_for_stronger_claim")
+    if artifact_completeness_status != "complete":
+        reasons.add("incomplete_artifacts")
+    if live_api_used and not measurement_validated_allowed:
+        reasons.add("live_api_alone_not_validation")
+    if kappa_present and not measurement_validated_allowed:
+        reasons.add("kappa_alone_not_validation")
+    if contamination_status == "pass" and not measurement_validated_allowed:
+        reasons.add("contamination_pass_alone_not_validation")
+    if metric_bridge_freshness != "fresh" and not measurement_validated_allowed:
+        reasons.add("fresh_metric_bridge_required")
+    if not measurement_validated_allowed:
+        reasons.add("claim_gate_allow_required")
+    if not operator_ready:
+        reasons.add("operator_required_phase")
+
+    denied_claims = set(DENIED_CLAIMS)
+    if measurement_validated_allowed:
+        denied_claims.discard("measurement_validated")
+        denied_claims.discard("scientific_validation")
+
+    required_next_evidence = (
+        [
+            "contamination_pass_or_documented_status",
+            "fresh_metric_bridge_for_stronger_claim",
+            "claim_gate_review",
+            "Route_A_human_labels_if_measurement_validated_is_desired",
+            "Route_A_human_human_kappa_if_measurement_validated_is_desired",
+            "P04_operator_review",
+            "P09_operator_review_if_runtime_claims_are_needed",
+        ]
+        if is_route_b
+        else [
+            "operator_approved_live_run" if not controlled_live_run_present else "controlled_live_run_present",
+            "complete_human_labels",
+            "acceptable_kappa",
+            "contamination_pass",
+            "fresh_metric_bridge",
+            "claim_gate_allow",
+            "P04_operator_review",
+            "P09_operator_review_if_runtime_claims_are_needed",
+        ]
+    )
+
+    package = {
+        "empirical_evidence_package_schema_version": EMPIRICAL_EVIDENCE_PACKAGE_SCHEMA_VERSION,
+        "run_id": run_id,
+        "source_phase": SOURCE_PHASE,
+        "evidence_level": "EV2_EV3_EV4_empirical_evidence_package",
+        "route_type": "model_adjudicated" if is_route_b else str(payload.get("route_type") or "human_labeled_or_pilot"),
+        "evaluation_route": (
+            "Route_B_model_adjudicated"
+            if is_route_b
+            else str(payload.get("evaluation_route") or "Route_A_or_unresolved")
+        ),
+        "live_api_used": live_api_used,
+        "external_runtime_used": False,
+        "controlled_live_run_present": controlled_live_run_present,
+        "human_labels_present": human_labels_present,
+        "labels_complete": labels_complete,
+        "kappa_present": kappa_present,
+        "human_human_kappa_established": bool(kappa_present and not is_route_b),
+        "kappa_status": kappa_status,
+        "macro_average_kappa": macro_average_kappa,
+        "contamination_status": contamination_status,
+        "metric_bridge_freshness": metric_bridge_freshness,
+        "artifact_completeness_status": artifact_completeness_status,
+        "measurement_validated_allowed": measurement_validated_allowed,
+        "allowed_empirical_claim_level": allowed_empirical_claim_level,
+        **route_b_artifacts,
+        "denied_claims": sorted(denied_claims),
+        "reason_codes": _ordered_reason_codes(reasons),
+        "reason_code_order": list(REASON_CODE_ORDER),
+        "required_next_evidence": required_next_evidence,
+        "p04_status": p04_status,
+        "p09_status": p09_status,
+        "live_pilot_summary": pilot_summary,
+        "human_label_completeness_report": completeness_report,
+        "kappa_report": kappa_report,
+        "contamination_report": contamination_report,
+        "empirical_claim_gate_report": empirical_claim_gate_report,
+        "claim_boundary": (
+            "P28 packages empirical evidence artifacts only. Live API success, high kappa, contamination pass, "
+            "complete artifacts, and fresh metric bridge are not individually sufficient for measurement validation."
+        ),
+    }
+    if output_root is not None:
+        package["generated_outputs"] = write_empirical_evidence_package(output_root, package)
+    return package
+
+
+def format_empirical_evidence_summary_markdown(package: Mapping[str, Any]) -> str:
+    payload = deepcopy(dict(package))
+    lines = [
+        "# Empirical Evidence Package",
+        "",
+        "## Summary",
+        "",
+        f"- Run id: `{payload.get('run_id', '')}`",
+        f"- Evidence level: `{payload.get('evidence_level', '')}`",
+        f"- Route type: `{payload.get('route_type', 'human_labeled_or_pilot')}`",
+        f"- Evaluation route: `{payload.get('evaluation_route', 'Route_A_or_unresolved')}`",
+        f"- Live API used: {str(bool(payload.get('live_api_used', False))).lower()}",
+        f"- Controlled live run present: {str(bool(payload.get('controlled_live_run_present', False))).lower()}",
+        f"- Human labels present: {str(bool(payload.get('human_labels_present', False))).lower()}",
+        f"- Labels complete: {str(bool(payload.get('labels_complete', False))).lower()}",
+        f"- Kappa present: {str(bool(payload.get('kappa_present', False))).lower()}",
+        f"- Human-human kappa established: {str(bool(payload.get('human_human_kappa_established', False))).lower()}",
+        f"- Kappa status: `{payload.get('kappa_status', 'kappa_missing')}`",
+        f"- Contamination status: `{payload.get('contamination_status', 'incomplete')}`",
+        f"- Metric bridge freshness: `{payload.get('metric_bridge_freshness', 'missing')}`",
+        f"- Allowed empirical claim level: `{payload.get('allowed_empirical_claim_level', 'ambiguous')}`",
+        f"- measurement_validated_allowed: {str(bool(payload.get('measurement_validated_allowed', False))).lower()}",
+        f"- P04 status: `{payload.get('p04_status', 'deferred/operator-required')}`",
+        f"- P09 status: `{payload.get('p09_status', 'BLOCKED_OPERATOR_REQUIRED')}`",
+        "",
+        "## Reason Codes",
+        "",
+    ]
+    reason_codes = list(payload.get("reason_codes") or [])
+    if reason_codes:
+        lines.extend(f"- `{reason}`" for reason in reason_codes)
+    else:
+        lines.append("- `none`")
+    if str(payload.get("evaluation_route", "")) == "Route_B_model_adjudicated":
+        lines.extend(
+            [
+                "",
+                "## Route B Model-Adjudicated Boundary",
+                "",
+                "- Route B is fully automated/model-adjudicated.",
+                "- Route B does not require human labels.",
+                "- Route B cannot claim measurement_validated.",
+                "- Codex adjudication is not human review.",
+                "- model_adjudicated_labels are not human_labels.",
+                "- LLM/Codex agreement is not human-human kappa.",
+                "- Maximum claim is model_adjudicated_pilot_only / operational_utility_only.",
+                f"- LLM prelabels present: {str(bool(payload.get('llm_prelabels_present', False))).lower()}",
+                f"- Subagent audit present: {str(bool(payload.get('subagent_audit_present', False))).lower()}",
+                f"- Model-adjudicated labels present: {str(bool(payload.get('model_adjudicated_labels_present', False))).lower()}",
+                "",
+            ]
+        )
+    lines.extend(["", "## Denied Claims", ""])
+    denied_claims = list(payload.get("denied_claims") or [])
+    if denied_claims:
+        lines.extend(f"- `{claim}`" for claim in denied_claims)
+    else:
+        lines.append("- `none`")
+    lines.extend(
+        [
+            "",
+            "## Claim Boundary",
+            "",
+            "- P28 packages empirical evidence but does not run live APIs.",
+            "- P28 does not fabricate human labels or kappa.",
+            "- Live API success alone is not measurement validation.",
+            "- High kappa alone is not measurement validation.",
+            "- Contamination pass alone is not measurement validation.",
+            "- Fresh metric bridge and claim gate approval remain required.",
+            "- P04 remains deferred/operator-required.",
+            "- P09 remains BLOCKED_OPERATOR_REQUIRED.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def write_empirical_evidence_package(output_root: str | Path, package: Mapping[str, Any]) -> dict[str, str]:
+    resolved_output_root = Path(output_root)
+    resolved_output_root.mkdir(parents=True, exist_ok=True)
+    payload = deepcopy(dict(package))
+    manifest_payload = {
+        key: value
+        for key, value in payload.items()
+        if key
+        not in {
+            "live_pilot_summary",
+            "human_label_completeness_report",
+            "kappa_report",
+            "contamination_report",
+            "empirical_claim_gate_report",
+            "generated_outputs",
+        }
+    }
+    manifest_path = _stable_write_json(resolved_output_root / "empirical_evidence_manifest.json", manifest_payload)
+    live_pilot_path = _stable_write_json(
+        resolved_output_root / "live_pilot_summary.json",
+        payload.get("live_pilot_summary") or {},
+    )
+    completeness_path = _stable_write_json(
+        resolved_output_root / "human_label_completeness_report.json",
+        payload.get("human_label_completeness_report") or {},
+    )
+    kappa_path = _stable_write_json(resolved_output_root / "kappa_report.json", payload.get("kappa_report") or {})
+    contamination_path = _stable_write_json(
+        resolved_output_root / "contamination_report.json",
+        payload.get("contamination_report") or {},
+    )
+    claim_gate_path = _stable_write_json(
+        resolved_output_root / "empirical_claim_gate_report.json",
+        payload.get("empirical_claim_gate_report") or {},
+    )
+    markdown_path = resolved_output_root / "empirical_evidence_summary.md"
+    markdown_path.write_text(format_empirical_evidence_summary_markdown(payload), encoding="utf-8")
+    return {
+        "empirical_evidence_manifest_json": str(manifest_path.resolve()),
+        "live_pilot_summary_json": str(live_pilot_path.resolve()),
+        "human_label_completeness_report_json": str(completeness_path.resolve()),
+        "kappa_report_json": str(kappa_path.resolve()),
+        "contamination_report_json": str(contamination_path.resolve()),
+        "empirical_claim_gate_report_json": str(claim_gate_path.resolve()),
+        "empirical_evidence_summary_markdown": str(markdown_path.resolve()),
+    }
