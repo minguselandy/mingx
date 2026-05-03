@@ -141,6 +141,42 @@ def _mapping_source(**overrides) -> dict:
     return source
 
 
+def _route_b_source(**overrides) -> dict:
+    source = _mapping_source(
+        route_type="model_adjudicated",
+        evaluation_route="Route_B_model_adjudicated",
+        human_label_completeness_report={
+            "labels_complete": False,
+            "reason_codes": ["human_labels_not_required_for_route_b"],
+        },
+        kappa_report={
+            "human_labels_present": False,
+            "labels_complete": False,
+            "kappa_present": False,
+            "kappa_status": "kappa_missing",
+            "macro_average_kappa": None,
+            "reason_codes": ["human_kappa_missing_for_measurement_validation"],
+        },
+        llm_prelabels_present=True,
+        llm_prelabel_count=8,
+        subagent_audit_present=True,
+        codex_adjudication_report_present=True,
+        model_adjudicated_labels_present=True,
+        model_adjudicated_label_count=8,
+        model_adjudicated_label_summary_present=True,
+        model_adjudicated_label_summary={
+            "model_adjudicated_labels_present": True,
+            "human_labels_present": False,
+            "kappa_present": False,
+            "measurement_validated_allowed": False,
+            "allowed_claim_level": "model_adjudicated_pilot_only",
+            "total_labels": 8,
+        },
+    )
+    source.update(overrides)
+    return source
+
+
 def test_package_reads_p26_output_dir_and_integrates_default_missing_ev3_artifacts(workspace_tmp_dir):
     pilot = build_controlled_live_pilot(
         workspace_tmp_dir / "pilot",
@@ -284,6 +320,150 @@ def test_stale_metric_bridge_denies_measurement_validated():
     assert package["allowed_empirical_claim_level"] == "operational_utility_only"
     assert package["measurement_validated_allowed"] is False
     assert "stale_metric_bridge" in package["reason_codes"]
+
+
+def test_route_b_package_accepts_model_adjudicated_artifacts_without_human_gates():
+    package = build_empirical_evidence_package(_route_b_source(metric_bridge_freshness="fresh"))
+
+    assert package["route_type"] == "model_adjudicated"
+    assert package["evaluation_route"] == "Route_B_model_adjudicated"
+    assert package["llm_prelabels_present"] is True
+    assert package["subagent_audit_present"] is True
+    assert package["model_adjudicated_labels_present"] is True
+    assert package["model_adjudicated_label_count"] == 8
+    assert package["human_labels_present"] is False
+    assert package["kappa_present"] is False
+    assert package["human_human_kappa_established"] is False
+    assert package["measurement_validated_allowed"] is False
+    assert package["allowed_empirical_claim_level"] == "model_adjudicated_pilot_only"
+    assert "model_adjudicated_labels_not_human_labels" in package["reason_codes"]
+    assert "codex_adjudication_not_human_review" in package["reason_codes"]
+    assert "measurement_validated_denied_for_route_b" in package["reason_codes"]
+
+
+def test_route_b_contamination_failure_forces_pilot_only():
+    package = build_empirical_evidence_package(
+        _route_b_source(contamination_report=_contamination_report(leaked_labels="fail"))
+    )
+
+    assert package["contamination_status"] == "failed"
+    assert package["allowed_empirical_claim_level"] == "pilot_only"
+    assert package["measurement_validated_allowed"] is False
+    assert "contamination_failed" in package["reason_codes"]
+
+
+def test_route_b_missing_or_stale_bridge_never_allows_measurement_validation():
+    missing = build_empirical_evidence_package(_route_b_source(metric_bridge_freshness="missing"))
+    stale = build_empirical_evidence_package(_route_b_source(metric_bridge_freshness="stale"))
+
+    assert missing["allowed_empirical_claim_level"] == "ambiguous"
+    assert stale["allowed_empirical_claim_level"] == "operational_utility_only"
+    assert missing["measurement_validated_allowed"] is False
+    assert stale["measurement_validated_allowed"] is False
+    assert "fresh_metric_bridge_required_for_stronger_claim" in missing["reason_codes"]
+    assert "fresh_metric_bridge_required_for_stronger_claim" in stale["reason_codes"]
+
+
+def test_route_b_high_quality_model_adjudication_still_denies_measurement_validated():
+    package = build_empirical_evidence_package(
+        _route_b_source(
+            contamination_report=_contamination_report(),
+            metric_bridge_freshness="fresh",
+            model_adjudicated_label_summary={
+                "model_adjudicated_labels_present": True,
+                "measurement_validated_allowed": False,
+                "allowed_claim_level": "model_adjudicated_pilot_only",
+                "accepted_model_adjudicated_count": 8,
+                "uncertain_count": 0,
+                "rejected_or_blocking_warning_count": 0,
+                "total_labels": 8,
+            },
+        )
+    )
+
+    assert package["model_adjudicated_labels_present"] is True
+    assert package["allowed_empirical_claim_level"] == "model_adjudicated_pilot_only"
+    assert package["measurement_validated_allowed"] is False
+    assert "human_labels_not_required_for_route_b" in package["reason_codes"]
+    assert "human_labels_missing_for_measurement_validation" in package["reason_codes"]
+    assert "human_kappa_missing_for_measurement_validation" in package["reason_codes"]
+
+
+def test_route_b_summary_markdown_states_model_adjudicated_boundary():
+    package = build_empirical_evidence_package(_route_b_source())
+    summary = format_empirical_evidence_summary_markdown(package)
+
+    assert "Route B is fully automated/model-adjudicated" in summary
+    assert "model_adjudicated_labels are not human_labels" in summary
+    assert "Codex adjudication is not human review" in summary
+    assert "Route B does not require human labels" in summary
+    assert "Route B cannot claim measurement_validated" in summary
+
+
+def test_route_b_package_reads_model_adjudicated_files_from_output_dir(workspace_tmp_dir):
+    output_dir = workspace_tmp_dir / "route-b-source"
+    output_dir.mkdir()
+    (output_dir / "llm_prelabels.jsonl").write_text(
+        json.dumps({"case_id": "case-001"}, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (output_dir / "subagent_audit_report.json").write_text(
+        json.dumps({"measurement_validated_allowed": False}, sort_keys=True),
+        encoding="utf-8",
+    )
+    (output_dir / "model_adjudicated_labels.jsonl").write_text(
+        json.dumps({"case_id": "case-001", "counts_as_human_label": False}, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    (output_dir / "codex_adjudication_report.json").write_text(
+        json.dumps({"total_labels": 1, "measurement_validated_allowed": False}, sort_keys=True),
+        encoding="utf-8",
+    )
+    (output_dir / "model_adjudicated_label_summary.json").write_text(
+        json.dumps(
+            {
+                "total_labels": 1,
+                "model_adjudicated_labels_present": True,
+                "human_labels_present": False,
+                "kappa_present": False,
+                "measurement_validated_allowed": False,
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+    package = build_empirical_evidence_package(output_dir)
+
+    assert package["evaluation_route"] == "Route_B_model_adjudicated"
+    assert package["llm_prelabels_present"] is True
+    assert package["llm_prelabel_count"] == 1
+    assert package["subagent_audit_present"] is True
+    assert package["codex_adjudication_report_present"] is True
+    assert package["model_adjudicated_labels_present"] is True
+    assert package["model_adjudicated_label_count"] == 1
+    assert package["model_adjudicated_label_summary_present"] is True
+    assert package["human_labels_present"] is False
+    assert package["kappa_present"] is False
+    assert package["measurement_validated_allowed"] is False
+
+
+def test_route_b_json_outputs_are_deterministic(workspace_tmp_dir):
+    package = build_empirical_evidence_package(_route_b_source())
+
+    first = write_empirical_evidence_package(workspace_tmp_dir / "route-b-first", package)
+    second = write_empirical_evidence_package(workspace_tmp_dir / "route-b-second", package)
+
+    for key in (
+        "empirical_evidence_manifest_json",
+        "empirical_claim_gate_report_json",
+        "empirical_evidence_summary_markdown",
+    ):
+        assert _read(first[key]) == _read(second[key])
+    manifest = _json(first["empirical_evidence_manifest_json"])
+    assert manifest["route_type"] == "model_adjudicated"
+    assert manifest["human_labels_present"] is False
+    assert manifest["kappa_present"] is False
 
 
 def test_complete_favorable_evidence_produces_candidate_not_default_validation():

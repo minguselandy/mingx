@@ -15,9 +15,15 @@ EMPIRICAL_EVIDENCE_PACKAGE_SCHEMA_VERSION = "EmpiricalEvidencePackageV1"
 SOURCE_PHASE = "P28"
 REASON_CODE_ORDER = (
     "no_live_run",
+    "route_b_model_adjudicated",
     "live_run_without_labels",
     "missing_human_labels",
     "missing_kappa",
+    "human_labels_not_required_for_route_b",
+    "human_labels_missing_for_measurement_validation",
+    "human_kappa_missing_for_measurement_validation",
+    "model_adjudicated_labels_not_human_labels",
+    "codex_adjudication_not_human_review",
     "low_kappa",
     "contamination_failed",
     "contamination_unknown",
@@ -29,12 +35,20 @@ REASON_CODE_ORDER = (
     "kappa_alone_not_validation",
     "contamination_pass_alone_not_validation",
     "fresh_metric_bridge_required",
+    "contamination_required_for_stronger_claim",
+    "fresh_metric_bridge_required_for_stronger_claim",
     "claim_gate_allow_required",
+    "measurement_validated_denied_for_route_b",
+    "model_adjudicated_pilot_only",
+    "route_b_max_claim_boundary",
     "operator_required_phase",
 )
 DENIED_CLAIMS = (
     "measurement_validated",
+    "human_labeled_validation",
+    "human_human_kappa_established",
     "scientific_validation",
+    "scientific_validation_completed",
     "deployed_v_information_certification",
     "deployed_v_information_submodularity_certified",
     "runtime_integration_complete",
@@ -54,6 +68,10 @@ def _stable_write_json(path: str | Path, payload: Any) -> Path:
 
 def _read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _jsonl_count(path: Path) -> int:
+    return sum(1 for line in path.read_text(encoding="utf-8").splitlines() if line.strip())
 
 
 def _ordered_reason_codes(reasons: set[str]) -> list[str]:
@@ -96,10 +114,21 @@ def _load_source(source: Mapping[str, Any] | Path) -> dict[str, Any]:
         ("human_label_completeness_report.json", "human_label_completeness_report"),
         ("kappa_report.json", "kappa_report"),
         ("contamination_report.json", "contamination_report"),
+        ("subagent_audit_report.json", "subagent_audit_report"),
+        ("codex_adjudication_report.json", "codex_adjudication_report"),
+        ("model_adjudicated_label_summary.json", "model_adjudicated_label_summary"),
     ):
         path = source_dir / filename
         if path.exists():
             payload[key] = _read_json(path)
+    llm_prelabels_path = source_dir / "llm_prelabels.jsonl"
+    if llm_prelabels_path.exists():
+        payload["llm_prelabels_present"] = True
+        payload["llm_prelabel_count"] = _jsonl_count(llm_prelabels_path)
+    model_adjudicated_labels_path = source_dir / "model_adjudicated_labels.jsonl"
+    if model_adjudicated_labels_path.exists():
+        payload["model_adjudicated_labels_present"] = True
+        payload["model_adjudicated_label_count"] = _jsonl_count(model_adjudicated_labels_path)
     if "run_manifest" in payload and "run_id" not in payload:
         payload["run_id"] = payload["run_manifest"].get("run_id", "")
     if "source_evidence_ledger" in payload:
@@ -107,6 +136,67 @@ def _load_source(source: Mapping[str, Any] | Path) -> dict[str, Any]:
     if "live_pilot_summary" in payload:
         payload.setdefault("artifact_completeness_status", _artifact_status_from_pilot(payload["live_pilot_summary"]))
     return payload
+
+
+def _route_b_artifacts(payload: Mapping[str, Any]) -> dict[str, Any]:
+    model_summary = dict(payload.get("model_adjudicated_label_summary") or {})
+    codex_report = dict(payload.get("codex_adjudication_report") or {})
+    llm_count = int(payload.get("llm_prelabel_count") or payload.get("llm_prelabels_count") or 0)
+    model_label_count = int(
+        payload.get("model_adjudicated_label_count")
+        or payload.get("model_adjudicated_labels_count")
+        or model_summary.get("total_labels")
+        or codex_report.get("total_labels")
+        or 0
+    )
+    llm_prelabels_present = bool(payload.get("llm_prelabels_present", False) or llm_count > 0)
+    subagent_audit_present = bool(payload.get("subagent_audit_present", False) or payload.get("subagent_audit_report"))
+    codex_adjudication_report_present = bool(
+        payload.get("codex_adjudication_report_present", False) or payload.get("codex_adjudication_report")
+    )
+    model_adjudicated_label_summary_present = bool(
+        payload.get("model_adjudicated_label_summary_present", False) or payload.get("model_adjudicated_label_summary")
+    )
+    model_adjudicated_labels_present = bool(
+        payload.get("model_adjudicated_labels_present", False)
+        or model_summary.get("model_adjudicated_labels_present", False)
+        or model_label_count > 0
+    )
+    return {
+        "llm_prelabels_present": llm_prelabels_present,
+        "llm_prelabel_count": llm_count,
+        "subagent_audit_present": subagent_audit_present,
+        "codex_adjudication_report_present": codex_adjudication_report_present,
+        "model_adjudicated_labels_present": model_adjudicated_labels_present,
+        "model_adjudicated_label_count": model_label_count,
+        "model_adjudicated_label_summary_present": model_adjudicated_label_summary_present,
+        "model_adjudicated_label_summary": model_summary,
+    }
+
+
+def _is_route_b(payload: Mapping[str, Any], route_b_artifacts: Mapping[str, Any]) -> bool:
+    return (
+        str(payload.get("route_type", "")) == "model_adjudicated"
+        or str(payload.get("evaluation_route", "")) == "Route_B_model_adjudicated"
+        or any(
+            bool(route_b_artifacts.get(key))
+            for key in (
+                "llm_prelabels_present",
+                "subagent_audit_present",
+                "codex_adjudication_report_present",
+                "model_adjudicated_labels_present",
+                "model_adjudicated_label_summary_present",
+            )
+        )
+    )
+
+
+def _route_b_core_present(route_b_artifacts: Mapping[str, Any]) -> bool:
+    return bool(
+        route_b_artifacts.get("llm_prelabels_present")
+        and route_b_artifacts.get("subagent_audit_present")
+        and route_b_artifacts.get("model_adjudicated_labels_present")
+    )
 
 
 def _artifact_status_from_pilot(pilot_summary: Mapping[str, Any]) -> str:
@@ -243,11 +333,32 @@ def _allowed_level(
     return "measurement_validated_candidate", False
 
 
+def _allowed_route_b_level(
+    *,
+    route_b_core_present: bool,
+    contamination_status: str,
+    metric_bridge_freshness: str,
+    artifact_completeness_status: str,
+) -> str:
+    if contamination_status == "failed":
+        return "pilot_only"
+    if metric_bridge_freshness == "stale":
+        return "operational_utility_only"
+    if metric_bridge_freshness in {"missing", "", "unknown", "none"}:
+        return "ambiguous"
+    if not route_b_core_present or artifact_completeness_status != "complete":
+        return "ambiguous"
+    return "model_adjudicated_pilot_only"
+
+
 def build_empirical_evidence_package(
     source: Mapping[str, Any] | Path,
     output_root: Path | None = None,
 ) -> dict[str, Any]:
     payload = _load_source(source)
+    route_b_artifacts = _route_b_artifacts(payload)
+    is_route_b = _is_route_b(payload, route_b_artifacts)
+    route_b_core_present = _route_b_core_present(route_b_artifacts)
     pilot_summary = _live_pilot_summary(payload)
     run_id = str(payload.get("run_id") or pilot_summary.get("run_id") or "")
     completeness_report = deepcopy(dict(payload.get("human_label_completeness_report") or _default_completeness_report()))
@@ -263,6 +374,12 @@ def build_empirical_evidence_package(
     kappa_present = bool(kappa_report.get("kappa_present", False))
     kappa_status = str(kappa_report.get("kappa_status", "kappa_missing") or "kappa_missing")
     macro_average_kappa = kappa_report.get("macro_average_kappa")
+    if is_route_b:
+        human_labels_present = False
+        labels_complete = False
+        kappa_present = False
+        kappa_status = "kappa_missing"
+        macro_average_kappa = None
     contamination_status = str(contamination_report.get("contamination_status", "incomplete") or "incomplete")
     metric_bridge_freshness = str(payload.get("metric_bridge_freshness") or payload.get("bridge_freshness") or "missing")
     artifact_completeness_status = str(
@@ -290,24 +407,66 @@ def build_empirical_evidence_package(
         p09_status=p09_status,
     )
     operator_ready = _is_operator_ready(p04_status, p09_status)
-    allowed_empirical_claim_level, measurement_validated_allowed = _allowed_level(
-        controlled_live_run_present=controlled_live_run_present,
-        human_labels_present=human_labels_present,
-        labels_complete=labels_complete,
-        kappa_present=kappa_present,
-        kappa_status=kappa_status,
-        contamination_status=contamination_status,
-        metric_bridge_freshness=metric_bridge_freshness,
-        artifact_completeness_status=artifact_completeness_status,
-        claim_gate_allows_measurement_validated=claim_gate_allows_measurement_validated
-        and bool(empirical_claim_gate_report.get("measurement_validated_allowed", False)),
-        operator_ready=operator_ready,
-    )
+    if is_route_b:
+        allowed_empirical_claim_level = _allowed_route_b_level(
+            route_b_core_present=route_b_core_present,
+            contamination_status=contamination_status,
+            metric_bridge_freshness=metric_bridge_freshness,
+            artifact_completeness_status=artifact_completeness_status,
+        )
+        measurement_validated_allowed = False
+    else:
+        allowed_empirical_claim_level, measurement_validated_allowed = _allowed_level(
+            controlled_live_run_present=controlled_live_run_present,
+            human_labels_present=human_labels_present,
+            labels_complete=labels_complete,
+            kappa_present=kappa_present,
+            kappa_status=kappa_status,
+            contamination_status=contamination_status,
+            metric_bridge_freshness=metric_bridge_freshness,
+            artifact_completeness_status=artifact_completeness_status,
+            claim_gate_allows_measurement_validated=claim_gate_allows_measurement_validated
+            and bool(empirical_claim_gate_report.get("measurement_validated_allowed", False)),
+            operator_ready=operator_ready,
+        )
+    if is_route_b:
+        empirical_claim_gate_report = deepcopy(dict(empirical_claim_gate_report))
+        empirical_claim_gate_report.update(
+            {
+                "route_type": "model_adjudicated",
+                "evaluation_route": "Route_B_model_adjudicated",
+                "model_adjudicated_labels_present": bool(route_b_artifacts["model_adjudicated_labels_present"]),
+                "human_labels_present": False,
+                "kappa_present": False,
+                "human_human_kappa_established": False,
+                "measurement_validated_allowed": False,
+                "allowed_empirical_claim_level": allowed_empirical_claim_level,
+                "claim_boundary": (
+                    "Route B model-adjudicated labels are not human labels; Codex adjudication is not human review; "
+                    "measurement_validated remains denied."
+                ),
+            }
+        )
 
     reasons: set[str] = set()
     if not controlled_live_run_present:
         reasons.add("no_live_run")
-    if controlled_live_run_present and not human_labels_present:
+    if is_route_b:
+        reasons.update(
+            {
+                "route_b_model_adjudicated",
+                "model_adjudicated_labels_not_human_labels",
+                "codex_adjudication_not_human_review",
+                "human_labels_not_required_for_route_b",
+                "human_labels_missing_for_measurement_validation",
+                "human_kappa_missing_for_measurement_validation",
+                "measurement_validated_denied_for_route_b",
+                "route_b_max_claim_boundary",
+            }
+        )
+        if allowed_empirical_claim_level == "model_adjudicated_pilot_only":
+            reasons.add("model_adjudicated_pilot_only")
+    if controlled_live_run_present and not human_labels_present and not is_route_b:
         reasons.add("live_run_without_labels")
     if not human_labels_present or not labels_complete:
         reasons.add("missing_human_labels")
@@ -321,9 +480,13 @@ def build_empirical_evidence_package(
         reasons.add("contamination_unknown")
     if contamination_status == "incomplete":
         reasons.add("contamination_incomplete")
+    if is_route_b and contamination_status != "pass":
+        reasons.add("contamination_required_for_stronger_claim")
     bridge_reason = _metric_bridge_missing_reason(metric_bridge_freshness)
     if bridge_reason:
         reasons.add(bridge_reason)
+    if is_route_b and metric_bridge_freshness not in {"fresh", "current", "bridge_fresh_enough_for_measurement_review"}:
+        reasons.add("fresh_metric_bridge_required_for_stronger_claim")
     if artifact_completeness_status != "complete":
         reasons.add("incomplete_artifacts")
     if live_api_used and not measurement_validated_allowed:
@@ -344,28 +507,18 @@ def build_empirical_evidence_package(
         denied_claims.discard("measurement_validated")
         denied_claims.discard("scientific_validation")
 
-    package = {
-        "empirical_evidence_package_schema_version": EMPIRICAL_EVIDENCE_PACKAGE_SCHEMA_VERSION,
-        "run_id": run_id,
-        "source_phase": SOURCE_PHASE,
-        "evidence_level": "EV2_EV3_EV4_empirical_evidence_package",
-        "live_api_used": live_api_used,
-        "external_runtime_used": False,
-        "controlled_live_run_present": controlled_live_run_present,
-        "human_labels_present": human_labels_present,
-        "labels_complete": labels_complete,
-        "kappa_present": kappa_present,
-        "kappa_status": kappa_status,
-        "macro_average_kappa": macro_average_kappa,
-        "contamination_status": contamination_status,
-        "metric_bridge_freshness": metric_bridge_freshness,
-        "artifact_completeness_status": artifact_completeness_status,
-        "measurement_validated_allowed": measurement_validated_allowed,
-        "allowed_empirical_claim_level": allowed_empirical_claim_level,
-        "denied_claims": sorted(denied_claims),
-        "reason_codes": _ordered_reason_codes(reasons),
-        "reason_code_order": list(REASON_CODE_ORDER),
-        "required_next_evidence": [
+    required_next_evidence = (
+        [
+            "contamination_pass_or_documented_status",
+            "fresh_metric_bridge_for_stronger_claim",
+            "claim_gate_review",
+            "Route_A_human_labels_if_measurement_validated_is_desired",
+            "Route_A_human_human_kappa_if_measurement_validated_is_desired",
+            "P04_operator_review",
+            "P09_operator_review_if_runtime_claims_are_needed",
+        ]
+        if is_route_b
+        else [
             "operator_approved_live_run" if not controlled_live_run_present else "controlled_live_run_present",
             "complete_human_labels",
             "acceptable_kappa",
@@ -374,7 +527,39 @@ def build_empirical_evidence_package(
             "claim_gate_allow",
             "P04_operator_review",
             "P09_operator_review_if_runtime_claims_are_needed",
-        ],
+        ]
+    )
+
+    package = {
+        "empirical_evidence_package_schema_version": EMPIRICAL_EVIDENCE_PACKAGE_SCHEMA_VERSION,
+        "run_id": run_id,
+        "source_phase": SOURCE_PHASE,
+        "evidence_level": "EV2_EV3_EV4_empirical_evidence_package",
+        "route_type": "model_adjudicated" if is_route_b else str(payload.get("route_type") or "human_labeled_or_pilot"),
+        "evaluation_route": (
+            "Route_B_model_adjudicated"
+            if is_route_b
+            else str(payload.get("evaluation_route") or "Route_A_or_unresolved")
+        ),
+        "live_api_used": live_api_used,
+        "external_runtime_used": False,
+        "controlled_live_run_present": controlled_live_run_present,
+        "human_labels_present": human_labels_present,
+        "labels_complete": labels_complete,
+        "kappa_present": kappa_present,
+        "human_human_kappa_established": bool(kappa_present and not is_route_b),
+        "kappa_status": kappa_status,
+        "macro_average_kappa": macro_average_kappa,
+        "contamination_status": contamination_status,
+        "metric_bridge_freshness": metric_bridge_freshness,
+        "artifact_completeness_status": artifact_completeness_status,
+        "measurement_validated_allowed": measurement_validated_allowed,
+        "allowed_empirical_claim_level": allowed_empirical_claim_level,
+        **route_b_artifacts,
+        "denied_claims": sorted(denied_claims),
+        "reason_codes": _ordered_reason_codes(reasons),
+        "reason_code_order": list(REASON_CODE_ORDER),
+        "required_next_evidence": required_next_evidence,
         "p04_status": p04_status,
         "p09_status": p09_status,
         "live_pilot_summary": pilot_summary,
@@ -401,11 +586,14 @@ def format_empirical_evidence_summary_markdown(package: Mapping[str, Any]) -> st
         "",
         f"- Run id: `{payload.get('run_id', '')}`",
         f"- Evidence level: `{payload.get('evidence_level', '')}`",
+        f"- Route type: `{payload.get('route_type', 'human_labeled_or_pilot')}`",
+        f"- Evaluation route: `{payload.get('evaluation_route', 'Route_A_or_unresolved')}`",
         f"- Live API used: {str(bool(payload.get('live_api_used', False))).lower()}",
         f"- Controlled live run present: {str(bool(payload.get('controlled_live_run_present', False))).lower()}",
         f"- Human labels present: {str(bool(payload.get('human_labels_present', False))).lower()}",
         f"- Labels complete: {str(bool(payload.get('labels_complete', False))).lower()}",
         f"- Kappa present: {str(bool(payload.get('kappa_present', False))).lower()}",
+        f"- Human-human kappa established: {str(bool(payload.get('human_human_kappa_established', False))).lower()}",
         f"- Kappa status: `{payload.get('kappa_status', 'kappa_missing')}`",
         f"- Contamination status: `{payload.get('contamination_status', 'incomplete')}`",
         f"- Metric bridge freshness: `{payload.get('metric_bridge_freshness', 'missing')}`",
@@ -422,6 +610,25 @@ def format_empirical_evidence_summary_markdown(package: Mapping[str, Any]) -> st
         lines.extend(f"- `{reason}`" for reason in reason_codes)
     else:
         lines.append("- `none`")
+    if str(payload.get("evaluation_route", "")) == "Route_B_model_adjudicated":
+        lines.extend(
+            [
+                "",
+                "## Route B Model-Adjudicated Boundary",
+                "",
+                "- Route B is fully automated/model-adjudicated.",
+                "- Route B does not require human labels.",
+                "- Route B cannot claim measurement_validated.",
+                "- Codex adjudication is not human review.",
+                "- model_adjudicated_labels are not human_labels.",
+                "- LLM/Codex agreement is not human-human kappa.",
+                "- Maximum claim is model_adjudicated_pilot_only / operational_utility_only.",
+                f"- LLM prelabels present: {str(bool(payload.get('llm_prelabels_present', False))).lower()}",
+                f"- Subagent audit present: {str(bool(payload.get('subagent_audit_present', False))).lower()}",
+                f"- Model-adjudicated labels present: {str(bool(payload.get('model_adjudicated_labels_present', False))).lower()}",
+                "",
+            ]
+        )
     lines.extend(["", "## Denied Claims", ""])
     denied_claims = list(payload.get("denied_claims") or [])
     if denied_claims:
