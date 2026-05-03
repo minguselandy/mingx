@@ -254,11 +254,16 @@ The claim gate is conservative by construction. Missing evidence lowers the allo
 | Evidence condition | Allowed claim boundary | Denied claim |
 |---|---|---|
 | contamination failure | `pilot_only` | `measurement_validated` |
-| missing human labels or missing kappa | not `measurement_validated` | `measurement_validated` |
-| stale or missing metric bridge | `operational_utility_only` or `ambiguous` | measurement validation |
+| missing human labels | not `measurement_validated` | `measurement_validated` |
+| missing kappa | not `measurement_validated` | `measurement_validated` |
+| stale metric bridge | `operational_utility_only` or `ambiguous` | measurement validation |
+| missing metric bridge | `operational_utility_only` or `ambiguous` | measurement validation |
 | synthetic-only evidence | `synthetic_structural_only` | deployed V-information certification |
-| engineering, replay, or paper-summary evidence | engineering/replay evidence only; no claim upgrade | scientific validation |
-| live API or external runtime success alone | operational evidence only | measurement validation |
+| engineering-only evidence | `engineering_smoke_only` | scientific validation |
+| replay package completeness | `replayable_artifact_evidence` | scientific validation |
+| paper-facing summary | no claim upgrade | measurement validation |
+| live API success alone | operational evidence only | measurement validation |
+| external runtime success alone | operational evidence only | measurement validation |
 
 **Formal layer.** The object analyzed in Section 3 is the V-information value function $f_i(S)$. All approximation statements, including Theorem 1 and its corollaries, apply to this formal object. They do not directly apply to an implementation that scores items with heuristics.
 
