@@ -2,8 +2,8 @@
 
 **Phase:** P29 Live Pilot Operator Runbook
 
-**Target workflow:** Controlled EV2/EV3 empirical pilot for the CPS
-runtime-audit scaffold.
+**Target workflow:** Controlled EV2, EV3-lite, and EV3 empirical pilot routes
+for the CPS runtime-audit scaffold.
 
 **Model conditions:** DeepSeek V4 Flash and DeepSeek V4 Pro.
 
@@ -13,11 +13,12 @@ authorize live execution by itself, add API clients, or claim
 
 ## 1. Purpose
 
-This runbook governs a controlled EV2/EV3 empirical pilot for Context Projection
-Selection (CPS) runtime-audit evidence. It translates the P25-P28 empirical
-validation infrastructure into an operator checklist for future live execution,
-human labeling, kappa reporting, contamination audit, metric bridge review, and
-empirical evidence packaging.
+This runbook governs controlled EV2/EV3-lite/EV3 empirical pilot routes for
+Context Projection Selection (CPS) runtime-audit evidence. It translates the
+P25-P28 empirical validation infrastructure into an operator checklist for
+future live execution, model-adjudicated evaluation, human labeling, kappa
+reporting, contamination audit, metric bridge review, and empirical evidence
+packaging.
 
 This runbook does not itself run live APIs. Live API execution requires separate
 operator approval, an explicit live run manifest, and all live gates defined by
@@ -43,13 +44,14 @@ P04 remains deferred/operator-required. P09 remains
 
 ## 2. Empirical Validation Ladder
 
-P29 prepares EV2/EV3 operations but does not execute them.
+P29 prepares EV2/EV3-lite/EV3 operations but does not execute them.
 
 | Level | Objective | Required artifacts | Allowed claim | Denied claim | Failure condition |
 | --- | --- | --- | --- | --- | --- |
 | EV0 replay/determinism validation | Confirm deterministic replay of saved evidence. | Replay package, projection bundles, evidence ledger, claim gate report, paper evidence summary. | `replayable_artifact_evidence` | `measurement_validated`, scientific validation. | Missing bundles, non-deterministic outputs, incomplete replay artifacts. |
 | EV1 proxy-regime diagnostic validation | Exercise proxy/synthetic diagnostic routing. | Proxy-regime matrix, diagnostics, metric bridge witnesses, claim gate report. | `synthetic_structural_only` or `operational_utility_only` as gated. | Deployed V-information certification, `measurement_validated`. | Contamination fail, stale/missing bridge, attempted validation claim without labels/kappa. |
 | EV2 controlled live API pilot | Run fixed live model conditions under a frozen manifest. | Run manifest, per-case artifacts, model outputs, claim gate report, pilot summary. | `controlled_live_pilot_only`, `pilot_only`, or `operational_utility_only` as gated. | `measurement_validated`, scientific validation. | Missing manifest gates, API drift, prompt changes, artifact failure, unfair baselines. |
+| EV3-lite model-adjudicated evaluation | Run the fully automated judge route after EV2 artifacts exist. | V4 Flash prelabels, Codex subagent audit, Codex model adjudication, contamination/bridge status. | `model_adjudicated_pilot_only`, `automated_judge_evidence`, or `operational_utility_only`. | `measurement_validated`, human-labeled validation, human-human kappa. | Model-adjudicated labels mistaken for human labels, missing route artifacts, contamination/bridge failure. |
 | EV3 human-labeled measurement validation | Add human labels, adjudication, and kappa evidence. | Human labels, adjudication, completeness report, kappa report, contamination report. | `measurement_validated_candidate` only if EV4 prerequisites are plausible. | Automatic `measurement_validated`; kappa-alone validation. | Missing labels, missing/low kappa, unresolved adjudication, contamination fail. |
 | EV4 metric-bridge closure | Close metric bridge freshness and final claim gate eligibility. | Fresh bridge evidence, bridge review, EV3 package, final claim gate report. | `measurement_validated` only if all gates pass. | Deployed V-information certification beyond the validated scope. | Missing/stale bridge, operational-only metric class, claim gate deny, incomplete EV3 evidence. |
 
@@ -132,6 +134,7 @@ cases post hoc unless the exclusion is recorded with a reason.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Stage 0: Dry-run rehearsal | Verify local artifact plumbing without live calls. | Dry-run manifest, fixed cases, fixed conditions. | Dry-run pilot outputs and claim gate report. | P26 artifact set, dry-run manifest. | Any artifact failure, non-determinism, missing output root. | `engineering_smoke_only` | `measurement_validated` |
 | Stage 1: Controlled live pilot, EV2 | Execute fixed live model conditions after operator approval. | `CPS_ALLOW_LIVE_API=1`, `operator_approval: true`, fixed endpoint/model/prompt/cases/conditions, output root, budget cap. | Live pilot outputs, model outputs, claim gate report. | Full per-case P26 artifacts. | Missing live gate, API drift, budget cap exceeded, artifact capture failure. | `controlled_live_pilot_only`, `pilot_only` | `measurement_validated` |
+| Stage 1B: Model-adjudicated route, EV3-lite | Process EV2 artifacts through V4 Flash prelabels, Codex audit, and Codex model adjudication. | EV2 artifacts, prelabel manifest, audit prompts, adjudication inputs. | `llm_prelabels.jsonl`, `subagent_audit_report.json`, `model_adjudicated_labels.jsonl`. | P32/P34 model-adjudicated artifact set. | Attempted human-label claim, missing route artifact, fabricated kappa, contamination/bridge failure. | `model_adjudicated_pilot_only`, `operational_utility_only` | `measurement_validated` |
 | Stage 2: Human labeling, EV3 | Collect human labels for validation-scoped outputs. | Model outputs, rubric, annotators, blinding policy. | `human_labels.jsonl`, adjudication records. | Complete labels for all scoped cases/conditions. | Missing labels, annotator leakage, unrecorded disagreement overwrite. | human-labeled pilot evidence | `measurement_validated` |
 | Stage 3: Kappa report generation | Compute reliability evidence. | Human labels, required case list, conditions. | `human_label_completeness_report.json`, `kappa_report.json`. | Per-dimension and macro-average kappa. | Fewer than two annotators, missing labels, invalid labels, low kappa. | kappa-supported candidate evidence | kappa-alone validation |
 | Stage 4: Contamination audit | Review leakage and fairness risks. | Case lineage, prompt history, candidate pools, labels, baseline access. | `contamination_report.json`. | All required P28 contamination checks. | Any failed check, unknown or incomplete critical audit. | contamination gate status | validation from contamination pass alone |
@@ -142,6 +145,20 @@ cases post hoc unless the exclusion is recorded with a reason.
 
 Stage 0 must use dry-run only and must not call live APIs. Stage 8 occurs only
 after claim gate review.
+
+### Operator Route Decision After EV2
+
+After EV2 controlled live pilot artifacts exist, the operator may choose one or
+both downstream routes.
+
+| Route | Downstream workflow | Claim effect |
+| --- | --- | --- |
+| Route A: Human-labeled measurement validation | Send outputs to human annotation, adjudication, kappa, contamination audit, metric bridge review, and claim gate. | May support `measurement_validated_candidate` only if all gates pass. |
+| Route B: Fully automated model-adjudicated evaluation | Send outputs to V4 Flash prelabel generation, Codex subagent audit, and Codex model adjudication. | Faster and cheaper, but no human review, no `human_labels.jsonl`, no human-human kappa, and no `measurement_validated`. |
+
+Route B is useful for pilot and operational evidence, annotation workload
+reduction, and error triage. Its maximum claim strength is
+`model_adjudicated_pilot_only` or `operational_utility_only`.
 
 ## 6. Operator Prerequisites Before Live Execution
 
@@ -276,6 +293,11 @@ These must later be joined with:
 - `empirical_claim_gate_report.json`
 - `empirical_evidence_summary.md`
 
+For Route B, the case artifacts may instead be joined with
+`llm_prelabels.jsonl`, `subagent_audit_report.json`, and
+`model_adjudicated_labels.jsonl`. These files must not be renamed or treated as
+`human_labels.jsonl`.
+
 Artifacts must include `model_alias`, `condition`, `case_id`, and `run_id`.
 Flash and Pro artifacts must not be mixed without explicit `model_condition`
 identifiers.
@@ -374,6 +396,8 @@ Rules:
 | Flash-only favorable live outputs | Model-conditioned operational observation | `measurement_validated` |
 | Pro-only favorable live outputs | Model-conditioned operational observation | `measurement_validated` |
 | Flash+Pro favorable live outputs without labels/kappa | Operational observation only | `measurement_validated` |
+| Route B complete model-adjudicated outputs | `model_adjudicated_pilot_only` or `operational_utility_only` | `measurement_validated`, human-labeled validation |
+| Model-adjudicated labels treated as human labels | No-go; fix claim boundary before reporting | `measurement_validated`, human-human kappa |
 | Complete favorable evidence | `measurement_validated_candidate` | Final validation without claim gate allow |
 | Claim gate explicitly allows all requirements | Gate-scoped `measurement_validated` only | Claims beyond scoped run |
 
@@ -432,6 +456,15 @@ After EV3 with labels and kappa, the manuscript may report:
 - kappa-supported annotation reliability;
 - still not `measurement_validated` unless contamination and metric bridge pass.
 
+After EV3-lite Route B model-adjudicated evaluation, the manuscript may report:
+
+- model-adjudicated pilot evidence;
+- automated judge evidence from V4 Flash prelabels, Codex subagent audit, and
+  Codex model adjudication;
+- annotation workload reduction evidence if supported by artifacts;
+- no `measurement_validated`, no human-labeled validation, and no human-human
+  kappa.
+
 After EV4 with fresh metric bridge and claim gate review, the manuscript may
 report:
 
@@ -445,20 +478,24 @@ Forbidden manuscript wording:
 - "Flash/Pro results certify V-information"
 - "live API success proves measurement validation"
 - "high kappa alone validates CPS"
+- "model-adjudicated labels are human labels"
+- "Codex adjudication establishes human-human kappa"
 
 Allowed cautious wording:
 
 - "controlled live pilot on DeepSeek V4 Flash / Pro"
 - "model-conditioned operational evidence"
 - "human-labeled pilot evidence when labels exist"
+- "model-adjudicated pilot evidence"
 - "`measurement_validated_candidate` only if all gates pass"
 
 ## 17. Minimal Command Sketch
 
 No matching executable `python -m` CLI entrypoints currently exist for the P26
 controlled live pilot runner, P27 label/kappa artifact builder, P28
-contamination audit, or P28 empirical evidence package builder. P29 therefore
-does not prescribe executable commands.
+contamination audit, P28 empirical evidence package builder, or P32-P34
+model-adjudicated route builders. P29 therefore does not prescribe executable
+commands.
 
 Current operational interface:
 
@@ -470,6 +507,9 @@ Current operational interface:
 | Kappa report | Function/API currently available; CLI not required in P29. |
 | Contamination audit report | Function/API currently available; CLI not required in P29. |
 | Empirical evidence package | Function/API currently available; CLI not required in P29. |
+| V4 Flash prelabel generation | Function/API currently available; CLI not required in P29. |
+| Codex subagent audit preparation | Function/API currently available; CLI not required in P29. |
+| Codex model adjudication | Function/API currently available; CLI not required in P29. |
 
 Do not run these steps from this runbook. A future P30 dry-run rehearsal can
 decide whether a CLI wrapper is needed, but P29 does not add one.

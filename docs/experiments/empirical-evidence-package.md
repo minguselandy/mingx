@@ -13,8 +13,8 @@ package:
 
 ```text
 controlled live pilot summary
-  -> human label completeness report
-  -> kappa report
+  -> Route A: human label completeness report and kappa report
+  -> Route B: V4 Flash prelabels, Codex audit, and model-adjudicated labels
   -> contamination report
   -> metric bridge freshness status
   -> empirical claim gate summary
@@ -37,13 +37,31 @@ Supported inputs include:
 - `human_label_completeness_report.json`
 - `kappa_report.json`
 - `contamination_report.json`
+- `llm_prelabels.jsonl`
+- `subagent_audit_report.json`
+- `model_adjudicated_labels.jsonl`
 - metric bridge freshness status
 - artifact completeness status
 
-Missing label, kappa, contamination, or bridge artifacts fail closed. They do
-not become validation evidence.
+For Route A, missing label, kappa, contamination, or bridge artifacts fail
+closed. For Route B, absent human labels and absent human-human kappa must remain
+explicitly recorded and must block `measurement_validated`. Missing evidence does
+not become validation evidence in either route.
 
-## 3. Outputs
+## 3. Two Evidence Routes
+
+The empirical package can consume two distinct evidence routes.
+
+| Route | Inputs | Required claim boundary |
+| --- | --- | --- |
+| Route A: human-label route | Human labels, kappa report, contamination report, metric bridge freshness, claim gate report. | Human labels and human-human kappa may support `measurement_validated_candidate` only when all other gates also pass. |
+| Route B: model-adjudicated route | V4 Flash prelabels, Codex subagent audit, model-adjudicated labels, contamination audit, metric bridge status, claim gate report. | Keep `human_labels_present=false`, `kappa_present=false`, and `measurement_validated_allowed=false`; allowed claim is no stronger than `model_adjudicated_pilot_only` or `operational_utility_only`. |
+
+Route B does not produce `human_labels.jsonl`, does not establish human-human
+kappa, and does not replace Route A. It is an automated judge evidence path for
+pilot and operational analysis only.
+
+## 4. Outputs
 
 The package can write:
 
@@ -69,7 +87,7 @@ The manifest records:
 - stable reason codes;
 - P04/P09 status.
 
-## 4. Claim Mapping
+## 5. Claim Mapping
 
 | Evidence state | Allowed empirical claim level |
 | --- | --- |
@@ -82,16 +100,25 @@ The manifest records:
 | Contamination unknown/incomplete | Not `measurement_validated` |
 | Stale bridge | `operational_utility_only` |
 | Missing bridge | `ambiguous` |
+| Route B with V4 Flash prelabels, Codex audit, and model-adjudicated labels | At most `model_adjudicated_pilot_only` or `operational_utility_only` |
 | High kappa, contamination pass, fresh bridge, complete artifacts | At most `measurement_validated_candidate` unless the existing claim gate explicitly allows more. |
 
 Even favorable evidence remains a candidate until all external requirements and
 the existing claim gate allow a stronger claim.
 
-## 5. Relationship To P26 And P27
+For Route B, `measurement_validated`, `human_labeled_validation`,
+`human_human_kappa_established`, scientific validation, and deployed
+V-information certification remain denied.
+
+## 6. Relationship To P26, P27, P32, And P34
 
 P26 provides controlled live pilot scaffolding and case artifacts. P27 provides
 human-label completeness and kappa reports. P28 packages those reports with
 contamination and metric bridge evidence.
+
+P32 provides V4 Flash prelabels and Codex subagent audit requests/reports. P34
+provides model-adjudicated labels. Those artifacts may be packaged as Route B
+evidence, but they must not satisfy human-label or kappa gates.
 
 P28 does not:
 
@@ -102,11 +129,14 @@ P28 does not:
 - fabricate contamination clearance;
 - unblock P04 or P09.
 
-## 6. Claim Boundary
+## 7. Claim Boundary
 
 - P28 does not complete empirical validation.
 - Live API success alone is not measurement validation.
 - Human labels and acceptable kappa are required.
+- Route B model-adjudicated labels are not human labels.
+- Route B does not establish human-human kappa.
+- Route B cannot support `measurement_validated`.
 - High kappa alone is not measurement validation.
 - Contamination pass alone is not measurement validation.
 - Fresh metric bridge evidence is required.

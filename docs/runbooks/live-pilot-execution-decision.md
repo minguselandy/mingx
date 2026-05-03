@@ -43,12 +43,20 @@ DO_NOT_RUN
 | `APPROVED_FOR_DRY_RUN_ONLY` | unchecked | Only another dry-run rehearsal may be performed. |
 | `APPROVED_FOR_FLASH_ONLY_LIVE_PILOT` | unchecked | Approve DeepSeek V4 Flash live pilot only after all gates pass. |
 | `APPROVED_FOR_FLASH_AND_PRO_LIVE_PILOT` | unchecked | Approve both model conditions after all gates pass. |
+| `APPROVED_FOR_MODEL_ADJUDICATED_ROUTE` | unchecked | Approve Route B automated model-adjudicated processing after EV2 artifacts exist. |
+| `APPROVED_FOR_HUMAN_LABEL_ROUTE` | unchecked | Approve Route A human annotation and kappa workflow after EV2 artifacts exist. |
+| `APPROVED_FOR_BOTH_ROUTES` | unchecked | Approve both Route A and Route B after all route-specific gates pass. |
+| `MODEL_ADJUDICATED_ROUTE_ONLY_NO_MEASUREMENT_VALIDATION` | unchecked | Approve only automated model adjudication, with no `measurement_validated` path. |
 | `DEFER_UNTIL_LABELERS_READY` | unchecked | Do not run until EV3 annotators are available. |
 | `DEFER_UNTIL_BUDGET_APPROVED` | unchecked | Do not run until budget cap is approved. |
 | `DEFER_UNTIL_METRIC_BRIDGE_READY` | unchecked | Do not run until bridge review ownership is ready. |
 
 The default `DO_NOT_RUN` status is fail-closed. A future phase must not infer
 approval from the existence of this document or the manifest template.
+
+Route selection is separate from live execution approval. Approval for the
+model-adjudicated route does not approve `measurement_validated`, does not
+produce `human_labels.jsonl`, and does not establish human-human kappa.
 
 ## 3. Required Operator Inputs
 
@@ -178,6 +186,11 @@ without labels and kappa is not `measurement_validated`.
 
 EV3 labels and kappa may support human-labeled pilot evidence, but high kappa
 alone is not validation. Contamination pass alone is not validation.
+
+The model-adjudicated route may support automated judge or operational pilot
+evidence only. DeepSeek V4 Flash prelabels, Codex subagent audit, and Codex
+model adjudication are not human labels, not human review, and not human-human
+kappa.
 
 EV4 metric bridge closure and conservative claim gate review are required before
 `measurement_validated_candidate`. `measurement_validated` requires explicit
