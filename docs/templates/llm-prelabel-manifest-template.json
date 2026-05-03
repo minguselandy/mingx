@@ -1,0 +1,26 @@
+{
+  "budget_cap": "<operator_filled_budget_cap>",
+  "claim_gate_required": true,
+  "codex_subagent_audit_is_human_review": false,
+  "contamination_audit_required": true,
+  "forbidden_claims": [
+    "measurement_validated",
+    "human_labeled_validation",
+    "scientific_validation_completed",
+    "deployed_v_information_certified"
+  ],
+  "human_confirmation_required": true,
+  "input_artifact_root": "<operator_filled_input_artifact_root>",
+  "judge_model_alias": "deepseek_v4_flash",
+  "judge_model_endpoint": "<operator_filled_deepseek_v4_flash_endpoint>",
+  "judge_model_name": "<operator_filled_deepseek_v4_flash_model_name>",
+  "judge_model_role": "llm_assisted_prelabeler",
+  "kappa_required_for_measurement_validated": true,
+  "llm_prelabels_are_human_labels": false,
+  "max_items": "<operator_filled_max_items>",
+  "metric_bridge_freshness_required": true,
+  "mode": "dry_run",
+  "operator_approval": false,
+  "output_root": "<operator_filled_output_root>",
+  "prelabel_run_id": "<operator_filled_prelabel_run_id>"
+}
