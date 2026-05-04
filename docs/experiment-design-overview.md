@@ -156,6 +156,18 @@ The replay contract, required trace fields, recomputation path, and
 missing-field status labels are specified in
 `docs/protocols/phase-b-replay-protocol.md`.
 
+Follow-up implementation plans:
+
+- [P38 Synthetic Structural Benchmark Plan](./experiments/P38-synthetic-structural-benchmark-plan.md)
+- [P40 Phase B Offline Replay Implementation Plan](./experiments/P40-phase-b-offline-replay-implementation-plan.md)
+- [P43 Phase C Realistic Task Context Projection Benchmark Plan](./experiments/P43-phase-c-realistic-task-context-projection-benchmark-plan.md)
+- [Extraction Uniformity Sidecar Plan](./protocols/extraction-uniformity-sidecar-plan.md)
+
+These plans do not change the scientific interpretation of Phase A, Phase B,
+Phase C, or extraction-uniformity evidence. They remain implementation and
+experiment planning documents until the required evidence gates are executed and
+reviewed.
+
 ### Phase C - Real-Task Benchmark
 
 Purpose:

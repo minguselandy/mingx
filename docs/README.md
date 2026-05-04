@@ -53,6 +53,53 @@ long-lived `phase0` / `phase1` code roots.
   Human-in-the-loop workflow for AI-assisted contamination judgement and
   minimal question rewrite planning after gate failure.
 
+## P37-P44 Development and Experiment Planning
+
+These documents are planning, protocol, template, and review artifacts. They do
+not upgrade the evidence claim level and do not claim measurement validation,
+scientific validation, or deployed V-information certification.
+
+Core package links:
+
+- [P37-P44 Development and Experiment Roadmap](./roadmaps/P37-P44-development-and-experiment-roadmap.md)
+- [P37-P44 Documentation Package README](./roadmaps/P37-P44-documentation-package-readme.md)
+- [P37-P44 Documentation Package Manifest](./roadmaps/P37-P44-documentation-package-manifest.json)
+- [Claim Boundary Checklist](./templates/claim-boundary-checklist.md)
+- [Route B Adjudication Manifest Template](./templates/route-b-adjudication-manifest-template.json)
+- [P37-P44 Codex Prompt Pack](./templates/codex-prompts/P37-P44-codex-prompt-pack.md)
+
+Planning and protocols:
+
+- [P37 Repo State and Claim Boundary Lock Protocol](./protocols/P37-repo-state-claim-boundary-lock-protocol.md)
+- [P39 Artifact Schema Freeze Protocol](./protocols/P39-artifact-schema-freeze-protocol.md)
+- [openWorker Trace Audit Protocol](./protocols/openworker-trace-audit-protocol.md)
+- [Extraction Uniformity Sidecar Plan](./protocols/extraction-uniformity-sidecar-plan.md)
+
+Experiments:
+
+- [P38 Synthetic Structural Benchmark Plan](./experiments/P38-synthetic-structural-benchmark-plan.md)
+- [P40 Phase B Offline Replay Implementation Plan](./experiments/P40-phase-b-offline-replay-implementation-plan.md)
+- [P41 Route B Model-Adjudicated Evaluation Plan](./experiments/P41-route-b-model-adjudicated-evaluation-plan.md)
+- [P42 Fresh Reduced-Scope Follow-Up Batch Plan](./experiments/P42-fresh-reduced-scope-follow-up-batch-plan.md)
+- [P43 Phase C Realistic Task Context Projection Benchmark Plan](./experiments/P43-phase-c-realistic-task-context-projection-benchmark-plan.md)
+
+Paper integration:
+
+- [P44 Manuscript Evidence Integration Plan](./paper/P44-manuscript-evidence-integration-plan.md)
+
+Reviews:
+
+- [P37 Repo State and Claim Boundary Lock Review](./reviews/P37-repo-state-and-claim-boundary-lock-review.md)
+- [P38 Synthetic Structural Validity Review](./reviews/P38-synthetic-structural-validity-review.md)
+- [P39 Artifact Schema Freeze Review](./reviews/P39-artifact-schema-freeze-review.md)
+- [P40 Phase B Offline Replay Review](./reviews/P40-phase-b-offline-replay-review.md)
+- [P41 Route B Model-Adjudicated Evaluation Review](./reviews/P41-route-b-model-adjudicated-evaluation-review.md)
+- [P42 Follow-Up Live Batch Decision Review](./reviews/P42-follow-up-live-batch-decision-review.md)
+- [P43 Phase C Benchmark Readiness Review](./reviews/P43-phase-c-benchmark-readiness-review.md)
+- [P44 Manuscript Evidence Integration Review](./reviews/P44-manuscript-evidence-integration-review.md)
+- [openWorker Trace Field Availability Map](./reviews/openworker-trace-field-availability-map.md)
+- [Extraction Uniformity Sidecar Review](./reviews/extraction-uniformity-sidecar-review.md)
+
 ## Documentation Layers
 
 - `protocols/`

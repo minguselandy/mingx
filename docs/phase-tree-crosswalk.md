@@ -129,3 +129,15 @@ which question:
   contract.
 - `docs/protocols/phase4-design-skeleton.md` records the deferred Phase 4
   branch structure.
+
+## P37-P44 Follow-Up Planning
+
+The follow-up planning package is indexed at:
+
+- [P37-P44 Development and Experiment Roadmap](./roadmaps/P37-P44-development-and-experiment-roadmap.md)
+- [openWorker Trace Audit Protocol](./protocols/openworker-trace-audit-protocol.md)
+- [Extraction Uniformity Sidecar Plan](./protocols/extraction-uniformity-sidecar-plan.md)
+
+These are planning and sidecar protocol documents. The openWorker trace audit
+and extraction-uniformity sidecar remain future or conditional work; they are
+not completed evidence and do not upgrade any claim level.
