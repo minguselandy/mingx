@@ -1,0 +1,127 @@
+[
+  {
+    "path": "README.md",
+    "sha256": "5555673ce48d8918d22e4519188a5848f557027e84d0d28b7d6d89c9e9a033cf",
+    "bytes": 2673
+  },
+  {
+    "path": "docs/experiments/P38-synthetic-structural-benchmark-plan.md",
+    "sha256": "fdad352df281476ecf26d209e37bdacda2c29436d12b5fe5b6d4371d5e39a6d1",
+    "bytes": 5990
+  },
+  {
+    "path": "docs/experiments/P40-phase-b-offline-replay-implementation-plan.md",
+    "sha256": "0b8eec987db48909adb8b62e003145ee3c995bc38a063abd7c90a151f6b6259c",
+    "bytes": 6631
+  },
+  {
+    "path": "docs/experiments/P41-route-b-model-adjudicated-evaluation-plan.md",
+    "sha256": "9e0595c3bcabee3aab9b0d40a97eec1a682122504d2108968e31193e30617aac",
+    "bytes": 5687
+  },
+  {
+    "path": "docs/experiments/P42-fresh-reduced-scope-follow-up-batch-plan.md",
+    "sha256": "ebbf5af3b5231a53c716032d3186e7203a24027e5ee78ada6f435308a46635d2",
+    "bytes": 4524
+  },
+  {
+    "path": "docs/experiments/P43-phase-c-realistic-task-context-projection-benchmark-plan.md",
+    "sha256": "c5c3cc3158d11aad26da3a513b720e7fdf11bd034395aefed21146bc1a19920e",
+    "bytes": 5553
+  },
+  {
+    "path": "docs/paper/P44-manuscript-evidence-integration-plan.md",
+    "sha256": "475fbebb9f4c1507bb3c733f16d25706625a08c76ec86817be70f0842d3ab340",
+    "bytes": 5906
+  },
+  {
+    "path": "docs/protocols/P37-repo-state-claim-boundary-lock-protocol.md",
+    "sha256": "7a3bd2f2d63853dcdc465ed4e423e5c836ed0e8aca3c884353c2ccac1719fe41",
+    "bytes": 5389
+  },
+  {
+    "path": "docs/protocols/P39-artifact-schema-freeze-protocol.md",
+    "sha256": "06662ba3bebabeda4a13f6809dc9f9654cb577d16ba752cb3100692bd153fc5d",
+    "bytes": 5652
+  },
+  {
+    "path": "docs/protocols/extraction-uniformity-sidecar-plan.md",
+    "sha256": "0289116b1260c362995b9947532ed392882b2885bd72499d1f0e75bc4e7bb159",
+    "bytes": 3664
+  },
+  {
+    "path": "docs/protocols/openworker-trace-audit-protocol.md",
+    "sha256": "fe3ca2a49607f0480d441779be4efdae24bd75cee236e8c499fd0468d610ddb7",
+    "bytes": 3522
+  },
+  {
+    "path": "docs/reviews/P37-repo-state-and-claim-boundary-lock-review.md",
+    "sha256": "9a8b2df46103790d7fd13ad9272903357b8c97e752fa5202bcbe7b35a7877e49",
+    "bytes": 2018
+  },
+  {
+    "path": "docs/reviews/P38-synthetic-structural-validity-review.md",
+    "sha256": "1837e7046053cffd3bf69a13a1f47ff842b34b20215c77f13aebaf235c99c3d9",
+    "bytes": 2121
+  },
+  {
+    "path": "docs/reviews/P39-artifact-schema-freeze-review.md",
+    "sha256": "db4c1d9619d91f8baf6197d23c15ac2887577851ef0f979054df606b109f07a6",
+    "bytes": 2148
+  },
+  {
+    "path": "docs/reviews/P40-phase-b-offline-replay-review.md",
+    "sha256": "8f93976e3e981acd79c40c75a78c8164faac91c15c1eacf6e3f42db924f12a97",
+    "bytes": 2124
+  },
+  {
+    "path": "docs/reviews/P41-route-b-model-adjudicated-evaluation-review.md",
+    "sha256": "6813fd90078852e088ac1044778b6acb83d440c1060e425c9e3447c147ced529",
+    "bytes": 2279
+  },
+  {
+    "path": "docs/reviews/P42-follow-up-live-batch-decision-review.md",
+    "sha256": "cbc40e3b8977d4e3528c43818a8c1b9ea83ff4e3b2144d957e9ff2d05ddcee59",
+    "bytes": 2188
+  },
+  {
+    "path": "docs/reviews/P43-phase-c-benchmark-readiness-review.md",
+    "sha256": "bb61c8ec8cfcbc6a9f78c232f317880148a2f9fa7bd423df0534e5758902d53a",
+    "bytes": 1879
+  },
+  {
+    "path": "docs/reviews/P44-manuscript-evidence-integration-review.md",
+    "sha256": "1e5569aca9045349bace8d11d85502e48d619737e79df358a71f0896ecc84d9b",
+    "bytes": 2172
+  },
+  {
+    "path": "docs/reviews/extraction-uniformity-sidecar-review.md",
+    "sha256": "29fa364d85d3068a0c81f55db4c75ffbfdea161b02f4ced8ed41eeca54628431",
+    "bytes": 1640
+  },
+  {
+    "path": "docs/reviews/openworker-trace-field-availability-map.md",
+    "sha256": "90f7b25db726803a02dc4f71f982d58b25c707cf0f8f2ba3f3c077bb05ee9a7b",
+    "bytes": 1792
+  },
+  {
+    "path": "docs/roadmaps/P37-P44-development-and-experiment-roadmap.md",
+    "sha256": "796abf36a66a2b7c8f77f20f06ce15bd526055241f195c12c93ac992b181096c",
+    "bytes": 8557
+  },
+  {
+    "path": "docs/templates/claim-boundary-checklist.md",
+    "sha256": "81b46716e175b3d444d4f50caca0186d2db27f260e020fa0c50b941089be4755",
+    "bytes": 1770
+  },
+  {
+    "path": "docs/templates/codex-prompts/P37-P44-codex-prompt-pack.md",
+    "sha256": "e66c4a6ee445408cbcd7de16e8ea7e62d002d947de16958b34d999daed646f58",
+    "bytes": 7849
+  },
+  {
+    "path": "docs/templates/route-b-adjudication-manifest-template.json",
+    "sha256": "bbeb8ea479032edb46a729d4db60101250ed9cffc274284dd2e85afd0d6e0b05",
+    "bytes": 1176
+  }
+]

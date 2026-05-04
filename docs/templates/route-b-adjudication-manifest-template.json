@@ -1,0 +1,37 @@
+{
+  "schema_version": "route_b_adjudication_manifest_v1",
+  "route": "B_model_adjudicated",
+  "run_id": "TBD",
+  "input_artifact_root": "TBD",
+  "output_root": "TBD",
+  "models": {
+    "prelabel_model": "TBD",
+    "audit_model": "TBD",
+    "adjudication_model": "TBD"
+  },
+  "label_dimensions": [
+    "answer_correctness",
+    "answer_completeness",
+    "answer_groundedness",
+    "context_sufficiency",
+    "missing_critical_context",
+    "irrelevant_context",
+    "misleading_context",
+    "conflict_or_stale_context"
+  ],
+  "claim_boundary": {
+    "human_labels_present": false,
+    "kappa_present": false,
+    "human_human_kappa_established": false,
+    "measurement_validated_allowed": false,
+    "label_source": "model_adjudicated",
+    "max_claim": "model_adjudicated_pilot_only"
+  },
+  "outputs": {
+    "model_prelabels_jsonl": "model_prelabels.jsonl",
+    "subagent_audit_report_json": "subagent_audit_report.json",
+    "model_adjudicated_labels_jsonl": "model_adjudicated_labels.jsonl",
+    "route_b_claim_gate_report_json": "route_b_claim_gate_report.json"
+  },
+  "operator_notes": "Live API calls are not authorized by this manifest unless separately approved."
+}

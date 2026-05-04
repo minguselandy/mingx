@@ -147,3 +147,14 @@ Phase B does not implement:
 Phase B is an audit and replay layer. Any implementation that requires changing
 runtime control flow to create missing trace data belongs to a separate
 observability engineering plan.
+
+## 8. Implementation Plan
+
+The follow-up implementation plan and review checklist for this protocol are:
+
+- [P40 Phase B Offline Replay Implementation Plan](../experiments/P40-phase-b-offline-replay-implementation-plan.md)
+- [P40 Phase B Offline Replay Review](../reviews/P40-phase-b-offline-replay-review.md)
+
+These documents do not alter replay status semantics. `replay_usable`,
+`pilot_degraded`, `replay_partial`, and `replay_unusable` remain the controlling
+status labels for Phase B interpretation.

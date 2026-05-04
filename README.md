@@ -42,6 +42,18 @@ Project entrypoints:
 - [configs/runs/README.md](./configs/runs/README.md)
 - [api/README.md](./api/README.md)
 
+## Current development planning
+
+The current P37-P44 development and experiment planning package is indexed at:
+
+- [P37-P44 Development and Experiment Roadmap](docs/roadmaps/P37-P44-development-and-experiment-roadmap.md)
+- [Documentation Index](docs/README.md)
+- [Claim Boundary Checklist](docs/templates/claim-boundary-checklist.md)
+
+These documents are planning and review artifacts. They do not claim
+measurement validation, scientific validation, or deployed V-information
+certification.
+
 ## Paper Context
 
 The current research framing is the revised conditional-theory,
