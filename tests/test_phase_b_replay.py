@@ -15,12 +15,16 @@ def _jsonl_rows(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def _json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def _base_rows(**overrides) -> dict[str, dict]:
     common = {
-        "run_id": "run-1",
-        "dispatch_id": "dispatch-1",
-        "agent_id": "agent-a",
-        "round_id": "round-1",
+        "run_id": overrides.pop("run_id", "run-1"),
+        "dispatch_id": overrides.pop("dispatch_id", "dispatch-1"),
+        "agent_id": overrides.pop("agent_id", "agent-a"),
+        "round_id": overrides.pop("round_id", "round-1"),
         "regime": "fixture",
     }
     rows = {
@@ -114,6 +118,21 @@ def _write_input_dir(input_dir: Path, rows: dict[str, dict]) -> None:
             _write_jsonl(input_dir / filename, [rows[key]])
 
 
+def _write_contamination_report(input_dir: Path, *, status: str) -> None:
+    input_dir.mkdir(parents=True, exist_ok=True)
+    input_dir.joinpath("contamination_report.json").write_text(
+        json.dumps(
+            {
+                "contamination_status": status,
+                "contamination_passed": status == "pass",
+                "failed_checks": ["leaked_labels"] if status == "failed" else [],
+            },
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
+
+
 def _run_fixture(workspace_tmp_dir, rows: dict[str, dict]) -> tuple[dict, list[dict], dict]:
     input_dir = workspace_tmp_dir / "input"
     output_dir = workspace_tmp_dir / "output"
@@ -124,6 +143,21 @@ def _run_fixture(workspace_tmp_dir, rows: dict[str, dict]) -> tuple[dict, list[d
     return report, manifest, summary
 
 
+def _output_payloads(output_dir: Path) -> dict[str, object]:
+    return {
+        "replay_manifest_json": _json(output_dir / "replay_manifest.json"),
+        "replay_manifest_jsonl": _jsonl_rows(output_dir / "replay_manifest.jsonl"),
+        "per_dispatch_diagnostics": _jsonl_rows(output_dir / "per_dispatch_diagnostics.jsonl"),
+        "missing_field_report": _json(output_dir / "missing_field_report.json"),
+        "pipeline_proxy_alignment": _json(output_dir / "pipeline_proxy_alignment.json"),
+        "metric_claim_level_summary": _json(output_dir / "metric_claim_level_summary.json"),
+        "selector_regime_summary": _json(output_dir / "selector_regime_summary.json"),
+        "replay_status_counts": _json(output_dir / "replay_status_counts.json"),
+        "replay_summary": _json(output_dir / "replay_summary.json"),
+        "report_md": (output_dir / "report.md").read_text(encoding="utf-8"),
+    }
+
+
 def test_complete_dispatch_bundle_is_replay_usable(workspace_tmp_dir):
     report, manifest, summary = _run_fixture(workspace_tmp_dir, _base_rows())
 
@@ -131,8 +165,13 @@ def test_complete_dispatch_bundle_is_replay_usable(workspace_tmp_dir):
     assert manifest[0]["replay_status"] == "replay_usable"
     assert manifest[0]["replay_claim_scope"] == "Vinfo_proxy_certified"
     assert manifest[0]["metric_claim_level"] == "Vinfo_proxy_certified"
+    assert manifest[0]["selector_regime_label"] == "greedy_valid"
+    assert manifest[0]["diagnostic_recompute_status"] == "recomputed"
+    assert manifest[0]["headline_eligible"] is True
+    assert manifest[0]["headline_exclusion_reason"] == ""
     assert summary["replay_usable_dispatches"] == 1
     assert summary["replay_status_counts"] == {"replay_usable": 1}
+    assert summary["headline_eligible_dispatches"] == 1
 
 
 def test_missing_metric_bridge_witness_downgrades_to_partial_without_bridge_claim(workspace_tmp_dir):
@@ -143,6 +182,8 @@ def test_missing_metric_bridge_witness_downgrades_to_partial_without_bridge_clai
     assert manifest[0]["metric_claim_level"] == "ambiguous"
     assert manifest[0]["replay_claim_scope"] == "observability_only"
     assert "MetricBridgeWitness" in manifest[0]["missing_required_fields"]
+    assert manifest[0]["headline_eligible"] is False
+    assert manifest[0]["headline_exclusion_reason"] == "replay_status_replay_partial"
     assert summary["metric_claim_level_counts"] == {"ambiguous": 1}
 
 
@@ -171,7 +212,123 @@ def test_missing_candidate_pool_is_replay_unusable(workspace_tmp_dir):
 
     assert manifest[0]["replay_status"] == "replay_unusable"
     assert manifest[0]["candidate_pool_present"] is False
+    assert manifest[0]["headline_eligible"] is False
     assert summary["replay_nonusable_dispatches"] == 1
+
+
+def test_missing_identity_fields_are_replay_unusable(workspace_tmp_dir):
+    for field in ("run_id", "dispatch_id", "agent_id", "round_id"):
+        rows = _base_rows()
+        for row in rows.values():
+            row.pop(field, None)
+        _, manifest, _ = _run_fixture(workspace_tmp_dir / field, rows)
+
+        assert manifest[0]["replay_status"] == "replay_unusable"
+        assert field in manifest[0]["missing_required_fields"]
+        assert manifest[0]["headline_eligible"] is False
+
+
+def test_missing_selected_set_is_replay_unusable(workspace_tmp_dir):
+    rows = _base_rows(
+        projection_plan={"selected_ids": []},
+        budget_witness={"selected_ids": []},
+        materialized_context={"selected_ids": []},
+        diagnostics={"selected_ids": []},
+    )
+
+    _, manifest, _ = _run_fixture(workspace_tmp_dir, rows)
+
+    assert manifest[0]["replay_status"] == "replay_unusable"
+    assert "selected_ids" in manifest[0]["missing_required_fields"]
+    assert manifest[0]["headline_eligible"] is False
+
+
+def test_complete_artifacts_with_missing_utility_records_are_replay_usable_but_not_headline(workspace_tmp_dir):
+    _, manifest, summary = _run_fixture(workspace_tmp_dir, _base_rows(utility_record=None))
+
+    assert manifest[0]["replay_status"] == "replay_usable"
+    assert manifest[0]["diagnostic_recompute_status"] == "insufficient_utility_records"
+    assert manifest[0]["headline_eligible"] is False
+    assert manifest[0]["headline_exclusion_reason"] == "insufficient_utility_records"
+    assert summary["replay_status_counts"] == {"replay_usable": 1}
+    assert summary["headline_eligible_dispatches"] == 0
+
+
+def test_uninformative_denominator_is_not_treated_as_low_block_ratio_failure(workspace_tmp_dir):
+    rows = _base_rows(
+        projection_plan={"selected_ids": ["a", "b"], "excluded_ids": []},
+        budget_witness={"selected_ids": ["a", "b"], "excluded_ids": []},
+        materialized_context={"selected_ids": ["a", "b"], "section_order": ["a", "b"]},
+        diagnostics={"selected_ids": ["a", "b"], "excluded_ids": []},
+        utility_record={"singleton_values": {"a": 0.0, "b": 0.0}, "block_values": {"a,b": 0.0}},
+    )
+
+    _, manifest, summary = _run_fixture(workspace_tmp_dir, rows)
+
+    assert manifest[0]["replay_status"] == "replay_usable"
+    assert manifest[0]["diagnostic_recompute_status"] == "uninformative_denominator"
+    assert manifest[0]["headline_eligible"] is False
+    assert "low_block_ratio" not in manifest[0]["headline_exclusion_reason"]
+    assert summary["headline_exclusion_counts"] == {"uninformative_denominator": 1}
+
+
+def test_contamination_failure_preserves_replay_status_but_forces_pilot_only_claim(workspace_tmp_dir):
+    input_dir = workspace_tmp_dir / "input"
+    output_dir = workspace_tmp_dir / "output"
+    _write_input_dir(input_dir, _base_rows())
+    _write_contamination_report(input_dir, status="failed")
+
+    run_phase_b_replay(input_dir=input_dir, output_dir=output_dir)
+    manifest = _jsonl_rows(output_dir / "replay_manifest.jsonl")
+    summary = _json(output_dir / "replay_summary.json")
+
+    assert manifest[0]["replay_status"] == "replay_usable"
+    assert manifest[0]["metric_claim_level"] == "pilot_only"
+    assert manifest[0]["headline_eligible"] is False
+    assert manifest[0]["headline_exclusion_reason"] == "contamination_failed"
+    assert summary["replay_status_counts"] == {"replay_usable": 1}
+    assert summary["metric_claim_level_counts"] == {"pilot_only": 1}
+
+
+def test_headline_summaries_exclude_contaminated_partial_unusable_stale_and_insufficient_rows(workspace_tmp_dir):
+    input_dir = workspace_tmp_dir / "input"
+    output_dir = workspace_tmp_dir / "output"
+
+    fixture_rows = [
+        _base_rows(),
+        _base_rows(dispatch_id="dispatch-partial", materialized_context=None),
+        _base_rows(dispatch_id="dispatch-unusable", candidate_pool=None),
+        _base_rows(dispatch_id="dispatch-stale", metric_bridge_witness={"drift_status": "stale"}),
+        _base_rows(dispatch_id="dispatch-no-utility", utility_record=None),
+    ]
+    file_map = {
+        "candidate_pool": "candidate_pools.jsonl",
+        "projection_plan": "projection_plans.jsonl",
+        "budget_witness": "budget_witnesses.jsonl",
+        "materialized_context": "materialized_contexts.jsonl",
+        "metric_bridge_witness": "metric_bridge_witnesses.jsonl",
+        "diagnostics": "diagnostics.jsonl",
+        "utility_record": "utility_records.jsonl",
+    }
+    for key, filename in file_map.items():
+        rows_for_file = [fixture[key] for fixture in fixture_rows if key in fixture]
+        _write_jsonl(input_dir / filename, rows_for_file)
+
+    run_phase_b_replay(input_dir=input_dir, output_dir=output_dir)
+    payloads = _output_payloads(output_dir)
+    summary = payloads["replay_summary"]
+    alignment = payloads["pipeline_proxy_alignment"]
+    metric_summary = payloads["metric_claim_level_summary"]
+    selector_summary = payloads["selector_regime_summary"]
+    report_text = payloads["report_md"]
+
+    assert summary["total_dispatches"] == 5
+    assert summary["headline_eligible_dispatches"] == 1
+    assert alignment["headline_denominator"] == 1
+    assert metric_summary["headline_denominator"] == 1
+    assert selector_summary["headline_denominator"] == 1
+    assert "Headline eligible dispatches: 1 / 5" in report_text
+    assert "Excluded dispatches are not mixed into headline diagnostics." in report_text
 
 
 def test_operational_only_metric_bridge_remains_operational_only(workspace_tmp_dir):
@@ -237,9 +394,17 @@ def test_cli_writes_phase_b_manifest_missing_fields_and_summary(workspace_tmp_di
     )
 
     assert result.returncode == 0
+    assert (output_dir / "replay_manifest.json").exists()
     assert (output_dir / "replay_manifest.jsonl").exists()
+    assert (output_dir / "per_dispatch_diagnostics.jsonl").exists()
+    assert (output_dir / "missing_field_report.json").exists()
     assert (output_dir / "missing_fields.json").exists()
+    assert (output_dir / "pipeline_proxy_alignment.json").exists()
+    assert (output_dir / "metric_claim_level_summary.json").exists()
+    assert (output_dir / "selector_regime_summary.json").exists()
+    assert (output_dir / "replay_status_counts.json").exists()
     assert (output_dir / "replay_summary.json").exists()
+    assert (output_dir / "report.md").exists()
     assert "replay_usable" in result.stdout
 
 
@@ -251,3 +416,30 @@ def test_candidate_pool_is_replay_substrate_not_core_paper_artifact(workspace_tm
     assert "CandidatePool" in summary["replay_substrate_artifacts"]
     assert "CandidatePool" not in summary["core_paper_artifacts"]
     assert "CandidatePool is replay substrate" in manifest[0]["notes"]
+
+
+def test_phase_b_outputs_are_byte_stable(workspace_tmp_dir):
+    first_input = workspace_tmp_dir / "first-input"
+    first_output = workspace_tmp_dir / "first-output"
+    second_input = workspace_tmp_dir / "second-input"
+    second_output = workspace_tmp_dir / "second-output"
+    _write_input_dir(first_input, _base_rows())
+    _write_input_dir(second_input, _base_rows())
+
+    run_phase_b_replay(input_dir=first_input, output_dir=first_output)
+    run_phase_b_replay(input_dir=second_input, output_dir=second_output)
+
+    output_names = [
+        "replay_manifest.json",
+        "replay_manifest.jsonl",
+        "per_dispatch_diagnostics.jsonl",
+        "missing_field_report.json",
+        "pipeline_proxy_alignment.json",
+        "metric_claim_level_summary.json",
+        "selector_regime_summary.json",
+        "replay_status_counts.json",
+        "replay_summary.json",
+        "report.md",
+    ]
+    for name in output_names:
+        assert (first_output / name).read_bytes() == (second_output / name).read_bytes()
