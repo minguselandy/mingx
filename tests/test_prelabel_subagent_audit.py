@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
@@ -15,6 +14,7 @@ from cps.experiments.prelabel_subagent_audit import (
     parse_subagent_audit_output,
     write_prelabel_subagent_audit_outputs,
 )
+from conftest import assert_importing_modules_does_not_load_forbidden_sdks
 
 
 def _read(path: str) -> str:
@@ -192,6 +192,6 @@ def test_audit_outputs_are_deterministic_and_never_write_human_labels(workspace_
 
 
 def test_no_external_sdk_import_is_required():
-    forbidden = {"openai", "anthropic", "requests", "httpx", "numpy", "pandas", "sklearn"}
-
-    assert forbidden.isdisjoint(set(sys.modules))
+    assert_importing_modules_does_not_load_forbidden_sdks(
+        ["cps.experiments.prelabel_subagent_audit"],
+    )

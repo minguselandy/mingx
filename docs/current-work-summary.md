@@ -161,3 +161,18 @@ If continuing the current lane, the most reasonable next action is:
    - framework improvements for fixed-question answering, or
    - sidecar logic for compression/memory formation, or
    - a fresh reduced-scope follow-up batch using the prepared replacements
+
+## Next Planning Documents
+
+The P37-P44 planning package adds follow-up planning and review artifacts for
+the next development cycle:
+
+- [P37-P44 Development and Experiment Roadmap](./roadmaps/P37-P44-development-and-experiment-roadmap.md)
+- [P37 Repo State and Claim Boundary Lock Protocol](./protocols/P37-repo-state-claim-boundary-lock-protocol.md)
+- [P40 Phase B Offline Replay Implementation Plan](./experiments/P40-phase-b-offline-replay-implementation-plan.md)
+- [P41 Route B Model-Adjudicated Evaluation Plan](./experiments/P41-route-b-model-adjudicated-evaluation-plan.md)
+
+These planning documents do not change the current run status: the reduced-scope
+live run remains `pilot_only`, contamination failed, and measurement validation
+still awaits real labels, kappa, contamination closure, fresh bridge evidence,
+and claim-gate review.

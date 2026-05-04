@@ -8,6 +8,8 @@ This repository implements a measurement and runtime-audit scaffold for:
 
 The implementation must remain aligned with the revised paper boundary.
 
+Current source manuscript anchor: `docs/archive/context_projection_revised_v10.md`.
+
 ## Mandatory reading before phase-development edits
 
 For implementation tasks, read:
