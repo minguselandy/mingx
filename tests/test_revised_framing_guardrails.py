@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 from typing import Iterable
 
@@ -15,16 +16,41 @@ def _read_text(path: Path) -> str:
 
 
 def _active_markdown_files() -> list[Path]:
-    docs = [
-        path
-        for path in (ROOT / "docs").rglob("*.md")
-        if "archive" not in path.relative_to(ROOT).parts
-    ]
+    docs = _tracked_markdown_files_under_docs()
     return [
         ROOT / "README.md",
         ROOT / "AGENTS.md",
         ROOT / "configs" / "runs" / "README.md",
         *sorted(docs),
+    ]
+
+
+def _tracked_markdown_files_under_docs() -> list[Path]:
+    result = subprocess.run(
+        [
+            "git",
+            "-c",
+            f"safe.directory={ROOT.as_posix()}",
+            "ls-files",
+            "docs/*.md",
+            "docs/**/*.md",
+        ],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if result.returncode != 0:
+        return [
+            path
+            for path in (ROOT / "docs").rglob("*.md")
+            if "archive" not in path.relative_to(ROOT).parts
+        ]
+    return [
+        ROOT / line
+        for line in sorted(set(result.stdout.splitlines()))
+        if line and "archive" not in Path(line).parts
     ]
 
 
