@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 import pytest
@@ -13,6 +12,7 @@ from cps.experiments.llm_assisted_prelabels import (
     build_v4_flash_prelabel_prompt,
     parse_llm_prelabel_output,
 )
+from conftest import assert_importing_modules_does_not_load_forbidden_sdks
 
 
 def _read(path: str) -> str:
@@ -238,6 +238,6 @@ def test_live_mode_fails_closed_with_placeholder_endpoint(monkeypatch, workspace
 
 
 def test_no_external_sdk_import_is_required():
-    forbidden = {"openai", "anthropic", "requests", "httpx", "numpy", "pandas", "sklearn"}
-
-    assert forbidden.isdisjoint(set(sys.modules))
+    assert_importing_modules_does_not_load_forbidden_sdks(
+        ["cps.experiments.llm_assisted_prelabels"],
+    )

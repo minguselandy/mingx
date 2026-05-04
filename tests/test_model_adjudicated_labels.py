@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 from cps.experiments.human_label_kappa import LABEL_DIMENSIONS
@@ -9,6 +8,7 @@ from cps.experiments.model_adjudicated_labels import (
     build_model_adjudicated_labels,
     build_model_adjudicated_labels_from_paths,
 )
+from conftest import assert_importing_modules_does_not_load_forbidden_sdks
 
 
 def _read(path: str) -> str:
@@ -236,6 +236,6 @@ def test_build_from_paths_consumes_p32_and_p33_outputs(workspace_tmp_dir):
 
 
 def test_no_external_sdk_import_or_live_api_is_required():
-    forbidden = {"openai", "anthropic", "requests", "httpx", "numpy", "pandas", "sklearn"}
-
-    assert forbidden.isdisjoint(set(sys.modules))
+    assert_importing_modules_does_not_load_forbidden_sdks(
+        ["cps.experiments.model_adjudicated_labels"],
+    )
