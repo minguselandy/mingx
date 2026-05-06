@@ -1,8 +1,8 @@
 # P42 Fresh Reduced-Scope Follow-Up Batch Plan
 
-**Milestone:** P42  
-**Status:** live-pilot plan, not authorization  
-**Live API:** prohibited unless explicitly approved by operator  
+**Milestone:** P42
+**Status:** no-git DEV execution pass completed with live API skipped
+**Live API:** prohibited unless explicitly approved by operator
 **Maximum claim:** `pilot_only` unless stronger gates are separately satisfied; live success alone is not measurement validation
 
 
@@ -18,7 +18,7 @@ This document is aligned to:
 - `docs/current-work-summary.md`
 - `configs/runs/README.md`
 
-Local execution status must always be verified from `git status`, run plans, `run_summary.json`, `events.jsonl`, and concrete artifacts. Paper text and roadmap documents are not run-completion evidence.
+Local execution status must be verified from the no-git automation state files, run plans, validation output, `run_summary.json`, `events.jsonl`, and concrete artifacts when such artifacts are produced. Paper text and roadmap documents are not run-completion evidence. During no-git direct development automation, do not run Git commands to determine status.
 
 
 ## 1. Purpose
@@ -88,9 +88,28 @@ uv run python -m api --export-phase1-env --profile dashscope-qwen-phase1
 uv run pytest -q tests/test_phase1_request_builder.py tests/test_phase1_backend_runtime.py
 ```
 
+Automation execution for P42 uses the non-live path first. The focused offline
+readiness target is:
+
+```bash
+uv run pytest -q tests/test_phase1_request_builder.py tests/test_phase1_backend_runtime.py tests/test_controlled_live_pilot.py
+```
+
 ## 6. Live Test Gate
 
-Only after explicit operator approval:
+Only after explicit operator approval and all live-smoke gates are true:
+
+- mock/offline path passed;
+- `.env` exists;
+- credentials resolve locally;
+- `CPS_ALLOW_LIVE_API=1`;
+- `P42_ALLOW_LIVE_SMOKE=1`;
+- run plan has `operator_approval=true`;
+- CLI explicitly uses `--backend live`;
+- `max_cases <= 3`;
+- `max_repeats = 1`.
+
+If any gate is missing, live execution is skipped and the exact skip reason is recorded. Only after those gates are satisfied:
 
 ```bash
 PHASE1_ENABLE_LIVE_TESTS=1 uv run pytest -q   tests/test_phase1_live_api.py   tests/test_phase1_live_run.py
@@ -133,3 +152,13 @@ P42 is accepted when:
 - contamination status is recorded;
 - no failed or replacement run is described as measurement validation;
 - output can feed observability or Route B evidence only under claim gate limits.
+
+## 10. P42 No-Git Automation Result
+
+- Execution time: `2026-05-05T01:17:58.5416162+08:00`
+- Mode: no-git direct development in `mingx-dev`
+- Offline/mock path: executed through focused request-builder, backend-runtime, and controlled-live-pilot tests
+- Live API: skipped before any provider call because `CPS_ALLOW_LIVE_API` and `P42_ALLOW_LIVE_SMOKE` were unset
+- `.env`: present, but no secret values were read into this document
+- Raw provider responses: none written
+- Output interpretation: `pilot_only` / `operational_utility_only`; no `measurement_validated` claim

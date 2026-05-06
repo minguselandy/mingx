@@ -46,7 +46,7 @@ We assume an enclosing orchestrator-worker runtime in which a scheduler decides 
 
 3. **Supporting contribution B — runtime interfaces, metric witnesses, and extraction QA.** We specify the minimum auditable runtime interfaces required by a verifiable deployment setting, including ProjectionPlan, BudgetWitness, MaterializedContext, and MetricBridgeWitness artifacts. The MetricBridgeWitness records the calibration epoch, active stratum, metric class, bridge residual, drift status, and diagnostic claim level so that V-information proxy labels cannot be silently reported under operational-only metrics. We also isolate extraction quality as a separate bridge-risk bottleneck with a value-stratified audit protocol. These support layers make the proxy-labeling protocol executable, but they are not parallel theory claims.
 
-**Evidence status.** The implemented scaffold currently demonstrates deterministic offline audit plumbing and manuscript-facing evidence summaries. It does not execute the human-label, kappa, contamination-closure, fresh metric-bridge, live API, or runtime-integration work required for measurement validation.
+**Evidence status.** The implemented scaffold currently demonstrates deterministic offline audit plumbing, manuscript-facing evidence summaries, Route B model-adjudicated pilot packaging, dry-run live-smoke gating, and deterministic realistic-task context-projection benchmark records. It does not execute the human-label, kappa, contamination-closure, fresh metric-bridge, approved live API, or runtime-integration work required for measurement validation.
 
 ## 2. Problem Formulation
 
@@ -595,6 +595,14 @@ Minimal pass conditions are: oracle-layer signature separation for most instance
 
 The implemented offline runtime-audit evidence chain exercises the audit plumbing around this scaffold without making a scientific validation claim. It normalizes provider-style candidates, runs a fake/local provider-to-selector smoke path, materializes `ProjectionBundleV1` artifacts, rebuilds an evidence ledger, applies the conservative claim gate and metric bridge gate, emits a proxy-regime matrix, packages replay evidence, and produces paper-facing summaries. It does not execute the benchmark's pre-registered scientific pass conditions. This is replayable engineering evidence for the audit surface only: P17 is not scientific validation, synthetic benchmark success does not certify deployed V-information submodularity, and replay package completeness is not scientific validation.
 
+The P41-P43 development evidence extends that audit surface without changing the claim level. The following manuscript-facing summary is traceable to the local phase plans, review documents, and phase output manifests; it is not a substitute for human-label, kappa, contamination-closure, or fresh metric-bridge evidence.
+
+| DEV evidence surface | Current status | Manuscript use | Claim boundary |
+|---|---|---|---|
+| P41 Route B model-adjudicated evaluation | dry-run package and focused tests present | records a scalable automated pilot lane that consumes prelabels, model audit, adjudicated labels, and Route B summaries | `model_adjudicated_pilot_only` or `operational_utility_only`; model-adjudicated labels are not human labels; no kappa or measurement-validation claim |
+| P42 reduced-scope live smoke | mock/offline path passed; live API skipped because required approval gates were absent | documents the live-governance boundary and preserves the contamination/pilot interpretation | `pilot_only` or `operational_utility_only`; live success alone would not establish measurement validation |
+| P43 realistic-task benchmark scaffold | deterministic offline fixtures and replay-compatible artifacts present | tests context-projection behavior under separated realistic-task conditions | `operational_utility_only`; no fresh metric bridge and no deployed V-information certification |
+
 The proxy-regime matrix records the diagnostic scope and failure boundaries that accompany the synthetic benchmark. Its rows should be read as proxy-regime diagnostic behavior, not as deployed V-information certification.
 
 | Regime | Expected diagnostic behavior | Allowed claim | Denied claim | Diagnostic scope |
@@ -926,7 +934,7 @@ Eighth, the extraction gate is a potential attack surface: a malicious or malfun
 
 Ninth, the runtime-interface requirements presume observability that some hosted frontier runtimes may not expose, including excluded candidates, materialization order, bridge calibration state, and replay-compatible evaluation traces. In such systems the protocol can still guide design, but it cannot certify proxy-regime labels without the required artifacts.
 
-The current runtime-audit scaffold does not close the missing scientific evidence. No human-label set, kappa evidence, contamination closure, or fresh deployed metric bridge sufficient for `measurement_validated` is supplied here. P04 remains deferred/operator-required, P09 remains `BLOCKED_OPERATOR_REQUIRED`, and `measurement_validated` is not claimed. Engineering success is not scientific validation, synthetic and replay evidence remain proxy/offline evidence, replay package completeness is not scientific validation, paper-facing summaries do not upgrade claim levels, and live API or external runtime success alone is not measurement validation.
+The current runtime-audit scaffold does not close the missing scientific evidence. No human-label set, kappa evidence, contamination closure, or fresh deployed metric bridge sufficient for `measurement_validated` is supplied here. P41 Route B evidence is model-adjudicated pilot evidence only, P42 did not run an approved live API smoke, and P43 is an offline realistic-task scaffold with an `operational_utility_only` ceiling. P04 remains deferred/operator-required, P09 remains `BLOCKED_OPERATOR_REQUIRED`, and `measurement_validated` is not claimed. Engineering success is not scientific validation, synthetic and replay evidence remain proxy/offline evidence, replay package completeness is not scientific validation, paper-facing summaries do not upgrade claim levels, and live API or external runtime success alone is not measurement validation.
 
 We do not claim to propose an optimal scheduler, solve the critical-path problem, establish multi-agent superiority over single-agent systems, or provide system-level correctness guarantees. The paper formalizes the context-allocation sub-layer that arises when an orchestrator-worker runtime has already chosen to dispatch a worker.
 
@@ -947,6 +955,8 @@ We have formalized context projection selection as monotone set-function maximiz
 The deployment contribution is correspondingly modest and explicit. The protocol does not verify true deployment-time V-information weak submodularity in general. It provides conservative proxy-regime diagnostic evidence, not deployed V-information certification, when the metric bridge is valid, and operational-utility escalation signals when it is not. The immediate next empirical steps are to execute the pre-registered synthetic regime benchmark, run an offline replay pilot on real dispatch traces, and perform the value-stratified extraction audit. The central open theoretical question — whether V-information with bounded neural network families is approximately submodular on natural language distributions — remains the key target for upgrading Condition A from an architectural argument to a formal guarantee.
 
 ---
+
+The P41-P43 DEV evidence adds operator-reviewable implementation records for Route B, live-smoke governance, and realistic-task projection behavior, but it leaves the validation-critical work to future/operator-controlled phases.
 
 ## References
 

@@ -1,10 +1,10 @@
 # P43 Phase C Realistic-Task Context Projection Benchmark Plan
 
-**Milestone:** P43  
-**Experiment stack:** Phase C realistic-task projection behavior  
-**Status:** experiment plan  
-**Live API:** optional and separately gated  
-**Maximum claim:** bridge-qualified operational evidence unless full metric bridge and validation gates are satisfied
+**Milestone:** P43
+**Experiment stack:** Phase C realistic-task projection behavior
+**Status:** implemented offline scaffold
+**Live API:** optional and separately gated
+**Maximum claim:** `operational_utility_only` for the implemented scaffold
 
 
 ## Source Basis
@@ -19,7 +19,7 @@ This document is aligned to:
 - `docs/current-work-summary.md`
 - `configs/runs/README.md`
 
-Local execution status must always be verified from `git status`, run plans, `run_summary.json`, `events.jsonl`, and concrete artifacts. Paper text and roadmap documents are not run-completion evidence.
+Local execution status must always be verified from the no-git automation state, run plans, concrete artifacts, and validation logs. Paper text and roadmap documents are not run-completion evidence.
 
 
 ## 1. Purpose
@@ -27,6 +27,24 @@ Local execution status must always be verified from `git status`, run plans, `ru
 P43 evaluates context-projection behavior on realistic tasks after artifact schema and Phase B replay are working. It asks whether diagnostic-guided context projection behaves usefully under realistic candidate pools, budgets, and task metrics.
 
 It does not claim scheduler optimality, multi-agent superiority, or deployed V-information weak submodularity.
+
+Implemented scaffold:
+
+- `cps/experiments/phase_c_benchmark.py` builds two deterministic realistic-task fixtures:
+  - `realistic_bridge_lookup`
+  - `realistic_runtime_triage`
+- The default run evaluates four separated conditions:
+  - `no_cps_baseline`
+  - `heuristic_selector_baseline`
+  - `cps_runtime_audit_scaffold`
+  - `diagnostic_guided_escalation`
+- Each dispatch writes replay-compatible `CandidatePool`, `ProjectionPlan`,
+  `BudgetWitness`, `MaterializedContext`, `MetricBridgeWitness`, and
+  diagnostics records to the caller-provided output directory.
+- Task metrics are operational support-coverage metrics, not V-information or
+  log-loss bridge metrics.
+- Missing or operational-only metric bridge evidence remains capped at
+  `operational_utility_only`.
 
 
 ## Claim Boundary Lock
@@ -150,16 +168,11 @@ ambiguous
 
 For Phase C, `structural_synthetic_only` should not apply unless a synthetic sub-run is included. `Vinfo_proxy_certified` requires fresh bridge evidence, not task success alone.
 
-## 7. Recommended Implementation Targets
+## 7. Implemented Targets
 
 ```text
 cps/experiments/phase_c_benchmark.py
-cps/experiments/task_context_pool_builder.py
-cps/experiments/phase_c_conditions.py
-cps/experiments/phase_c_report.py
-tests/test_phase_c_candidate_pool_builder.py
-tests/test_phase_c_artifact_completeness.py
-tests/test_phase_c_claim_level_assignment.py
+tests/test_phase_c_benchmark.py
 ```
 
 ## 8. Outputs
@@ -175,6 +188,10 @@ phase_c_claim_gate_report.json
 phase_c_report.md
 ```
 
+The implementation writes these outputs under the supplied `--output-dir`.
+Persistent benchmark artifacts are not required for the P43 commit candidate;
+tests exercise temporary output directories and Phase B replay compatibility.
+
 ## 9. Acceptance Criteria
 
 P43 is accepted when:
@@ -185,3 +202,11 @@ P43 is accepted when:
 - results do not claim theorem inheritance;
 - Phase B can replay at least the benchmark's artifact records;
 - report distinguishes operational usefulness from measurement validation.
+
+Current validation:
+
+```text
+python -m compileall cps scripts => passed
+uv run pytest tests/test_phase_c_benchmark.py -q => 5 passed
+uv run pytest -q => 435 passed, 4 skipped
+```

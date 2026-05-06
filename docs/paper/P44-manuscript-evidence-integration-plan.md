@@ -1,8 +1,8 @@
 # P44 Manuscript Evidence Integration Plan
 
-**Milestone:** P44  
-**Status:** manuscript integration plan  
-**Live API:** prohibited  
+**Milestone:** P44
+**Status:** no-git DEV manuscript integration completed
+**Live API:** prohibited
 **Primary target:** `docs/archive/context_projection_revised_v10.md`
 
 
@@ -24,6 +24,19 @@ Local execution status must always be verified from `git status`, run plans, `ru
 ## 1. Purpose
 
 P44 integrates new evidence from P38-P43 into the revised v10 manuscript without claim inflation. The manuscript should continue to read as conditional theory + bridge statement + proxy-regime certification + runtime-audit evidence, not as deployed scientific validation.
+
+## P44 No-Git Automation Result
+
+- Execution time: `2026-05-05T02:03:32.2550785+08:00`
+- Mode: no-git direct development in `mingx-dev`
+- Manuscript target updated: `docs/archive/context_projection_revised_v10.md`
+- Review target updated: `docs/reviews/P44-manuscript-evidence-integration-review.md`
+- Evidence integrated: P41 Route B model-adjudicated pilot packaging, P42 reduced-scope live-smoke gate result, and P43 deterministic realistic-task benchmark scaffold
+- Claim ceiling: `model_adjudicated_pilot_only`, `pilot_only`, or `operational_utility_only`, depending on evidence surface
+- Live API: skipped; P44 is manuscript/doc integration only
+- Claim boundary: no human labels, kappa, contamination pass, fresh metric bridge, `measurement_validated`, scientific validation, or deployed V-information certification is claimed
+- Validation: `python -m compileall cps scripts` passed; focused manuscript/framing tests passed with `31 passed`; full `uv run pytest -q` passed with `435 passed, 4 skipped`
+- Risky claim scan: safe; occurrences are denied claims, boundary conditions, claim-gate rules, future/conditional targets, explicit non-claims, Route B ceilings, or pilot ceilings
 
 
 ## Claim Boundary Lock

@@ -1,0 +1,156 @@
+{
+  "source_of_truth": "event_log",
+  "run_id": "synthetic-regime-smoke-20260418",
+  "dispatch_count": 3,
+  "artifact_counts": {
+    "candidate_pools": 3,
+    "projection_plans": 3,
+    "budget_witnesses": 3,
+    "materialized_contexts": 3,
+    "metric_bridge_witnesses": 3,
+    "diagnostics": 3
+  },
+  "complete_artifact_sets": true,
+  "selector_action_counts": {
+    "interaction_aware_local_search": 1,
+    "monitored_greedy": 1,
+    "seeded_augmented_greedy": 1
+  },
+  "selector_regime_label_counts": {
+    "escalate": 2,
+    "greedy_valid": 1
+  },
+  "policy_counts": {
+    "interaction_aware_local_search": 1,
+    "monitored_greedy": 1,
+    "seeded_augmented_greedy": 1
+  },
+  "metric_claim_level_counts": {
+    "structural_synthetic_only": 3
+  },
+  "per_regime": {
+    "higher_order_synergy": {
+      "dispatch_count": 1,
+      "avg_block_ratio_lcb_b2": 0.678955,
+      "avg_block_ratio_lcb_star": 0.678955,
+      "avg_block_ratio_lcb_b3": 0.761905,
+      "avg_trace_decay_proxy": 1.0,
+      "avg_synergy_fraction": 0.107143,
+      "avg_positive_interaction_mass_ucb": 0.214286,
+      "avg_greedy_augmented_gap": 0.492711,
+      "selector_actions": {
+        "interaction_aware_local_search": 1
+      },
+      "selector_regime_labels": {
+        "escalate": 1
+      },
+      "metric_claim_levels": {
+        "structural_synthetic_only": 1
+      }
+    },
+    "redundancy_dominated": {
+      "dispatch_count": 1,
+      "avg_block_ratio_lcb_b2": 1.0,
+      "avg_block_ratio_lcb_star": 1.0,
+      "avg_block_ratio_lcb_b3": 1.0,
+      "avg_trace_decay_proxy": 1.0,
+      "avg_synergy_fraction": 0.0,
+      "avg_positive_interaction_mass_ucb": 0.0,
+      "avg_greedy_augmented_gap": 0.0,
+      "selector_actions": {
+        "monitored_greedy": 1
+      },
+      "selector_regime_labels": {
+        "greedy_valid": 1
+      },
+      "metric_claim_levels": {
+        "structural_synthetic_only": 1
+      }
+    },
+    "sparse_pairwise_synergy": {
+      "dispatch_count": 1,
+      "avg_block_ratio_lcb_b2": 0.802198,
+      "avg_block_ratio_lcb_star": 0.802198,
+      "avg_block_ratio_lcb_b3": 0.817259,
+      "avg_trace_decay_proxy": 1.124138,
+      "avg_synergy_fraction": 0.142857,
+      "avg_positive_interaction_mass_ucb": 0.514286,
+      "avg_greedy_augmented_gap": 0.0,
+      "selector_actions": {
+        "seeded_augmented_greedy": 1
+      },
+      "selector_regime_labels": {
+        "escalate": 1
+      },
+      "metric_claim_levels": {
+        "structural_synthetic_only": 1
+      }
+    }
+  },
+  "pre_registered_gate_passed": true,
+  "pre_registered_gate_failures": [],
+  "pre_registered_gate_results": {
+    "artifact_completeness": {
+      "passed": true,
+      "artifact_counts": {
+        "candidate_pools": 3,
+        "projection_plans": 3,
+        "budget_witnesses": 3,
+        "materialized_contexts": 3,
+        "metric_bridge_witnesses": 3,
+        "diagnostics": 3
+      }
+    },
+    "ambiguity_accounting": {
+      "passed": true,
+      "ambiguity_count": 0,
+      "dispatch_ids": []
+    },
+    "redundancy_signature": {
+      "passed": true,
+      "dispatch_ids": [
+        "redundancy_0"
+      ]
+    },
+    "pairwise_synergy_signature": {
+      "passed": true,
+      "dispatch_ids": [
+        "pairwise_0"
+      ],
+      "redundancy_b2_lcb": 1.0
+    },
+    "higher_order_safety": {
+      "passed": true,
+      "dispatch_ids": [
+        "higher_order_0"
+      ]
+    },
+    "triple_excess_detection": {
+      "passed": true,
+      "dispatch_ids": [
+        "higher_order_0"
+      ]
+    }
+  },
+  "ambiguity_count": 0,
+  "status": "green",
+  "config_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\mingx\\configs\\runs\\synthetic-regime-smoke.json",
+  "output_dir": "C:\\Users\\Mingx\\Documents\\mx-codex\\mingx\\artifacts\\experiments\\synthetic_regime_smoke_alignment_test",
+  "expected_policy_matches": 3,
+  "artifact_paths": {
+    "events": "C:\\Users\\Mingx\\Documents\\mx-codex\\mingx\\artifacts\\experiments\\synthetic_regime_smoke_alignment_test\\events.jsonl",
+    "candidate_pool_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\mingx\\artifacts\\experiments\\synthetic_regime_smoke_alignment_test\\candidate_pools.jsonl",
+    "projection_plan_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\mingx\\artifacts\\experiments\\synthetic_regime_smoke_alignment_test\\projection_plans.jsonl",
+    "budget_witness_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\mingx\\artifacts\\experiments\\synthetic_regime_smoke_alignment_test\\budget_witnesses.jsonl",
+    "materialized_context_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\mingx\\artifacts\\experiments\\synthetic_regime_smoke_alignment_test\\materialized_contexts.jsonl",
+    "metric_bridge_witness_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\mingx\\artifacts\\experiments\\synthetic_regime_smoke_alignment_test\\metric_bridge_witnesses.jsonl",
+    "projection_diagnostics_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\mingx\\artifacts\\experiments\\synthetic_regime_smoke_alignment_test\\diagnostics.jsonl"
+  },
+  "interpretation_limits": [
+    "synthetic proxy-layer diagnostic only",
+    "no scheduler implementation",
+    "no memory architecture implementation",
+    "no theorem-inheritance claim",
+    "no system-level performance claim"
+  ]
+}
