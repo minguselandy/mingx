@@ -56,7 +56,7 @@ Mark as `BLOCKING` if any of the following occur:
 - runtime diagnostics are described as selector-regime proof
 - `Vinfo_proxy_certified` is emitted without a fresh matching `MetricBridgeWitness`
 - `CandidatePool` is counted as a core paper artifact
-- `gamma_hat` is treated as a submodularity-ratio estimator
+- `gamma_hat` legacy/non-headline trace-decay alias is treated as a submodularity-ratio estimator
 - `block_ratio_lcb_star` is described as degree-adaptive or paper-grade
 - Phase B performs live inference
 - Phase B recomputes diagnostics
@@ -194,7 +194,7 @@ For each:
 - proxy-regime / operational-utility diagnostic boundary:
 - M* -> M extraction bridge separation:
 - CandidatePool substrate status:
-- gamma_hat legacy status:
+- gamma_hat legacy status: legacy/non-headline alias only; not a true gamma estimator
 - block_ratio_lcb_star placeholder status:
 
 # Phase-boundary assessment

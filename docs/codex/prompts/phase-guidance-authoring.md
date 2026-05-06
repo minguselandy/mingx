@@ -32,7 +32,7 @@ Do not introduce language implying:
 - runtime selector-regime proof
 - bridge-qualified V-information proxy certification without fresh matching bridge evidence
 - CandidatePool as a core paper artifact
-- gamma_hat as a submodularity ratio
+- gamma_hat legacy/non-headline alias as a submodularity ratio
 - block_ratio_lcb_star as a paper-grade degree-adaptive estimator
 
 ## Review requirement

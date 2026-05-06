@@ -142,7 +142,7 @@ Do not:
 - implement live inference
 - implement Phase C
 - change synthetic benchmark behavior
-- change `gamma_hat` semantics
+- change `gamma_hat` legacy/non-headline trace-decay alias semantics
 - change `block_ratio_lcb_star` semantics
 - infer missing materialization order
 - infer excluded candidates without explicit complete considered set

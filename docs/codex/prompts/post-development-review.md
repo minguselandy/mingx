@@ -25,7 +25,7 @@ Review focus:
 - theorem-level wording
 - accidental `Vinfo_proxy_certified` emission
 - `CandidatePool` treated as core paper artifact
-- `gamma_hat` treated as a submodularity ratio
+- `gamma_hat` legacy/non-headline alias treated as a submodularity ratio
 - `block_ratio_lcb_star` described as degree-adaptive or paper-grade
 - diagnostic recomputation introduced during Phase B
 - inference of missing materialization order

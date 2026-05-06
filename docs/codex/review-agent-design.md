@@ -90,7 +90,7 @@ The review agent must block if the diff:
 - upgrades runtime diagnostics into theorem-level claims
 - emits `Vinfo_proxy_certified` without fresh matching bridge evidence
 - treats `CandidatePool` as a core paper artifact
-- treats `gamma_hat` as a submodularity ratio
+- treats `gamma_hat` legacy/non-headline alias as a submodularity ratio
 - treats `block_ratio_lcb_star` as paper-grade degree-adaptive
 - performs live inference during Phase B
 - recomputes diagnostics during Phase B
