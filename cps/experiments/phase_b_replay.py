@@ -10,6 +10,7 @@ from typing import Any, Iterable
 from cps.experiments.decision import derive_metric_claim_level
 
 
+DENOMINATOR_THRESHOLD = 1e-9
 ARTIFACT_FILE_SPECS = {
     "candidate_pools.jsonl": "candidate_pool",
     "projection_plans.jsonl": "projection_plan",
@@ -75,6 +76,15 @@ class ReplayManifestRow:
     materialization_order_present: bool
     bridge_status: str
     metric_claim_level: str
+    selector_regime_label: str
+    diagnostic_recompute_status: str
+    headline_eligible: bool
+    headline_exclusion_reason: str
+    selected_token_cost: int | None
+    budget_utilization: float | None
+    observed_proxy_value: float | None
+    block_ratio_lcb_b2: float | None
+    contamination_status: str
     missing_required_fields: list[str]
     missing_optional_fields: list[str]
     replay_defects: list[str]
@@ -100,11 +110,18 @@ class ReplaySummary:
     replay_status_counts: dict[str, int]
     artifact_presence_counts: dict[str, int]
     metric_claim_level_counts: dict[str, int]
+    headline_metric_claim_level_counts: dict[str, int]
+    headline_selector_regime_counts: dict[str, int]
+    headline_exclusion_counts: dict[str, int]
     missing_field_counts: dict[str, int]
     replay_usable_dispatches: int
     replay_nonusable_dispatches: int
+    headline_eligible_dispatches: int
+    headline_excluded_dispatches: int
     replay_usable_dispatch_ids: list[str]
     replay_nonusable_dispatch_ids: list[str]
+    headline_eligible_dispatch_ids: list[str]
+    headline_excluded_dispatch_ids: list[str]
     core_paper_artifacts: list[str]
     replay_substrate_artifacts: list[str]
 
@@ -124,6 +141,18 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
             raise ValueError(f"invalid JSONL in {path} line {line_number}: expected object")
         rows.append(row)
     return rows
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"invalid JSON in {path}: {exc}") from exc
+    if not isinstance(payload, dict):
+        raise ValueError(f"invalid JSON in {path}: expected object")
+    return payload
 
 
 def _write_json(path: Path, payload: Any) -> None:
@@ -301,6 +330,148 @@ def _materialization_order_present(bundle: ReplayArtifactBundle) -> bool:
     return False
 
 
+def _realized_budget_present(bundle: ReplayArtifactBundle) -> bool:
+    witness = bundle.budget_witness or {}
+    for field in ("realized_tokens", "estimated_tokens", "token_count"):
+        value = witness.get(field)
+        if isinstance(value, (int, float)):
+            return True
+    return False
+
+
+def _selected_token_cost(bundle: ReplayArtifactBundle, selected_ids: list[str]) -> int | None:
+    if not selected_ids or not bundle.candidate_pool:
+        return None
+    by_id = {
+        str(item.get("item_id")): item
+        for item in bundle.candidate_pool.get("items", [])
+        if isinstance(item, dict) and item.get("item_id") is not None
+    }
+    total = 0
+    for item_id in selected_ids:
+        item = by_id.get(str(item_id))
+        if item is None or not isinstance(item.get("token_cost"), (int, float)):
+            return None
+        total += int(item["token_cost"])
+    return total
+
+
+def _budget_utilization(bundle: ReplayArtifactBundle, selected_token_cost: int | None) -> float | None:
+    if selected_token_cost is None:
+        return None
+    budget = None
+    for record in (bundle.budget_witness, bundle.projection_plan, bundle.candidate_pool):
+        if not record:
+            continue
+        value = record.get("budget_tokens")
+        if isinstance(value, (int, float)) and value > 0:
+            budget = float(value)
+            break
+    if budget is None:
+        return None
+    return round(float(selected_token_cost) / budget, 6)
+
+
+def _utility_payload(bundle: ReplayArtifactBundle) -> dict[str, Any] | None:
+    for row in bundle.utility_records:
+        if isinstance(row.get("singleton_values"), dict) and isinstance(row.get("block_values"), dict):
+            return row
+    return None
+
+
+def _pair_key(first: str, second: str) -> str:
+    return ",".join(sorted([str(first), str(second)]))
+
+
+def _diagnostic_recompute(
+    bundle: ReplayArtifactBundle,
+    *,
+    selected_ids: list[str],
+    selected_token_cost: int | None,
+    budget_utilization: float | None,
+) -> dict[str, Any]:
+    utility = _utility_payload(bundle)
+    if utility is None:
+        return {
+            "diagnostic_recompute_status": "insufficient_utility_records",
+            "observed_proxy_value": None,
+            "block_ratio_lcb_b2": None,
+            "selected_token_cost": selected_token_cost,
+            "budget_utilization": budget_utilization,
+        }
+
+    singleton_values = utility.get("singleton_values") or {}
+    block_values = utility.get("block_values") or {}
+    if not selected_ids or any(item_id not in singleton_values for item_id in selected_ids):
+        return {
+            "diagnostic_recompute_status": "insufficient_utility_records",
+            "observed_proxy_value": None,
+            "block_ratio_lcb_b2": None,
+            "selected_token_cost": selected_token_cost,
+            "budget_utilization": budget_utilization,
+        }
+
+    selected_key = ",".join(sorted(selected_ids))
+    if selected_key in block_values:
+        observed_proxy_value = float(block_values[selected_key])
+    else:
+        observed_proxy_value = sum(float(singleton_values[item_id]) for item_id in selected_ids)
+
+    candidate_ids = _candidate_ids(bundle.candidate_pool)
+    if len(candidate_ids) < 2:
+        return {
+            "diagnostic_recompute_status": "insufficient_utility_records",
+            "observed_proxy_value": round(observed_proxy_value, 6),
+            "block_ratio_lcb_b2": None,
+            "selected_token_cost": selected_token_cost,
+            "budget_utilization": budget_utilization,
+        }
+
+    ratios: list[float] = []
+    saw_uninformative_denominator = False
+    for index, first in enumerate(candidate_ids):
+        for second in candidate_ids[index + 1 :]:
+            key = _pair_key(first, second)
+            if first not in singleton_values or second not in singleton_values or key not in block_values:
+                continue
+            denominator = float(block_values[key])
+            if denominator <= DENOMINATOR_THRESHOLD:
+                saw_uninformative_denominator = True
+                continue
+            numerator = float(singleton_values[first]) + float(singleton_values[second])
+            ratios.append(round(max(0.0, min(1.0, numerator / denominator)), 6))
+
+    if not ratios:
+        status = "uninformative_denominator" if saw_uninformative_denominator else "insufficient_utility_records"
+        return {
+            "diagnostic_recompute_status": status,
+            "observed_proxy_value": round(observed_proxy_value, 6),
+            "block_ratio_lcb_b2": None,
+            "selected_token_cost": selected_token_cost,
+            "budget_utilization": budget_utilization,
+        }
+
+    return {
+        "diagnostic_recompute_status": "recomputed",
+        "observed_proxy_value": round(observed_proxy_value, 6),
+        "block_ratio_lcb_b2": min(ratios),
+        "selected_token_cost": selected_token_cost,
+        "budget_utilization": budget_utilization,
+    }
+
+
+def _contamination_status(input_dir: Path) -> str:
+    payload = _read_json(input_dir / "contamination_report.json")
+    if not payload:
+        return "not_applicable"
+    status = str(payload.get("contamination_status") or payload.get("status") or "unknown").strip().lower()
+    if status == "fail":
+        return "failed"
+    if status not in {"pass", "failed", "incomplete", "unknown"}:
+        return "unknown"
+    return status
+
+
 def _add_missing(
     missing: list[MissingFieldRecord],
     bundle: ReplayArtifactBundle,
@@ -337,7 +508,11 @@ def _bridge_scope(metric_bridge_witness: dict[str, Any] | None, metric_claim_lev
     return drift_status, metric_claim_level
 
 
-def classify_replay_bundle(bundle: ReplayArtifactBundle) -> tuple[ReplayManifestRow, list[MissingFieldRecord]]:
+def classify_replay_bundle(
+    bundle: ReplayArtifactBundle,
+    *,
+    contamination_status: str = "not_applicable",
+) -> tuple[ReplayManifestRow, list[MissingFieldRecord]]:
     missing: list[MissingFieldRecord] = []
     replay_defects: list[str] = []
     missing_optional_fields: list[str] = []
@@ -349,10 +524,11 @@ def classify_replay_bundle(bundle: ReplayArtifactBundle) -> tuple[ReplayManifest
             bundle,
             field="run_id",
             artifact="identity",
-            severity="warning",
-            required_for="stable_grouping",
-            reason="run_id is missing; bundle was grouped by remaining dispatch identity fields",
+            severity="error",
+            required_for="dispatch_binding",
+            reason="run_id is required to reconstruct a dispatch binding",
         )
+        replay_defects.append("missing_dispatch_binding")
     for field in ("dispatch_id", "agent_id", "round_id"):
         if not getattr(bundle, field):
             _add_missing(
@@ -375,8 +551,21 @@ def classify_replay_bundle(bundle: ReplayArtifactBundle) -> tuple[ReplayManifest
     selected_ids_present = bool(selected_ids)
     excluded_ids_present = _excluded_ids_present(bundle, selected_ids)
     materialization_order_present = _materialization_order_present(bundle)
+    realized_budget_present = _realized_budget_present(bundle)
     metric_claim_level = derive_metric_claim_level(bundle.metric_bridge_witness)
     bridge_status, replay_claim_scope = _bridge_scope(bundle.metric_bridge_witness, metric_claim_level)
+    if contamination_status == "failed":
+        metric_claim_level = "pilot_only"
+        replay_claim_scope = "pilot_only"
+    selector_regime_label = str((bundle.diagnostics or {}).get("selector_regime_label") or "unknown")
+    selected_token_cost = _selected_token_cost(bundle, selected_ids)
+    budget_utilization = _budget_utilization(bundle, selected_token_cost)
+    diagnostic = _diagnostic_recompute(
+        bundle,
+        selected_ids=selected_ids,
+        selected_token_cost=selected_token_cost,
+        budget_utilization=budget_utilization,
+    )
 
     if not candidate_pool_present:
         _add_missing(
@@ -429,6 +618,17 @@ def classify_replay_bundle(bundle: ReplayArtifactBundle) -> tuple[ReplayManifest
             required_for="replay_usable",
             reason="budget witness is required to reconstruct B_i",
         )
+    elif not realized_budget_present:
+        _add_missing(
+            missing,
+            bundle,
+            field="realized_budget",
+            artifact="BudgetWitness",
+            severity="error",
+            required_for="replay_usable",
+            reason="realized or estimated token usage is required to reconstruct B_i",
+        )
+        replay_defects.append("missing_realized_budget")
     if not materialized_context_present:
         _add_missing(
             missing,
@@ -487,7 +687,7 @@ def classify_replay_bundle(bundle: ReplayArtifactBundle) -> tuple[ReplayManifest
     missing_required_fields = [row.field for row in missing if row.severity == "error"]
     if not candidate_pool_present or not selected_ids_present or "missing_dispatch_binding" in replay_defects:
         replay_status = "replay_unusable"
-    elif not metric_bridge_witness_present or metric_claim_level == "ambiguous" or not cached_utility_records_present:
+    elif not metric_bridge_witness_present or metric_claim_level == "ambiguous":
         replay_status = "replay_partial"
     elif (
         not projection_plan_present
@@ -495,14 +695,31 @@ def classify_replay_bundle(bundle: ReplayArtifactBundle) -> tuple[ReplayManifest
         or not materialized_context_present
         or not excluded_ids_present
         or not materialization_order_present
+        or not realized_budget_present
     ):
         replay_status = "pilot_degraded"
     else:
         replay_status = "replay_usable"
 
+    if contamination_status == "failed":
+        headline_exclusion_reason = "contamination_failed"
+    elif contamination_status in {"incomplete", "unknown"}:
+        headline_exclusion_reason = f"contamination_{contamination_status}"
+    elif replay_status != "replay_usable":
+        headline_exclusion_reason = f"replay_status_{replay_status}"
+    elif diagnostic["diagnostic_recompute_status"] != "recomputed":
+        headline_exclusion_reason = str(diagnostic["diagnostic_recompute_status"])
+    elif bridge_status in {"missing", "stale", "ambiguous", "unknown"}:
+        headline_exclusion_reason = f"metric_bridge_{bridge_status}"
+    elif metric_claim_level in {"ambiguous", "operational_utility_only", "pilot_only"}:
+        headline_exclusion_reason = f"metric_claim_level_{metric_claim_level}"
+    else:
+        headline_exclusion_reason = ""
+    headline_eligible = headline_exclusion_reason == ""
+
     notes = (
         "CandidatePool is replay substrate, not one of the four core paper artifacts. "
-        "Diagnostic recomputation is intentionally deferred."
+        "Replay status and claim level are reported separately; headline diagnostics exclude ineligible rows."
     )
     return (
         ReplayManifestRow(
@@ -523,6 +740,15 @@ def classify_replay_bundle(bundle: ReplayArtifactBundle) -> tuple[ReplayManifest
             materialization_order_present=materialization_order_present,
             bridge_status=bridge_status,
             metric_claim_level=metric_claim_level,
+            selector_regime_label=selector_regime_label,
+            diagnostic_recompute_status=str(diagnostic["diagnostic_recompute_status"]),
+            headline_eligible=headline_eligible,
+            headline_exclusion_reason=headline_exclusion_reason,
+            selected_token_cost=diagnostic["selected_token_cost"],
+            budget_utilization=diagnostic["budget_utilization"],
+            observed_proxy_value=diagnostic["observed_proxy_value"],
+            block_ratio_lcb_b2=diagnostic["block_ratio_lcb_b2"],
+            contamination_status=contamination_status,
             missing_required_fields=missing_required_fields,
             missing_optional_fields=missing_optional_fields,
             replay_defects=sorted(set(replay_defects)),
@@ -543,6 +769,10 @@ def _dispatch_label(row: ReplayManifestRow) -> str:
 def build_replay_summary(rows: list[ReplayManifestRow], missing: list[MissingFieldRecord]) -> ReplaySummary:
     status_counts = Counter(row.replay_status for row in rows)
     metric_counts = Counter(row.metric_claim_level for row in rows)
+    headline_rows = [row for row in rows if row.headline_eligible]
+    headline_metric_counts = Counter(row.metric_claim_level for row in headline_rows)
+    headline_selector_counts = Counter(row.selector_regime_label for row in headline_rows)
+    headline_exclusion_counts = Counter(row.headline_exclusion_reason for row in rows if not row.headline_eligible)
     missing_counts = Counter(record.field for record in missing)
     artifact_presence_counts = {
         "candidate_pools": sum(1 for row in rows if row.candidate_pool_present),
@@ -554,19 +784,136 @@ def build_replay_summary(rows: list[ReplayManifestRow], missing: list[MissingFie
     }
     usable = [row for row in rows if row.replay_status == "replay_usable"]
     nonusable = [row for row in rows if row.replay_status != "replay_usable"]
+    headline_excluded = [row for row in rows if not row.headline_eligible]
     return ReplaySummary(
         total_dispatches=len(rows),
         replay_status_counts={status: status_counts[status] for status in REPLAY_STATUSES if status_counts[status]},
         artifact_presence_counts=artifact_presence_counts,
         metric_claim_level_counts=dict(sorted(metric_counts.items())),
+        headline_metric_claim_level_counts=dict(sorted(headline_metric_counts.items())),
+        headline_selector_regime_counts=dict(sorted(headline_selector_counts.items())),
+        headline_exclusion_counts=dict(sorted(headline_exclusion_counts.items())),
         missing_field_counts=dict(sorted(missing_counts.items())),
         replay_usable_dispatches=len(usable),
         replay_nonusable_dispatches=len(nonusable),
+        headline_eligible_dispatches=len(headline_rows),
+        headline_excluded_dispatches=len(headline_excluded),
         replay_usable_dispatch_ids=[_dispatch_label(row) for row in usable],
         replay_nonusable_dispatch_ids=[_dispatch_label(row) for row in nonusable],
+        headline_eligible_dispatch_ids=[_dispatch_label(row) for row in headline_rows],
+        headline_excluded_dispatch_ids=[_dispatch_label(row) for row in headline_excluded],
         core_paper_artifacts=list(CORE_PAPER_ARTIFACTS),
         replay_substrate_artifacts=list(REPLAY_SUBSTRATE_ARTIFACTS),
     )
+
+
+def _mean(values: list[float]) -> float | None:
+    if not values:
+        return None
+    return round(sum(values) / len(values), 6)
+
+
+def _per_dispatch_diagnostic_payload(row: ReplayManifestRow) -> dict[str, Any]:
+    return {
+        "run_id": row.run_id,
+        "dispatch_id": row.dispatch_id,
+        "agent_id": row.agent_id,
+        "round_id": row.round_id,
+        "replay_status": row.replay_status,
+        "metric_claim_level": row.metric_claim_level,
+        "selector_regime_label": row.selector_regime_label,
+        "diagnostic_recompute_status": row.diagnostic_recompute_status,
+        "headline_eligible": row.headline_eligible,
+        "headline_exclusion_reason": row.headline_exclusion_reason,
+        "selected_token_cost": row.selected_token_cost,
+        "budget_utilization": row.budget_utilization,
+        "observed_proxy_value": row.observed_proxy_value,
+        "block_ratio_lcb_b2": row.block_ratio_lcb_b2,
+    }
+
+
+def _pipeline_proxy_alignment(rows: list[ReplayManifestRow]) -> dict[str, Any]:
+    headline = [row for row in rows if row.headline_eligible]
+    excluded = [row for row in rows if not row.headline_eligible]
+    return {
+        "total_dispatches": len(rows),
+        "headline_denominator": len(headline),
+        "excluded_dispatches": len(excluded),
+        "excluded_counts": dict(sorted(Counter(row.headline_exclusion_reason for row in excluded).items())),
+        "headline_selected_token_cost_mean": _mean(
+            [float(row.selected_token_cost) for row in headline if row.selected_token_cost is not None]
+        ),
+        "headline_budget_utilization_mean": _mean(
+            [float(row.budget_utilization) for row in headline if row.budget_utilization is not None]
+        ),
+        "headline_observed_proxy_value_mean": _mean(
+            [float(row.observed_proxy_value) for row in headline if row.observed_proxy_value is not None]
+        ),
+        "headline_block_ratio_lcb_b2_min": (
+            min(float(row.block_ratio_lcb_b2) for row in headline if row.block_ratio_lcb_b2 is not None)
+            if any(row.block_ratio_lcb_b2 is not None for row in headline)
+            else None
+        ),
+        "note": "Excluded dispatches are not mixed into headline diagnostics.",
+    }
+
+
+def _metric_claim_level_summary(rows: list[ReplayManifestRow]) -> dict[str, Any]:
+    headline = [row for row in rows if row.headline_eligible]
+    excluded = [row for row in rows if not row.headline_eligible]
+    return {
+        "total_dispatches": len(rows),
+        "headline_denominator": len(headline),
+        "all_counts": dict(sorted(Counter(row.metric_claim_level for row in rows).items())),
+        "headline_counts": dict(sorted(Counter(row.metric_claim_level for row in headline).items())),
+        "excluded_counts": dict(sorted(Counter(row.headline_exclusion_reason for row in excluded).items())),
+    }
+
+
+def _selector_regime_summary(rows: list[ReplayManifestRow]) -> dict[str, Any]:
+    headline = [row for row in rows if row.headline_eligible]
+    excluded = [row for row in rows if not row.headline_eligible]
+    return {
+        "total_dispatches": len(rows),
+        "headline_denominator": len(headline),
+        "all_counts": dict(sorted(Counter(row.selector_regime_label for row in rows).items())),
+        "headline_counts": dict(sorted(Counter(row.selector_regime_label for row in headline).items())),
+        "excluded_counts": dict(sorted(Counter(row.headline_exclusion_reason for row in excluded).items())),
+    }
+
+
+def _format_report(summary: dict[str, Any], alignment: dict[str, Any]) -> str:
+    lines = [
+        "# Phase B Offline Replay Report",
+        "",
+        "P40 is offline replay / observability evidence only. It does not run live APIs and does not claim measurement validation.",
+        "",
+        "## Claim Boundary",
+        "",
+        "- Replay package completeness is not scientific validation.",
+        "- Missing human labels or missing kappa prevents `measurement_validated`.",
+        "- Contamination failure downgrades claim level to `pilot_only`.",
+        "- Stale or missing metric bridge downgrades claim level to `operational_utility_only` or `ambiguous`.",
+        "",
+        "## Replay Summary",
+        "",
+        f"- Total dispatches: {summary['total_dispatches']}",
+        f"- Headline eligible dispatches: {summary['headline_eligible_dispatches']} / {summary['total_dispatches']}",
+        f"- Replay status counts: `{json.dumps(summary['replay_status_counts'], sort_keys=True)}`",
+        f"- Metric claim level counts: `{json.dumps(summary['metric_claim_level_counts'], sort_keys=True)}`",
+        f"- Headline exclusion counts: `{json.dumps(summary['headline_exclusion_counts'], sort_keys=True)}`",
+        "",
+        "## Headline Diagnostics",
+        "",
+        "Excluded dispatches are not mixed into headline diagnostics.",
+        f"- Headline denominator: {alignment['headline_denominator']}",
+        f"- Mean selected token cost: {alignment['headline_selected_token_cost_mean']}",
+        f"- Mean budget utilization: {alignment['headline_budget_utilization_mean']}",
+        f"- Mean observed proxy value: {alignment['headline_observed_proxy_value_mean']}",
+        f"- Minimum block-ratio LCB b2: {alignment['headline_block_ratio_lcb_b2_min']}",
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def run_phase_b_replay(*, input_dir: str | Path, output_dir: str | Path) -> dict[str, Any]:
@@ -575,10 +922,11 @@ def run_phase_b_replay(*, input_dir: str | Path, output_dir: str | Path) -> dict
     output_path.mkdir(parents=True, exist_ok=True)
 
     bundles = load_replay_artifact_bundles(input_path)
+    contamination_status = _contamination_status(input_path)
     manifest_rows: list[ReplayManifestRow] = []
     missing_records: list[MissingFieldRecord] = []
     for bundle in bundles:
-        manifest, missing = classify_replay_bundle(bundle)
+        manifest, missing = classify_replay_bundle(bundle, contamination_status=contamination_status)
         manifest_rows.append(manifest)
         missing_records.extend(missing)
 
@@ -586,23 +934,47 @@ def run_phase_b_replay(*, input_dir: str | Path, output_dir: str | Path) -> dict
     manifest_payloads = [asdict(row) for row in manifest_rows]
     missing_payloads = [asdict(record) for record in missing_records]
     summary_payload = asdict(summary)
+    diagnostics_payloads = [_per_dispatch_diagnostic_payload(row) for row in manifest_rows]
+    alignment_payload = _pipeline_proxy_alignment(manifest_rows)
+    metric_summary_payload = _metric_claim_level_summary(manifest_rows)
+    selector_summary_payload = _selector_regime_summary(manifest_rows)
+    replay_status_counts_payload = {
+        "replay_status_counts": summary_payload["replay_status_counts"],
+        "headline_exclusion_counts": summary_payload["headline_exclusion_counts"],
+        "headline_denominator": summary_payload["headline_eligible_dispatches"],
+        "total_dispatches": summary_payload["total_dispatches"],
+    }
+    missing_field_payload = {
+        "missing_fields": missing_payloads,
+        "missing_field_counts": summary_payload["missing_field_counts"],
+    }
 
+    _write_json(output_path / "replay_manifest.json", {"rows": manifest_payloads})
     _write_jsonl(output_path / "replay_manifest.jsonl", manifest_payloads)
-    _write_json(
-        output_path / "missing_fields.json",
-        {
-            "missing_fields": missing_payloads,
-            "missing_field_counts": summary_payload["missing_field_counts"],
-        },
-    )
+    _write_jsonl(output_path / "per_dispatch_diagnostics.jsonl", diagnostics_payloads)
+    _write_json(output_path / "missing_field_report.json", missing_field_payload)
+    _write_json(output_path / "missing_fields.json", missing_field_payload)
+    _write_json(output_path / "pipeline_proxy_alignment.json", alignment_payload)
+    _write_json(output_path / "metric_claim_level_summary.json", metric_summary_payload)
+    _write_json(output_path / "selector_regime_summary.json", selector_summary_payload)
+    _write_json(output_path / "replay_status_counts.json", replay_status_counts_payload)
     _write_json(output_path / "replay_summary.json", summary_payload)
+    (output_path / "report.md").write_text(_format_report(summary_payload, alignment_payload), encoding="utf-8")
     return {
         "status": "classified",
         "input_dir": str(input_path),
         "output_dir": str(output_path),
+        "manifest_json_path": str(output_path / "replay_manifest.json"),
         "manifest_path": str(output_path / "replay_manifest.jsonl"),
+        "per_dispatch_diagnostics_path": str(output_path / "per_dispatch_diagnostics.jsonl"),
+        "missing_field_report_path": str(output_path / "missing_field_report.json"),
         "missing_fields_path": str(output_path / "missing_fields.json"),
+        "pipeline_proxy_alignment_path": str(output_path / "pipeline_proxy_alignment.json"),
+        "metric_claim_level_summary_path": str(output_path / "metric_claim_level_summary.json"),
+        "selector_regime_summary_path": str(output_path / "selector_regime_summary.json"),
+        "replay_status_counts_path": str(output_path / "replay_status_counts.json"),
         "summary_path": str(output_path / "replay_summary.json"),
+        "report_path": str(output_path / "report.md"),
         "summary": summary_payload,
     }
 

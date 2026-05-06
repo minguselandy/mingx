@@ -2,7 +2,7 @@
 
 **Milestone:** P40  
 **Experiment stack:** Phase B offline replay and artifact sufficiency  
-**Status:** implementation plan  
+**Status:** implemented replay contract
 **Live API:** prohibited  
 **Maximum claim:** replay / observability evidence
 
@@ -87,6 +87,30 @@ Every replay attempt must receive exactly one status:
 
 Headline diagnostic claims must use only `replay_usable` records.
 
+Replay status and claim level are separate fields. A row can remain
+`replay_usable` while claim-level gates exclude it from headline diagnostics.
+Every per-dispatch row records:
+
+```text
+replay_status
+metric_claim_level
+selector_regime_label
+diagnostic_recompute_status
+headline_eligible
+headline_exclusion_reason
+```
+
+Conservative precedence:
+
+1. missing `run_id`, `dispatch_id`, `agent_id`, or `round_id` => `replay_unusable`;
+2. missing candidate pool => `replay_unusable`;
+3. missing selected set => `replay_unusable`;
+4. missing materialized context/order or realized budget => `pilot_degraded` or `replay_partial`;
+5. complete artifacts but insufficient cached utility/log-loss records => `replay_usable` with `diagnostic_recompute_status=insufficient_utility_records` and `headline_eligible=false`;
+6. contamination failure => preserve the underlying `replay_status`, set `metric_claim_level=pilot_only`, and set `headline_eligible=false`;
+7. missing/stale metric bridge => `metric_claim_level=operational_utility_only` or `ambiguous`;
+8. only `replay_usable` rows with sufficient utility records, safe bridge, and no contamination enter headline diagnostics.
+
 ## 4. Diagnostic Recompute Steps
 
 For each dispatch:
@@ -106,6 +130,12 @@ For each dispatch:
 13. compare observed pipeline selection against diagnostic-guided alternatives;
 14. derive `metric_claim_level`, `selector_regime_label`, and `selector_action`;
 15. record missing-field downgrades.
+
+Utility-record recomputation fails closed. Missing cached utility/log-loss
+fields produce `diagnostic_recompute_status=insufficient_utility_records`.
+Uninformative denominator evidence produces
+`diagnostic_recompute_status=uninformative_denominator` and is not interpreted
+as a low block-ratio failure.
 
 ## 5. Pipeline-vs-Proxy Alignment Metrics
 
@@ -130,14 +160,7 @@ missing_fields
 
 ```text
 cps/experiments/phase_b_replay.py
-cps/experiments/replay_status.py
-cps/experiments/recompute_diagnostics.py
-cps/experiments/pipeline_proxy_alignment.py
-cps/experiments/replay_report.py
-tests/test_phase_b_replay_status.py
-tests/test_phase_b_recompute_diagnostics.py
-tests/test_phase_b_missing_field_downgrade.py
-tests/test_phase_b_pipeline_proxy_alignment.py
+tests/test_phase_b_replay.py
 ```
 
 ## 7. CLI Shape
@@ -163,21 +186,25 @@ replay_manifest.json
 replay_manifest.jsonl
 per_dispatch_diagnostics.jsonl
 missing_field_report.json
+missing_fields.json
 pipeline_proxy_alignment.json
 metric_claim_level_summary.json
 selector_regime_summary.json
 replay_status_counts.json
+replay_summary.json
 report.md
 ```
+
+Headline summaries must count excluded rows separately and must not mix
+contaminated, partial, unusable, stale-bridge, insufficient-utility, or
+denominator-uninformative rows into headline diagnostic denominators.
 
 ## 9. Validation
 
 ```bash
 uv run python -m compileall cps scripts
-uv run pytest tests/test_phase_b_replay_status.py -q
-uv run pytest tests/test_phase_b_recompute_diagnostics.py -q
-uv run pytest tests/test_phase_b_missing_field_downgrade.py -q
-uv run pytest tests/test_phase_b_pipeline_proxy_alignment.py -q
+uv run pytest tests/test_phase_b_replay.py -q
+uv run pytest -q
 ```
 
 ## 10. Acceptance Criteria
@@ -187,6 +214,9 @@ P40 is accepted when:
 - the replay runner works on Phase A synthetic artifacts;
 - every dispatch receives exactly one replay status;
 - missing fields downgrade claims conservatively;
+- replay status and claim level remain separate;
+- headline diagnostics use only eligible rows;
+- stale/missing bridge, contamination failure, insufficient utility records, and uninformative denominators are excluded from headline denominators;
 - `TraceDecay` is not reported as headline gamma;
 - contaminated or reduced-scope live artifacts cannot enter headline claims unless replay protocol and claim gates allow it;
 - report tables are derived from machine-readable outputs.

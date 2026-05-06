@@ -1,71 +1,108 @@
 # P40 Phase B Offline Replay Review
 
+## Review Verdict
 
-## Verdict
+`ACCEPT`
 
-- Verdict: `PENDING_REVIEW`
-- Reviewer:
-- Date:
-- Branch:
-- Commit range:
+## Scope Reviewed
 
-Allowed verdicts:
+P40 implements the offline Phase B replay package over recorded artifacts. The
+review covered:
 
-- `ACCEPT`
-- `ACCEPT_WITH_MINOR_REVISIONS`
-- `ACCEPT_WITH_MAJOR_REVISIONS`
-- `REJECT_UNSAFE_OVERCLAIM`
-- `REJECT_INCOMPLETE_ARTIFACTS`
-- `PENDING_REVIEW`
+- replay status and claim-level separation;
+- explicit replay precedence;
+- fail-closed cached utility/log-loss recomputation;
+- headline eligibility and exclusion accounting;
+- contamination-failure claim downgrade;
+- deterministic replay output files;
+- documentation and claim-boundary consistency.
 
-## Claim Boundary Review
+## Files Changed
 
-Confirm:
+- `cps/experiments/phase_b_replay.py`
+- `tests/test_phase_b_replay.py`
+- `docs/experiments/P40-phase-b-offline-replay-implementation-plan.md`
+- `docs/reviews/P40-phase-b-offline-replay-review.md`
 
-- [ ] no live API was run unless the milestone explicitly allowed it and approval was recorded
-- [ ] no human labels were fabricated
-- [ ] no human-human kappa was fabricated
-- [ ] no `measurement_validated` claim was made unless all required gates were satisfied
-- [ ] synthetic evidence was not described as deployed V-information certification
-- [ ] replay evidence was not described as scientific validation
-- [ ] Route B/model-adjudicated labels were not described as human labels
-- [ ] contamination failures, if present, caused `pilot_only` / scientific-stop interpretation
+## Validation
 
+Commands run:
 
-## Scope
+```bash
+python -m compileall cps scripts
+uv run pytest tests/test_phase_b_replay.py -q
+uv run pytest -q
+```
 
-Review whether Phase B can recompute diagnostics from recorded traces and cached utility records without live inference.
+Results:
 
-## Replay Status Review
+- `python -m compileall cps scripts`: passed
+- `uv run pytest tests/test_phase_b_replay.py -q`: `17 passed`
+- `uv run pytest -q`: `425 passed, 4 skipped`
 
-| Status | Count | Included in headline diagnostics? | Notes |
-|---|---:|---|---|
-| `replay_usable` | TBD | yes | TBD |
-| `pilot_degraded` | TBD | no | TBD |
-| `replay_partial` | TBD | no | TBD |
-| `replay_unusable` | TBD | no | TBD |
+Risky claim scan over changed files was reviewed for:
 
-## Diagnostic Recompute Checklist
+```text
+measurement_validated
+scientific validation
+deployed V-information certification
+Vinfo_proxy_certified
+certified greedy-valid
+human labels
+kappa
+pilot_only
+model_adjudicated_pilot_only
+operational_utility_only
+```
 
-- [ ] candidate pool reconstructed
-- [ ] selected set reconstructed
-- [ ] token budget reconstructed
-- [ ] materialization order reconstructed
-- [ ] metric bridge witness assigned
-- [ ] block-ratio LCB recomputed where supported
-- [ ] interaction mass recomputed where supported
-- [ ] triple-excess recomputed where supported
-- [ ] greedy-vs-augmented gap recomputed where supported
-- [ ] pipeline-vs-proxy alignment reported
-- [ ] missing-field downgrades applied
+All remaining occurrences are denied claims, boundary conditions, claim-gate
+rules, tests, or claim ceilings.
 
-## Non-Goal Check
+## Claim-Boundary Review
 
-- [ ] no live inference used to fill missing fields
-- [ ] no scheduler change made
-- [ ] no memory architecture redesign made
-- [ ] no theorem-inheritance claim made
+- No live API was run.
+- No human labels were fabricated.
+- No human-human kappa was fabricated.
+- No contamination pass was fabricated.
+- No fresh metric bridge was fabricated.
+- No `measurement_validated` claim was introduced.
+- Replay package completeness remains replay/observability evidence only.
+- Contamination failure preserves the underlying replay status but downgrades
+  claim level to `pilot_only` and excludes the row from headline diagnostics.
+- Stale or missing metric bridge remains `operational_utility_only` or
+  `ambiguous`.
+- Headline summaries use only eligible replay rows and account for excluded
+  rows separately.
+- P04 remains deferred/operator-required.
+- P09 remains `BLOCKED_OPERATOR_REQUIRED`.
 
-## Required Conclusion
+## Output Review
 
-State whether Phase B is ready to serve as replay/observability evidence and whether P43 can proceed.
+Required outputs are implemented:
+
+- `replay_manifest.json`
+- `replay_manifest.jsonl`
+- `per_dispatch_diagnostics.jsonl`
+- `missing_field_report.json`
+- `missing_fields.json`
+- `pipeline_proxy_alignment.json`
+- `metric_claim_level_summary.json`
+- `selector_regime_summary.json`
+- `replay_status_counts.json`
+- `replay_summary.json`
+- `report.md`
+
+Byte-stability is covered by `tests/test_phase_b_replay.py`.
+
+## Remaining Limitations
+
+- P40 does not run live inference or fill missing replay fields.
+- P40 recomputes only diagnostics supported by cached utility/log-loss records;
+  incomplete or uninformative utility evidence fails closed.
+- P40 does not create human labels or kappa evidence.
+- P40 does not upgrade Route B or replay evidence into measurement validation.
+
+## Next Recommended Milestone
+
+P41 Route B model-adjudicated evaluation, unless the operator chooses a narrower
+documentation-only checkpoint first.
