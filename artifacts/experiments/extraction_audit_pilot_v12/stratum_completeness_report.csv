@@ -1,0 +1,5 @@
+stratum,expected_count,captured_core_preserved_count,missing_count,c_s,value_weighted_loss
+contradictory_adversarial,1,0,0,0.5,0.5
+high_provenance,3,1,0,0.666667,0.348485
+qualifier_heavy,1,0,1,0.0,1.0
+simple_factual,4,4,0,1.0,0.0

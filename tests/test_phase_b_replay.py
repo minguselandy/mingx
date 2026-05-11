@@ -3,7 +3,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-from cps.experiments.phase_b_replay import load_replay_artifact_bundles, run_phase_b_replay
+from cps.experiments.phase_b_replay import REASON_CODE_ORDER
+from cps.experiments.phase_b_replay import ReplayArtifactBundle
+from cps.experiments.phase_b_replay import classify_replay_bundle
+from cps.experiments.phase_b_replay import load_replay_artifact_bundles
+from cps.experiments.phase_b_replay import run_phase_b_replay
 
 
 def _write_jsonl(path: Path, rows: list[dict]) -> None:
@@ -19,12 +23,18 @@ def _json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _assert_reason_codes_in_deterministic_order(reason_codes: list[str]) -> None:
+    order = {reason: index for index, reason in enumerate(REASON_CODE_ORDER)}
+    assert reason_codes == sorted(set(reason_codes), key=lambda reason: (order.get(reason, len(order)), reason))
+
+
 def _base_rows(**overrides) -> dict[str, dict]:
     common = {
         "run_id": overrides.pop("run_id", "run-1"),
         "dispatch_id": overrides.pop("dispatch_id", "dispatch-1"),
         "agent_id": overrides.pop("agent_id", "agent-a"),
         "round_id": overrides.pop("round_id", "round-1"),
+        "data_source_kind": overrides.pop("data_source_kind", "fixture"),
         "regime": "fixture",
     }
     rows = {
@@ -152,8 +162,10 @@ def _output_payloads(output_dir: Path) -> dict[str, object]:
         "pipeline_proxy_alignment": _json(output_dir / "pipeline_proxy_alignment.json"),
         "metric_claim_level_summary": _json(output_dir / "metric_claim_level_summary.json"),
         "selector_regime_summary": _json(output_dir / "selector_regime_summary.json"),
+        "phase_b_replay_claim_gate_report": _json(output_dir / "phase_b_replay_claim_gate_report.json"),
         "replay_status_counts": _json(output_dir / "replay_status_counts.json"),
         "replay_summary": _json(output_dir / "replay_summary.json"),
+        "phase_b_replay_v12_report": (output_dir / "phase_b_replay_v12_report.md").read_text(encoding="utf-8"),
         "report_md": (output_dir / "report.md").read_text(encoding="utf-8"),
     }
 
@@ -163,19 +175,30 @@ def test_complete_dispatch_bundle_is_replay_usable(workspace_tmp_dir):
 
     assert report["status"] == "classified"
     assert manifest[0]["replay_status"] == "replay_usable"
-    assert manifest[0]["replay_claim_scope"] == "vinfo_proxy_supported"
-    assert manifest[0]["metric_claim_level"] == "vinfo_proxy_supported"
+    assert manifest[0]["replay_claim_scope"] == "fixture_replay_only"
+    assert manifest[0]["metric_claim_level"] == "operational_utility_only"
     assert manifest[0]["selector_regime_label"] == "greedy_supported"
     assert manifest[0]["diagnostic_recompute_status"] == "recomputed"
-    assert manifest[0]["headline_eligible"] is True
-    assert manifest[0]["headline_exclusion_reason"] == ""
+    assert manifest[0]["paper_evidence_eligible"] is False
+    assert manifest[0]["measurement_validation_claim"] is False
+    assert manifest[0]["headline_eligible"] is False
+    assert manifest[0]["headline_exclusion_reason"] == "fixture_only_replay_not_paper_evidence"
+    assert manifest[0]["reason_codes"] == [
+        "fixture_only_replay_not_paper_evidence",
+        "measurement_validation_denied",
+        "human_labels_missing",
+        "human_kappa_missing",
+        "deployed_v_information_verification_denied",
+    ]
     assert summary["replay_usable_dispatches"] == 1
     assert summary["replay_status_counts"] == {"replay_usable": 1}
-    assert summary["headline_eligible_dispatches"] == 1
+    assert summary["headline_eligible_dispatches"] == 0
+    assert summary["paper_evidence_eligible_dispatches"] == 0
 
 
 def test_legacy_phase_b_labels_are_mapped_to_v12_outputs(workspace_tmp_dir):
     legacy_rows = _base_rows(
+        data_source_kind="operator_replay",
         metric_bridge_witness={"diagnostic_claim_level": "Vinfo_proxy_certified"},
         diagnostics={
             "metric_claim_level": "Vinfo_proxy_certified",
@@ -192,7 +215,10 @@ def test_legacy_phase_b_labels_are_mapped_to_v12_outputs(workspace_tmp_dir):
 
 
 def test_missing_metric_bridge_witness_downgrades_to_partial_without_bridge_claim(workspace_tmp_dir):
-    _, manifest, summary = _run_fixture(workspace_tmp_dir, _base_rows(metric_bridge_witness=None))
+    _, manifest, summary = _run_fixture(
+        workspace_tmp_dir,
+        _base_rows(data_source_kind="operator_replay", metric_bridge_witness=None),
+    )
 
     assert manifest[0]["replay_status"] == "replay_partial"
     assert manifest[0]["metric_bridge_witness_present"] is False
@@ -242,7 +268,94 @@ def test_missing_identity_fields_are_replay_unusable(workspace_tmp_dir):
 
         assert manifest[0]["replay_status"] == "replay_unusable"
         assert field in manifest[0]["missing_required_fields"]
+        assert f"missing_identity_{field}" in manifest[0]["reason_codes"]
         assert manifest[0]["headline_eligible"] is False
+
+
+def test_cross_run_artifacts_with_same_dispatch_identity_do_not_merge(workspace_tmp_dir):
+    input_dir = workspace_tmp_dir / "input"
+    output_dir = workspace_tmp_dir / "output"
+    run_1 = _base_rows(data_source_kind="operator_replay", run_id="run-1")
+    run_2 = _base_rows(data_source_kind="operator_replay", run_id="run-2")
+
+    _write_jsonl(input_dir / "candidate_pools.jsonl", [run_1["candidate_pool"]])
+    _write_jsonl(input_dir / "projection_plans.jsonl", [run_1["projection_plan"]])
+    _write_jsonl(input_dir / "budget_witnesses.jsonl", [run_1["budget_witness"]])
+    _write_jsonl(input_dir / "materialized_contexts.jsonl", [run_2["materialized_context"]])
+    _write_jsonl(input_dir / "metric_bridge_witnesses.jsonl", [run_2["metric_bridge_witness"]])
+    _write_jsonl(input_dir / "diagnostics.jsonl", [run_2["diagnostics"]])
+    _write_jsonl(input_dir / "utility_records.jsonl", [run_2["utility_record"]])
+
+    run_phase_b_replay(input_dir=input_dir, output_dir=output_dir)
+    manifest = _jsonl_rows(output_dir / "replay_manifest.jsonl")
+
+    assert len(manifest) == 2
+    assert {row["run_id"] for row in manifest} == {"run-1", "run-2"}
+    assert all(row["paper_evidence_eligible"] is False for row in manifest)
+    assert all(row["headline_eligible"] is False for row in manifest)
+
+
+def test_identity_mismatch_fails_closed(workspace_tmp_dir):
+    for field in ("run_id", "dispatch_id", "agent_id", "round_id"):
+        rows = _base_rows(data_source_kind="operator_replay")
+        rows["projection_plan"][field] = f"mismatched-{field}"
+        bundle = ReplayArtifactBundle(
+            run_id=rows["candidate_pool"]["run_id"],
+            dispatch_id=rows["candidate_pool"]["dispatch_id"],
+            agent_id=rows["candidate_pool"]["agent_id"],
+            round_id=rows["candidate_pool"]["round_id"],
+            candidate_pool=rows["candidate_pool"],
+            projection_plan=rows["projection_plan"],
+            budget_witness=rows["budget_witness"],
+            materialized_context=rows["materialized_context"],
+            metric_bridge_witness=rows["metric_bridge_witness"],
+            diagnostics=rows["diagnostics"],
+            utility_records=[rows["utility_record"]],
+            source_files=[],
+            raw_event_records=[],
+        )
+
+        manifest, _ = classify_replay_bundle(bundle)
+
+        assert manifest.replay_status == "replay_unusable"
+        assert f"identity_mismatch_{field}" in manifest.reason_codes
+        assert manifest.metric_claim_level == "ambiguous_metric"
+        assert manifest.paper_evidence_eligible is False
+        assert manifest.headline_eligible is False
+        assert manifest.measurement_validation_claim is False
+        assert manifest.metric_claim_level != "vinfo_proxy_supported"
+        assert manifest.metric_claim_level != "calibrated_proxy_supported"
+        _assert_reason_codes_in_deterministic_order(manifest.reason_codes)
+
+
+def test_candidate_pool_hash_mismatch_fails_closed(workspace_tmp_dir):
+    rows = _base_rows(
+        data_source_kind="operator_replay",
+        projection_plan={"candidate_pool_hash": "other-pool-hash"},
+    )
+
+    _, manifest, _ = _run_fixture(workspace_tmp_dir, rows)
+
+    assert manifest[0]["replay_status"] == "replay_unusable"
+    assert manifest[0]["metric_claim_level"] == "ambiguous_metric"
+    assert "candidate_pool_hash_mismatch" in manifest[0]["reason_codes"]
+    assert manifest[0]["headline_eligible"] is False
+    assert manifest[0]["paper_evidence_eligible"] is False
+    assert manifest[0]["measurement_validation_claim"] is False
+    assert manifest[0]["metric_claim_level"] != "vinfo_proxy_supported"
+    assert manifest[0]["metric_claim_level"] != "calibrated_proxy_supported"
+    _assert_reason_codes_in_deterministic_order(manifest[0]["reason_codes"])
+
+
+def test_matching_candidate_pool_hash_preserves_valid_fixture_path(workspace_tmp_dir):
+    _, manifest, summary = _run_fixture(workspace_tmp_dir, _base_rows())
+
+    assert manifest[0]["replay_status"] == "replay_usable"
+    assert "candidate_pool_hash_mismatch" not in manifest[0]["reason_codes"]
+    assert manifest[0]["metric_claim_level"] == "operational_utility_only"
+    assert manifest[0]["paper_evidence_eligible"] is False
+    assert manifest[0]["measurement_validation_claim"] is False
+    assert summary["replay_status_counts"] == {"replay_usable": 1}
 
 
 def test_missing_selected_set_is_replay_unusable(workspace_tmp_dir):
@@ -261,7 +374,10 @@ def test_missing_selected_set_is_replay_unusable(workspace_tmp_dir):
 
 
 def test_complete_artifacts_with_missing_utility_records_are_replay_usable_but_not_headline(workspace_tmp_dir):
-    _, manifest, summary = _run_fixture(workspace_tmp_dir, _base_rows(utility_record=None))
+    _, manifest, summary = _run_fixture(
+        workspace_tmp_dir,
+        _base_rows(data_source_kind="operator_replay", utility_record=None),
+    )
 
     assert manifest[0]["replay_status"] == "replay_usable"
     assert manifest[0]["diagnostic_recompute_status"] == "insufficient_utility_records"
@@ -289,10 +405,10 @@ def test_uninformative_denominator_is_not_treated_as_low_block_ratio_failure(wor
     assert summary["headline_exclusion_counts"] == {"uninformative_denominator": 1}
 
 
-def test_contamination_failure_preserves_replay_status_but_forces_pilot_only_claim(workspace_tmp_dir):
+def test_contamination_failure_preserves_replay_status_but_forces_conservative_claim(workspace_tmp_dir):
     input_dir = workspace_tmp_dir / "input"
     output_dir = workspace_tmp_dir / "output"
-    _write_input_dir(input_dir, _base_rows())
+    _write_input_dir(input_dir, _base_rows(data_source_kind="operator_replay"))
     _write_contamination_report(input_dir, status="failed")
 
     run_phase_b_replay(input_dir=input_dir, output_dir=output_dir)
@@ -300,11 +416,13 @@ def test_contamination_failure_preserves_replay_status_but_forces_pilot_only_cla
     summary = _json(output_dir / "replay_summary.json")
 
     assert manifest[0]["replay_status"] == "replay_usable"
-    assert manifest[0]["metric_claim_level"] == "pilot_only"
+    assert manifest[0]["metric_claim_level"] == "operational_utility_only"
+    assert manifest[0]["paper_evidence_eligible"] is False
+    assert manifest[0]["measurement_validation_claim"] is False
     assert manifest[0]["headline_eligible"] is False
     assert manifest[0]["headline_exclusion_reason"] == "contamination_failed"
     assert summary["replay_status_counts"] == {"replay_usable": 1}
-    assert summary["metric_claim_level_counts"] == {"pilot_only": 1}
+    assert summary["metric_claim_level_counts"] == {"operational_utility_only": 1}
 
 
 def test_headline_summaries_exclude_contaminated_partial_unusable_stale_and_insufficient_rows(workspace_tmp_dir):
@@ -312,11 +430,11 @@ def test_headline_summaries_exclude_contaminated_partial_unusable_stale_and_insu
     output_dir = workspace_tmp_dir / "output"
 
     fixture_rows = [
-        _base_rows(),
-        _base_rows(dispatch_id="dispatch-partial", materialized_context=None),
-        _base_rows(dispatch_id="dispatch-unusable", candidate_pool=None),
-        _base_rows(dispatch_id="dispatch-stale", metric_bridge_witness={"drift_status": "stale"}),
-        _base_rows(dispatch_id="dispatch-no-utility", utility_record=None),
+        _base_rows(data_source_kind="operator_replay"),
+        _base_rows(data_source_kind="operator_replay", dispatch_id="dispatch-partial", materialized_context=None),
+        _base_rows(data_source_kind="operator_replay", dispatch_id="dispatch-unusable", candidate_pool=None),
+        _base_rows(data_source_kind="operator_replay", dispatch_id="dispatch-stale", metric_bridge_witness={"drift_status": "stale"}),
+        _base_rows(data_source_kind="operator_replay", dispatch_id="dispatch-no-utility", utility_record=None),
     ]
     file_map = {
         "candidate_pool": "candidate_pools.jsonl",
@@ -365,6 +483,7 @@ def test_operational_only_metric_bridge_remains_operational_only(workspace_tmp_d
 
 def test_legacy_structural_synthetic_metric_bridge_keeps_scope_without_vinfo_upgrade(workspace_tmp_dir):
     rows = _base_rows(
+        data_source_kind="synthetic",
         metric_bridge_witness={
             "metric_class": "synthetic_oracle",
             "utility_metric": "synthetic_oracle_value",
@@ -376,13 +495,54 @@ def test_legacy_structural_synthetic_metric_bridge_keeps_scope_without_vinfo_upg
 
     assert manifest[0]["metric_claim_level"] == "ambiguous_metric"
     assert manifest[0]["metric_claim_level"] != "vinfo_proxy_supported"
-    assert manifest[0]["replay_claim_scope"] == "ambiguous_metric"
+    assert manifest[0]["replay_claim_scope"] == "synthetic_structural_only"
     assert manifest[0]["diagnostic_scope"] == "synthetic_structural_only"
+    assert manifest[0]["evidence_scope"] == "synthetic_structural_only"
+    assert manifest[0]["paper_evidence_eligible"] is False
     assert manifest[0]["replay_status"] == "replay_partial"
 
 
+def test_synthetic_only_bridge_like_evidence_cannot_emit_vinfo_proxy_supported(workspace_tmp_dir):
+    rows = _base_rows(
+        data_source_kind="synthetic",
+        metric_bridge_witness={
+            "metric_class": "synthetic_oracle",
+            "utility_metric": "synthetic_oracle_value",
+            "diagnostic_claim_level": "vinfo_proxy_supported",
+            "diagnostic_scope": "synthetic_structural_only",
+        },
+    )
+
+    _, manifest, _ = _run_fixture(workspace_tmp_dir, rows)
+
+    assert manifest[0]["metric_claim_level"] == "ambiguous_metric"
+    assert manifest[0]["replay_claim_scope"] == "synthetic_structural_only"
+    assert manifest[0]["paper_evidence_eligible"] is False
+    assert "synthetic_only_not_metric_bridge_evidence" in manifest[0]["reason_codes"]
+
+
+def test_incomplete_metric_bridge_witness_fails_closed(workspace_tmp_dir):
+    rows = _base_rows(
+        data_source_kind="operator_replay",
+        metric_bridge_witness={
+            "metric_class": "log_loss_aligned",
+            "diagnostic_claim_level": "vinfo_proxy_supported",
+            "drift_status": "",
+        },
+    )
+
+    _, manifest, _ = _run_fixture(workspace_tmp_dir, rows)
+
+    assert manifest[0]["metric_claim_level"] == "ambiguous_metric"
+    assert manifest[0]["bridge_status"] == "incomplete"
+    assert manifest[0]["replay_claim_scope"] == "bridge_witness_incomplete"
+    assert manifest[0]["replay_status"] == "replay_partial"
+    assert "metric_bridge_incomplete" in manifest[0]["reason_codes"]
+    assert "MetricBridgeWitness" in manifest[0]["missing_required_fields"]
+
+
 def test_stale_metric_bridge_yields_recalibration_required_scope(workspace_tmp_dir):
-    rows = _base_rows(metric_bridge_witness={"drift_status": "stale"})
+    rows = _base_rows(data_source_kind="operator_replay", metric_bridge_witness={"drift_status": "stale"})
 
     _, manifest, _ = _run_fixture(workspace_tmp_dir, rows)
 
@@ -422,9 +582,16 @@ def test_cli_writes_phase_b_manifest_missing_fields_and_summary(workspace_tmp_di
     assert (output_dir / "pipeline_proxy_alignment.json").exists()
     assert (output_dir / "metric_claim_level_summary.json").exists()
     assert (output_dir / "selector_regime_summary.json").exists()
+    assert (output_dir / "phase_b_replay_claim_gate_report.json").exists()
     assert (output_dir / "replay_status_counts.json").exists()
     assert (output_dir / "replay_summary.json").exists()
     assert (output_dir / "report.md").exists()
+    assert (output_dir / "replay_status_counts.csv").exists()
+    assert (output_dir / "missing_field_defects.csv").exists()
+    assert (output_dir / "metric_claim_level_counts.csv").exists()
+    assert (output_dir / "selector_regime_label_counts.csv").exists()
+    assert (output_dir / "observed_vs_alternative.csv").exists()
+    assert (output_dir / "phase_b_replay_v12_report.md").exists()
     assert "replay_usable" in result.stdout
 
 
@@ -457,9 +624,47 @@ def test_phase_b_outputs_are_byte_stable(workspace_tmp_dir):
         "pipeline_proxy_alignment.json",
         "metric_claim_level_summary.json",
         "selector_regime_summary.json",
+        "phase_b_replay_claim_gate_report.json",
         "replay_status_counts.json",
         "replay_summary.json",
         "report.md",
+        "replay_status_counts.csv",
+        "missing_field_defects.csv",
+        "metric_claim_level_counts.csv",
+        "selector_regime_label_counts.csv",
+        "observed_vs_alternative.csv",
+        "phase_b_replay_v12_report.md",
     ]
     for name in output_names:
         assert (first_output / name).read_bytes() == (second_output / name).read_bytes()
+
+
+def test_phase_b_outputs_use_v12_claim_fields_and_no_legacy_active_labels(workspace_tmp_dir):
+    input_dir = workspace_tmp_dir / "input"
+    output_dir = workspace_tmp_dir / "output"
+    rows = _base_rows(
+        data_source_kind="operator_replay",
+        diagnostics={"selector_regime_label": "escalate", "selector_action": "monitored_greedy"},
+    )
+    _write_input_dir(input_dir, rows)
+
+    run_phase_b_replay(input_dir=input_dir, output_dir=output_dir)
+
+    manifest = _jsonl_rows(output_dir / "replay_manifest.jsonl")
+    assert manifest[0]["selector_regime_label"] == "pairwise_escalate"
+    assert manifest[0]["selector_regime_label"] not in {"monitored_greedy", "ambiguous_downgrade"}
+    assert manifest[0]["measurement_validation_claim"] is False
+    assert manifest[0]["human_labels_present"] is False
+    assert manifest[0]["human_kappa_present"] is False
+    assert manifest[0]["deployed_v_information_verification_claim"] is False
+    assert manifest[0]["paper_evidence_eligible"] is True
+
+    combined = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in sorted(output_dir.iterdir(), key=lambda item: item.name)
+        if path.is_file()
+    )
+    assert "Vinfo_proxy_certified" not in combined
+    assert "greedy_valid" not in combined
+    assert '"escalate"' not in combined
+    assert '"measurement_validation_claim": true' not in combined

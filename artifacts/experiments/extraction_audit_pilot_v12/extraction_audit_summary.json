@@ -1,0 +1,43 @@
+{
+  "audit_scope": "extraction_audit_pilot",
+  "c_effective": 0.677885,
+  "case_count": 6,
+  "data_source_kind": "fixture",
+  "defect_reason_counts": {
+    "contradictory_sources": 2,
+    "duplicate_finding": 2,
+    "missing_critical_finding": 1,
+    "over_merged_finding": 2,
+    "provenance_missing": 3,
+    "source_span_missing": 3,
+    "unsupported_finding": 1
+  },
+  "evidence_scope": "fixture_extraction_audit_only",
+  "finding_count": 10,
+  "label_count": 9,
+  "live_api_used": false,
+  "measurement_validation_claim": false,
+  "metric_claim_level": "operational_utility_only",
+  "outcome_counts": {
+    "captured_core_changed": 3,
+    "captured_core_preserved": 5,
+    "missing": 1
+  },
+  "paper_evidence_eligible": false,
+  "protocol_version": "extraction_audit_pilot.v12",
+  "run_id": "extraction-audit-pilot-v12",
+  "schema_version": "ExtractionAuditPilotV1",
+  "stratum_completeness": {
+    "contradictory_adversarial": 0.5,
+    "high_provenance": 0.666667,
+    "qualifier_heavy": 0.0,
+    "simple_factual": 1.0
+  },
+  "support_status_counts": {
+    "ambiguous": 1,
+    "partially_supported": 2,
+    "supported": 6,
+    "unsupported": 1
+  },
+  "value_weighted_loss": 0.322115
+}

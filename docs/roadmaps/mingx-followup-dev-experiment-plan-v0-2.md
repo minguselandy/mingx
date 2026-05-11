@@ -12,9 +12,12 @@
 The controlling Codex development/reference package for this follow-up program
 is now `docs/codex/v12-phase-docs/`. It preserves the P45-P50 plan/review
 documents, closes P45 for the current `bio_attribute` stratum as implemented
-but non-calibrated, and makes P46 synthetic v12 artifact refresh the next
-active phase. P50 remains optional until P46-P49 are complete or explicitly
-deferred. The
+but non-calibrated, records the P46 synthetic v12 artifact refresh, adds the
+P47 offline fixture model-adjudicated realistic-task benchmark, and hardens P48
+Phase B replay under v12 claim semantics. P49 adds a deterministic fixture
+extraction audit pilot for the M-star to M boundary. P50 adds an optional
+fixture ReprojectionWitness scaffold for auditability of re-projection
+decisions. The
 package is planning and review guidance only; it does not claim
 `measurement_validated` evidence and does not supply bridge calibration results
 by itself.
@@ -41,9 +44,20 @@ The revised development program should proceed through seven lanes:
 7. **Lane 6 — uncertainty-triggered re-projection.** Add a UT-ACA-inspired content-level re-projection loop and `ReprojectionWitness`.
 
 The current status override is: Lane 1 has been implemented and closed for the
-current `bio_attribute` stratum with downgrade behavior. Lane 2/P46 is the next
-active phase. Revisit Lane 1 only with a new stratum or materially new
-utility/logloss design.
+current `bio_attribute` stratum with downgrade behavior. Lane 2/P46 has been
+refreshed under v12 labels. Lane 3/P47 now has an offline fixture benchmark
+that exercises the model-adjudicated realistic-task schema and claim boundary.
+Lane 5/P48 now separates replay usability from metric claim level and hardens
+dispatch identity checks.
+Lane 4/P49 now has a fixture extraction audit pilot for source-span
+traceability, missing critical findings, unsupported findings, duplicate or
+over-merged findings, contradictory sources, and deterministic candidate-pool
+provenance.
+Lane 6/P50 now has an optional fixture ReprojectionWitness scaffold for
+recording trigger reasons, context diffs, budget status, dispatch identity, and
+candidate-pool provenance without upgrading claims.
+Revisit Lane 1 only with a new stratum or materially new utility/logloss
+design.
 
 The minimum next paper package is **Lane 1 closure + Lane 2 hardening + a small Lane 3 pilot + Lane 4 pilot**. Lane 5 and Lane 6 are important for artifact strength but should not block the next paper version unless the target venue requires runtime evidence.
 
@@ -646,11 +660,11 @@ ambiguous
 | 3 | bridge calibration execution | P45 implemented and closed for current stratum; claim downgrade documented |
 | 4 | synthetic benchmark hardening I | P46 synthetic v12 artifact refresh: seed sweeps, noisy proxy layer, cost table |
 | 5 | synthetic benchmark hardening II | ablations, adversarial/provenance variants, paper tables |
-| 6 | model-adjudicated prompt development | generator/labeler/verifier/adjudicator prompts, dev split |
-| 7 | frozen model-adjudicated run | labels, stability report, realistic-task benchmark |
+| 6 | model-adjudicated prompt development | P47 fixture schema and four-role fields implemented without live API |
+| 7 | frozen model-adjudicated run | P47 offline fixture labels, stability report, and realistic-task benchmark implemented |
 | 8 | extraction audit pilot | strata, model-adjudicated audit, value-weighted loss |
-| 9 | offline replay implementation | replay schemas, replay statuses, missing-field checks |
-| 10 | replay experiment | recomputed diagnostics, replay report, alternative selector comparison |
+| 9 | offline replay implementation | P48 replay schemas, replay statuses, missing-field and identity checks hardened |
+| 10 | replay experiment | P48 deterministic v12 replay report, claim fields, and alternative selector comparison scaffold |
 | 11 | re-projection prototype | uncertainty labels, `ReprojectionWitness`, small retry experiment |
 | 12 | paper/release packaging | regenerated tables, artifact manifest, final claim report, reference audit |
 
@@ -831,9 +845,10 @@ to:
 - [x] Add claim-gate tests for bridge downgrade.
 - [x] Run bounded P45 canaries and preserve negative bridge reports.
 - [x] Add P45 closure/status document.
-- [ ] Start P46 synthetic v12 artifact refresh.
-- [ ] Update synthetic benchmark artifacts with v12 labels and cost accounting.
-- [ ] Add paper-ready paragraph summarizing the P45 downgrade and P46 synthetic refresh result.
+- [x] Start P46 synthetic v12 artifact refresh.
+- [x] Update synthetic benchmark artifacts with v12 labels and cost accounting.
+- [x] Add paper-ready paragraph summarizing the P45 downgrade and P46 synthetic refresh result.
+- [x] Add offline fixture P47 realistic-task benchmark artifacts and claim-gate report.
 
 ---
 

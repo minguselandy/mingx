@@ -1,0 +1,39 @@
+{
+  "artifact_version": "synthetic_regime_v12",
+  "bridge_calibration_used": false,
+  "claim_boundary": {
+    "bridge_evidence": false,
+    "human_validation": false,
+    "kappa": false,
+    "measurement_validation": false
+  },
+  "diagnostic_scope": "synthetic_structural_only",
+  "dispatch_count": 40,
+  "evidence_scope": "synthetic_structural_only",
+  "families": [
+    "adversarial-redundancy",
+    "higher-order-prerequisite",
+    "pairwise-synergy",
+    "redundancy-dominated"
+  ],
+  "files": [
+    "synthetic_confusion_v12.csv",
+    "synthetic_metrics_v12.csv",
+    "synthetic_cost_table_v12.csv",
+    "synthetic_run_manifest_v12.json",
+    "synthetic_report_v12.md"
+  ],
+  "metric_claim_level": "ambiguous_metric",
+  "output_dir": "artifacts/experiments/synthetic_regime_v12",
+  "paper_evidence_eligible": false,
+  "protocol_version": "synthetic_regime.v12",
+  "run_id": "synthetic-regime-v12",
+  "seed": 20260511,
+  "selector_regime_label_counts": {
+    "ambiguous": 15,
+    "greedy_supported": 10,
+    "higher_order_risk": 5,
+    "pairwise_escalate": 10
+  },
+  "status": "green"
+}

@@ -1,0 +1,11 @@
+{
+  "audit_scope": "reprojection_witness_pilot",
+  "data_source_kind": "fixture",
+  "evidence_scope": "fixture_reprojection_witness_only",
+  "live_api_used": false,
+  "measurement_validation_claim": false,
+  "output_dir": "artifacts/experiments/reprojection_witness_pilot_v12",
+  "paper_evidence_eligible": false,
+  "run_id": "reprojection-witness-pilot-v12",
+  "schema_version": "ReprojectionWitnessPilotV1"
+}

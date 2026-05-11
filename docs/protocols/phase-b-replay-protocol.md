@@ -14,9 +14,9 @@ Phase B is an offline replay protocol. It consumes recorded traces and cached
 proxy-utility records. It must not depend on re-running live inference to fill
 missing replay fields.
 
-Phase B validates observability and diagnostic recomputation. It does not prove
-Condition A, certify deployed V-information weak submodularity, validate
-scheduler correctness, or make a system-level performance claim.
+Phase B reports observability and diagnostic recomputation. It does not
+establish Condition A, verify deployed V-information weak submodularity,
+establish scheduler correctness, or make a system-level performance claim.
 
 ## 2. Required replay inputs
 
@@ -30,7 +30,7 @@ Each replayable dispatch record must bind the following inputs by stable
 | `ProjectionPlan` | selected ids, excluded ids, algorithm, score config, selection trace, candidate-pool hash | Reconstruct `S_i` and observed pipeline selection |
 | `BudgetWitness` | token budget, estimated tokens, realized tokens, within-budget flag, tolerance violations | Reconstruct `B_i` and budget compliance |
 | `MaterializedContext` | selected ids, section order, content hash, truncation or clipping record, realized token count | Reconstruct actual context sent downstream |
-| `MetricBridgeWitness` | metric family, bridge evidence, claim level, ambiguity reason if any, proxy or utility scope | Qualify whether diagnostics support V-information proxy, calibrated proxy, operational-utility-only, or ambiguous claims |
+| `MetricBridgeWitness` | metric family, bridge evidence, claim level, ambiguity reason if any, proxy or utility scope | Qualify whether diagnostics support V-information proxy, calibrated proxy, operational-utility-only, or ambiguous metric claims |
 | diagnostics, if replaying prior diagnostic outputs | prior `block_ratio_*`, interaction, triple-excess, gap, claim-level, regime-label, and selector-action fields with diagnostic version | Compare prior outputs against recomputed replay diagnostics |
 | cached utility/log-loss records | singleton values, per-step marginal values, pairwise utility records, block utility records, triple utility records, log-loss records, or cached scoring table, with utility model metadata | Recompute diagnostics without live inference |
 | task metadata | task family, dataset id, split, seed, model/profile ids where applicable | Stratify diagnostic distributions and alignment summaries |
@@ -42,9 +42,14 @@ If a concrete openWorker path is unavailable, the Phase B record should say
 
 Replay proceeds dispatch by dispatch:
 
-1. Group events by `run_id`, `dispatch_id`, `agent_id`, and `round_id`.
-2. Verify that candidate-pool hashes agree across `ProjectionPlan`,
-   `BudgetWitness`, `MaterializedContext`, and diagnostic records.
+1. Group events by the full dispatch identity: `run_id`, `dispatch_id`,
+   `agent_id`, and `round_id`. Records with missing or conflicting identity
+   fields fail closed as `replay_unusable`.
+2. Verify that `candidate_pool_hash` agrees across candidate-pool-bound
+   artifacts. `CandidatePool` and `ProjectionPlan` must carry the hash; any
+   mismatch fails closed and prevents headline or paper evidence eligibility.
+   A `MetricBridgeWitness` cannot be reused across a different run or a
+   different candidate pool.
 3. Rebuild `M` from the candidate pool and `S_i` from selected ids.
 4. Rebuild `B_i` from `BudgetWitness` and verify selected token cost against the
    realized budget fields.
@@ -64,7 +69,7 @@ Replay proceeds dispatch by dispatch:
 11. Derive `metric_claim_level` using `MetricBridgeWitness`.
 12. Derive `selector_regime_label` as `greedy_supported`,
     `pairwise_escalate`, `higher_order_risk`, or `ambiguous`, then derive
-    `selector_action` as `monitored_greedy`,
+    `selector_action` as a runtime action such as `monitored_greedy`,
     `seeded_augmented_greedy`, `interaction_aware_local_search`, or
     `no_certified_switch`.
 13. Compare the observed pipeline selection against the diagnostic-guided
@@ -101,6 +106,11 @@ candidate-pool completeness checks. Missing materialization order is a replay
 defect even if selected ids are present, because context order can affect utility
 and downstream behavior.
 
+Identity mismatch (`run_id`, `dispatch_id`, `agent_id`, or `round_id`) and
+`candidate_pool_hash` mismatch are blocking provenance defects. They force
+`replay_unusable`, keep `metric_claim_level = ambiguous_metric`, and prevent
+`headline_eligible` and `paper_evidence_eligible` outputs.
+
 ## 5. Claim-level downgrade rules
 
 Phase B reports must downgrade claim level before reporting selector-regime
@@ -113,6 +123,12 @@ conclusions:
 | operational-only utility | `operational_utility_only`, not `vinfo_proxy_supported` |
 | missing triple evidence under higher-order risk | `ambiguous`; do not emit high-confidence `greedy_supported` |
 | insufficient denominator signal | `ambiguous`; denominator-uninformative block-ratio samples are not low-ratio failures |
+
+Replay status and metric claim level are separate fields. A dispatch can be
+usable for replay while still having `metric_claim_level =
+operational_utility_only` or `ambiguous_metric`. Fixture-only and
+synthetic-only replay rows must set `paper_evidence_eligible = false` and
+`measurement_validation_claim = false`.
 
 ## 6. Outputs
 
@@ -143,7 +159,7 @@ Phase B does not implement:
 - a memory architecture redesign
 - an openWorker port
 - benchmark scoring changes
-- theorem-inheritance claims
+- deployed-theory inheritance claims
 
 Phase B is an audit and replay layer. Any implementation that requires changing
 runtime control flow to create missing trace data belongs to a separate

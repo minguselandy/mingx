@@ -1,0 +1,39 @@
+{
+  "experiment_id": "synthetic_regime_benchmark_v12",
+  "run_id": "synthetic-regime-v12",
+  "protocol_version": "synthetic_regime.v12",
+  "seed": 20260511,
+  "output_dir": "artifacts/experiments/synthetic_regime_v12",
+  "emit_v12_artifacts": true,
+  "regimes": [
+    "adversarial_redundancy",
+    "higher_order_synergy",
+    "sparse_pairwise_synergy",
+    "redundancy_dominated"
+  ],
+  "instances_per_regime": 10,
+  "n_items": 10,
+  "budget_tokens": 18,
+  "top_l": 8,
+  "selector_backend": "native_greedy",
+  "oracle_backend": "brute_force",
+  "strict_optional_dependencies": false,
+  "noise_level": 0.02,
+  "policy_thresholds": {
+    "monitored_greedy": {
+      "block_ratio_lcb_star_gte": 0.75,
+      "synergy_fraction_lte": 0.1,
+      "positive_interaction_mass_ucb_lte": 0.1,
+      "greedy_augmented_gap_lte": 0.05
+    },
+    "seeded_augmented_greedy": {
+      "block_ratio_lcb_star_gte": 0.45,
+      "greedy_augmented_gap_lte": 0.15
+    },
+    "diagnostic_sufficiency": {
+      "block_ratio_sample_count_gte": 1,
+      "block_ratio_informative_sample_count_gte": 1,
+      "denominator_signal_fraction_gte": 0.5
+    }
+  }
+}

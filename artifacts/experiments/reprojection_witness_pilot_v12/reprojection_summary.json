@@ -1,0 +1,40 @@
+{
+  "audit_scope": "reprojection_witness_pilot",
+  "budget_status_counts": {
+    "not_applicable_fail_closed": 2,
+    "over_budget_non_comparable": 1,
+    "within_budget": 5
+  },
+  "case_count": 8,
+  "data_source_kind": "fixture",
+  "evidence_scope": "fixture_reprojection_witness_only",
+  "live_api_used": false,
+  "measurement_validation_claim": false,
+  "metric_claim_level_counts": {
+    "ambiguous_metric": 3,
+    "operational_utility_only": 5
+  },
+  "paper_evidence_eligible": false,
+  "protocol_version": "reprojection_witness_pilot.v12",
+  "replay_safe_witnesses": 5,
+  "reprojection_action_counts": {
+    "abstain_no_safe_reprojection": 3,
+    "add_missing_finding": 2,
+    "compress_redundant_context": 1,
+    "downgrade_to_ambiguous": 1,
+    "remove_unsupported_finding": 1
+  },
+  "run_id": "reprojection-witness-pilot-v12",
+  "schema_version": "ReprojectionWitnessPilotV1",
+  "trigger_type_counts": {
+    "ambiguous_selector_regime": 1,
+    "budget_violation": 1,
+    "candidate_pool_hash_mismatch": 1,
+    "identity_mismatch": 1,
+    "missing_critical_finding": 1,
+    "operator_requested": 1,
+    "pairwise_escalation": 1,
+    "unsupported_finding": 1
+  },
+  "witness_count": 8
+}

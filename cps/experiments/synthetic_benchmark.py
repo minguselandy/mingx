@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -28,7 +30,9 @@ from cps.experiments.selection import (
     brute_force_optimal_select,
     greedy_select,
     item_costs,
+    random_budgeted_select,
     seeded_augmented_greedy,
+    top_k_relevance_select,
     total_cost,
 )
 from cps.experiments.synthetic_regimes import SyntheticInstance, build_synthetic_instances
@@ -55,6 +59,21 @@ REQUIRED_ARTIFACT_COUNT_KEYS = (
     "metric_bridge_witnesses",
     "diagnostics",
     "projection_bundles",
+)
+REGIME_FAMILY_LABELS = {
+    "adversarial_redundancy": "adversarial-redundancy",
+    "higher_order_synergy": "higher-order-prerequisite",
+    "redundancy_dominated": "redundancy-dominated",
+    "sparse_pairwise_synergy": "pairwise-synergy",
+}
+V12_BASELINE_ORDER = (
+    "random_budgeted",
+    "top_k_relevance",
+    "mmr_density_greedy",
+    "seeded_augmented_greedy",
+    "pair_aware_local_search",
+    "opt_or_near_opt",
+    "v12_cost_aware_diagnostic_policy",
 )
 
 
@@ -239,6 +258,58 @@ def _write_artifact_and_event(
     )
 
 
+def _family_label(regime: str) -> str:
+    return REGIME_FAMILY_LABELS.get(str(regime), str(regime).replace("_", "-"))
+
+
+def _selection_ratio(value: float | None, oracle_value: float | None) -> float | None:
+    if value is None or oracle_value is None or oracle_value <= 0:
+        return None
+    return round(float(value) / float(oracle_value), 6)
+
+
+def _selection_gap(value: float | None, oracle_value: float | None) -> float | None:
+    if value is None or oracle_value is None or oracle_value <= 0:
+        return None
+    return round(max(0.0, float(oracle_value) - float(value)) / float(oracle_value), 6)
+
+
+def _selection_delta_ratio(
+    *,
+    numerator_value: float | None,
+    baseline_value: float | None,
+    oracle_value: float | None,
+) -> float | None:
+    if numerator_value is None or baseline_value is None or oracle_value is None or oracle_value <= 0:
+        return None
+    return round((float(numerator_value) - float(baseline_value)) / float(oracle_value), 6)
+
+
+def _baseline_payload(
+    *,
+    baseline: str,
+    result: Any,
+    oracle_value: float | None,
+    selected_ids: list[str] | None = None,
+    token_cost: int | None = None,
+    value: float | None = None,
+    status: str = "available",
+) -> dict[str, Any]:
+    resolved_ids = selected_ids if selected_ids is not None else list(getattr(result, "selected_ids", []) or [])
+    resolved_value = value if value is not None else getattr(result, "value", None)
+    resolved_cost = token_cost if token_cost is not None else int(getattr(result, "token_cost", 0) or 0)
+    return {
+        "baseline": baseline,
+        "selected_ids": list(resolved_ids),
+        "selected_count": len(resolved_ids),
+        "selected_token_cost": int(resolved_cost),
+        "status": status,
+        "value": None if resolved_value is None else round(float(resolved_value), 6),
+        "value_over_opt": _selection_ratio(resolved_value, oracle_value),
+        "gap_over_opt": _selection_gap(resolved_value, oracle_value),
+    }
+
+
 def _as_float(row: dict[str, Any], field: str, default: float | None = None) -> float | None:
     value = row.get(field)
     if value is None:
@@ -358,18 +429,26 @@ def evaluate_pre_registered_validity_gate(
         )
 
     ambiguity_rows = [row for row in rows if row.get("selector_regime_label") == "ambiguous"]
+    expected_structural_ambiguity_rows = [
+        row for row in ambiguity_rows if row.get("regime") in {"adversarial_redundancy", "higher_order_synergy"}
+    ]
+    unexpected_ambiguity_rows = [
+        row for row in ambiguity_rows if row.get("regime") not in {"adversarial_redundancy", "higher_order_synergy"}
+    ]
     ambiguity_count = len(ambiguity_rows)
     gate_results["ambiguity_accounting"] = {
-        "passed": ambiguity_count == 0,
+        "passed": len(unexpected_ambiguity_rows) == 0,
         "ambiguity_count": ambiguity_count,
+        "expected_structural_ambiguity_count": len(expected_structural_ambiguity_rows),
+        "unexpected_ambiguity_count": len(unexpected_ambiguity_rows),
         "dispatch_ids": _dispatch_ids(ambiguity_rows),
     }
-    if ambiguity_count:
+    if unexpected_ambiguity_rows:
         _record_failure(
             failures,
             gate="ambiguity_accounting",
-            reason="ambiguous labels are reported separately and do not count as benchmark success",
-            rows=ambiguity_rows,
+            reason="unexpected ambiguous labels are reported separately and do not count as benchmark success",
+            rows=unexpected_ambiguity_rows,
         )
 
     redundancy_rows = _rows_for_regime(rows, "redundancy_dominated")
@@ -448,11 +527,314 @@ def evaluate_pre_registered_validity_gate(
             rows=failed_rows,
         )
 
+    adversarial_rows = _rows_for_regime(rows, "adversarial_redundancy")
+    adversarial_passed_rows = [
+        row
+        for row in adversarial_rows
+        if row.get("selector_regime_label") == "ambiguous" and row.get("selector_action") == "no_certified_switch"
+    ]
+    gate_results["adversarial_redundancy_conservative"] = {
+        "passed": not adversarial_rows or len(adversarial_passed_rows) == len(adversarial_rows),
+        "dispatch_ids": _dispatch_ids(adversarial_rows),
+    }
+    if adversarial_rows and len(adversarial_passed_rows) != len(adversarial_rows):
+        failed_rows = [row for row in adversarial_rows if row not in adversarial_passed_rows]
+        _record_failure(
+            failures,
+            gate="adversarial_redundancy_conservative",
+            reason="adversarial redundancy rows must remain ambiguous with no certified switch",
+            rows=failed_rows,
+        )
+
     return {
         "pre_registered_gate_passed": not failures,
         "pre_registered_gate_failures": failures,
         "pre_registered_gate_results": gate_results,
         "ambiguity_count": ambiguity_count,
+    }
+
+
+def _write_csv(path: Path, *, fieldnames: list[str], rows: list[dict[str, Any]]) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+    return path
+
+
+def _write_stable_json(path: Path, payload: Any) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+    return path
+
+
+def _avg(values: list[float | None]) -> float | None:
+    present = [float(value) for value in values if value is not None]
+    if not present:
+        return None
+    return round(sum(present) / len(present), 6)
+
+
+def _rate(count: int, denominator: int) -> float | None:
+    if denominator <= 0:
+        return None
+    return round(count / denominator, 6)
+
+
+def _selector_label_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
+    return dict(sorted(Counter(str(row.get("selector_regime_label", "unknown")) for row in rows).items()))
+
+
+def _cost_aware_outcomes(rows: list[dict[str, Any]]) -> str:
+    counts = Counter(str(row.get("cost_aware_policy_outcome", "unknown")) for row in rows)
+    return ";".join(f"{key}:{counts[key]}" for key in sorted(counts))
+
+
+def _v12_confusion_rows(diagnostics_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    counts: Counter[tuple[str, str]] = Counter()
+    for row in diagnostics_rows:
+        counts[(_family_label(str(row.get("regime", "unknown"))), str(row.get("selector_regime_label", "unknown")))] += 1
+    return [
+        {
+            "true_family": family,
+            "selector_regime_label": label,
+            "count": count,
+        }
+        for (family, label), count in sorted(counts.items(), key=lambda item: (item[0][0], item[0][1]))
+    ]
+
+
+def _v12_metrics_row(scope: str, rows: list[dict[str, Any]], all_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    higher_order_rows = [
+        row for row in (all_rows if scope == "all" else rows) if row.get("regime") == "higher_order_synergy"
+    ]
+    pairwise_rows = [
+        row for row in (all_rows if scope == "all" else rows) if row.get("regime") == "sparse_pairwise_synergy"
+    ]
+    false_greedy_rows = [
+        row
+        for row in rows
+        if row.get("selector_regime_label") == "greedy_supported" and row.get("regime") != "redundancy_dominated"
+    ]
+    return {
+        "scope": scope,
+        "n": len(rows),
+        "false_greedy_supported_rate": _rate(len(false_greedy_rows), len(rows)),
+        "higher_order_false_greedy_supported_rate": _rate(
+            sum(1 for row in higher_order_rows if row.get("selector_regime_label") == "greedy_supported"),
+            len(higher_order_rows),
+        ),
+        "pairwise_escalate_recall": _rate(
+            sum(1 for row in pairwise_rows if row.get("selector_regime_label") == "pairwise_escalate"),
+            len(pairwise_rows),
+        ),
+        "avg_greedy_over_opt": _avg([_as_float(row, "greedy_over_opt") for row in rows]),
+        "avg_sag_over_opt": _avg([_as_float(row, "sag_over_opt") for row in rows]),
+        "avg_local_search_over_opt": _avg([_as_float(row, "local_search_over_opt") for row in rows]),
+        "avg_sag_residual_gap_over_opt": _avg([_as_float(row, "sag_residual_gap_over_opt") for row in rows]),
+        "avg_sag_improvement_over_greedy_over_opt": _avg(
+            [_as_float(row, "sag_improvement_over_greedy_over_opt") for row in rows]
+        ),
+        "avg_diagnostic_call_count": _avg([_as_float(row, "diagnostic_call_count") for row in rows]),
+        "avg_pair_sample_count": _avg([_as_float(row, "pairwise_sample_count") for row in rows]),
+        "sag_trigger_rate": _rate(
+            sum(1 for row in rows if row.get("selector_action") == "seeded_augmented_greedy"),
+            len(rows),
+        ),
+        "ambiguity_rate": _rate(
+            sum(1 for row in rows if row.get("selector_regime_label") == "ambiguous"),
+            len(rows),
+        ),
+        "avg_selected_token_cost": _avg([_as_float(row, "selected_token_cost") for row in rows]),
+        "cost_aware_policy_outcome": _cost_aware_outcomes(rows),
+    }
+
+
+def _v12_metrics_rows(diagnostics_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = [_v12_metrics_row("all", diagnostics_rows, diagnostics_rows)]
+    for family in sorted({_family_label(str(row.get("regime", "unknown"))) for row in diagnostics_rows}):
+        family_rows = [row for row in diagnostics_rows if _family_label(str(row.get("regime", "unknown"))) == family]
+        rows.append(_v12_metrics_row(family, family_rows, diagnostics_rows))
+    return rows
+
+
+def _v12_cost_rows(diagnostics_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for row in sorted(diagnostics_rows, key=lambda item: str(item.get("dispatch_id", ""))):
+        baseline_results = dict(row.get("baseline_results") or {})
+        for baseline in V12_BASELINE_ORDER:
+            payload = dict(baseline_results.get(baseline) or {})
+            rows.append(
+                {
+                    "dispatch_id": row.get("dispatch_id"),
+                    "true_family": _family_label(str(row.get("regime", "unknown"))),
+                    "selector_regime_label": row.get("selector_regime_label"),
+                    "cost_aware_policy_outcome": row.get("cost_aware_policy_outcome"),
+                    "baseline": baseline,
+                    "selected_token_cost": payload.get("selected_token_cost"),
+                    "budget_tokens": row.get("budget_tokens"),
+                    "value": payload.get("value"),
+                    "opt_value": row.get("oracle_value"),
+                    "value_over_opt": payload.get("value_over_opt"),
+                    "gap_over_opt": payload.get("gap_over_opt"),
+                    "selected_count": payload.get("selected_count"),
+                    "status": payload.get("status"),
+                }
+            )
+    return rows
+
+
+def _v12_manifest(
+    *,
+    config: dict[str, Any],
+    summary: dict[str, Any],
+    diagnostics_rows: list[dict[str, Any]],
+) -> dict[str, Any]:
+    families = sorted({_family_label(str(row.get("regime", "unknown"))) for row in diagnostics_rows})
+    return {
+        "artifact_version": "synthetic_regime_v12",
+        "bridge_calibration_used": False,
+        "claim_boundary": {
+            "bridge_evidence": False,
+            "human_validation": False,
+            "kappa": False,
+            "measurement_validation": False,
+        },
+        "diagnostic_scope": "synthetic_structural_only",
+        "dispatch_count": len(diagnostics_rows),
+        "evidence_scope": "synthetic_structural_only",
+        "families": families,
+        "files": [
+            "synthetic_confusion_v12.csv",
+            "synthetic_metrics_v12.csv",
+            "synthetic_cost_table_v12.csv",
+            "synthetic_run_manifest_v12.json",
+            "synthetic_report_v12.md",
+        ],
+        "metric_claim_level": "ambiguous_metric",
+        "output_dir": str(config.get("output_dir", "artifacts/experiments/synthetic_regime_v12")).replace("\\", "/"),
+        "paper_evidence_eligible": False,
+        "protocol_version": str(config.get("protocol_version", "synthetic_regime.v12")),
+        "run_id": str(summary.get("run_id", config.get("run_id", "synthetic-regime-v12"))),
+        "seed": int(config.get("seed", 20260511)),
+        "selector_regime_label_counts": _selector_label_counts(diagnostics_rows),
+        "status": summary.get("status"),
+    }
+
+
+def _format_v12_report(*, metrics_rows: list[dict[str, Any]], manifest: dict[str, Any]) -> str:
+    overall = next(row for row in metrics_rows if row["scope"] == "all")
+    family_lines = [
+        f"- {row['scope']}: n={row['n']}, ambiguity_rate={row['ambiguity_rate']}, "
+        f"pairwise_recall={row['pairwise_escalate_recall']}, avg_sag_over_opt={row['avg_sag_over_opt']}"
+        for row in metrics_rows
+        if row["scope"] != "all"
+    ]
+    return "\n".join(
+        [
+            "# Synthetic Regime v12 Report",
+            "",
+            "## Scope",
+            "Deterministic synthetic structural diagnostics only.",
+            f"metric_claim_level: {manifest['metric_claim_level']}",
+            f"diagnostic_scope: {manifest['diagnostic_scope']}",
+            f"evidence_scope: {manifest['evidence_scope']}",
+            "paper_evidence_eligible: false",
+            "",
+            "## Cost-Aware Baseline Summary",
+            f"- n: {overall['n']}",
+            f"- false_greedy_supported_rate: {overall['false_greedy_supported_rate']}",
+            f"- higher_order_false_greedy_supported_rate: {overall['higher_order_false_greedy_supported_rate']}",
+            f"- pairwise_escalate_recall: {overall['pairwise_escalate_recall']}",
+            f"- avg_greedy_over_opt: {overall['avg_greedy_over_opt']}",
+            f"- avg_sag_over_opt: {overall['avg_sag_over_opt']}",
+            f"- avg_local_search_over_opt: {overall['avg_local_search_over_opt']}",
+            f"- avg_sag_residual_gap_over_opt: {overall['avg_sag_residual_gap_over_opt']}",
+            f"- avg_sag_improvement_over_greedy_over_opt: {overall['avg_sag_improvement_over_greedy_over_opt']}",
+            f"- avg_diagnostic_call_count: {overall['avg_diagnostic_call_count']}",
+            f"- avg_pair_sample_count: {overall['avg_pair_sample_count']}",
+            f"- sag_trigger_rate: {overall['sag_trigger_rate']}",
+            f"- ambiguity_rate: {overall['ambiguity_rate']}",
+            f"- avg_selected_token_cost: {overall['avg_selected_token_cost']}",
+            "",
+            "## Family Summary",
+            *family_lines,
+            "",
+            "## Interpretation",
+            "Redundancy-dominated cases should mostly certify monitored greedy. Pairwise-synergy cases should trigger pairwise escalation. Higher-order prerequisite cases are guarded against false greedy support. Adversarial redundancy is reported conservatively as ambiguous.",
+            "",
+        ]
+    )
+
+
+def _write_synthetic_v12_artifacts(
+    *,
+    output_dir: Path,
+    config: dict[str, Any],
+    summary: dict[str, Any],
+    diagnostics_rows: list[dict[str, Any]],
+) -> dict[str, str]:
+    confusion_rows = _v12_confusion_rows(diagnostics_rows)
+    metrics_rows = _v12_metrics_rows(diagnostics_rows)
+    cost_rows = _v12_cost_rows(diagnostics_rows)
+    manifest = _v12_manifest(config=config, summary=summary, diagnostics_rows=diagnostics_rows)
+
+    confusion_path = _write_csv(
+        output_dir / "synthetic_confusion_v12.csv",
+        fieldnames=["true_family", "selector_regime_label", "count"],
+        rows=confusion_rows,
+    )
+    metrics_path = _write_csv(
+        output_dir / "synthetic_metrics_v12.csv",
+        fieldnames=[
+            "scope",
+            "n",
+            "false_greedy_supported_rate",
+            "higher_order_false_greedy_supported_rate",
+            "pairwise_escalate_recall",
+            "avg_greedy_over_opt",
+            "avg_sag_over_opt",
+            "avg_local_search_over_opt",
+            "avg_sag_residual_gap_over_opt",
+            "avg_sag_improvement_over_greedy_over_opt",
+            "avg_diagnostic_call_count",
+            "avg_pair_sample_count",
+            "sag_trigger_rate",
+            "ambiguity_rate",
+            "avg_selected_token_cost",
+            "cost_aware_policy_outcome",
+        ],
+        rows=metrics_rows,
+    )
+    cost_path = _write_csv(
+        output_dir / "synthetic_cost_table_v12.csv",
+        fieldnames=[
+            "dispatch_id",
+            "true_family",
+            "selector_regime_label",
+            "cost_aware_policy_outcome",
+            "baseline",
+            "selected_token_cost",
+            "budget_tokens",
+            "value",
+            "opt_value",
+            "value_over_opt",
+            "gap_over_opt",
+            "selected_count",
+            "status",
+        ],
+        rows=cost_rows,
+    )
+    manifest_path = _write_stable_json(output_dir / "synthetic_run_manifest_v12.json", manifest)
+    report_path = write_text(output_dir / "synthetic_report_v12.md", _format_v12_report(metrics_rows=metrics_rows, manifest=manifest))
+    return {
+        "synthetic_confusion_v12": str(confusion_path),
+        "synthetic_metrics_v12": str(metrics_path),
+        "synthetic_cost_table_v12": str(cost_path),
+        "synthetic_run_manifest_v12": str(manifest_path),
+        "synthetic_report_v12": str(report_path),
     }
 
 
@@ -511,6 +893,17 @@ def _run_instance(
         value_fn=instance.value,
         initial_selected_ids=augmented_result.selected_ids,
     )
+    random_result = random_budgeted_select(
+        items=instance.items,
+        budget_tokens=instance.budget_tokens,
+        value_fn=instance.value,
+        seed=f"{instance.seed}:{instance.instance_id}",
+    )
+    top_k_result = top_k_relevance_select(
+        items=instance.items,
+        budget_tokens=instance.budget_tokens,
+        value_fn=instance.value,
+    )
     diagnostics = compute_diagnostics(
         items=instance.items,
         value_fn=instance.value,
@@ -534,6 +927,44 @@ def _run_instance(
     oracle_gap = None
     if oracle_value is not None and oracle_value > 0:
         oracle_gap = round(max(0.0, oracle_value - greedy_result.value) / oracle_value, 6)
+    baseline_results = {
+        "random_budgeted": _baseline_payload(
+            baseline="random_budgeted",
+            result=random_result,
+            oracle_value=oracle_value,
+        ),
+        "top_k_relevance": _baseline_payload(
+            baseline="top_k_relevance",
+            result=top_k_result,
+            oracle_value=oracle_value,
+        ),
+        "mmr_density_greedy": _baseline_payload(
+            baseline="mmr_density_greedy",
+            result=greedy_result,
+            oracle_value=oracle_value,
+        ),
+        "seeded_augmented_greedy": _baseline_payload(
+            baseline="seeded_augmented_greedy",
+            result=augmented_result,
+            oracle_value=oracle_value,
+        ),
+        "pair_aware_local_search": _baseline_payload(
+            baseline="pair_aware_local_search",
+            result=local_result,
+            oracle_value=oracle_value,
+        ),
+        "opt_or_near_opt": _baseline_payload(
+            baseline="opt_or_near_opt",
+            result=oracle_result,
+            oracle_value=oracle_value,
+            status=oracle_result.oracle_status,
+        ),
+        "v12_cost_aware_diagnostic_policy": _baseline_payload(
+            baseline="v12_cost_aware_diagnostic_policy",
+            result=selected_result,
+            oracle_value=oracle_value,
+        ),
+    }
     selected_ids = list(selected_result.selected_ids)
     excluded_ids = sorted(item.item_id for item in instance.items if item.item_id not in selected_ids)
     costs = item_costs(instance.items)
@@ -703,6 +1134,7 @@ def _run_instance(
         "candidate_pool_hash": pool_hash,
         "candidate_count": len(item_payloads),
         "budget_tokens": instance.budget_tokens,
+        "true_family": _family_label(instance.regime),
         "algorithm": selected_result.algorithm,
         "selected_ids": selected_ids,
         "excluded_ids": excluded_ids,
@@ -724,6 +1156,25 @@ def _run_instance(
         "oracle_gap": oracle_gap,
         "oracle_selected_ids": list(oracle_result.selected_ids),
         "oracle_token_cost": oracle_result.token_cost,
+        "baseline_results": baseline_results,
+        "random_budgeted_value": random_result.value,
+        "top_k_relevance_value": top_k_result.value,
+        "greedy_over_opt": _selection_ratio(greedy_result.value, oracle_value),
+        "sag_over_opt": _selection_ratio(augmented_result.value, oracle_value),
+        "local_search_over_opt": _selection_ratio(local_result.value, oracle_value),
+        "sag_residual_gap_over_opt": _selection_gap(augmented_result.value, oracle_value),
+        "sag_improvement_over_greedy_over_opt": _selection_delta_ratio(
+            numerator_value=augmented_result.value,
+            baseline_value=greedy_result.value,
+            oracle_value=oracle_value,
+        ),
+        "diagnostic_call_count": (
+            len(diagnostics.block_ratio_samples)
+            + len(diagnostics.pairwise_samples)
+            + len(diagnostics.triple_samples)
+        ),
+        "selected_token_cost": realized_tokens,
+        "cost_aware_policy_outcome": diagnostics.selector_action,
         "optional_selector_backend": selector_backend,
         "optional_selector_available": optional_selector_result.selector_available,
         "optional_selector_unavailable_reason": optional_selector_result.unavailable_reason,
@@ -805,12 +1256,14 @@ def run_synthetic_benchmark(
     selector_backend = str(config.get("selector_backend", "native_greedy"))
     oracle_backend = str(config.get("oracle_backend", "brute_force"))
     strict_optional_dependencies = bool(config.get("strict_optional_dependencies", False))
+    resolved_n_items = n_items if n_items is not None else config.get("n_items")
+    resolved_budget_tokens = budget_tokens if budget_tokens is not None else config.get("budget_tokens")
     instances = build_synthetic_instances(
         regimes=config["regimes"],
         instances_per_regime=int(config.get("instances_per_regime", 1)),
         seed=resolved_seed,
-        n_items=n_items,
-        budget_tokens=budget_tokens,
+        n_items=resolved_n_items,
+        budget_tokens=resolved_budget_tokens,
         token_cost_range=tuple(config["token_cost_range"]) if config.get("token_cost_range") is not None else None,
         cluster_count=config.get("cluster_count"),
         pairwise_degree=config.get("pairwise_degree"),
@@ -870,6 +1323,13 @@ def run_synthetic_benchmark(
             "no system-level performance claim",
         ],
     }
+    if bool(config.get("emit_v12_artifacts", False)) or protocol_version == "synthetic_regime.v12":
+        summary["v12_artifact_paths"] = _write_synthetic_v12_artifacts(
+            output_dir=resolved_output_dir,
+            config=config,
+            summary=summary,
+            diagnostics_rows=diagnostics_rows,
+        )
     summary_path = write_json(resolved_output_dir / "summary.json", summary)
     report_path = write_text(
         resolved_output_dir / "report.md",

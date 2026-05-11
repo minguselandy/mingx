@@ -1,0 +1,62 @@
+{
+  "experiment_id": "realistic_task_model_adjudicated_v12",
+  "run_id": "realistic-task-model-adjudicated-v12",
+  "protocol_version": "realistic_task_model_adjudicated.v12",
+  "schema_version": "RealisticTaskModelAdjudicatedBenchmarkV1",
+  "output_dir": "artifacts/experiments/realistic_task_model_adjudicated_v12",
+  "data_source_kind": "fixture",
+  "paper_evidence_eligible": false,
+  "measurement_validation_claim": false,
+  "live_api_used": false,
+  "task_families": [
+    "multi_hop_evidence_assembly",
+    "paper_revision_microtask",
+    "repo_change_review_microtask"
+  ],
+  "baselines": [
+    "minimal_context",
+    "full_context",
+    "top_k_retrieval",
+    "mmr_density_greedy",
+    "always_sag",
+    "v12_cost_aware_diagnostic_policy"
+  ],
+  "budget_comparable_baselines": [
+    "minimal_context",
+    "top_k_retrieval",
+    "mmr_density_greedy",
+    "always_sag",
+    "v12_cost_aware_diagnostic_policy"
+  ],
+  "non_budget_reference_baselines": [
+    "full_context"
+  ],
+  "selector_labels": [
+    "greedy_supported",
+    "pairwise_escalate",
+    "higher_order_risk",
+    "ambiguous"
+  ],
+  "claim_boundary": {
+    "allowed": [
+      "model_adjudicated_proxy_evidence",
+      "operational_utility_only",
+      "ambiguous_metric"
+    ],
+    "denied": [
+      "measurement_validated",
+      "human_validation",
+      "human_labels",
+      "human_kappa",
+      "deployed_v_information_verification",
+      "calibrated_proxy_supported"
+    ]
+  },
+  "quality_controls": {
+    "duplicate_judging_stability": "fixture_not_measured",
+    "order_reversal_status": "fixture_not_measured",
+    "paraphrase_robustness_status": "fixture_not_measured",
+    "prerequisite_ablation_status": "fixture_not_measured",
+    "unstable_label_downgrade": "ambiguous"
+  }
+}

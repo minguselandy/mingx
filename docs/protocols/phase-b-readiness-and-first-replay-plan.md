@@ -2,19 +2,24 @@
 
 **Document status:** proposed execution plan for the next development stage.  
 **Recommended repo path:** `docs/protocols/phase-b-readiness-and-first-replay-plan.md`  
-**Baseline:** v10-aligned measurement and runtime-audit scaffold after the synthetic benchmark follow-up.
+**Baseline:** v12-aligned measurement and runtime-audit scaffold after the
+synthetic benchmark follow-up.
 
 ---
 
 ## 1. Purpose
 
-Phase B turns the v10-aligned scaffold from synthetic structural validation into offline replay readiness.
+Phase B turns the v12-aligned scaffold from synthetic structural diagnostics
+into offline replay readiness.
 
 The central question is:
 
 > Given recorded dispatch traces and cached utility or log-loss records, can the repo reconstruct candidate pools, selections, budgets, materialized contexts, metric-bridge claim levels, and selector diagnostics without live inference?
 
-A successful Phase B does **not** prove Condition A, does **not** certify deployed V-information weak submodularity, and does **not** validate scheduler correctness. It validates whether the repo can audit and replay dispatch-time context projection decisions at the correct claim level.
+A successful Phase B does **not** establish Condition A, does **not** verify
+deployed V-information weak submodularity, and does **not** establish scheduler
+correctness. It reports whether the repo can audit and replay dispatch-time
+context projection decisions at the correct claim level.
 
 ---
 
@@ -67,7 +72,7 @@ Phase B must not:
 - mutate the scheduler or runtime control flow;
 - redesign memory;
 - treat synthetic success as deployment validation;
-- treat extraction audit as selector-regime proof;
+- treat extraction audit as selector-regime support;
 - emit `vinfo_proxy_supported` without a fresh and matching `MetricBridgeWitness`;
 - treat `CandidatePool` as one of the four core paper artifacts;
 - report legacy `gamma_hat` compatibility output as a current headline weak-submodularity diagnostic.
@@ -134,7 +139,8 @@ Minimum implementation:
 
 - group records by `run_id`, `dispatch_id`, `agent_id`, and `round_id`;
 - bind `CandidatePool`, `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`, and `MetricBridgeWitness`;
-- verify candidate-pool hash consistency where available;
+- verify `candidate_pool_hash` consistency across candidate-pool-bound artifacts, with `CandidatePool` and `ProjectionPlan` carrying required hashes;
+- fail closed on identity mismatch or candidate-pool hash mismatch so bridge evidence cannot be reused across the wrong run or candidate pool;
 - preserve raw missing-field information.
 
 Exit criteria:
@@ -204,7 +210,7 @@ Report at minimum:
 
 Exit criteria:
 
-- comparison does not imply theorem inheritance;
+- comparison does not imply deployed-theory inheritance;
 - alternative selector results are reported as replay diagnostics, not automatic runtime replacements.
 
 ---

@@ -1,5 +1,6 @@
-import json
 import builtins
+import csv
+import json
 from pathlib import Path
 
 from cps.experiments.artifacts import rebuild_projection_summary_from_events
@@ -24,6 +25,11 @@ from cps.schema.projection_bundle_v1 import ProjectionBundleV1
 
 def _jsonl_rows(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def _csv_rows(path: Path) -> list[dict]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
 
 
 def _stable_summary_payload(path: Path) -> dict:
@@ -515,6 +521,126 @@ def test_forbidden_metric_claim_levels_never_appear(workspace_tmp_dir):
     assert {row["diagnostic_scope"] for row in diagnostics} == {"synthetic_structural_only"}
     assert {row["diagnostic_claim_level"] for row in witnesses} == {"ambiguous_metric"}
     assert {row["diagnostic_scope"] for row in witnesses} == {"synthetic_structural_only"}
+
+
+def test_synthetic_v12_artifact_refresh_outputs_cost_aware_tables(workspace_tmp_dir):
+    output_dir = workspace_tmp_dir / "synthetic_v12"
+
+    report = run_synthetic_benchmark(
+        config_path="configs/runs/synthetic-regime-v12.json",
+        output_dir=output_dir,
+    )
+
+    assert report["status"] == "green"
+    for name in (
+        "synthetic_confusion_v12.csv",
+        "synthetic_metrics_v12.csv",
+        "synthetic_cost_table_v12.csv",
+        "synthetic_run_manifest_v12.json",
+        "synthetic_report_v12.md",
+    ):
+        assert (output_dir / name).exists()
+
+    manifest = json.loads((output_dir / "synthetic_run_manifest_v12.json").read_text(encoding="utf-8"))
+    assert manifest["metric_claim_level"] == "ambiguous_metric"
+    assert manifest["diagnostic_scope"] == "synthetic_structural_only"
+    assert manifest["evidence_scope"] == "synthetic_structural_only"
+    assert manifest["paper_evidence_eligible"] is False
+    assert manifest["bridge_calibration_used"] is False
+    assert manifest["families"] == [
+        "adversarial-redundancy",
+        "higher-order-prerequisite",
+        "pairwise-synergy",
+        "redundancy-dominated",
+    ]
+    assert "artifacts/experiments/synthetic_regime_v12" in manifest["output_dir"]
+    assert ":\\" not in json.dumps(manifest, ensure_ascii=False)
+
+    confusion = (output_dir / "synthetic_confusion_v12.csv").read_text(encoding="utf-8")
+    assert "true_family,selector_regime_label,count" in confusion
+    assert "higher-order-prerequisite,greedy_supported" not in confusion
+    assert "adversarial-redundancy,ambiguous" in confusion
+
+    metrics_text = (output_dir / "synthetic_metrics_v12.csv").read_text(encoding="utf-8")
+    for column in (
+        "false_greedy_supported_rate",
+        "higher_order_false_greedy_supported_rate",
+        "pairwise_escalate_recall",
+        "avg_greedy_over_opt",
+        "avg_sag_over_opt",
+        "avg_local_search_over_opt",
+        "avg_sag_residual_gap_over_opt",
+        "avg_sag_improvement_over_greedy_over_opt",
+        "avg_diagnostic_call_count",
+        "avg_pair_sample_count",
+        "sag_trigger_rate",
+        "ambiguity_rate",
+        "avg_selected_token_cost",
+    ):
+        assert column in metrics_text
+    assert "avg_sag_gap_over_opt" not in metrics_text
+
+    cost_text = (output_dir / "synthetic_cost_table_v12.csv").read_text(encoding="utf-8")
+    for baseline in (
+        "random_budgeted",
+        "top_k_relevance",
+        "mmr_density_greedy",
+        "seeded_augmented_greedy",
+        "pair_aware_local_search",
+        "opt_or_near_opt",
+        "v12_cost_aware_diagnostic_policy",
+    ):
+        assert baseline in cost_text
+
+    report_text = (output_dir / "synthetic_report_v12.md").read_text(encoding="utf-8")
+    assert "## Cost-Aware Baseline Summary" in report_text
+    assert "avg_sag_residual_gap_over_opt" in report_text
+    assert "avg_sag_improvement_over_greedy_over_opt" in report_text
+    assert "avg_sag_gap_over_opt" not in report_text
+    assert "synthetic_structural_only" in report_text
+    assert "calibrated_proxy_supported" not in report_text
+    assert "vinfo_proxy_supported" not in report_text
+    assert "measurement_validated" not in report_text
+
+
+def test_adversarial_redundancy_family_is_conservatively_ambiguous(workspace_tmp_dir):
+    report = run_synthetic_benchmark(
+        config_path="configs/runs/synthetic-regime-v12.json",
+        output_dir=workspace_tmp_dir / "adversarial_v12",
+    )
+    diagnostics = _jsonl_rows(Path(report["summary"]["output_dir"]) / "diagnostics.jsonl")
+    adversarial_rows = [row for row in diagnostics if row["regime"] == "adversarial_redundancy"]
+
+    assert adversarial_rows
+    assert {row["selector_regime_label"] for row in adversarial_rows} == {"ambiguous"}
+    assert {row["selector_action"] for row in adversarial_rows} == {"no_certified_switch"}
+    assert report["summary"]["pre_registered_gate_passed"] is True
+
+
+def test_synthetic_v12_artifacts_do_not_emit_legacy_or_bridge_claim_labels(workspace_tmp_dir):
+    output_dir = workspace_tmp_dir / "synthetic_v12_claim_boundary"
+    run_synthetic_benchmark(
+        config_path="configs/runs/synthetic-regime-v12.json",
+        output_dir=output_dir,
+    )
+
+    allowed_selector_labels = {"greedy_supported", "pairwise_escalate", "higher_order_risk", "ambiguous"}
+    confusion_rows = _csv_rows(output_dir / "synthetic_confusion_v12.csv")
+    selector_labels = {row["selector_regime_label"] for row in confusion_rows}
+    assert selector_labels.issubset(allowed_selector_labels)
+    assert "escalate" not in selector_labels
+
+    forbidden = {
+        "Vinfo_proxy_certified",
+        "greedy_valid",
+        "vinfo_proxy_supported",
+        "calibrated_proxy_supported",
+        "measurement_validated",
+    }
+    for path in sorted(output_dir.glob("synthetic_*_v12.*")):
+        text = path.read_text(encoding="utf-8")
+        for label in forbidden:
+            assert label not in text, f"{label} leaked into {path.name}"
 
 
 def test_benchmark_does_not_read_reference_or_import_live_api(monkeypatch, workspace_tmp_dir):

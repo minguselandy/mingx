@@ -1,0 +1,20 @@
+{
+  "audit_scope": "reprojection_witness_pilot",
+  "calibrated_proxy_supported": false,
+  "data_source_kind": "fixture",
+  "evidence_scope": "fixture_reprojection_witness_only",
+  "fixture_only_reprojection_witness": true,
+  "human_kappa_present": false,
+  "human_labels_present": false,
+  "live_api_used": false,
+  "measurement_validation_claim": false,
+  "p47_claim_upgraded": false,
+  "p48_claim_upgraded": false,
+  "p49_claim_upgraded": false,
+  "paper_evidence_eligible": false,
+  "prior_phase_claims_upgraded": false,
+  "schema_version": "ReprojectionWitnessPilotV1",
+  "selector_regime_claim_upgraded": false,
+  "vinfo_proxy_supported": false,
+  "witness_count": 8
+}

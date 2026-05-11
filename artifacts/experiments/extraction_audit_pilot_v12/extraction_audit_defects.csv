@@ -1,0 +1,15 @@
+case_id,case_family,finding_id,expected_finding_id,reason_code,severity,support_status,source_record_ids,candidate_pool_hash
+p49-contradictory-001,contradictory_source,find-contradict-alpha,,contradictory_sources,error,ambiguous,src-contradict-1|src-contradict-2,3add9635f3930db686c3da80
+p49-contradictory-001,contradictory_source,find-contradict-alpha,gt-contradict-alpha,contradictory_sources,error,captured_core_changed,,3add9635f3930db686c3da80
+p49-duplicate-001,duplicate_over_merged,find-overmerged-provenance,,over_merged_finding,error,partially_supported,src-duplicate-1|src-duplicate-2,bd5ed664d02b2a757d6b00bf
+p49-duplicate-001,duplicate_over_merged,find-overmerged-provenance,gt-duplicate-identity,over_merged_finding,error,captured_core_changed,,bd5ed664d02b2a757d6b00bf
+p49-duplicate-001,duplicate_over_merged,find-duplicate-pool-a|find-duplicate-pool-b,gt-duplicate-pool,duplicate_finding,error,captured_core_preserved,,bd5ed664d02b2a757d6b00bf
+p49-duplicate-001,duplicate_over_merged,find-duplicate-pool-b,,duplicate_finding,error,supported,src-duplicate-1,bd5ed664d02b2a757d6b00bf
+p49-missing-001,missing_critical_finding,,gt-missing-full-context,missing_critical_finding,error,missing,,2c4f5916a01d50930798eba1
+p49-provenance-001,provenance_missing,find-provenance-handles,,source_span_missing,error,partially_supported,src-provenance-1,31c1b0a637ba6d32f1f6f314
+p49-provenance-001,provenance_missing,find-provenance-handles,gt-provenance-handles,source_span_missing,error,captured_core_changed,,31c1b0a637ba6d32f1f6f314
+p49-provenance-001,provenance_missing,find-provenance-handles,,provenance_missing,error,partially_supported,src-provenance-1,31c1b0a637ba6d32f1f6f314
+p49-provenance-001,provenance_missing,find-provenance-handles,gt-provenance-handles,provenance_missing,error,captured_core_changed,,31c1b0a637ba6d32f1f6f314
+p49-unsupported-001,unsupported_hallucinated,find-unsupported-validation,,unsupported_finding,error,unsupported,,1720fff26866d7dfcf597263
+p49-unsupported-001,unsupported_hallucinated,find-unsupported-validation,,source_span_missing,error,unsupported,,1720fff26866d7dfcf597263
+p49-unsupported-001,unsupported_hallucinated,find-unsupported-validation,,provenance_missing,error,unsupported,,1720fff26866d7dfcf597263

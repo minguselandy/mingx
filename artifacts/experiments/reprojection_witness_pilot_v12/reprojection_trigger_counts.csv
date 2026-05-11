@@ -1,0 +1,9 @@
+trigger_type,count
+ambiguous_selector_regime,1
+budget_violation,1
+candidate_pool_hash_mismatch,1
+identity_mismatch,1
+missing_critical_finding,1
+operator_requested,1
+pairwise_escalation,1
+unsupported_finding,1

@@ -1,0 +1,28 @@
+{
+  "audit_scope": "extraction_audit_pilot",
+  "data_source_kind": "fixture",
+  "evidence_scope": "fixture_extraction_audit_only",
+  "live_api_used": false,
+  "measurement_validation_claim": false,
+  "metric_claim_level": "operational_utility_only",
+  "output_dir": "artifacts/experiments/extraction_audit_pilot_v12",
+  "output_files": [
+    "extraction_audit_cases.jsonl",
+    "extraction_audit_findings.jsonl",
+    "extraction_audit_labels.jsonl",
+    "extraction_audit_defects.csv",
+    "extraction_audit_summary.json",
+    "extraction_audit_report.md",
+    "extraction_audit_manifest.json",
+    "extraction_ground_truth_findings.jsonl",
+    "stratum_completeness_report.csv",
+    "value_weighted_loss.csv",
+    "extraction_claim_gate_report.json"
+  ],
+  "paper_evidence_eligible": false,
+  "protocol_version": "extraction_audit_pilot.v12",
+  "run_id": "extraction-audit-pilot-v12",
+  "schema_version": "ExtractionAuditPilotV1",
+  "selector_regime_claim_upgraded": false,
+  "vinfo_proxy_supported": false
+}

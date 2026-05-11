@@ -1,0 +1,6 @@
+scope,n,false_greedy_supported_rate,higher_order_false_greedy_supported_rate,pairwise_escalate_recall,avg_greedy_over_opt,avg_sag_over_opt,avg_local_search_over_opt,avg_sag_residual_gap_over_opt,avg_sag_improvement_over_greedy_over_opt,avg_diagnostic_call_count,avg_pair_sample_count,sag_trigger_rate,ambiguity_rate,avg_selected_token_cost,cost_aware_policy_outcome
+all,40,0.0,0.0,1.0,0.877288,1.0,1.0,0.0,0.122712,344.0,28.0,0.25,0.375,18.0,interaction_aware_local_search:5;monitored_greedy:10;no_certified_switch:15;seeded_augmented_greedy:10
+adversarial-redundancy,10,0.0,,,1.0,1.0,1.0,0.0,0.0,344.0,28.0,0.0,1.0,18.0,no_certified_switch:10
+higher-order-prerequisite,10,0.0,0.0,,0.50915,1.0,1.0,0.0,0.49085,344.0,28.0,0.0,0.5,18.0,interaction_aware_local_search:5;no_certified_switch:5
+pairwise-synergy,10,0.0,,1.0,1.0,1.0,1.0,0.0,0.0,344.0,28.0,1.0,0.0,18.0,seeded_augmented_greedy:10
+redundancy-dominated,10,0.0,,,1.0,1.0,1.0,0.0,0.0,344.0,28.0,0.0,0.0,18.0,monitored_greedy:10
