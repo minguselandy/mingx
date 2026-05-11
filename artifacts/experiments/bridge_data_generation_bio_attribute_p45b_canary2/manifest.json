@@ -1,0 +1,32 @@
+{
+  "data_origin": "api_generated",
+  "denied_claims": [
+    "measurement_validated",
+    "scientific_validation",
+    "human_labeled_validation",
+    "human_kappa",
+    "deployed_v_information_verification"
+  ],
+  "fixed_model_id": "qwen3.6-flash",
+  "human_labels_present": false,
+  "kappa_present": false,
+  "live_api_used": true,
+  "measurement_validated_allowed": false,
+  "measurement_validation_claim": false,
+  "mode": "live_operator_approved",
+  "operator_approval": true,
+  "protocol_version": "bridge_data_generation.v1",
+  "provider_profile": "dashscope-qwen-phase1",
+  "source": "operator_provided",
+  "strong_review_model_id": "qwen3.6-plus",
+  "summary": {
+    "accepted_rows": 0,
+    "ambiguous_rows": 0,
+    "bridge_uninformative_rows": 8,
+    "measurement_validated_allowed": false,
+    "negative_delta_logloss_rows": 6,
+    "rejected_rows": 4,
+    "total_rows": 8,
+    "unusable_rows": 8
+  }
+}

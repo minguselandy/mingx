@@ -49,7 +49,7 @@ def _ordered_list(values: Any) -> list[str]:
 
 
 def _package_claim_scope(ledger: Mapping[str, Any], report: Mapping[str, Any]) -> str:
-    allowed_claim_level = str(report.get("allowed_claim_level", "ambiguous"))
+    allowed_claim_level = str(report.get("allowed_claim_level", "ambiguous_metric"))
     if allowed_claim_level == "pilot_only" or str(ledger.get("contamination_status")) == "failed":
         return "pilot_only"
     if (
@@ -57,20 +57,21 @@ def _package_claim_scope(ledger: Mapping[str, Any], report: Mapping[str, Any]) -
         or int(ledger.get("projection_bundle_count", 0) or 0) <= 0
         or "projection_bundles" in set(ledger.get("missing_required_artifacts", []))
     ):
-        return "ambiguous"
+        return "ambiguous_metric"
     if allowed_claim_level == "measurement_validated" and not bool(report.get("measurement_validated_allowed")):
-        return "ambiguous"
+        return "ambiguous_metric"
     if allowed_claim_level in {
         "engineering_compatibility_only",
         "engineering_smoke_only",
         "replayable_artifact_evidence",
-        "synthetic_structural_only",
+        "vinfo_proxy_supported",
+        "calibrated_proxy_supported",
         "operational_utility_only",
-        "ambiguous",
+        "ambiguous_metric",
         "pilot_only",
     }:
         return allowed_claim_level
-    return "ambiguous"
+    return "ambiguous_metric"
 
 
 def _manifest(
@@ -85,7 +86,8 @@ def _manifest(
     return {
         "package_schema_version": PACKAGE_SCHEMA_VERSION,
         "source_run_id": str(ledger.get("run_id", "")),
-        "evidence_mode": str(ledger.get("evidence_mode", "ambiguous")),
+        "evidence_mode": str(ledger.get("evidence_mode", "ambiguous_metric")),
+        "evidence_scope": str(ledger.get("evidence_scope", ledger.get("evidence_mode", "ambiguous_metric"))),
         "source_phase": str(ledger.get("source_phase", "unknown")),
         "artifact_counts": artifact_counts,
         "required_artifacts_present": bool(ledger.get("required_artifacts_present", False)),
@@ -95,7 +97,7 @@ def _manifest(
         "projection_bundle_hashes": projection_bundle_hashes,
         "metric_bridge_witness_count": int(ledger.get("metric_bridge_witness_count", 0) or 0),
         "diagnostic_count": int(ledger.get("diagnostic_count", 0) or 0),
-        "claim_gate_allowed_level": str(report.get("allowed_claim_level", "ambiguous")),
+        "claim_gate_allowed_level": str(report.get("allowed_claim_level", "ambiguous_metric")),
         "measurement_validated_allowed": bool(report.get("measurement_validated_allowed", False)),
         "denied_claims": denied_claims,
         "reason_codes": reason_codes,
@@ -192,6 +194,7 @@ def format_replay_package_summary_markdown(package: Mapping[str, Any]) -> str:
         f"- Package schema version: `{manifest['package_schema_version']}`",
         f"- Source run id: `{manifest['source_run_id']}`",
         f"- Evidence mode: `{manifest['evidence_mode']}`",
+        f"- Evidence scope: `{manifest.get('evidence_scope', 'ambiguous_metric')}`",
         f"- Source phase: `{manifest['source_phase']}`",
         f"- Package claim scope: `{manifest['package_claim_scope']}`",
         f"- Claim gate allowed level: `{manifest['claim_gate_allowed_level']}`",

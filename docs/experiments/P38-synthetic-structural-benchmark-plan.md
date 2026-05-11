@@ -4,7 +4,7 @@
 **Experiment stack:** Phase A synthetic structural validity  
 **Status:** implementation plan  
 **Live API:** prohibited  
-**Maximum claim:** `structural_synthetic_only`
+**Maximum claim:** `vinfo_proxy_supported`
 
 
 ## Source Basis
@@ -39,7 +39,7 @@ Conservative claim rules:
 - missing human labels => not `measurement_validated`
 - missing human-human kappa => not `measurement_validated`
 - stale or missing metric bridge => `operational_utility_only` or `ambiguous`
-- synthetic-only evidence => `structural_synthetic_only`, not deployed V-information certification
+- synthetic-only evidence => `vinfo_proxy_supported`, not deployed V-information certification
 - replay package completeness => replay/observability evidence only, not scientific validation
 - model-adjudicated labels => not human labels
 - Codex/model audit => not human review
@@ -56,7 +56,7 @@ Findings are organized into clusters. The first item in a cluster has high value
 - low positive complementarity mass
 - no triple-excess alarm
 - small greedy-vs-augmented gap
-- `selector_regime_label = greedy_valid`, if the pre-registered threshold is met
+- `selector_regime_label = greedy_supported`, if the pre-registered threshold is met
 
 ### 2.2 Sparse pairwise synergy
 
@@ -71,7 +71,7 @@ Expected signature:
 - lower pair-block ratio
 - detected interaction mass
 - seeded augmented greedy improves over plain greedy on a meaningful fraction of instances
-- `selector_regime_label = escalate` or calibrated warning, depending on thresholds
+- `selector_regime_label = pairwise_escalate` or calibrated warning, depending on thresholds
 
 ### 2.3 Higher-order / prerequisite synergy
 
@@ -85,7 +85,7 @@ Expected signature:
 
 - pairwise diagnostics may look incomplete;
 - `block_ratio_lcb_b3` or triple-excess test should fire;
-- high-confidence `greedy_valid` must be withheld;
+- high-confidence `greedy_supported` must be withheld;
 - ambiguous labels are acceptable and must be counted separately.
 
 ## 3. Required Outputs
@@ -137,7 +137,7 @@ The benchmark passes only if:
 
 1. redundancy-dominated instances mostly receive the expected high block-ratio / low synergy signature;
 2. pairwise-synergy instances show detectable pairwise interaction mass or seeded-greedy improvement;
-3. higher-order instances do not receive high-confidence `greedy_valid` labels;
+3. higher-order instances do not receive high-confidence `greedy_supported` labels;
 4. ambiguity is counted separately and is not counted as a successful regime match;
 5. generated artifacts are replayable under the schema version used by P39.
 

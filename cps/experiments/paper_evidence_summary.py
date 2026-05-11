@@ -30,9 +30,10 @@ CLAIM_LADDER = (
     ("engineering_compatibility_only", "Schema and compatibility evidence only."),
     ("engineering_smoke_only", "Offline fake/local path evidence only."),
     ("replayable_artifact_evidence", "Complete deterministic artifact package evidence."),
-    ("synthetic_structural_only", "Synthetic/proxy structural diagnostic evidence only."),
+    ("vinfo_proxy_supported", "Log-loss-aligned V-information proxy support evidence only."),
+    ("calibrated_proxy_supported", "Calibrated proxy evidence supported by a fresh bridge."),
     ("operational_utility_only", "Operational utility evidence without measurement validation."),
-    ("ambiguous", "Fail-closed or incomplete evidence."),
+    ("ambiguous_metric", "Fail-closed or incomplete evidence."),
     ("pilot_only", "Contamination or boundary failure restricts claims to pilot use."),
     ("measurement_validated", "Requires existing claim gate validation evidence."),
 )
@@ -93,9 +94,9 @@ def _artifact_rows(manifest: Mapping[str, Any]) -> list[dict[str, Any]]:
 
 def _claim_rows(manifest: Mapping[str, Any]) -> list[dict[str, str]]:
     fields = (
-        ("allowed_claim_level", manifest.get("claim_gate_allowed_level", "ambiguous")),
+        ("allowed_claim_level", manifest.get("claim_gate_allowed_level", "ambiguous_metric")),
         ("measurement_validated_allowed", str(bool(manifest.get("measurement_validated_allowed", False))).lower()),
-        ("package_claim_scope", manifest.get("package_claim_scope", "ambiguous")),
+        ("package_claim_scope", manifest.get("package_claim_scope", "ambiguous_metric")),
         ("p04_status", manifest.get("p04_status", "BLOCKED_OPERATOR_REQUIRED")),
         ("p09_status", manifest.get("p09_status", "BLOCKED_OPERATOR_REQUIRED")),
         ("live_api_used", str(bool(manifest.get("live_api_used", False))).lower()),
@@ -116,10 +117,10 @@ def _proxy_rows(matrix: Mapping[str, Any] | None) -> list[dict[str, str]]:
         return [
             {
                 "regime_name": "proxy_regime_matrix",
-                "certification_scope": "unavailable",
-                "allowed_claim_level": "ambiguous",
+                "diagnostic_scope": "unavailable",
+                "allowed_claim_level": "ambiguous_metric",
                 "reason_codes": "matrix_not_available",
-                "paper_section": "proxy-regime certification",
+                "paper_section": "proxy-regime diagnosis",
             }
         ]
     rows: list[dict[str, str]] = []
@@ -127,10 +128,12 @@ def _proxy_rows(matrix: Mapping[str, Any] | None) -> list[dict[str, str]]:
         rows.append(
             {
                 "regime_name": str(entry.get("regime_name", "")),
-                "certification_scope": str(entry.get("certification_scope", "ambiguous")),
-                "allowed_claim_level": str(entry.get("allowed_claim_level", "ambiguous")),
+                "diagnostic_scope": str(
+                    entry.get("diagnostic_scope", entry.get("certification_scope", "ambiguous_metric"))
+                ),
+                "allowed_claim_level": str(entry.get("allowed_claim_level", "ambiguous_metric")),
                 "reason_codes": ", ".join(str(reason) for reason in entry.get("reason_codes", [])) or "none",
-                "paper_section": "proxy-regime certification",
+                "paper_section": "proxy-regime diagnosis",
             }
         )
     return rows
@@ -160,7 +163,7 @@ def _replay_rows(manifest: Mapping[str, Any], matrix: Mapping[str, Any] | None) 
     rows.append(
         {
             "output": "package_claim_scope",
-            "status": str(manifest.get("package_claim_scope", "ambiguous")),
+            "status": str(manifest.get("package_claim_scope", "ambiguous_metric")),
             "paper_section": "replayable experiment evidence",
         }
     )
@@ -194,7 +197,7 @@ def _proxy_summary(matrix: Mapping[str, Any] | None) -> dict[str, Any]:
             "matrix_available": False,
             "entry_count": 0,
             "regime_names": [],
-            "certification_scopes": [],
+            "diagnostic_scopes": [],
             "denied_scope_values": [],
             "claim_boundary_warning": "proxy-regime matrix unavailable",
         }
@@ -203,7 +206,9 @@ def _proxy_summary(matrix: Mapping[str, Any] | None) -> dict[str, Any]:
         "matrix_available": True,
         "entry_count": len(entries),
         "regime_names": [str(entry.get("regime_name", "")) for entry in entries],
-        "certification_scopes": _ordered_list(entry.get("certification_scope", "ambiguous") for entry in entries),
+        "diagnostic_scopes": _ordered_list(
+            entry.get("diagnostic_scope", entry.get("certification_scope", "ambiguous_metric")) for entry in entries
+        ),
         "denied_scope_values": list(matrix.get("denied_scope_values") or []),
         "claim_boundary_warning": str(matrix.get("claim_boundary_warning", "")),
     }
@@ -214,8 +219,8 @@ def _bullet_summary(manifest: Mapping[str, Any]) -> list[str]:
         f"Runtime-audit artifacts present: {str(bool(manifest.get('required_artifacts_present'))).lower()}.",
         f"Projection bundles: {int(manifest.get('projection_bundle_count', 0) or 0)}.",
         f"Metric bridge witnesses: {int(manifest.get('metric_bridge_witness_count', 0) or 0)}.",
-        f"Allowed claim level: {manifest.get('claim_gate_allowed_level', 'ambiguous')}.",
-        f"Package claim scope: {manifest.get('package_claim_scope', 'ambiguous')}.",
+        f"Allowed claim level: {manifest.get('claim_gate_allowed_level', 'ambiguous_metric')}.",
+        f"Package claim scope: {manifest.get('package_claim_scope', 'ambiguous_metric')}.",
         "measurement_validated is not claimed.",
         "Paper-facing summaries do not upgrade claim levels.",
     ]
@@ -235,7 +240,9 @@ def _build_summary(package: Mapping[str, Any]) -> dict[str, Any]:
     projection_bundle_hashes = _ordered_list(manifest.get("projection_bundle_hashes", []))
     denied_claims = list(manifest.get("denied_claims") or report.get("denied_claims") or [])
     reason_codes = list(manifest.get("reason_codes") or report.get("reason_codes") or [])
-    claim_gate_allowed_level = str(manifest.get("claim_gate_allowed_level", report.get("allowed_claim_level", "ambiguous")))
+    claim_gate_allowed_level = str(
+        manifest.get("claim_gate_allowed_level", report.get("allowed_claim_level", "ambiguous_metric"))
+    )
     measurement_validated_allowed = bool(
         manifest.get("measurement_validated_allowed", report.get("measurement_validated_allowed", False))
     )
@@ -250,7 +257,8 @@ def _build_summary(package: Mapping[str, Any]) -> dict[str, Any]:
         "paper_evidence_schema_version": PAPER_EVIDENCE_SCHEMA_VERSION,
         "source_run_id": str(manifest.get("source_run_id", ledger.get("run_id", ""))),
         "source_phase": str(manifest.get("source_phase", ledger.get("source_phase", "unknown"))),
-        "evidence_mode": str(manifest.get("evidence_mode", ledger.get("evidence_mode", "ambiguous"))),
+        "evidence_mode": str(manifest.get("evidence_mode", ledger.get("evidence_mode", "ambiguous_metric"))),
+        "evidence_scope": str(manifest.get("evidence_scope", ledger.get("evidence_scope", "ambiguous_metric"))),
         "artifact_summary": {
             "required_artifacts_present": bool(manifest.get("required_artifacts_present", False)),
             "artifact_counts": artifact_counts,
@@ -265,12 +273,12 @@ def _build_summary(package: Mapping[str, Any]) -> dict[str, Any]:
             "metric_bridge_witness_count": int(manifest.get("metric_bridge_witness_count", 0) or 0),
             "bridge_freshness": str(ledger.get("bridge_freshness", "missing")),
             "metric_bridge_gate_status": str(report.get("metric_bridge_gate_status", "unknown")),
-            "allowed_bridge_claim_level": str(report.get("allowed_bridge_claim_level", "ambiguous")),
+            "allowed_bridge_claim_level": str(report.get("allowed_bridge_claim_level", "ambiguous_metric")),
             "metric_bridge_reason_codes": list(report.get("metric_bridge_reason_codes") or []),
         },
         "claim_gate_summary": {
             "allowed_claim_level": claim_gate_allowed_level,
-            "package_claim_scope": str(manifest.get("package_claim_scope", "ambiguous")),
+            "package_claim_scope": str(manifest.get("package_claim_scope", "ambiguous_metric")),
             "measurement_validated_allowed": measurement_validated_allowed,
             "denied_claims": denied_claims,
             "reason_codes": reason_codes,
@@ -286,7 +294,7 @@ def _build_summary(package: Mapping[str, Any]) -> dict[str, Any]:
         "proxy_regime_summary": _proxy_summary(matrix),
         "replay_package_summary": {
             "package_schema_version": str(source_package.get("package_schema_version", "ReplayEvidencePackageV1")),
-            "package_claim_scope": str(manifest.get("package_claim_scope", "ambiguous")),
+            "package_claim_scope": str(manifest.get("package_claim_scope", "ambiguous_metric")),
             "claim_gate_report_available": bool(report),
             "proxy_regime_matrix_available": matrix is not None,
             "deterministic_replay_package_status": "available",
@@ -361,6 +369,7 @@ def format_paper_evidence_summary_markdown(summary: Mapping[str, Any]) -> str:
         "",
         f"- Source run id: `{summary['source_run_id']}`",
         f"- Evidence mode: `{summary['evidence_mode']}`",
+        f"- Evidence scope: `{summary.get('evidence_scope', 'ambiguous_metric')}`",
         f"- Source phase: `{summary['source_phase']}`",
         f"- Allowed claim level: `{summary['claim_gate_summary']['allowed_claim_level']}`",
         f"- measurement_validated_allowed: {str(summary['measurement_validated_allowed']).lower()}",
@@ -389,7 +398,7 @@ def format_paper_evidence_summary_markdown(summary: Mapping[str, Any]) -> str:
             "## Proxy-Regime Table",
             "",
             *_markdown_table(
-                ("regime_name", "certification_scope", "allowed_claim_level", "reason_codes"),
+                ("regime_name", "diagnostic_scope", "allowed_claim_level", "reason_codes"),
                 list(rows["proxy_regime_table_rows"]),
             ),
             "",
@@ -422,7 +431,7 @@ def format_paper_evidence_summary_markdown(summary: Mapping[str, Any]) -> str:
             "- Replayable experiment evidence: replay evidence table and projection bundle summary.",
             "- Metric bridge: metric bridge summary and claim boundary table.",
             "- Conservative claim gate: denied claims and reason codes.",
-            "- Proxy-regime certification: proxy-regime table.",
+            "- Proxy-regime diagnosis: proxy-regime table.",
             "- Limitations and denied claims: limitations table.",
             "",
             "## Final Claim Boundary",

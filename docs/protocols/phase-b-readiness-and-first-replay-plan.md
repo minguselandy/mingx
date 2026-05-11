@@ -24,7 +24,7 @@ Phase A is treated as complete for scaffold purposes only:
 
 - synthetic benchmark artifacts can materialize `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`, and `MetricBridgeWitness`;
 - synthetic reports use the pre-registered structural validity gate;
-- synthetic labels are `structural_synthetic_only`;
+- synthetic metric claim labels remain `ambiguous_metric`, while `synthetic_structural_only` is recorded as diagnostic scope;
 - ambiguity is counted separately and not treated as success;
 - `gamma_hat` remains legacy compatibility only;
 - `TraceDecay` is path-local marginal decay only;
@@ -68,7 +68,7 @@ Phase B must not:
 - redesign memory;
 - treat synthetic success as deployment validation;
 - treat extraction audit as selector-regime proof;
-- emit `Vinfo_proxy_certified` without a fresh and matching `MetricBridgeWitness`;
+- emit `vinfo_proxy_supported` without a fresh and matching `MetricBridgeWitness`;
 - treat `CandidatePool` as one of the four core paper artifacts;
 - report legacy `gamma_hat` compatibility output as a current headline weak-submodularity diagnostic.
 
@@ -93,13 +93,13 @@ Every dispatch replay attempt receives exactly one status.
 
 | Condition | Required outcome |
 |---|---|
-| Missing `MetricBridgeWitness` | `ambiguous` or observability-only; no bridge-qualified claim. |
-| Stale bridge | `ambiguous`; recalibration required. |
-| Operational-only utility | `operational_utility_only`, not `Vinfo_proxy_certified`. |
+| Missing `MetricBridgeWitness` | `ambiguous_metric` or observability-only; no bridge-qualified claim. |
+| Stale bridge | `ambiguous_metric`; recalibration required. |
+| Operational-only utility | `operational_utility_only`, not `vinfo_proxy_supported`. |
 | Missing materialization order | replay defect; do not infer order from selected ids. |
 | Missing excluded candidates | replay defect; candidate-pool completeness cannot be audited. |
 | Low denominator signal | ambiguous/uninformative, not automatic low-ratio failure. |
-| Missing triple evidence under higher-order risk | ambiguous; no high-confidence `greedy_valid`. |
+| Missing triple evidence under higher-order risk | `ambiguous`; no high-confidence `greedy_supported`. |
 | Contamination-failed or extraction-incomplete source run | pilot/observability only unless separately remediated and requalified. |
 
 ---

@@ -57,7 +57,7 @@ Conservative claim rules:
 - missing human labels => not `measurement_validated`
 - missing human-human kappa => not `measurement_validated`
 - stale or missing metric bridge => `operational_utility_only` or `ambiguous`
-- synthetic-only evidence => `structural_synthetic_only`, not deployed V-information certification
+- synthetic-only evidence => `vinfo_proxy_supported`, not deployed V-information certification
 - replay package completeness => replay/observability evidence only, not scientific validation
 - model-adjudicated labels => not human labels
 - Codex/model audit => not human review
@@ -159,14 +159,13 @@ If the metric is not log-loss aligned or bridge-calibrated, assign `operational_
 Every condition-level result must be tagged as one of:
 
 ```text
-Vinfo_proxy_certified
-calibrated_proxy
+vinfo_proxy_supported
+calibrated_proxy_supported
 operational_utility_only
-structural_synthetic_only
-ambiguous
+ambiguous_metric
 ```
 
-For Phase C, `structural_synthetic_only` should not apply unless a synthetic sub-run is included. `Vinfo_proxy_certified` requires fresh bridge evidence, not task success alone.
+For Phase C, `vinfo_proxy_supported` requires fresh bridge evidence, not task success alone. The deterministic Phase C scaffold should normally remain `operational_utility_only`.
 
 ## 7. Implemented Targets
 

@@ -1,5 +1,11 @@
 # Paper Alignment V10
 
+Legacy status: this document is preserved as the v10 repository-to-paper map.
+The current paper direction is v12, anchored at
+`docs/archive/context_projection_fixed_v12.md` and mapped in
+`docs/paper-alignment-v12.md`. New paper-facing work should use proxy-regime
+diagnosis terminology, not v10 proxy-regime certification terminology.
+
 This document maps the revised Context Projection Selection paper to the
 repository. It is the first stop for deciding what the code and artifacts are
 allowed to claim.

@@ -100,49 +100,54 @@ def _diagnostic_row(**overrides):
 
 def test_metric_claim_level_comes_from_metric_bridge_witness():
     assert derive_metric_claim_level({"metric_class": "synthetic_oracle", "drift_status": "not_applicable"}) == (
-        "structural_synthetic_only"
+        "ambiguous_metric"
     )
     assert derive_metric_claim_level({"metric_class": "operational_only", "drift_status": "fresh"}) == (
         "operational_utility_only"
     )
     assert derive_metric_claim_level({"metric_class": "log_loss_aligned", "drift_status": "fresh"}) == (
-        "Vinfo_proxy_certified"
+        "vinfo_proxy_supported"
     )
-    assert derive_metric_claim_level(None) == "ambiguous"
-    assert derive_metric_claim_level({"metric_class": "log_loss_aligned", "drift_status": "stale"}) == "ambiguous"
-    assert derive_metric_claim_level({"metric_class": "unknown", "drift_status": "fresh"}) == "ambiguous"
+    assert derive_metric_claim_level({"metric_class": "bridge_calibrated", "drift_status": "fresh"}) == (
+        "calibrated_proxy_supported"
+    )
+    assert derive_metric_claim_level(None) == "ambiguous_metric"
+    assert derive_metric_claim_level({"metric_class": "log_loss_aligned", "drift_status": "stale"}) == (
+        "ambiguous_metric"
+    )
+    assert derive_metric_claim_level({"metric_class": "unknown", "drift_status": "fresh"}) == "ambiguous_metric"
 
 
 def test_selector_regime_label_uses_two_axis_protocol():
     good = _diagnostic_row()
-    assert derive_selector_regime_label(good, "structural_synthetic_only", {}) == "greedy_valid"
-    assert derive_selector_action("greedy_valid", good, {}) == "monitored_greedy"
+    assert derive_selector_regime_label(good, "vinfo_proxy_supported", {}) == "greedy_supported"
+    assert derive_selector_action("greedy_supported", good, {}) == "monitored_greedy"
 
     high_synergy = _diagnostic_row(synergy_fraction=0.5, positive_interaction_mass_ucb=0.7)
-    assert derive_selector_regime_label(high_synergy, "structural_synthetic_only", {}) == "escalate"
-    assert derive_selector_action("escalate", high_synergy, {}) == "seeded_augmented_greedy"
+    assert derive_selector_regime_label(high_synergy, "vinfo_proxy_supported", {}) == "pairwise_escalate"
+    assert derive_selector_action("pairwise_escalate", high_synergy, {}) == "seeded_augmented_greedy"
 
     positive_triple = _diagnostic_row(triple_excess_flag="positive", higher_order_ambiguity_flag=True)
-    assert derive_selector_regime_label(positive_triple, "structural_synthetic_only", {}) == "escalate"
-    assert derive_selector_action("escalate", positive_triple, {}) == "interaction_aware_local_search"
+    assert derive_selector_regime_label(positive_triple, "vinfo_proxy_supported", {}) == "higher_order_risk"
+    assert derive_selector_action("higher_order_risk", positive_triple, {}) == "interaction_aware_local_search"
 
 
 def test_selector_regime_label_downgrades_ambiguous_inputs():
     insufficient_samples = _diagnostic_row(block_ratio_sample_count=0, block_ratio_lcb_star=None)
-    assert derive_selector_regime_label(insufficient_samples, "structural_synthetic_only", {}) == "ambiguous"
+    assert derive_selector_regime_label(insufficient_samples, "vinfo_proxy_supported", {}) == "ambiguous"
     assert derive_selector_action("ambiguous", insufficient_samples, {}) == "no_certified_switch"
 
     low_denominator_signal = _diagnostic_row(block_ratio_sample_count=3, block_ratio_uninformative_count=3)
-    assert derive_selector_regime_label(low_denominator_signal, "structural_synthetic_only", {}) == "ambiguous"
+    assert derive_selector_regime_label(low_denominator_signal, "vinfo_proxy_supported", {}) == "ambiguous"
 
     missing_bridge = _diagnostic_row()
-    assert derive_selector_regime_label(missing_bridge, "ambiguous", {}) == "ambiguous"
+    assert derive_selector_regime_label(missing_bridge, "ambiguous_metric", {}) == "ambiguous"
 
     missing_higher_order_test = _diagnostic_row(
         triple_excess_flag="not_evaluable",
         higher_order_ambiguity_flag=True,
     )
-    assert derive_selector_regime_label(missing_higher_order_test, "structural_synthetic_only", {}) == "ambiguous"
+    assert derive_selector_regime_label(missing_higher_order_test, "vinfo_proxy_supported", {}) == "ambiguous"
 
 
 def test_compute_diagnostics_headlines_block_ratio_fields():
@@ -177,8 +182,9 @@ def test_compute_diagnostics_headlines_block_ratio_fields():
     assert diagnostics.trace_decay_proxy == diagnostics.gamma_hat
     assert diagnostics.selector_action == "seeded_augmented_greedy"
     assert diagnostics.policy_recommendation == diagnostics.selector_action
-    assert diagnostics.metric_claim_level == "structural_synthetic_only"
-    assert diagnostics.selector_regime_label == "escalate"
+    assert diagnostics.metric_claim_level == "ambiguous_metric"
+    assert diagnostics.diagnostic_scope == "synthetic_structural_only"
+    assert diagnostics.selector_regime_label == "pairwise_escalate"
 
 
 def test_compute_diagnostics_downgrades_missing_metric_bridge():
@@ -207,7 +213,7 @@ def test_compute_diagnostics_downgrades_missing_metric_bridge():
         metric_bridge_witness=None,
     )
 
-    assert diagnostics.metric_claim_level == "ambiguous"
+    assert diagnostics.metric_claim_level == "ambiguous_metric"
     assert diagnostics.selector_regime_label == "ambiguous"
     assert diagnostics.selector_action == "no_certified_switch"
     assert diagnostics.policy_recommendation == diagnostics.selector_action
@@ -260,11 +266,11 @@ def test_higher_order_synthetic_instance_produces_positive_triple_excess():
     assert diagnostics.triple_excess_lcb_max is not None
     assert diagnostics.triple_excess_lcb_max > 0.0
     assert diagnostics.higher_order_ambiguity_flag is True
-    assert diagnostics.selector_regime_label == "escalate"
+    assert diagnostics.selector_regime_label == "higher_order_risk"
     assert diagnostics.selector_action == "interaction_aware_local_search"
 
 
-def test_higher_order_risk_without_triple_evidence_is_not_greedy_valid():
+def test_higher_order_risk_without_triple_evidence_remains_ambiguous():
     instance = build_synthetic_instances(
         regimes=["higher_order_synergy"],
         instances_per_regime=1,

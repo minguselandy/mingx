@@ -22,6 +22,22 @@ DEFAULT_SELECTOR_THRESHOLDS: dict[str, dict[str, float]] = {
     },
 }
 
+METRIC_CLAIM_LEVEL_ALIASES = {
+    "Vinfo_proxy_certified": "vinfo_proxy_supported",
+    "structural_synthetic_only": "ambiguous_metric",
+    "calibrated_proxy": "calibrated_proxy_supported",
+    "ambiguous": "ambiguous_metric",
+}
+
+SELECTOR_REGIME_LABEL_ALIASES = {
+    "greedy_valid": "greedy_supported",
+}
+SYNTHETIC_DIAGNOSTIC_SCOPES = {
+    "synthetic_structural_only",
+    "oracle_structural_only",
+    "synthetic_oracle_structural_only",
+}
+
 
 def _get(record: Any, field: str, default: Any = None) -> Any:
     if record is None:
@@ -57,6 +73,45 @@ def _as_bool(value: Any) -> bool:
     return bool(value)
 
 
+def normalize_metric_claim_level(value: Any) -> str:
+    label = str(value or "ambiguous_metric")
+    return METRIC_CLAIM_LEVEL_ALIASES.get(label, label)
+
+
+def normalize_diagnostic_scope(value: Any) -> str:
+    label = str(value or "ambiguous_metric")
+    aliases = {
+        "synthetic": "synthetic_structural_only",
+        "synthetic_structural": "synthetic_structural_only",
+        "structural_synthetic_only": "synthetic_structural_only",
+    }
+    return aliases.get(label, label)
+
+
+def is_synthetic_diagnostic_scope(value: Any) -> bool:
+    return normalize_diagnostic_scope(value) in SYNTHETIC_DIAGNOSTIC_SCOPES
+
+
+def normalize_selector_regime_label(
+    value: Any,
+    diagnostics: Any | None = None,
+    thresholds: dict | None = None,
+) -> str:
+    label = str(value or "ambiguous")
+    if label in SELECTOR_REGIME_LABEL_ALIASES:
+        return SELECTOR_REGIME_LABEL_ALIASES[label]
+    if label == "escalate":
+        resolved = resolve_selector_thresholds(thresholds)
+        triple_excess_flag = str(_get(diagnostics, "triple_excess_flag", "") or "")
+        higher_order_ambiguity = _as_bool(_get(diagnostics, "higher_order_ambiguity_flag", False))
+        if triple_excess_flag == "positive":
+            return "higher_order_risk"
+        if higher_order_ambiguity:
+            return "ambiguous"
+        return "pairwise_escalate" if _has_pairwise_escalation_signal(diagnostics, resolved) else "pairwise_escalate"
+    return label
+
+
 def resolve_selector_thresholds(thresholds: dict | None) -> dict:
     resolved = {name: dict(values) for name, values in DEFAULT_SELECTOR_THRESHOLDS.items()}
     for name, values in dict(thresholds or {}).items():
@@ -71,22 +126,22 @@ def resolve_selector_thresholds(thresholds: dict | None) -> dict:
 
 def derive_metric_claim_level(metric_bridge_witness: Any | None) -> str:
     if not metric_bridge_witness:
-        return "ambiguous"
+        return "ambiguous_metric"
 
     metric_class = str(_get(metric_bridge_witness, "metric_class", "") or "")
     drift_status = str(_get(metric_bridge_witness, "drift_status", "") or "")
 
     if drift_status in {"stale", "ambiguous"}:
-        return "ambiguous"
+        return "ambiguous_metric"
     if metric_class == "synthetic_oracle":
-        return "structural_synthetic_only"
+        return normalize_metric_claim_level(_get(metric_bridge_witness, "diagnostic_claim_level", "ambiguous_metric"))
     if metric_class == "log_loss_aligned" and drift_status == "fresh":
-        return "Vinfo_proxy_certified"
+        return "vinfo_proxy_supported"
     if metric_class == "bridge_calibrated" and drift_status == "fresh":
-        return "calibrated_proxy"
+        return "calibrated_proxy_supported"
     if metric_class == "operational_only":
         return "operational_utility_only"
-    return "ambiguous"
+    return normalize_metric_claim_level(_get(metric_bridge_witness, "diagnostic_claim_level", "ambiguous_metric"))
 
 
 def _has_sufficient_denominator_signal(diagnostics: Any, thresholds: dict) -> bool:
@@ -129,7 +184,9 @@ def derive_selector_regime_label(
     thresholds: dict | None,
 ) -> str:
     resolved = resolve_selector_thresholds(thresholds)
-    if metric_claim_level == "ambiguous":
+    normalized_metric_claim_level = normalize_metric_claim_level(metric_claim_level)
+    diagnostic_scope = _get(diagnostics, "diagnostic_scope", _get(diagnostics, "evidence_scope", ""))
+    if normalized_metric_claim_level == "ambiguous_metric" and not is_synthetic_diagnostic_scope(diagnostic_scope):
         return "ambiguous"
     if not _has_sufficient_denominator_signal(diagnostics, resolved):
         return "ambiguous"
@@ -137,7 +194,7 @@ def derive_selector_regime_label(
     triple_excess_flag = str(_get(diagnostics, "triple_excess_flag", "") or "")
     higher_order_ambiguity = _as_bool(_get(diagnostics, "higher_order_ambiguity_flag", False))
     if triple_excess_flag == "positive":
-        return "escalate"
+        return "higher_order_risk"
     if higher_order_ambiguity:
         return "ambiguous"
 
@@ -147,11 +204,11 @@ def derive_selector_regime_label(
 
     monitored = resolved["monitored_greedy"]
     if block_ratio < float(monitored["block_ratio_lcb_star_gte"]):
-        return "escalate"
+        return "pairwise_escalate"
     if _has_pairwise_escalation_signal(diagnostics, resolved):
-        return "escalate"
+        return "pairwise_escalate"
 
-    return "greedy_valid"
+    return "greedy_supported"
 
 
 def derive_selector_action(
@@ -159,15 +216,14 @@ def derive_selector_action(
     diagnostics: Any,
     thresholds: dict | None,
 ) -> str:
-    if selector_regime_label == "greedy_valid":
+    normalized_label = normalize_selector_regime_label(selector_regime_label, diagnostics, thresholds)
+    if normalized_label == "greedy_supported":
         return "monitored_greedy"
-    if selector_regime_label == "ambiguous":
+    if normalized_label == "ambiguous":
         return "no_certified_switch"
-    if selector_regime_label != "escalate":
+    if normalized_label == "pairwise_escalate":
+        return "seeded_augmented_greedy"
+    if normalized_label != "higher_order_risk":
         return "no_certified_switch"
 
-    triple_excess_flag = str(_get(diagnostics, "triple_excess_flag", "") or "")
-    higher_order_ambiguity = _as_bool(_get(diagnostics, "higher_order_ambiguity_flag", False))
-    if triple_excess_flag == "positive" or higher_order_ambiguity:
-        return "interaction_aware_local_search"
-    return "seeded_augmented_greedy"
+    return "interaction_aware_local_search"

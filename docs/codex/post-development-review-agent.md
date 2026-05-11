@@ -43,10 +43,10 @@ Review in this order:
 
 Use these labels:
 
-- `BLOCKING` — must be fixed before merge
-- `MAJOR` — likely should be fixed before merge unless explicitly waived
-- `MINOR` — non-blocking improvement
-- `QUESTION` — ambiguity requiring human decision
+- `BLOCKING` - must be fixed before merge
+- `MAJOR` - likely should be fixed before merge unless explicitly waived
+- `MINOR` - non-blocking improvement
+- `QUESTION` - ambiguity requiring human decision
 
 ## Blocking issues
 
@@ -54,7 +54,7 @@ Mark as `BLOCKING` if any of the following occur:
 
 - theorem-level deployment verification is claimed
 - runtime diagnostics are described as selector-regime proof
-- `Vinfo_proxy_certified` is emitted without a fresh matching `MetricBridgeWitness`
+- `vinfo_proxy_supported` is emitted without a fresh matching `MetricBridgeWitness`
 - `CandidatePool` is counted as a core paper artifact
 - `gamma_hat` legacy/non-headline trace-decay alias is treated as a submodularity-ratio estimator
 - `block_ratio_lcb_star` is described as degree-adaptive or paper-grade
@@ -94,10 +94,10 @@ Check specific cases:
 
 Verify that:
 
-- synthetic bridge claim level remains `structural_synthetic_only`
+- synthetic bridge claim level remains `vinfo_proxy_supported`
 - operational bridge claim level remains `operational_utility_only`
 - stale bridge produces conservative scope such as `recalibration_required`, `ambiguous`, or `no_bridge_qualified_claim`
-- no `Vinfo_proxy_certified` claim appears without fresh matching bridge evidence
+- no `vinfo_proxy_supported` claim appears without fresh matching bridge evidence
 - missing bridge is not treated as a materialization defect unless a structural/materialization prerequisite is also missing
 
 ## Artifact ontology checks
@@ -123,7 +123,7 @@ Verify that the implementation does not:
 - infer excluded candidates from selected ids
 - infer complete candidate pool from selected ids alone
 - infer bridge freshness from bridge presence alone
-- infer V-information proxy certification from utility record presence alone
+- infer V-information proxy support from utility record presence alone
 
 ## Determinism checks
 

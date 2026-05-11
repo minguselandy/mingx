@@ -39,7 +39,7 @@ def test_missing_metric_bridge_witness_count_gives_missing_reason():
     gate = evaluate_metric_bridge_gate(_ledger(metric_bridge_witness_count=0))
 
     assert gate["bridge_gate_status"] == "missing_bridge"
-    assert gate["allowed_bridge_claim_level"] == "ambiguous"
+    assert gate["allowed_bridge_claim_level"] == "ambiguous_metric"
     assert "missing_metric_bridge" in gate["reason_codes"]
     assert gate["measurement_validated_allowed"] is False
 
@@ -95,9 +95,26 @@ def test_operational_utility_diagnostic_claim_denies_measurement_validated():
 def test_synthetic_evidence_denies_deployed_v_information_certification():
     gate = evaluate_metric_bridge_gate(_ledger(evidence_mode="synthetic_structural_only"))
 
+    assert gate["allowed_bridge_claim_level"] == "ambiguous_metric"
     assert "deployed_v_information_certification" in gate["denied_claims"]
     assert "synthetic_only_not_deployed_certification" in gate["reason_codes"]
     assert gate["measurement_validated_allowed"] is False
+
+
+def test_synthetic_only_evidence_scope_does_not_upgrade_metric_claim():
+    gate = evaluate_metric_bridge_gate(
+        _ledger(
+            evidence_scope="synthetic_structural_only",
+            diagnostic_scope="synthetic_structural_only",
+            diagnostic_claim_level="structural_synthetic_only",
+            metric_class="synthetic_oracle",
+        )
+    )
+
+    assert gate["allowed_bridge_claim_level"] == "ambiguous_metric"
+    assert gate["evidence_scope"] == "synthetic_structural_only"
+    assert gate["measurement_validated_allowed"] is False
+    assert "synthetic_only_not_deployed_certification" in gate["reason_codes"]
 
 
 def test_engineering_only_evidence_denies_scientific_validation():
@@ -118,7 +135,7 @@ def test_complete_artifacts_alone_still_deny_measurement_validated():
         )
     )
 
-    assert gate["allowed_bridge_claim_level"] in {"ambiguous", "operational_utility_only"}
+    assert gate["allowed_bridge_claim_level"] in {"ambiguous_metric", "operational_utility_only"}
     assert "complete_artifacts_not_validation" in gate["reason_codes"]
     assert gate["measurement_validated_allowed"] is False
 

@@ -86,7 +86,7 @@ def test_projection_artifacts_round_trip_through_event_log(workspace_tmp_dir):
         effective_sample_size=None,
         drift_status="not_applicable",
         diagnostic_mode="synthetic_oracle",
-        diagnostic_claim_level="structural_synthetic_only",
+        diagnostic_claim_level="vinfo_proxy_supported",
     )
     diagnostics = ProjectionDiagnostics(
         dispatch_id="dispatch-1",
@@ -107,8 +107,8 @@ def test_projection_artifacts_round_trip_through_event_log(workspace_tmp_dir):
         triple_excess_flag="not_evaluable",
         higher_order_ambiguity_flag=False,
         greedy_augmented_gap=0.0,
-        metric_claim_level="structural_synthetic_only",
-        selector_regime_label="greedy_valid",
+        metric_claim_level="vinfo_proxy_supported",
+        selector_regime_label="greedy_supported",
         selector_action="monitored_greedy",
         policy_recommendation="monitored_greedy",
         greedy_value=1.0,
@@ -153,8 +153,8 @@ def test_projection_artifacts_round_trip_through_event_log(workspace_tmp_dir):
     assert summary["complete_artifact_sets"] is True
     assert summary["artifact_counts"]["metric_bridge_witnesses"] == 1
     assert summary["artifact_counts"]["projection_bundles"] == 1
-    assert summary["metric_claim_level_counts"] == {"structural_synthetic_only": 1}
-    assert summary["selector_regime_label_counts"] == {"greedy_valid": 1}
+    assert summary["metric_claim_level_counts"] == {"vinfo_proxy_supported": 1}
+    assert summary["selector_regime_label_counts"] == {"greedy_supported": 1}
     assert summary["selector_action_counts"] == {"monitored_greedy": 1}
     assert summary["per_regime"]["redundancy_dominated"]["avg_block_ratio_lcb_star"] == 1.0
     assert "avg_gamma_hat" not in summary["per_regime"]["redundancy_dominated"]
@@ -250,8 +250,8 @@ def test_projection_summary_requires_metric_bridge_witness(workspace_tmp_dir):
                 triple_excess_flag="not_evaluable",
                 higher_order_ambiguity_flag=False,
                 greedy_augmented_gap=0.0,
-                metric_claim_level="structural_synthetic_only",
-                selector_regime_label="greedy_valid",
+                metric_claim_level="vinfo_proxy_supported",
+                selector_regime_label="greedy_supported",
                 selector_action="monitored_greedy",
                 policy_recommendation="monitored_greedy",
                 greedy_value=1.0,
@@ -304,7 +304,7 @@ def test_projection_summary_requires_projection_bundle_event(workspace_tmp_dir):
             store_dir=store_dir,
             event_type=event_type,
             run_id="run-1",
-            payload={**common, "metric_claim_level": "structural_synthetic_only"},
+            payload={**common, "metric_claim_level": "vinfo_proxy_supported"},
             notes="fixture",
         )
 

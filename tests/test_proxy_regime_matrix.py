@@ -30,10 +30,11 @@ def _summary(**overrides) -> dict:
     dispatch_count = int(overrides.pop("dispatch_count", 1))
     summary = {
         "run_id": "matrix-fixture",
-        "claim_level": "synthetic_structural_only",
+        "claim_level": "ambiguous_metric",
         "dispatch_count": dispatch_count,
         "artifact_counts": {name: dispatch_count for name in REQUIRED_EVIDENCE_ARTIFACTS},
-        "metric_claim_level_counts": {"structural_synthetic_only": dispatch_count},
+        "metric_claim_level_counts": {"ambiguous_metric": dispatch_count},
+        "diagnostic_scope_counts": {"synthetic_structural_only": dispatch_count},
         "complete_artifact_sets": True,
     }
     summary.update(overrides)
@@ -56,9 +57,9 @@ def test_matrix_from_synthetic_artifact_dir_includes_required_regimes(workspace_
         "higher_order_synergy",
     ]
     assert names == list(PROXY_REGIME_ENTRY_ORDER)
-    assert _entry_by_name(matrix, "redundancy_dominated")["certification_scope"] == "synthetic_structural_only"
-    assert _entry_by_name(matrix, "sparse_pairwise_synergy")["certification_scope"] == "synthetic_structural_only"
-    assert _entry_by_name(matrix, "higher_order_synergy")["certification_scope"] == "synthetic_structural_only"
+    assert _entry_by_name(matrix, "redundancy_dominated")["diagnostic_scope"] == "synthetic_structural_only"
+    assert _entry_by_name(matrix, "sparse_pairwise_synergy")["diagnostic_scope"] == "synthetic_structural_only"
+    assert _entry_by_name(matrix, "higher_order_synergy")["diagnostic_scope"] == "synthetic_structural_only"
 
 
 def test_boundary_rows_encode_conservative_claim_results():
@@ -66,7 +67,7 @@ def test_boundary_rows_encode_conservative_claim_results():
 
     contamination = _entry_by_name(matrix, "contamination_failed")
     assert contamination["allowed_claim_level"] == "pilot_only"
-    assert contamination["certification_scope"] == "pilot_only"
+    assert contamination["diagnostic_scope"] == "pilot_only"
     assert "contamination_failed" in contamination["reason_codes"]
 
     missing_labels = _entry_by_name(matrix, "missing_human_labels")
@@ -78,18 +79,18 @@ def test_boundary_rows_encode_conservative_claim_results():
     assert "missing_kappa" in missing_kappa["reason_codes"]
 
     stale_bridge = _entry_by_name(matrix, "stale_metric_bridge")
-    assert stale_bridge["allowed_claim_level"] in {"operational_utility_only", "ambiguous"}
-    assert stale_bridge["certification_scope"] == "ambiguous"
+    assert stale_bridge["allowed_claim_level"] in {"operational_utility_only", "ambiguous_metric"}
+    assert stale_bridge["diagnostic_scope"] == "ambiguous_metric"
     assert "stale_metric_bridge" in stale_bridge["reason_codes"]
 
     missing_bridge = _entry_by_name(matrix, "missing_metric_bridge")
-    assert missing_bridge["allowed_claim_level"] == "ambiguous"
-    assert missing_bridge["certification_scope"] == "ambiguous"
+    assert missing_bridge["allowed_claim_level"] == "ambiguous_metric"
+    assert missing_bridge["diagnostic_scope"] == "ambiguous_metric"
     assert "missing_metric_bridge" in missing_bridge["reason_codes"]
 
     artifact_incomplete = _entry_by_name(matrix, "artifact_incomplete")
-    assert artifact_incomplete["allowed_claim_level"] == "ambiguous"
-    assert artifact_incomplete["certification_scope"] == "ambiguous"
+    assert artifact_incomplete["allowed_claim_level"] == "ambiguous_metric"
+    assert artifact_incomplete["diagnostic_scope"] == "ambiguous_metric"
     assert "missing_required_artifacts" in artifact_incomplete["reason_codes"]
 
 
@@ -98,13 +99,13 @@ def test_synthetic_matrix_never_emits_deployed_v_information_certification():
     serialized = json.dumps(matrix, sort_keys=True)
 
     assert "deployed_V_information_certified" not in {
-        row["certification_scope"] for row in matrix["entries"]
+        row["diagnostic_scope"] for row in matrix["entries"]
     }
     assert "measurement_validated" not in {
-        row["certification_scope"] for row in matrix["entries"]
+        row["diagnostic_scope"] for row in matrix["entries"]
     }
     assert "scientific_validation" not in {
-        row["certification_scope"] for row in matrix["entries"]
+        row["diagnostic_scope"] for row in matrix["entries"]
     }
     assert "deployed_V_information_certified" in matrix["denied_scope_values"]
     assert "deployed_v_information_certification" in serialized
@@ -142,7 +143,7 @@ def test_markdown_writer_contains_claim_boundary_warning(workspace_tmp_dir):
     outputs = write_proxy_regime_matrix(workspace_tmp_dir / "matrix", matrix)
     markdown = Path(outputs["markdown"]).read_text(encoding="utf-8")
 
-    assert "proxy-regime certification is not deployed V-information certification" in markdown
+    assert "proxy-regime diagnosis is not deployed V-information certification" in markdown
     assert "measurement_validated is not claimed" in markdown
     assert "P04 remains BLOCKED_OPERATOR_REQUIRED" in format_proxy_regime_matrix_markdown(matrix)
     assert "P09 remains BLOCKED_OPERATOR_REQUIRED" in format_proxy_regime_matrix_markdown(matrix)

@@ -1,14 +1,21 @@
-# AGENTS.md — mingx Codex operating contract
+# AGENTS.md - mingx Codex operating contract
 
 ## Project identity
 
-This repository implements a measurement and runtime-audit scaffold for:
+This repository implements a measurement and runtime-audit scaffold for the
+current v12 Context Projection Selection paper direction:
 
-**“Context Projection Selection in Multi-Agent Systems: Conditional Theory, Metric Bridge, and Proxy-Regime Certification.”**
+**Context Projection Selection in Multi-Agent Systems: Conditional Theory,
+Metric Bridge, and Proxy-Regime Diagnosis.**
 
 The implementation must remain aligned with the revised paper boundary.
 
-Current source manuscript anchor: `docs/archive/context_projection_revised_v10.md`.
+Current source manuscript anchor: `docs/archive/context_projection_fixed_v12.md`.
+Current alignment map: `docs/paper-alignment-v12.md`.
+
+Legacy v10 references remain preserved as archive material:
+`docs/archive/context_projection_revised_v10.md` and
+`docs/paper-alignment-v10.md`.
 
 ## Mandatory reading before phase-development edits
 
@@ -16,7 +23,7 @@ For implementation tasks, read:
 
 - `docs/codex/phase-development-guidance.md`
 - the relevant file under `docs/codex/phases/`
-- `docs/paper-alignment-v10.md`
+- `docs/paper-alignment-v12.md`
 - `docs/protocols/phase-b-replay-protocol.md`
 - `docs/protocols/phase-b-readiness-and-first-replay-plan.md`
 
@@ -34,7 +41,7 @@ For review tasks, read:
 - The theory is conditional on an approximate / weak-submodular regime hypothesis.
 - Runtime diagnostics are proxy-regime / operational-utility signals depending on `MetricBridgeWitness` status.
 - Extraction audit is a separate `M* -> M` bridge-risk audit, not selector-regime proof.
-- Do **not** emit `Vinfo_proxy_certified` without a fresh matching `MetricBridgeWitness`.
+- Do **not** emit `vinfo_proxy_supported` without a fresh matching `MetricBridgeWitness`.
 - Do **not** describe `block_ratio_lcb_star` as a paper-grade degree-adaptive star-block estimator.
 - `gamma_hat` is legacy compatibility only.
 - `gamma_hat_semantics` must remain `legacy_trace_decay_alias_not_submodularity_ratio`.

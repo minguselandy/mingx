@@ -89,9 +89,9 @@ Use the detailed definitions in `docs/codex/phases/phase-b-replay-readiness.md`.
 
 - Missing bridge usually means `replay_partial`, unless earlier structural/materialization defects apply.
 - Stale bridge usually means `replay_partial` plus conservative scope.
-- Synthetic bridge claim level must remain `structural_synthetic_only`.
+- Synthetic bridge claim level must remain `vinfo_proxy_supported`.
 - Operational bridge claim level must remain `operational_utility_only`.
-- Do not emit `Vinfo_proxy_certified` without fresh matching `MetricBridgeWitness`.
+- Do not emit `vinfo_proxy_supported` without fresh matching `MetricBridgeWitness`.
 
 ## CandidatePool rule
 
@@ -109,8 +109,8 @@ Implement tests for:
 4. missing excluded candidates -> not `replay_usable`; replay defect recorded
 5. missing candidate pool -> `replay_unusable`
 6. operational-only bridge -> `metric_claim_level == operational_utility_only`
-7. structural synthetic bridge -> `metric_claim_level == structural_synthetic_only`
-8. stale bridge -> conservative/recalibration-required scope; no `Vinfo_proxy_certified`
+7. structural synthetic bridge -> `metric_claim_level == ambiguous_metric` with `diagnostic_scope == synthetic_structural_only`
+8. stale bridge -> conservative/recalibration-required scope; no `vinfo_proxy_supported`
 9. CLI writes required output files
 10. `CandidatePool` is substrate, not core paper artifact
 
@@ -147,7 +147,7 @@ Do not:
 - infer missing materialization order
 - infer excluded candidates without explicit complete considered set
 - emit theorem-level deployment verification
-- emit `Vinfo_proxy_certified` without fresh matching bridge evidence
+- emit `vinfo_proxy_supported` without fresh matching bridge evidence
 
 ## Required final response
 

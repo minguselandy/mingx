@@ -1,10 +1,10 @@
-# Proxy-Regime Certification Matrix
+# Proxy-Regime Diagnosis Matrix
 
 ## Purpose
 
-P14 adds a deterministic proxy-regime certification matrix for manuscript-facing CPS diagnostics. The matrix summarizes expected synthetic/proxy regime behavior, observed diagnostic behavior, failure modes, and conservative claim boundaries.
+P14 adds a deterministic proxy-regime diagnosis matrix for manuscript-facing CPS diagnostics. The matrix summarizes expected synthetic/proxy regime behavior, observed diagnostic behavior, failure modes, and conservative claim boundaries.
 
-Proxy-regime certification means certification of the proxy diagnostic regime only. It does not certify deployed V-information submodularity, deployed runtime behavior, or measurement validation.
+Proxy-regime diagnosis is a proxy diagnostic report only. It does not certify deployed V-information submodularity, deployed runtime behavior, or measurement validation.
 
 ## Inputs
 
@@ -32,12 +32,12 @@ Boundary rows:
 - `missing_metric_bridge`
 - `artifact_incomplete`
 
-## Certification Scope
+## Diagnostic Scope
 
-Allowed certification scopes are:
+Allowed diagnostic scopes are:
 
 - `proxy_regime_diagnostic_only`
-- `synthetic_structural_only`
+- `vinfo_proxy_supported`
 - `engineering_smoke_only`
 - `ambiguous`
 - `pilot_only`
@@ -69,7 +69,7 @@ Stable writers emit:
 - `proxy_regime_matrix.json`
 - `proxy_regime_matrix.md`
 
-The Markdown output is intended for manuscript drafting and review. It includes regime assumptions, expected behavior, observed behavior, allowed claim level, certification scope, and reason codes.
+The Markdown output is intended for manuscript drafting and review. It includes regime assumptions, expected behavior, observed behavior, allowed claim level, diagnostic scope, and reason codes.
 
 ## Validation
 

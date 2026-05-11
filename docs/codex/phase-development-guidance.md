@@ -44,10 +44,10 @@ Implementation must never increase claim strength unless the task explicitly cha
 
 Forbidden claim upgrades include:
 
-- `replay_usable` -> `Vinfo_proxy_certified` without fresh matching `MetricBridgeWitness`
+- `replay_usable` -> `vinfo_proxy_supported` without fresh matching `MetricBridgeWitness`
 - runtime diagnostic -> theorem-level selector-regime proof
 - synthetic structural validity -> deployment verification
-- extraction bridge audit -> selector-regime certification
+- extraction bridge audit -> selector-regime diagnosis
 - `block_ratio_lcb_star` placeholder -> degree-adaptive star-block estimator
 - `gamma_hat` legacy trace-decay alias -> submodularity-ratio estimator
 
@@ -104,7 +104,7 @@ Documentation changes must preserve the revised paper boundary.
 Do not introduce language implying:
 
 - deployment verification
-- theorem-level runtime certification
+- theorem-level runtime proof
 - proof of weak-submodular regime membership from runtime traces
 - proof that extraction audit validates selector-regime assumptions
 - proof that placeholder diagnostics are paper-grade estimators

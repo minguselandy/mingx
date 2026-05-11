@@ -5,16 +5,30 @@ live mini-batch, contamination triage, and runtime-default updates.
 
 ## Paper Framing Update
 
-The current paper framing is now the revised v10 framing:
+The current paper framing is now the fixed v12 framing:
+
+- `docs/archive/context_projection_fixed_v12.md`
+- `docs/paper-alignment-v12.md`
+
+Use it for the research boundary: conditional V-information theory, the
+formal/proxy/pipeline/runtime/metric-bridge/extraction layering, proxy-regime
+diagnosis and escalation, extraction as an `M* -> M` bridge risk, and the
+target auditable runtime interfaces `ProjectionPlan`, `BudgetWitness`,
+`MaterializedContext`, and `MetricBridgeWitness`.
+
+The v10 files remain preserved as legacy/archive material:
 
 - `docs/archive/context_projection_revised_v10.md`
 - `docs/paper-alignment-v10.md`
 
-Use it for the research boundary: conditional V-information theory, the
-formal/proxy/pipeline/runtime/metric-bridge/extraction layering, verification
-and escalation, extraction as an `M* -> M` bridge risk, and the target auditable
-runtime interfaces `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`,
-and `MetricBridgeWitness`.
+P45 bridge calibration is now implemented but not calibrated for the current
+`bio_attribute` stratum. The lane is operator/API-ready and its fixed-logloss
+positive control verified the measured-logprob path, but later canaries did not
+establish a utility-to-logloss bridge. The repository does not claim
+`measurement_validated` evidence, scientific validation, deployed
+V-information verification, fabricated human labels, fabricated kappa,
+fabricated bridge calibration, or `calibrated_proxy_supported` for the failed
+stratum.
 
 Do not use the paper to infer run completion status. Current execution status
 still comes from protocol docs, run plans, `run_summary.json`, `events.jsonl`,
@@ -163,6 +177,21 @@ If continuing the current lane, the most reasonable next action is:
    - a fresh reduced-scope follow-up batch using the prepared replacements
 
 ## Next Planning Documents
+
+The P45-P50 phase-doc package is now the controlling Codex
+development/reference package for v12 follow-up work:
+
+- [P45-P50 v12 Phase Docs](./codex/v12-phase-docs/README.md)
+- [P45 One-Stratum Bridge Calibration Plan](./codex/v12-phase-docs/P45-one-stratum-bridge-calibration-plan.md)
+- [P45 Bridge Calibration Closure](./experiments/P45-bridge-calibration-closure.md)
+- [P46 Synthetic v12 Artifact Refresh Plan](./codex/v12-phase-docs/P46-synthetic-v12-artifact-refresh-plan.md)
+- [Common Guardrails](./codex/v12-phase-docs/COMMON-GUARDRAILS.md)
+
+P45 is closed for the current `bio_attribute` stratum as implemented but
+non-calibrated. The next active phase is P46 synthetic v12 artifact refresh.
+P50 is optional and must not precede P46-P49 unless explicitly deferred. These
+phase docs do not claim `measurement_validated` evidence and do not supply
+bridge calibration results by themselves.
 
 The P37-P44 planning package adds follow-up planning and review artifacts for
 the next development cycle:

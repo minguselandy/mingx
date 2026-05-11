@@ -45,7 +45,6 @@ DENIED_CLAIMS = (
     "measurement_validated",
     "scientific_validation",
     "deployed_v_information_certification",
-    "Vinfo_proxy_certified",
 )
 
 
@@ -715,12 +714,12 @@ def _dispatch_records(
 
 def _selector_regime_label(condition: str, greedy_augmented_gap: float) -> str:
     if condition in {"no_cps_baseline", "heuristic_selector_baseline"}:
-        return "baseline"
+        return "ambiguous"
     if condition == "diagnostic_guided_escalation" and greedy_augmented_gap > 0:
-        return "escalate"
+        return "pairwise_escalate"
     if greedy_augmented_gap > 0.05:
-        return "escalate"
-    return "greedy_valid"
+        return "pairwise_escalate"
+    return "greedy_supported"
 
 
 def _diversity_score(task: RealisticTask, selected_ids: Sequence[str]) -> float:

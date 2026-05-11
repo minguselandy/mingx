@@ -1,0 +1,79 @@
+{
+  "api_key_env": "DASHSCOPE_API_KEY",
+  "base_url_env": "DASHSCOPE_BASE_URL",
+  "checks": [
+    {
+      "detail": "present",
+      "name": "local_config_exists",
+      "passed": true
+    },
+    {
+      "detail": "set",
+      "name": "CPS_ALLOW_LIVE_API",
+      "passed": true
+    },
+    {
+      "detail": "set",
+      "name": "P45_ALLOW_API_DATA_GENERATION",
+      "passed": true
+    },
+    {
+      "detail": "live_operator_approved",
+      "name": "mode_live_operator_approved",
+      "passed": true
+    },
+    {
+      "detail": "true",
+      "name": "operator_approval_true",
+      "passed": true
+    },
+    {
+      "detail": "set",
+      "name": "provider_profile_non_empty",
+      "passed": true
+    },
+    {
+      "detail": "set",
+      "name": "fixed_model_id_non_empty",
+      "passed": true
+    },
+    {
+      "detail": "set",
+      "name": "strong_review_model_id_non_empty",
+      "passed": true
+    },
+    {
+      "detail": "dashscope-qwen-phase1",
+      "name": "provider_profile_known",
+      "passed": true
+    },
+    {
+      "detail": "openai_chat_compatible",
+      "name": "provider_api_style_supported",
+      "passed": true
+    },
+    {
+      "detail": "logprob-ready",
+      "name": "provider_logprob_ready",
+      "passed": true
+    },
+    {
+      "detail": "environment",
+      "name": "provider_credential_source_present",
+      "passed": true
+    },
+    {
+      "detail": "DASHSCOPE_BASE_URL, API_BASE_URL, or profile default",
+      "name": "provider_base_url_available",
+      "passed": true
+    }
+  ],
+  "config_path": "configs\\local\\bridge-data-generation-live.local.json",
+  "credential_source_kind": "environment",
+  "fixed_model_id": "qwen3.6-flash",
+  "live_api_called": false,
+  "provider_profile": "dashscope-qwen-phase1",
+  "ready": true,
+  "secret_values_exposed": false,
+  "strong_review_model_id": "qwen3.6-plus"
+}

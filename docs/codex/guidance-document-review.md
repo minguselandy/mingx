@@ -46,7 +46,7 @@ Does the document preserve:
 - conditional approximate / weak-submodular theory
 - diagnostics as proxy-regime / operational-utility signals
 - extraction audit as separate `M* -> M` bridge-risk audit
-- no `Vinfo_proxy_certified` without fresh matching `MetricBridgeWitness`
+- no `vinfo_proxy_supported` without fresh matching `MetricBridgeWitness`
 
 ### 3. Artifact ontology consistency
 

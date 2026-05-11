@@ -1,0 +1,24 @@
+{
+  "bridge_calibration_artifacts_generated": false,
+  "data_origin": "api_generated",
+  "delta_logloss_range": [
+    0.05673104939512541,
+    0.3972162185666548
+  ],
+  "fixed_model_id": "qwen3.6-flash",
+  "human_labels_present": false,
+  "kappa_present": false,
+  "low_signal_rows": 0,
+  "measurement_validation_claim": false,
+  "median_delta_logloss": 0.14448151347914973,
+  "minimum_abs_delta_logloss_for_bridge_evidence": 0.001,
+  "mode": "live_operator_approved",
+  "negative_delta_logloss_rows": 0,
+  "positive_delta_logloss_rows": 10,
+  "probe_kind": "p45c_fixed_logloss_positive_control",
+  "provider_profile": "dashscope-qwen-phase1",
+  "source": "operator_provided",
+  "sufficient_signal_rows": 10,
+  "total_probes": 10,
+  "usable_logprob_rows": 10
+}

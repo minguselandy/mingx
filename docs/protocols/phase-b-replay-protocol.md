@@ -62,8 +62,9 @@ Replay proceeds dispatch by dispatch:
 10. Recompute the greedy-vs-augmented gap by replaying greedy and seeded
     augmented greedy over the cached utility table and budget.
 11. Derive `metric_claim_level` using `MetricBridgeWitness`.
-12. Derive `selector_regime_label` as `greedy_valid`, `escalate`, or
-    `ambiguous`, then derive `selector_action` as `monitored_greedy`,
+12. Derive `selector_regime_label` as `greedy_supported`,
+    `pairwise_escalate`, `higher_order_risk`, or `ambiguous`, then derive
+    `selector_action` as `monitored_greedy`,
     `seeded_augmented_greedy`, `interaction_aware_local_search`, or
     `no_certified_switch`.
 13. Compare the observed pipeline selection against the diagnostic-guided
@@ -107,10 +108,10 @@ conclusions:
 
 | Condition | Required downgrade |
 |---|---|
-| Missing `MetricBridgeWitness` | `ambiguous` or observability-only; do not emit a bridge-qualified claim |
-| stale bridge | `ambiguous`; recalibrate before making proxy-regime claims |
-| operational-only utility | `operational_utility_only`, not `Vinfo_proxy_certified` |
-| missing triple evidence under higher-order risk | `ambiguous`; do not emit high-confidence `greedy_valid` |
+| Missing `MetricBridgeWitness` | `ambiguous_metric` or observability-only; do not emit a bridge-qualified claim |
+| stale bridge | `ambiguous_metric`; recalibrate before making proxy-regime claims |
+| operational-only utility | `operational_utility_only`, not `vinfo_proxy_supported` |
+| missing triple evidence under higher-order risk | `ambiguous`; do not emit high-confidence `greedy_supported` |
 | insufficient denominator signal | `ambiguous`; denominator-uninformative block-ratio samples are not low-ratio failures |
 
 ## 6. Outputs

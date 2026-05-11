@@ -1,0 +1,64 @@
+{
+  "accepted_adjudication_rows": 4,
+  "ambiguous_rows": 0,
+  "artifact": "p45b_canary2_summary.v1",
+  "blockers": [
+    "all rows below minimum_abs_delta_logloss_for_bridge_evidence=0.001",
+    "six of eight rows have negative delta_logloss",
+    "reviewer evidence_strength_band values need prompt/schema tightening before rerun"
+  ],
+  "bridge_uninformative_rows": 8,
+  "claim_boundary": {
+    "calibrated_proxy_supported_claimed": false,
+    "deployed_v_information_verification_claim": false,
+    "human_labels_present": false,
+    "kappa_present": false,
+    "measurement_validation_claim": false
+  },
+  "delta_logloss_range": [
+    -0.0009177988148323379,
+    0.000585852496591599
+  ],
+  "delta_logloss_values": [
+    -0.00024220426455912047,
+    -0.00037920754237319443,
+    0.000585852496591599,
+    -0.0005483890524828894,
+    0.0005666298972997197,
+    -0.0009177988148323379,
+    -0.0007187769043923709,
+    -0.00013271530010428023
+  ],
+  "delta_utility_range": [
+    0.0,
+    1.0
+  ],
+  "delta_utility_values": [
+    0.0,
+    0.25,
+    0.5,
+    0.7000000000000001,
+    1.0,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "exported_p45_rows": 0,
+  "fixed_model_id": "qwen3.6-flash",
+  "input_task_packets": "artifacts/experiments/bridge_data_generation_bio_attribute_p45b_dryrun/task_packets.jsonl",
+  "live_api_used": true,
+  "low_abs_delta_logloss_rows": 8,
+  "measured_logprob_rows": 8,
+  "negative_delta_logloss_rows": 6,
+  "next_step_decision": "do_not_scale_to_20_30_pilot_yet",
+  "output_dir": "artifacts\\experiments\\bridge_data_generation_bio_attribute_p45b_canary2",
+  "reason_counts": {
+    "delta_logloss_below_informative_threshold": 8,
+    "negative_delta_logloss": 6,
+    "target_clear_failed": 3,
+    "unsupported_evidence_strength_band": 7
+  },
+  "rejected_rows": 4,
+  "strong_review_model_id": "qwen3.6-plus",
+  "total_rows": 8
+}

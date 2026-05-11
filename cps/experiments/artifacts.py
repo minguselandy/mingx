@@ -93,6 +93,7 @@ class MetricBridgeWitness:
     drift_status: str
     diagnostic_mode: str
     diagnostic_claim_level: str
+    diagnostic_scope: str | None = None
 
 
 @dataclass(frozen=True)
@@ -127,6 +128,7 @@ class ProjectionDiagnostics:
     triple_samples: list[dict[str, Any]]
     thresholds: dict[str, Any]
     notes: str
+    diagnostic_scope: str | None = None
 
 
 def stable_json_dumps(payload: Any) -> str:
@@ -257,18 +259,24 @@ def rebuild_projection_summary_from_events(
     selector_action_counts: dict[str, int] = {}
     selector_regime_label_counts: dict[str, int] = {}
     metric_claim_level_counts: dict[str, int] = {}
+    diagnostic_scope_counts: dict[str, int] = {}
     metric_claim_rows = metric_bridge_witnesses or diagnostics
     for row in metric_claim_rows:
         claim_level = row.get("metric_claim_level") or row.get("diagnostic_claim_level")
         if claim_level:
             key = str(claim_level)
             metric_claim_level_counts[key] = metric_claim_level_counts.get(key, 0) + 1
+        diagnostic_scope = row.get("diagnostic_scope") or row.get("evidence_scope")
+        if diagnostic_scope:
+            key = str(diagnostic_scope)
+            diagnostic_scope_counts[key] = diagnostic_scope_counts.get(key, 0) + 1
 
     for row in diagnostics:
         regime = str(row.get("regime", "unknown"))
         selector_action = str(row.get("selector_action") or row.get("policy_recommendation", "unknown"))
         selector_regime_label = str(row.get("selector_regime_label", "unknown"))
         metric_claim_level = str(row.get("metric_claim_level", "unknown"))
+        diagnostic_scope = str(row.get("diagnostic_scope") or row.get("evidence_scope") or "unknown")
         bucket = per_regime.setdefault(
             regime,
             {
@@ -283,6 +291,7 @@ def rebuild_projection_summary_from_events(
                 "selector_actions": {},
                 "selector_regime_labels": {},
                 "metric_claim_levels": {},
+                "diagnostic_scopes": {},
                 "_avg_counts": {
                     "block_ratio_lcb_b2": 0,
                     "block_ratio_lcb_star": 0,
@@ -311,6 +320,7 @@ def rebuild_projection_summary_from_events(
             bucket["selector_regime_labels"].get(selector_regime_label, 0) + 1
         )
         bucket["metric_claim_levels"][metric_claim_level] = bucket["metric_claim_levels"].get(metric_claim_level, 0) + 1
+        bucket["diagnostic_scopes"][diagnostic_scope] = bucket["diagnostic_scopes"].get(diagnostic_scope, 0) + 1
         selector_action_counts[selector_action] = selector_action_counts.get(selector_action, 0) + 1
         selector_regime_label_counts[selector_regime_label] = (
             selector_regime_label_counts.get(selector_regime_label, 0) + 1
@@ -353,5 +363,6 @@ def rebuild_projection_summary_from_events(
         "selector_regime_label_counts": dict(sorted(selector_regime_label_counts.items())),
         "policy_counts": dict(sorted(selector_action_counts.items())),
         "metric_claim_level_counts": dict(sorted(metric_claim_level_counts.items())),
+        "diagnostic_scope_counts": dict(sorted(diagnostic_scope_counts.items())),
         "per_regime": {key: per_regime[key] for key in sorted(per_regime)},
     }

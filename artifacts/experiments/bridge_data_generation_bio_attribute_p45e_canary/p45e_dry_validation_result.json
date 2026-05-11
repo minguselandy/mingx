@@ -1,0 +1,92 @@
+{
+  "bridge_metrics": {
+    "bridge_scale_c_s": 56.092845501063664,
+    "claim_gate_status": "failed_closed",
+    "measurement_validation_claim": false,
+    "metric_claim_level": "ambiguous_metric",
+    "paper_evidence_eligible": false,
+    "pass_flags": {
+      "bridge_freshness_pass": true,
+      "bridge_informative_delta_pass": true,
+      "effective_sample_size_pass": false,
+      "fit_denominator_pass": true,
+      "one_stratum_pass": true,
+      "pearson_pass": true,
+      "sample_size_pass": false,
+      "sign_agreement_pass": true,
+      "source_kind_pass": true,
+      "spearman_pass": true,
+      "synthetic_scope_pass": true,
+      "zeta_pass": false
+    },
+    "pearson_correlation": 1.0,
+    "reason_codes": [
+      "effective_sample_size_failed",
+      "sample_size_failed",
+      "zeta_failed"
+    ],
+    "sign_agreement": 1.0,
+    "spearman_correlation": 1.0,
+    "zeta_s": 0.6149804388887039
+  },
+  "dry_validation": {
+    "active_stratum_ids": [
+      "bio_attribute__operator_provided_fixed_model_v1__fixed_order_v1__block1__top_L"
+    ],
+    "artifacts_written": [],
+    "bridge_informative_delta_pair_count": 2,
+    "data_source_kind": "operator_provided_api_generated",
+    "denied_claims": [
+      "measurement_validated",
+      "scientific_validation",
+      "deployed_v_information_verification",
+      "deployed_v_information_certification"
+    ],
+    "deployed_v_information_verification_claim": false,
+    "effective_sample_size": 2,
+    "low_signal_delta_logloss_count": 0,
+    "low_signal_delta_logloss_pair_ids": [],
+    "measurement_validation_claim": false,
+    "mode": "dry_validation",
+    "negative_delta_logloss_count": 0,
+    "negative_delta_logloss_pair_ids": [],
+    "paper_evidence_claimed": false,
+    "paper_evidence_eligible": false,
+    "pass_flags": {
+      "bridge_freshness_pass": true,
+      "bridge_informative_delta_pass": true,
+      "effective_sample_size_pass": false,
+      "fit_denominator_pass": true,
+      "one_stratum_pass": true,
+      "pearson_pass": true,
+      "sample_size_pass": false,
+      "sign_agreement_pass": true,
+      "source_kind_pass": true,
+      "spearman_pass": true,
+      "synthetic_scope_pass": true,
+      "zeta_pass": false
+    },
+    "reason_codes": [
+      "effective_sample_size_failed",
+      "sample_size_failed",
+      "zeta_failed"
+    ],
+    "sample_size": 2,
+    "schema_validation_status": "passed",
+    "threshold_validation_status": "failed",
+    "thresholds": {
+      "max_allowed_zeta": 0.05,
+      "min_pearson_correlation": 0.9,
+      "min_sign_agreement": 0.9,
+      "min_spearman_correlation": 0.9,
+      "minimum_abs_delta_logloss_for_bridge_evidence": 0.001,
+      "minimum_effective_sample_size": 6,
+      "minimum_sample_size": 6,
+      "zeta_mode": "max",
+      "zeta_quantile": 0.95
+    },
+    "would_be_claim_gate_status": "failed_closed",
+    "would_be_metric_claim_level": "ambiguous_metric",
+    "would_be_paper_evidence_eligible": false
+  }
+}

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-P16 adds a deterministic paper evidence summary builder for CPS runtime-audit evidence. The summary converts existing replay evidence packages into manuscript-facing JSON and Markdown sections for the runtime-audit scaffold, replayable experiment evidence, metric bridge, conservative claim gate, proxy-regime certification, limitations, and denied claims.
+P16 adds a deterministic paper evidence summary builder for CPS runtime-audit evidence. The summary converts existing replay evidence packages into manuscript-facing JSON and Markdown sections for the runtime-audit scaffold, replayable experiment evidence, metric bridge, conservative claim gate, proxy-regime diagnosis, limitations, and denied claims.
 
 This is manuscript/evidence summarization only. It is not scientific validation.
 

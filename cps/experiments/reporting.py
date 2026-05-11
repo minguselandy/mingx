@@ -37,6 +37,7 @@ def format_synthetic_benchmark_report(
         f"- Pre-registered gate passed: `{summary['pre_registered_gate_passed']}`",
         f"- Ambiguity count: `{summary['ambiguity_count']}`",
         f"- Metric claim levels: `{_fmt_counts(summary.get('metric_claim_level_counts'))}`",
+        f"- Diagnostic scopes: `{_fmt_counts(summary.get('diagnostic_scope_counts'))}`",
         f"- Selector regime labels: `{_fmt_counts(summary.get('selector_regime_label_counts'))}`",
         f"- Selector actions: `{_fmt_counts(summary.get('selector_action_counts'))}`",
         f"- Expected policy matches (legacy compatibility detail): `{summary['expected_policy_matches']}/{summary['dispatch_count']}`",
@@ -94,8 +95,8 @@ def format_synthetic_benchmark_report(
             "",
             "## Regime diagnostics table",
             "",
-            "| Dispatch | Regime | block_ratio_lcb_b2 | block_ratio_lcb_star | block_ratio_lcb_star_semantics | block_ratio_lcb_b3 | trace_decay_proxy | synergy_fraction | positive_interaction_mass_ucb | triple_excess_flag | higher_order_ambiguity_flag | greedy_augmented_gap | oracle_status | oracle_gap | metric_claim_level | selector_regime_label | selector_action |",
-            "|---|---|---:|---:|---|---:|---:|---:|---:|---|---|---:|---|---:|---|---|---|",
+            "| Dispatch | Regime | block_ratio_lcb_b2 | block_ratio_lcb_star | block_ratio_lcb_star_semantics | block_ratio_lcb_b3 | trace_decay_proxy | synergy_fraction | positive_interaction_mass_ucb | triple_excess_flag | higher_order_ambiguity_flag | greedy_augmented_gap | oracle_status | oracle_gap | metric_claim_level | diagnostic_scope | selector_regime_label | selector_action |",
+            "|---|---|---:|---:|---|---:|---:|---:|---:|---|---|---:|---|---:|---|---|---|---|",
         ]
     )
     for row in diagnostics_rows:
@@ -116,6 +117,7 @@ def format_synthetic_benchmark_report(
             f"{row.get('oracle_status', 'n/a')} | "
             f"{_fmt(row.get('oracle_gap'))} | "
             f"{row['metric_claim_level']} | "
+            f"{row.get('diagnostic_scope', 'ambiguous_metric')} | "
             f"{row['selector_regime_label']} | "
             f"{row['selector_action']} |"
         )
@@ -152,7 +154,8 @@ def format_synthetic_benchmark_report(
             "",
             "## Interpretation limits",
             "",
-            "- All synthetic diagnostic claims in this report are `structural_synthetic_only`.",
+            "- Synthetic-only metric claims remain `ambiguous_metric`; diagnostic scope records `synthetic_structural_only`.",
+            "- The evidence remains a synthetic structural smoke check, not deployed V-information proxy support or bridge calibration.",
             "- Thresholds are provisional calibration bins for synthetic regimes.",
             "- The benchmark validates diagnostic plumbing and controlled regime discrimination only.",
             "- It is not deployment certification and does not certify deployed V-information weak submodularity.",

@@ -43,11 +43,17 @@ prove deployed LLM behavior.
 | `BudgetWitness` | realized token or cost accounting for the selected context | Phase A implemented as sidecar artifact; Phase B/C require stable realized counts |
 | `MaterializedContext` | realized prompt or context sequence after projection | Phase A implemented as sidecar artifact; Phase B/C require deterministic reconstruction |
 | `MetricBridgeWitness` | claim-level artifact qualifying whether diagnostics support V-information proxy, calibrated proxy, operational-utility-only, or ambiguous claims | Phase A implemented for synthetic oracle claims; Phase B/C require bridge-qualified extensions |
-| selector action | `monitored_greedy`, `seeded_augmented_greedy`, `interaction_aware_local_search`, or `no_certified_switch` as operational labels | Phase A emits `selector_action`, `selector_regime_label`, and `metric_claim_level`; `selector_regime_label` is limited to `greedy_valid`, `escalate`, or `ambiguous`; legacy policy terminology is compatibility only |
+| selector action | `monitored_greedy`, `seeded_augmented_greedy`, `interaction_aware_local_search`, or `no_certified_switch` as operational labels | Phase A emits `selector_action`, `selector_regime_label`, and `metric_claim_level`; `selector_regime_label` is limited to `greedy_supported`, `pairwise_escalate`, `higher_order_risk`, or `ambiguous`; legacy policy terminology is compatibility only |
 
 The status column records experimental readiness, not theoretical validity.
 Block-ratio diagnostics are proxy-layer estimates under bridge assumptions, not
 certificates of the formal worst-case parameter.
+
+V12 terminology note: new paper-facing work should use proxy-regime diagnosis
+labels such as `greedy_supported`, `pairwise_escalate`,
+`higher_order_risk`, and `ambiguous`. Existing references to `greedy_valid` or
+bare `escalate` describe legacy artifact vocabulary and are mapped through
+compatibility code when older replay inputs are read.
 
 ## 3. Experimental Phases
 

@@ -1,0 +1,48 @@
+{
+  "_template_notice": "Copy this file to configs/local/bridge-data-generation-live.local.json for an operator-approved live smoke. Do not commit the copied local file.",
+  "_secret_notice": "Do not paste API keys or credential CSV contents into this file. Load provider credentials from local environment variables or a local untracked credential file.",
+  "protocol_version": "bridge_data_generation.v1",
+  "mode": "live_operator_approved",
+  "operator_approval": true,
+  "active_stratum_id": "bio_attribute__operator_provided_fixed_model_v1__fixed_order_v1__block1__top_L",
+  "task_family": "bio_attribute",
+  "materialization_policy": "fixed_order_v1",
+  "block_size": 1,
+  "candidate_slice_band": "top_L",
+  "metric": "model_adjudicated_utility_vs_logloss",
+  "source": "operator_provided",
+  "data_origin": "api_generated",
+  "delta_utility_source": "strong_model_adjudicated",
+  "delta_logloss_source": "measured_logprob",
+  "provider_profile": "OPERATOR_FILL_PROVIDER_PROFILE",
+  "fixed_model_id": "OPERATOR_FILL_FIXED_MODEL_WITH_LOGPROBS",
+  "strong_review_model_id": "OPERATOR_FILL_STRONG_REVIEW_MODEL",
+  "request_timeout_seconds": 60,
+  "logloss_max_completion_tokens": 64,
+  "review_max_completion_tokens": 384,
+  "adjudication_max_completion_tokens": 256,
+  "provider_extra_body": {
+    "enable_thinking": false
+  },
+  "sample_target_min": 6,
+  "sample_target_max": 10,
+  "task_packets_file": "OPERATOR_LOCAL_TASK_PACKET_JSONL_PATH_DO_NOT_COMMIT",
+  "output_dir": "artifacts/experiments/bridge_data_generation_bio_attribute_smoke",
+  "credential_source": {
+    "_comment": "Credential source must be local-only. Keep credential files untracked and ignored; prefer environment variables for the live provider wrapper.",
+    "api_key_env": "OPERATOR_FILL_PROVIDER_API_KEY_ENV",
+    "base_url_env": "OPERATOR_FILL_PROVIDER_BASE_URL_ENV_IF_REQUIRED",
+    "local_credential_file": "OPERATOR_LOCAL_CREDENTIAL_PATH_IF_USED_DO_NOT_COMMIT"
+  },
+  "required_environment_gates": {
+    "CPS_ALLOW_LIVE_API": "1",
+    "P45_ALLOW_API_DATA_GENERATION": "1"
+  },
+  "claim_boundary": {
+    "paper_evidence_eligible": false,
+    "measurement_validation_claim": false,
+    "human_labels": false,
+    "kappa": false,
+    "deployed_v_information_verification": false
+  }
+}

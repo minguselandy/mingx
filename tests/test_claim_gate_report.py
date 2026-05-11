@@ -85,9 +85,27 @@ def test_synthetic_evidence_denies_deployed_v_information_certification():
         _complete_ledger(evidence_mode="synthetic_structural_only", source_phase="P05")
     )
 
-    assert report["allowed_claim_level"] == "synthetic_structural_only"
+    assert report["allowed_claim_level"] == "ambiguous_metric"
+    assert report["evidence_scope"] == "synthetic_structural_only"
     assert "deployed_v_information_certification" in report["denied_claims"]
     assert "synthetic_only_not_deployed_certification" in report["reason_codes"]
+
+
+def test_synthetic_only_evidence_scope_does_not_silently_become_vinfo_proxy_supported():
+    report = build_claim_gate_report(
+        _complete_ledger(
+            evidence_scope="synthetic_structural_only",
+            diagnostic_scope="synthetic_structural_only",
+            diagnostic_claim_level="structural_synthetic_only",
+            metric_class="synthetic_oracle",
+            source_phase="P05",
+        )
+    )
+
+    assert report["allowed_claim_level"] == "ambiguous_metric"
+    assert report["allowed_claim_level"] != "vinfo_proxy_supported"
+    assert report["evidence_scope"] == "synthetic_structural_only"
+    assert report["measurement_validated_allowed"] is False
 
 
 def test_missing_required_artifacts_fail_closed_to_ambiguous():
@@ -100,7 +118,7 @@ def test_missing_required_artifacts_fail_closed_to_ambiguous():
 
     report = build_claim_gate_report(ledger)
 
-    assert report["allowed_claim_level"] == "ambiguous"
+    assert report["allowed_claim_level"] == "ambiguous_metric"
     assert report["measurement_validated_allowed"] is False
     assert "missing_required_artifacts" in report["reason_codes"]
     assert "missing_projection_bundles" in report["reason_codes"]

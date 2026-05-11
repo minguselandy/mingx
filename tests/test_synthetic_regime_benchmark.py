@@ -79,10 +79,12 @@ def test_synthetic_benchmark_cli_function_writes_replayable_artifacts(workspace_
     assert event_summary["complete_artifact_sets"] is True
     assert summary["artifact_counts"]["metric_bridge_witnesses"] == 3
     assert summary["artifact_counts"]["projection_bundles"] == 3
-    assert summary["metric_claim_level_counts"] == {"structural_synthetic_only": 3}
+    assert summary["metric_claim_level_counts"] == {"ambiguous_metric": 3}
+    assert summary["diagnostic_scope_counts"] == {"synthetic_structural_only": 3}
     assert summary["selector_regime_label_counts"] == {
-        "escalate": 2,
-        "greedy_valid": 1,
+        "greedy_supported": 1,
+        "higher_order_risk": 1,
+        "pairwise_escalate": 1,
     }
     assert summary["expected_policy_matches"] == 3
     assert summary["pre_registered_gate_passed"] is True
@@ -118,6 +120,7 @@ def test_synthetic_benchmark_cli_function_writes_replayable_artifacts(workspace_
             "positive_interaction_mass_ucb",
             "greedy_augmented_gap",
             "metric_claim_level",
+            "diagnostic_scope",
             "selector_regime_label",
             "selector_action",
         ):
@@ -131,12 +134,20 @@ def test_synthetic_benchmark_cli_function_writes_replayable_artifacts(workspace_
         if row["oracle_status"] == "available":
             assert row["oracle_value"] >= row["greedy_value"]
             assert row["oracle_gap"] >= 0.0
-        assert row["metric_claim_level"] not in {"Vinfo_proxy_certified", "measurement_validated"}
+        assert row["metric_claim_level"] == "ambiguous_metric"
+        assert row["diagnostic_scope"] == "synthetic_structural_only"
+        assert row["metric_claim_level"] not in {
+            "Vinfo_proxy_certified",
+            "vinfo_proxy_supported",
+            "measurement_validated",
+        }
+        assert row["selector_regime_label"] not in {"greedy_valid", "escalate"}
 
     witnesses = _jsonl_rows(output_dir / "metric_bridge_witnesses.jsonl")
     for row in witnesses:
         assert row["metric_class"] == "synthetic_oracle"
-        assert row["diagnostic_claim_level"] == "structural_synthetic_only"
+        assert row["diagnostic_claim_level"] == "ambiguous_metric"
+        assert row["diagnostic_scope"] == "synthetic_structural_only"
         assert row["drift_status"] == "fresh"
         assert row["utility_metric"] == "synthetic_oracle_value"
         assert row["diagnostic_mode"] == "synthetic_oracle"
@@ -159,7 +170,8 @@ def test_synthetic_benchmark_cli_function_writes_replayable_artifacts(workspace_
     assert "MetricBridgeWitness" in report_text
     assert "not a theorem-inheritance claim" in report_text
     assert "not a system-level performance claim" in report_text
-    assert "structural_synthetic_only" in report_text
+    assert "synthetic_structural_only" in report_text
+    assert "vinfo_proxy_supported" not in report_text
     assert "gamma_hat" not in report_text
     assert "Avg gamma_hat" not in report_text
     assert "Block-ratio LCB" in report_text
@@ -192,8 +204,9 @@ def test_synthetic_benchmark_rerun_resets_event_log_for_output_dir(workspace_tmp
         "projection_bundles": 3,
     }
     assert summary["selector_regime_label_counts"] == {
-        "escalate": 2,
-        "greedy_valid": 1,
+        "greedy_supported": 1,
+        "higher_order_risk": 1,
+        "pairwise_escalate": 1,
     }
 
 
@@ -240,8 +253,9 @@ def _valid_row(regime: str, **overrides) -> dict:
         "triple_excess_flag": "none_detected",
         "higher_order_ambiguity_flag": False,
         "greedy_augmented_gap": 0.0,
-        "metric_claim_level": "structural_synthetic_only",
-        "selector_regime_label": "greedy_valid",
+        "metric_claim_level": "ambiguous_metric",
+        "diagnostic_scope": "synthetic_structural_only",
+        "selector_regime_label": "greedy_supported",
         "selector_action": "monitored_greedy",
         "augmented_value": 1.0,
         "greedy_value": 1.0,
@@ -271,7 +285,7 @@ def test_pre_registered_gate_does_not_count_ambiguous_labels_as_success():
             triple_excess_flag="positive",
             higher_order_ambiguity_flag=True,
             greedy_augmented_gap=0.5,
-            selector_regime_label="escalate",
+            selector_regime_label="higher_order_risk",
             selector_action="interaction_aware_local_search",
         ),
     ]
@@ -283,7 +297,7 @@ def test_pre_registered_gate_does_not_count_ambiguous_labels_as_success():
     assert any(failure["gate"] == "ambiguity_accounting" for failure in result["pre_registered_gate_failures"])
 
 
-def test_pre_registered_gate_rejects_higher_order_false_greedy_certification():
+def test_pre_registered_gate_rejects_higher_order_false_greedy_support():
     rows = [
         _valid_row("redundancy_dominated"),
         _valid_row(
@@ -292,7 +306,7 @@ def test_pre_registered_gate_rejects_higher_order_false_greedy_certification():
             block_ratio_lcb_star=0.8,
             synergy_fraction=0.2,
             positive_interaction_mass_ucb=0.5,
-            selector_regime_label="escalate",
+            selector_regime_label="pairwise_escalate",
             selector_action="seeded_augmented_greedy",
             augmented_value=2.0,
             greedy_value=1.0,
@@ -301,7 +315,7 @@ def test_pre_registered_gate_rejects_higher_order_false_greedy_certification():
             "higher_order_synergy",
             triple_excess_flag="not_evaluable",
             higher_order_ambiguity_flag=False,
-            selector_regime_label="greedy_valid",
+            selector_regime_label="greedy_supported",
             selector_action="monitored_greedy",
         ),
     ]
@@ -406,7 +420,7 @@ def test_pairwise_regime_detects_interaction_mass():
     )
 
 
-def test_higher_order_regime_detects_triple_excess_and_is_not_greedy_valid(workspace_tmp_dir):
+def test_higher_order_regime_detects_triple_excess_and_is_not_greedy_supported(workspace_tmp_dir):
     instance = build_synthetic_instance_from_config(
         SyntheticRegimeConfig(regime_name="higher_order_synergy", n_items=12, budget_tokens=20, seed=7)
     )
@@ -424,7 +438,7 @@ def test_higher_order_regime_detects_triple_excess_and_is_not_greedy_valid(works
     )
     diagnostics = _jsonl_rows(Path(report["summary"]["output_dir"]) / "diagnostics.jsonl")
     higher = next(row for row in diagnostics if row["regime"] == "higher_order_synergy")
-    assert higher["selector_regime_label"] not in {"greedy_valid", "greedy_valid_synthetic"}
+    assert higher["selector_regime_label"] == "higher_order_risk"
 
 
 def test_greedy_selection_and_bruteforce_oracle_respect_budget():
@@ -481,10 +495,26 @@ def test_forbidden_metric_claim_levels_never_appear(workspace_tmp_dir):
         config_path="configs/runs/synthetic-regime-smoke.json",
         output_dir=output_dir,
     )
-    forbidden = {"Vinfo_proxy_certified", "measurement_validated"}
+    forbidden = {
+        "Vinfo_proxy_certified",
+        "greedy_valid",
+        '"escalate"',
+        "structural_synthetic_only",
+        "measurement_validated",
+    }
     combined = "\n".join(path.read_text(encoding="utf-8") for path in output_dir.glob("*.json*"))
 
     assert not any(claim in combined for claim in forbidden)
+    summary = json.loads((output_dir / "summary.json").read_text(encoding="utf-8"))
+    diagnostics = _jsonl_rows(output_dir / "diagnostics.jsonl")
+    witnesses = _jsonl_rows(output_dir / "metric_bridge_witnesses.jsonl")
+
+    assert summary["metric_claim_level_counts"] == {"ambiguous_metric": 3}
+    assert summary["diagnostic_scope_counts"] == {"synthetic_structural_only": 3}
+    assert {row["metric_claim_level"] for row in diagnostics} == {"ambiguous_metric"}
+    assert {row["diagnostic_scope"] for row in diagnostics} == {"synthetic_structural_only"}
+    assert {row["diagnostic_claim_level"] for row in witnesses} == {"ambiguous_metric"}
+    assert {row["diagnostic_scope"] for row in witnesses} == {"synthetic_structural_only"}
 
 
 def test_benchmark_does_not_read_reference_or_import_live_api(monkeypatch, workspace_tmp_dir):

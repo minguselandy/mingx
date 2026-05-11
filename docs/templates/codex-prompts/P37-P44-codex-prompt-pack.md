@@ -61,7 +61,7 @@ Goal:
 Strengthen Phase A synthetic benchmark outputs and report generation for redundancy-dominated, sparse pairwise-synergy, and higher-order/prerequisite regimes.
 
 Boundary:
-This is structural_synthetic_only evidence. It is not deployed V-information certification and not scientific validation.
+This is vinfo_proxy_supported evidence. It is not deployed V-information certification and not scientific validation.
 
 Required outputs:
 - events.jsonl

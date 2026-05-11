@@ -65,10 +65,11 @@ The benchmark reports:
 Triple-excess flags use `positive`, `none_detected`, `ambiguous`, or
 `not_evaluable`. Higher-order-risk instances with missing triple/block evidence
 must be escalated or marked ambiguous; pairwise-healthy diagnostics alone are
-not enough to emit a high-confidence greedy-valid label.
+not enough to emit a high-confidence `greedy_supported` label.
 
-Default selector-regime labels are limited to `greedy_valid`, `escalate`, and
-`ambiguous`. Default provisional selector actions:
+Default selector-regime labels are limited to `greedy_supported`,
+`pairwise_escalate`, `higher_order_risk`, and `ambiguous`. Default provisional
+selector actions:
 
 - `monitored_greedy`: high block-ratio LCB, low interaction mass, and small gap
 - `seeded_augmented_greedy`: moderate block-ratio LCB and bounded gap

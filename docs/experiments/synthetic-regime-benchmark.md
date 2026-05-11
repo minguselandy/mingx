@@ -25,7 +25,7 @@ Expected signature:
 - high block-ratio LCB
 - low pairwise synergy mass
 - small greedy-vs-oracle or greedy-vs-augmented gap
-- selector label may be `greedy_valid`
+- selector label may be `greedy_supported`
 - selector action may be `monitored_greedy`
 
 ### Pairwise-Synergy
@@ -37,7 +37,7 @@ Expected signature:
 - pairwise interaction mass detected
 - lower pair/block ratio than redundancy-dominated instances
 - seeded or augmented greedy may improve over vanilla greedy
-- selector label should escalate or remain ambiguous, not silently certify deployed behavior
+- selector label should be `pairwise_escalate` or remain `ambiguous`, not silently claim deployed behavior
 
 ### Higher-Order-Synergy / Prerequisite
 
@@ -47,7 +47,7 @@ Expected signature:
 
 - positive triple-excess or block-3 diagnostic signal
 - higher-order ambiguity flag may fire
-- `greedy_valid` must be withheld when triple excess is high
+- `greedy_supported` must be withheld when triple excess is high
 - selector action should escalate to interaction-aware search or mark the case ambiguous
 
 ## Outputs
@@ -71,16 +71,16 @@ The benchmark writes deterministic, replayable audit files:
 
 | Condition | Expected interpretation |
 |---|---|
-| Redundancy has high block-ratio, low synergy, and small greedy gap | synthetic `greedy_valid` path is behaving as expected |
+| Redundancy has high block-ratio, low synergy, and small greedy gap | synthetic `greedy_supported` path is behaving as expected |
 | Pairwise regime has positive interaction mass | pairwise escalation signal is detected |
 | Pairwise seeded/augmented greedy improves over vanilla greedy | escalation path is structurally useful in this synthetic regime |
-| Higher-order regime has positive triple excess | pairwise-only certification is insufficient |
-| Higher-order regime is labeled `greedy_valid` despite triple excess | benchmark failure |
-| Metric claim level is `Vinfo_proxy_certified` or `measurement_validated` | benchmark failure |
+| Higher-order regime has positive triple excess | pairwise-only support is insufficient |
+| Higher-order regime is labeled `greedy_supported` despite triple excess | benchmark failure |
+| Metric claim level is legacy `Vinfo_proxy_certified` or `measurement_validated` | benchmark failure |
 | Projection bundle hash changes across identical seed/config reruns | determinism failure |
 
 ## Claim Boundary
 
-Allowed metric claim levels are `structural_synthetic_only`, `operational_utility_only`, and `ambiguous`. The benchmark must never emit `Vinfo_proxy_certified` or `measurement_validated`.
+Allowed metric claim levels are `vinfo_proxy_supported`, `operational_utility_only`, and `ambiguous_metric`. The benchmark must never emit legacy `Vinfo_proxy_certified` or `measurement_validated`.
 
 Synthetic benchmark success does not certify deployed V-information weak submodularity. P04 remains the required scientific closure path for live follow-up, contamination review, human labels, kappa, bridge evidence, and human confirmation.

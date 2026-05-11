@@ -1,0 +1,68 @@
+{
+  "active_stratum_id": "bio_attribute__fixed_model__fixed_order__block1",
+  "active_stratum_ids": [
+    "bio_attribute__fixed_model__fixed_order__block1"
+  ],
+  "bridge_freshness": "fresh",
+  "bridge_scale_c_s": 2.0,
+  "data_source_kind": "fixture",
+  "denied_claims": [
+    "measurement_validated",
+    "scientific_validation",
+    "deployed_v_information_verification",
+    "deployed_v_information_certification"
+  ],
+  "deployed_v_information_verification_claim": false,
+  "diagnostic_scope": "one_stratum_bridge_calibration",
+  "effective_sample_size": 6,
+  "evidence_scope": "one_stratum_bridge_calibration",
+  "experiment_id": "bridge_calibration_one_stratum_v1",
+  "fit_method": "ols_through_origin",
+  "intercept_diagnostic": {
+    "intercept": 0.0006666666666666626,
+    "mean_absolute_residual": 0.0037777777777777827,
+    "slope": 1.9999999999999996
+  },
+  "mean_absolute_residual": 0.003999999999999999,
+  "measurement_validated_allowed": false,
+  "measurement_validation_claim": false,
+  "metric_claim_level": "calibrated_proxy_supported",
+  "paper_evidence_eligible": false,
+  "pass_flags": {
+    "bridge_freshness_pass": true,
+    "effective_sample_size_pass": true,
+    "fit_denominator_pass": true,
+    "one_stratum_pass": true,
+    "pearson_pass": true,
+    "sample_size_pass": true,
+    "sign_agreement_pass": true,
+    "source_kind_pass": true,
+    "spearman_pass": true,
+    "synthetic_scope_pass": true,
+    "zeta_pass": true
+  },
+  "pearson_correlation": 0.9999092077686396,
+  "protocol_version": "bridge_calibration.v1",
+  "reason_codes": [],
+  "residual_quantiles": {
+    "p100": 0.0050000000000000044,
+    "p50": 0.0049999999999999906,
+    "p90": 0.0050000000000000044,
+    "p95": 0.0050000000000000044
+  },
+  "sample_size": 6,
+  "selector_regime_label": "ambiguous",
+  "sign_agreement": 1.0,
+  "spearman_correlation": 1.0,
+  "thresholds": {
+    "max_allowed_zeta": 0.05,
+    "min_pearson_correlation": 0.9,
+    "min_sign_agreement": 0.9,
+    "min_spearman_correlation": 0.9,
+    "minimum_effective_sample_size": 6,
+    "minimum_sample_size": 6,
+    "zeta_mode": "max",
+    "zeta_quantile": 0.95
+  },
+  "zeta_s": 0.0050000000000000044
+}

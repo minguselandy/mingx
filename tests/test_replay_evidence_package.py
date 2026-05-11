@@ -18,10 +18,11 @@ def _complete_summary(**overrides) -> dict:
     dispatch_count = int(overrides.pop("dispatch_count", 1))
     summary = {
         "run_id": "replay-package-fixture",
-        "claim_level": "synthetic_structural_only",
+        "claim_level": "ambiguous_metric",
         "dispatch_count": dispatch_count,
         "artifact_counts": {name: dispatch_count for name in REQUIRED_EVIDENCE_ARTIFACTS},
-        "metric_claim_level_counts": {"structural_synthetic_only": dispatch_count},
+        "metric_claim_level_counts": {"ambiguous_metric": dispatch_count},
+        "diagnostic_scope_counts": {"synthetic_structural_only": dispatch_count},
         "complete_artifact_sets": True,
     }
     summary.update(overrides)
@@ -45,6 +46,7 @@ def test_package_builds_stable_manifest_from_in_memory_summary():
     assert manifest["package_schema_version"] == "ReplayEvidencePackageV1"
     assert manifest["source_run_id"] == "replay-package-fixture"
     assert manifest["evidence_mode"] == "synthetic_structural_only"
+    assert manifest["evidence_scope"] == "synthetic_structural_only"
     assert manifest["source_phase"] == "P05"
     assert manifest["projection_bundle_count"] == 1
     assert manifest["projection_bundle_hash_count"] == 2
@@ -54,6 +56,7 @@ def test_package_builds_stable_manifest_from_in_memory_summary():
     assert manifest["p09_status"] == "BLOCKED_OPERATOR_REQUIRED"
     assert "measurement_validated" in manifest["denied_claims"]
     assert "synthetic_only_not_deployed_certification" in manifest["reason_codes"]
+    assert manifest["package_claim_scope"] == "ambiguous_metric"
 
     second = build_replay_evidence_package_from_summary(
         _complete_summary(),
@@ -97,7 +100,8 @@ def test_package_writes_stable_files_from_synthetic_artifact_dir(workspace_tmp_d
     assert manifest["projection_bundle_count"] == 3
     assert manifest["projection_bundle_hash_count"] == 3
     assert manifest["measurement_validated_allowed"] is False
-    assert manifest["package_claim_scope"] == "synthetic_structural_only"
+    assert manifest["evidence_scope"] == "synthetic_structural_only"
+    assert manifest["package_claim_scope"] == "ambiguous_metric"
 
 
 def test_missing_projection_bundles_fails_package_conservatively():
@@ -110,8 +114,8 @@ def test_missing_projection_bundles_fails_package_conservatively():
     assert manifest["required_artifacts_present"] is False
     assert manifest["missing_required_artifacts"] == ["projection_bundles"]
     assert manifest["projection_bundle_count"] == 0
-    assert manifest["package_claim_scope"] == "ambiguous"
-    assert manifest["claim_gate_allowed_level"] == "ambiguous"
+    assert manifest["package_claim_scope"] == "ambiguous_metric"
+    assert manifest["claim_gate_allowed_level"] == "ambiguous_metric"
     assert "missing_projection_bundles" in manifest["reason_codes"]
 
 
@@ -160,7 +164,7 @@ def test_stale_metric_bridge_is_reflected_in_reason_codes():
     )
 
     assert "stale_metric_bridge" in package["manifest"]["reason_codes"]
-    assert package["manifest"]["package_claim_scope"] in {"operational_utility_only", "ambiguous"}
+    assert package["manifest"]["package_claim_scope"] in {"operational_utility_only", "ambiguous_metric"}
 
 
 def test_synthetic_and_engineering_packages_keep_forbidden_claims_denied():
@@ -198,7 +202,11 @@ def test_live_api_or_external_runtime_flags_alone_do_not_allow_validation():
 
 def test_hashes_and_reason_codes_are_sorted_deterministically():
     package = build_replay_evidence_package_from_summary(
-        _complete_summary(claim_level="synthetic_structural_only"),
+        _complete_summary(
+            claim_level="vinfo_proxy_supported",
+            metric_claim_level_counts={"vinfo_proxy_supported": 1},
+            diagnostic_scope_counts={},
+        ),
         evidence_overrides={
             "projection_bundle_hashes": ["z-hash", "a-hash", "m-hash"],
             "contamination_status": "failed",

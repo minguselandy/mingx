@@ -79,12 +79,12 @@ def _base_rows(**overrides) -> dict[str, dict]:
             "effective_sample_size": 20,
             "drift_status": "fresh",
             "diagnostic_mode": "absolute",
-            "diagnostic_claim_level": "Vinfo_proxy_certified",
+            "diagnostic_claim_level": "vinfo_proxy_supported",
         },
         "diagnostics": {
             **common,
-            "metric_claim_level": "Vinfo_proxy_certified",
-            "selector_regime_label": "greedy_valid",
+            "metric_claim_level": "vinfo_proxy_supported",
+            "selector_regime_label": "greedy_supported",
             "selector_action": "monitored_greedy",
             "gamma_hat_semantics": "legacy_trace_decay_alias_not_submodularity_ratio",
         },
@@ -163,9 +163,9 @@ def test_complete_dispatch_bundle_is_replay_usable(workspace_tmp_dir):
 
     assert report["status"] == "classified"
     assert manifest[0]["replay_status"] == "replay_usable"
-    assert manifest[0]["replay_claim_scope"] == "Vinfo_proxy_certified"
-    assert manifest[0]["metric_claim_level"] == "Vinfo_proxy_certified"
-    assert manifest[0]["selector_regime_label"] == "greedy_valid"
+    assert manifest[0]["replay_claim_scope"] == "vinfo_proxy_supported"
+    assert manifest[0]["metric_claim_level"] == "vinfo_proxy_supported"
+    assert manifest[0]["selector_regime_label"] == "greedy_supported"
     assert manifest[0]["diagnostic_recompute_status"] == "recomputed"
     assert manifest[0]["headline_eligible"] is True
     assert manifest[0]["headline_exclusion_reason"] == ""
@@ -174,17 +174,34 @@ def test_complete_dispatch_bundle_is_replay_usable(workspace_tmp_dir):
     assert summary["headline_eligible_dispatches"] == 1
 
 
+def test_legacy_phase_b_labels_are_mapped_to_v12_outputs(workspace_tmp_dir):
+    legacy_rows = _base_rows(
+        metric_bridge_witness={"diagnostic_claim_level": "Vinfo_proxy_certified"},
+        diagnostics={
+            "metric_claim_level": "Vinfo_proxy_certified",
+            "selector_regime_label": "greedy_valid",
+        },
+    )
+
+    _, manifest, summary = _run_fixture(workspace_tmp_dir, legacy_rows)
+
+    assert manifest[0]["replay_claim_scope"] == "vinfo_proxy_supported"
+    assert manifest[0]["metric_claim_level"] == "vinfo_proxy_supported"
+    assert manifest[0]["selector_regime_label"] == "greedy_supported"
+    assert summary["metric_claim_level_counts"] == {"vinfo_proxy_supported": 1}
+
+
 def test_missing_metric_bridge_witness_downgrades_to_partial_without_bridge_claim(workspace_tmp_dir):
     _, manifest, summary = _run_fixture(workspace_tmp_dir, _base_rows(metric_bridge_witness=None))
 
     assert manifest[0]["replay_status"] == "replay_partial"
     assert manifest[0]["metric_bridge_witness_present"] is False
-    assert manifest[0]["metric_claim_level"] == "ambiguous"
+    assert manifest[0]["metric_claim_level"] == "ambiguous_metric"
     assert manifest[0]["replay_claim_scope"] == "observability_only"
     assert "MetricBridgeWitness" in manifest[0]["missing_required_fields"]
     assert manifest[0]["headline_eligible"] is False
     assert manifest[0]["headline_exclusion_reason"] == "replay_status_replay_partial"
-    assert summary["metric_claim_level_counts"] == {"ambiguous": 1}
+    assert summary["metric_claim_level_counts"] == {"ambiguous_metric": 1}
 
 
 def test_missing_materialization_order_is_replay_defect(workspace_tmp_dir):
@@ -346,7 +363,7 @@ def test_operational_only_metric_bridge_remains_operational_only(workspace_tmp_d
     assert manifest[0]["metric_claim_level"] != "Vinfo_proxy_certified"
 
 
-def test_structural_synthetic_metric_bridge_remains_structural_synthetic_only(workspace_tmp_dir):
+def test_legacy_structural_synthetic_metric_bridge_keeps_scope_without_vinfo_upgrade(workspace_tmp_dir):
     rows = _base_rows(
         metric_bridge_witness={
             "metric_class": "synthetic_oracle",
@@ -357,8 +374,11 @@ def test_structural_synthetic_metric_bridge_remains_structural_synthetic_only(wo
 
     _, manifest, _ = _run_fixture(workspace_tmp_dir, rows)
 
-    assert manifest[0]["metric_claim_level"] == "structural_synthetic_only"
-    assert manifest[0]["replay_claim_scope"] == "structural_synthetic_only"
+    assert manifest[0]["metric_claim_level"] == "ambiguous_metric"
+    assert manifest[0]["metric_claim_level"] != "vinfo_proxy_supported"
+    assert manifest[0]["replay_claim_scope"] == "ambiguous_metric"
+    assert manifest[0]["diagnostic_scope"] == "synthetic_structural_only"
+    assert manifest[0]["replay_status"] == "replay_partial"
 
 
 def test_stale_metric_bridge_yields_recalibration_required_scope(workspace_tmp_dir):
@@ -366,7 +386,7 @@ def test_stale_metric_bridge_yields_recalibration_required_scope(workspace_tmp_d
 
     _, manifest, _ = _run_fixture(workspace_tmp_dir, rows)
 
-    assert manifest[0]["metric_claim_level"] == "ambiguous"
+    assert manifest[0]["metric_claim_level"] == "ambiguous_metric"
     assert manifest[0]["bridge_status"] == "stale"
     assert manifest[0]["replay_claim_scope"] == "recalibration_required"
     assert manifest[0]["replay_status"] == "replay_partial"

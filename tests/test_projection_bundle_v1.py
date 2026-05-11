@@ -48,7 +48,7 @@ def _minimal_payload():
             "dispatch_id": "dispatch-1",
             "agent_id": "agent-a",
             "round_id": "round-1",
-            "diagnostic_claim_level": "structural_synthetic_only",
+            "diagnostic_claim_level": "vinfo_proxy_supported",
         },
         "source_mode": "mock",
     }
@@ -137,7 +137,7 @@ def _artifact_dataclasses():
             effective_sample_size=None,
             drift_status="not_applicable",
             diagnostic_mode="synthetic_oracle",
-            diagnostic_claim_level="structural_synthetic_only",
+            diagnostic_claim_level="vinfo_proxy_supported",
         ),
         "diagnostics": ProjectionDiagnostics(
             dispatch_id="dispatch-1",
@@ -158,8 +158,8 @@ def _artifact_dataclasses():
             triple_excess_flag="not_evaluable",
             higher_order_ambiguity_flag=False,
             greedy_augmented_gap=0.0,
-            metric_claim_level="structural_synthetic_only",
-            selector_regime_label="greedy_valid",
+            metric_claim_level="vinfo_proxy_supported",
+            selector_regime_label="greedy_supported",
             selector_action="monitored_greedy",
             policy_recommendation="monitored_greedy",
             greedy_value=1.0,
@@ -226,7 +226,7 @@ def test_empty_identity_fields_are_rejected(field_name):
 
 def test_optional_diagnostics_are_preserved_if_present():
     payload = _minimal_payload()
-    payload["diagnostics"] = {"metric_claim_level": "structural_synthetic_only", "samples": []}
+    payload["diagnostics"] = {"metric_claim_level": "vinfo_proxy_supported", "samples": []}
 
     bundle = ProjectionBundleV1.from_dict(payload)
 
@@ -246,8 +246,8 @@ def test_existing_artifact_dataclasses_can_be_serialized():
     bundle_payload = bundle.to_dict()
 
     assert bundle_payload["candidate_pool"]["candidate_pool_hash"] == "pool-hash"
-    assert bundle_payload["metric_bridge_witness"]["diagnostic_claim_level"] == "structural_synthetic_only"
-    assert bundle_payload["diagnostics"]["metric_claim_level"] == "structural_synthetic_only"
+    assert bundle_payload["metric_bridge_witness"]["diagnostic_claim_level"] == "vinfo_proxy_supported"
+    assert bundle_payload["diagnostics"]["metric_claim_level"] == "vinfo_proxy_supported"
 
 
 def test_no_timestamps_or_uuids_are_introduced_by_default():
