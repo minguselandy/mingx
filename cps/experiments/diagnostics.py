@@ -9,6 +9,7 @@ from cps.experiments.decision import (
     derive_metric_claim_level,
     derive_selector_action,
     derive_selector_regime_label,
+    normalize_diagnostic_scope,
     resolve_selector_thresholds,
 )
 from cps.experiments.selection import SelectionResult
@@ -25,6 +26,8 @@ STAR_BLOCK_PLACEHOLDER_SEMANTICS = "placeholder_conservative_min_b2_b3_not_degre
 SYNTHETIC_ORACLE_METRIC_BRIDGE = {
     "metric_class": "synthetic_oracle",
     "drift_status": "fresh",
+    "diagnostic_claim_level": "ambiguous_metric",
+    "diagnostic_scope": "synthetic_structural_only",
 }
 
 
@@ -45,6 +48,7 @@ class DiagnosticResult:
     higher_order_ambiguity_flag: bool
     greedy_augmented_gap: float
     metric_claim_level: str
+    diagnostic_scope: str
     selector_regime_label: str
     selector_action: str
     policy_recommendation: str
@@ -411,7 +415,7 @@ def recommend_policy(
         "triple_excess_flag": "not_evaluable" if higher_order_ambiguity_flag else "none_detected",
         "higher_order_ambiguity_flag": higher_order_ambiguity_flag,
     }
-    label = derive_selector_regime_label(diagnostics, "structural_synthetic_only", policy_thresholds)
+    label = derive_selector_regime_label(diagnostics, "vinfo_proxy_supported", policy_thresholds)
     return derive_selector_action(label, diagnostics, policy_thresholds)
 
 
@@ -432,7 +436,7 @@ def _selector_regime_label(
         "triple_excess_flag": "not_evaluable" if higher_order_ambiguity_flag else "none_detected",
         "higher_order_ambiguity_flag": higher_order_ambiguity_flag,
     }
-    return derive_selector_regime_label(diagnostics, "structural_synthetic_only", thresholds)
+    return derive_selector_regime_label(diagnostics, "vinfo_proxy_supported", thresholds)
 
 
 def compute_diagnostics(
@@ -476,6 +480,12 @@ def compute_diagnostics(
     )
     gap = greedy_augmented_gap(greedy_value=greedy_result.value, augmented_value=augmented_result.value)
     metric_claim_level = derive_metric_claim_level(metric_bridge_witness)
+    if isinstance(metric_bridge_witness, dict):
+        diagnostic_scope = normalize_diagnostic_scope(
+            metric_bridge_witness.get("diagnostic_scope") or "synthetic_structural_only"
+        )
+    else:
+        diagnostic_scope = "not_recorded"
     decision_context = {
         "block_ratio_lcb_b2": block_ratio_lcb_b2,
         "block_ratio_lcb_star": block_ratio_lcb_star,
@@ -488,6 +498,7 @@ def compute_diagnostics(
         "triple_excess_flag": triple_excess_flag,
         "higher_order_ambiguity_flag": higher_order_ambiguity,
         "greedy_augmented_gap": gap,
+        "diagnostic_scope": diagnostic_scope,
     }
     selector_regime_label = derive_selector_regime_label(decision_context, metric_claim_level, resolved_thresholds)
     selector_action = derive_selector_action(selector_regime_label, decision_context, resolved_thresholds)
@@ -507,6 +518,7 @@ def compute_diagnostics(
         higher_order_ambiguity_flag=higher_order_ambiguity,
         greedy_augmented_gap=gap,
         metric_claim_level=metric_claim_level,
+        diagnostic_scope=diagnostic_scope,
         selector_regime_label=selector_regime_label,
         selector_action=selector_action,
         policy_recommendation=selector_action,

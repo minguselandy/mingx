@@ -1,0 +1,22 @@
+{
+  "active_stratum_id": "bio_attribute__operator_provided_fixed_model_v1__fixed_order_v1__block1__top_L",
+  "block_size": 1,
+  "candidate_slice_band": "top_L",
+  "data_origin": "api_generated",
+  "delta_logloss_source": "measured_logprob",
+  "delta_utility_source": "strong_model_adjudicated",
+  "fixed_model_id": "",
+  "materialization_policy": "fixed_order_v1",
+  "metric": "model_adjudicated_utility_vs_logloss",
+  "minimum_abs_delta_logloss_for_bridge_evidence": 0.001,
+  "mode": "dry_run",
+  "operator_approval": false,
+  "output_dir": "artifacts/experiments/bridge_data_generation_bio_attribute",
+  "protocol_version": "bridge_data_generation.v1",
+  "sample_limit": 8,
+  "provider_profile": "",
+  "source": "operator_provided",
+  "strong_review_model_id": "",
+  "task_family": "bio_attribute",
+  "task_packet_mode": "bridge_canary_v2"
+}

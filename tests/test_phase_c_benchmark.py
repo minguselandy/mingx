@@ -48,6 +48,10 @@ def test_phase_c_writes_required_condition_artifacts(workspace_tmp_dir):
     dispatches = _jsonl_rows(output_dir / "phase_c_dispatches.jsonl")
     assert len(dispatches) == 8
     assert {row["condition"] for row in dispatches} == set(report["condition_order"])
+    selector_labels = {row["diagnostics"]["selector_regime_label"] for row in dispatches}
+    assert selector_labels <= {"ambiguous", "greedy_supported", "pairwise_escalate", "higher_order_risk"}
+    assert "greedy_valid" not in selector_labels
+    assert "escalate" not in selector_labels
     for row in dispatches:
         assert row["claim_gate_record"]["measurement_validated_allowed"] is False
         assert row["claim_gate_record"]["allowed_claim_level"] == "operational_utility_only"
@@ -57,6 +61,11 @@ def test_phase_c_writes_required_condition_artifacts(workspace_tmp_dir):
         assert row["selection_summary"]["selected_token_cost"] <= row["budget_tokens"]
         assert row["selection_summary"]["condition"] == row["condition"]
         assert row["task_output"]["claim_level"] == "operational_utility_only"
+
+    combined = "\n".join(path.read_text(encoding="utf-8") for path in output_dir.glob("*"))
+    assert "Vinfo_proxy_certified" not in combined
+    assert "greedy_valid" not in combined
+    assert '"escalate"' not in combined
 
     condition_results = _json(output_dir / "phase_c_condition_results.json")
     assert list(condition_results["conditions"]) == report["condition_order"]

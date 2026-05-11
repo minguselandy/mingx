@@ -60,7 +60,7 @@ The demo writes:
 
 `claim_gate_report.md` shows the conservative claim gate result, denied claims, reason codes, and metric bridge gate status. Missing labels, missing kappa, missing or stale metric bridge evidence, and operator-required phases remain visible as limitations.
 
-`proxy_regime_matrix.md` summarizes proxy/synthetic diagnostic rows and boundary rows. Proxy-regime certification is not deployed V-information certification.
+`proxy_regime_matrix.md` summarizes proxy/synthetic diagnostic rows and boundary rows. Proxy-regime diagnosis is not deployed V-information certification.
 
 `replay_package/replay_package_summary.md` summarizes replay package completeness, projection bundle hashes, denied claims, and replay limitations. Replay package completeness is not scientific validation.
 

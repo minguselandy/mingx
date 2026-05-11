@@ -7,13 +7,16 @@ from pathlib import Path
 from typing import Any
 
 from cps.experiments.claim_gate_report import build_claim_gate_report
+from cps.experiments.decision import is_synthetic_diagnostic_scope
+from cps.experiments.decision import normalize_diagnostic_scope
+from cps.experiments.decision import normalize_metric_claim_level
 from cps.experiments.evidence_ledger import (
     build_evidence_ledger_from_artifact_dir,
     build_evidence_ledger_from_summary,
 )
 
 
-MATRIX_VERSION = "ProxyRegimeCertificationMatrixV1"
+MATRIX_VERSION = "ProxyRegimeDiagnosisMatrixV1"
 PROXY_REGIME_ENTRY_ORDER = (
     "redundancy_dominated",
     "sparse_pairwise_synergy",
@@ -25,20 +28,23 @@ PROXY_REGIME_ENTRY_ORDER = (
     "missing_metric_bridge",
     "artifact_incomplete",
 )
-CERTIFICATION_SCOPES = (
+DIAGNOSTIC_SCOPES = (
     "proxy_regime_diagnostic_only",
     "synthetic_structural_only",
+    "oracle_structural_only",
+    "synthetic_oracle_structural_only",
     "engineering_smoke_only",
-    "ambiguous",
+    "ambiguous_metric",
     "pilot_only",
 )
+CERTIFICATION_SCOPES = DIAGNOSTIC_SCOPES
 DENIED_SCOPE_VALUES = (
     "deployed_V_information_certified",
     "measurement_validated",
     "scientific_validation",
 )
 CLAIM_BOUNDARY_WARNING = (
-    "proxy-regime certification is not deployed V-information certification; "
+    "proxy-regime diagnosis is not deployed V-information certification; "
     "measurement_validated is not claimed; "
     "P04 remains BLOCKED_OPERATOR_REQUIRED; "
     "P09 remains BLOCKED_OPERATOR_REQUIRED"
@@ -58,7 +64,7 @@ REGIME_DEFINITIONS: dict[str, dict[str, str]] = {
     "higher_order_synergy": {
         "structural_assumption": "Higher-order prerequisite or triple interactions where pairwise diagnostics are insufficient.",
         "expected_selector_behavior": "interaction_aware_local_search",
-        "expected_diagnostic_behavior": "Triple-excess or higher-order ambiguity diagnostic fires and greedy-valid is withheld.",
+        "expected_diagnostic_behavior": "Triple-excess or higher-order ambiguity diagnostic fires and greedy support is withheld.",
     },
 }
 
@@ -90,7 +96,7 @@ def _bridge_overrides_from_witnesses(rows: Iterable[Mapping[str, Any]]) -> dict[
             "metric_bridge_witness_count": 0,
             "bridge_freshness": "missing",
             "metric_class": "missing",
-            "diagnostic_claim_level": "ambiguous",
+            "diagnostic_claim_level": "ambiguous_metric",
         }
     drift_statuses = {str(row.get("drift_status", "missing")) for row in witness_rows}
     if "stale" in drift_statuses:
@@ -100,12 +106,23 @@ def _bridge_overrides_from_witnesses(rows: Iterable[Mapping[str, Any]]) -> dict[
     else:
         bridge_freshness = "missing"
     metric_classes = sorted({str(row.get("metric_class", "unknown")) for row in witness_rows})
-    diagnostic_claim_levels = sorted({str(row.get("diagnostic_claim_level", "ambiguous")) for row in witness_rows})
+    diagnostic_claim_levels = sorted({str(row.get("diagnostic_claim_level", "ambiguous_metric")) for row in witness_rows})
     return {
         "metric_bridge_witness_count": len(witness_rows),
         "bridge_freshness": bridge_freshness,
         "metric_class": metric_classes[0] if len(metric_classes) == 1 else "mixed",
         "diagnostic_claim_level": diagnostic_claim_levels[0] if len(diagnostic_claim_levels) == 1 else "mixed",
+    }
+
+
+def _matrix_evidence_overrides(explicit_overrides: Mapping[str, Any] | None) -> dict[str, Any]:
+    explicit = deepcopy(dict(explicit_overrides or {}))
+    if any(key in explicit for key in ("evidence_mode", "evidence_scope", "diagnostic_scope")):
+        return explicit
+    return {
+        "evidence_mode": "synthetic_structural_only",
+        "evidence_scope": "synthetic_structural_only",
+        **explicit,
     }
 
 
@@ -145,27 +162,35 @@ def _artifact_status(ledger: Mapping[str, Any]) -> str:
     return "complete" if bool(ledger.get("required_artifacts_present")) else "incomplete"
 
 
-def _certification_scope(*, regime_name: str, allowed_claim_level: str, required_artifacts_present: bool) -> str:
+def _diagnostic_scope(
+    *,
+    regime_name: str,
+    allowed_claim_level: str,
+    evidence_scope: str,
+    required_artifacts_present: bool,
+) -> str:
+    normalized_claim_level = normalize_metric_claim_level(allowed_claim_level)
+    normalized_evidence_scope = normalize_diagnostic_scope(evidence_scope)
     if allowed_claim_level == "pilot_only":
         return "pilot_only"
-    if not required_artifacts_present or allowed_claim_level == "ambiguous":
-        return "ambiguous"
+    if not required_artifacts_present or normalized_claim_level == "ambiguous_metric":
+        if regime_name in REGIME_DEFINITIONS and is_synthetic_diagnostic_scope(normalized_evidence_scope):
+            return normalized_evidence_scope
+        return "ambiguous_metric"
     if allowed_claim_level == "engineering_smoke_only":
         return "engineering_smoke_only"
-    if regime_name in REGIME_DEFINITIONS and allowed_claim_level == "synthetic_structural_only":
-        return "synthetic_structural_only"
     if regime_name in REGIME_DEFINITIONS:
         return "proxy_regime_diagnostic_only"
-    return "ambiguous"
+    return "ambiguous_metric"
 
 
 def _effective_allowed_claim_level(report: Mapping[str, Any]) -> str:
-    allowed_claim_level = str(report["allowed_claim_level"])
-    allowed_bridge_claim_level = str(report.get("allowed_bridge_claim_level", allowed_claim_level))
+    allowed_claim_level = normalize_metric_claim_level(report["allowed_claim_level"])
+    allowed_bridge_claim_level = normalize_metric_claim_level(report.get("allowed_bridge_claim_level", allowed_claim_level))
     if allowed_claim_level == "pilot_only" or allowed_bridge_claim_level == "pilot_only":
         return "pilot_only"
-    if allowed_claim_level == "ambiguous" or allowed_bridge_claim_level == "ambiguous":
-        return "ambiguous"
+    if allowed_claim_level == "ambiguous_metric" or allowed_bridge_claim_level == "ambiguous_metric":
+        return "ambiguous_metric"
     if allowed_bridge_claim_level == "operational_utility_only":
         return "operational_utility_only"
     return allowed_claim_level
@@ -230,9 +255,10 @@ def _entry_from_report(
         "reason_codes": list(report.get("reason_codes", [])),
         "reason_code_order": list(report.get("reason_code_order", [])),
         "failure_modes": _failure_modes(diagnostics_rows=diagnostics_rows, report=report, ledger=ledger),
-        "certification_scope": _certification_scope(
+        "diagnostic_scope": _diagnostic_scope(
             regime_name=regime_name,
             allowed_claim_level=allowed_claim_level,
+            evidence_scope=str(ledger.get("evidence_scope", evidence_mode)),
             required_artifacts_present=required_artifacts_present,
         ),
     }
@@ -256,7 +282,7 @@ def _boundary_entry(
     boundary_ledger, report = _report_for_ledger(ledger, **dict(updates))
     return _entry_from_report(
         regime_name=name,
-        evidence_mode=str(boundary_ledger.get("evidence_mode", "ambiguous")),
+        evidence_mode=str(boundary_ledger.get("evidence_mode", "ambiguous_metric")),
         structural_assumption=assumption,
         expected_selector_behavior="not_applicable_boundary_case",
         expected_diagnostic_behavior=expected,
@@ -279,9 +305,8 @@ def build_proxy_regime_matrix_from_summary(
     bridge_rows = [deepcopy(dict(row)) for row in metric_bridge_rows]
     bridge_overrides = _bridge_overrides_from_witnesses(bridge_rows)
     overrides = {
-        "evidence_mode": "synthetic_structural_only",
+        **_matrix_evidence_overrides(evidence_overrides),
         **bridge_overrides,
-        **deepcopy(dict(evidence_overrides or {})),
     }
     ledger = build_evidence_ledger_from_summary(source_summary, **overrides)
     claim_report = build_claim_gate_report(ledger)
@@ -294,7 +319,9 @@ def build_proxy_regime_matrix_from_summary(
         regime_ledger, regime_report = _report_for_ledger(
             ledger,
             evidence_mode="synthetic_structural_only",
-            diagnostic_claim_level="structural_synthetic_only",
+            evidence_scope="synthetic_structural_only",
+            diagnostic_scope="synthetic_structural_only",
+            diagnostic_claim_level="ambiguous_metric",
         )
         entries.append(
             _entry_from_report(
@@ -365,7 +392,7 @@ def build_proxy_regime_matrix_from_summary(
     ordered_entries = [entry_by_name[name] for name in PROXY_REGIME_ENTRY_ORDER]
     return {
         "matrix_version": MATRIX_VERSION,
-        "source_mode": "proxy_regime_certification_matrix",
+        "source_mode": "proxy_regime_diagnosis_matrix",
         "run_id": str(ledger.get("run_id", "")),
         "p04_status": str(ledger.get("p04_status", "BLOCKED_OPERATOR_REQUIRED")),
         "p09_status": str(ledger.get("p09_status", "BLOCKED_OPERATOR_REQUIRED")),
@@ -373,7 +400,7 @@ def build_proxy_regime_matrix_from_summary(
         "denied_claims": list(claim_report["denied_claims"]),
         "reason_codes": list(claim_report["reason_codes"]),
         "reason_code_order": list(claim_report["reason_code_order"]),
-        "certification_scopes": list(CERTIFICATION_SCOPES),
+        "diagnostic_scopes": list(DIAGNOSTIC_SCOPES),
         "denied_scope_values": list(DENIED_SCOPE_VALUES),
         "claim_boundary_warning": CLAIM_BOUNDARY_WARNING,
         "entries": ordered_entries,
@@ -394,12 +421,14 @@ def build_proxy_regime_matrix_from_artifact_dir(
     diagnostics_rows = _read_jsonl(resolved_dir / "diagnostics.jsonl")
     metric_bridge_rows = _read_jsonl(resolved_dir / "metric_bridge_witnesses.jsonl")
     bridge_overrides = _bridge_overrides_from_witnesses(metric_bridge_rows)
+    ledger_overrides = {
+        **_matrix_evidence_overrides(evidence_overrides),
+        **bridge_overrides,
+    }
     ledger = build_evidence_ledger_from_artifact_dir(
         resolved_dir,
         run_id=run_id,
-        evidence_mode="synthetic_structural_only",
-        **bridge_overrides,
-        **evidence_overrides,
+        **ledger_overrides,
     )
     merged_summary = {**summary, "artifact_counts": ledger["artifact_counts"], "run_id": ledger["run_id"]}
     return build_proxy_regime_matrix_from_summary(
@@ -417,17 +446,17 @@ def build_proxy_regime_matrix_from_artifact_dir(
 
 def format_proxy_regime_matrix_markdown(matrix: Mapping[str, Any]) -> str:
     lines = [
-        "# Proxy-Regime Certification Matrix",
+        "# Proxy-Regime Diagnosis Matrix",
         "",
         "## Claim Boundary",
         "",
         f"- {matrix['claim_boundary_warning']}",
-        "- proxy-regime certification is not deployed V-information certification.",
+        "- proxy-regime diagnosis is not deployed V-information certification.",
         "- measurement_validated is not claimed.",
         "",
         "## Matrix",
         "",
-        "| Regime | Structural assumption | Expected behavior | Observed behavior | Allowed claim | Certification scope | Reason codes |",
+        "| Regime | Structural assumption | Expected behavior | Observed behavior | Allowed claim | Diagnostic scope | Reason codes |",
         "|---|---|---|---|---|---|---|",
     ]
     for entry in matrix.get("entries", []):
@@ -441,7 +470,7 @@ def format_proxy_regime_matrix_markdown(matrix: Mapping[str, Any]) -> str:
                     str(entry["expected_diagnostic_behavior"]),
                     str(entry["observed_diagnostic_behavior"]),
                     str(entry["allowed_claim_level"]),
-                    str(entry["certification_scope"]),
+                    str(entry["diagnostic_scope"]),
                     reason_codes,
                 ]
             )

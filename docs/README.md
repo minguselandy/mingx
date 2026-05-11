@@ -7,12 +7,13 @@ long-lived `phase0` / `phase1` code roots.
 
 - [architecture.md](./architecture.md)
   Explains the code layout, artifact layout, and migration direction.
-- [paper-alignment-v10.md](./paper-alignment-v10.md)
-  Repo-facing map for the revised paper framing, claim levels, and terminology.
-- [archive/context_projection_revised_v10.md](./archive/context_projection_revised_v10.md)
-  Current revised paper framing: conditional theory, metric bridge,
-  proxy-regime diagnostics, auditable runtime artifacts, and extraction as a
-  separate bridge risk.
+- [paper-alignment-v12.md](./paper-alignment-v12.md)
+  Repo-facing map for the current v12 paper direction, claim levels, and
+  terminology.
+- [archive/context_projection_fixed_v12.md](./archive/context_projection_fixed_v12.md)
+  Current v12 paper framing: conditional theory, metric bridge,
+  proxy-regime diagnosis, auditable runtime artifacts, synthetic structural
+  evidence, and extraction as a separate bridge risk.
 - [experiment-design-overview.md](./experiment-design-overview.md)
   High-level Phase A/B/C experiment design for context-projection diagnostics.
 - [phase-tree-crosswalk.md](./phase-tree-crosswalk.md)
@@ -53,6 +54,19 @@ long-lived `phase0` / `phase1` code roots.
   Human-in-the-loop workflow for AI-assisted contamination judgement and
   minimal question rewrite planning after gate failure.
 
+## P45-P50 v12 Codex Phase Docs
+
+The controlling Codex development/reference package for v12 follow-up work is:
+
+- [P45-P50 v12 Phase Docs](./codex/v12-phase-docs/README.md)
+- [Common Guardrails](./codex/v12-phase-docs/COMMON-GUARDRAILS.md)
+- [P45 One-Stratum Bridge Calibration Plan](./codex/v12-phase-docs/P45-one-stratum-bridge-calibration-plan.md)
+
+P45, one-stratum metric bridge calibration, is the next priority. P50 is
+optional and should not precede P45-P49. These phase docs are planning and
+review controls only: they do not claim `measurement_validated` evidence and do
+not supply bridge calibration results by themselves.
+
 ## P37-P44 Development and Experiment Planning
 
 These documents are planning, protocol, template, and review artifacts. They do
@@ -61,6 +75,7 @@ scientific validation, or deployed V-information certification.
 
 Core package links:
 
+- [Mingx Follow-up Development and Experiment Plan v0.2](./roadmaps/mingx-followup-dev-experiment-plan-v0-2.md)
 - [P37-P44 Development and Experiment Roadmap](./roadmaps/P37-P44-development-and-experiment-roadmap.md)
 - [P37-P44 Documentation Package README](./roadmaps/P37-P44-documentation-package-readme.md)
 - [P37-P44 Documentation Package Manifest](./roadmaps/P37-P44-documentation-package-manifest.json)
@@ -104,10 +119,19 @@ Reviews:
 
 - `protocols/`
   Active protocol documents that guide implementation and execution.
+- `roadmaps/`
+  Active planning documents. The v12 follow-up plan is
+  `mingx-followup-dev-experiment-plan-v0-2.md`; it makes one-stratum metric
+  bridge calibration the highest-priority missing experiment and does not
+  claim measurement validation.
 - `archive/`
-  `context_projection_revised_v10.md` is the current research-framing anchor.
-  Older paper drafts, including final v8, are historical reference material,
-  not default implementation entrypoints.
+  `context_projection_fixed_v12.md` is the current research-framing anchor.
+  `context_projection_revised_v10.md` and older paper drafts, including final
+  v8, are historical reference material, not default implementation
+  entrypoints.
+- `paper-alignment-v10.md`
+  Legacy v10 repository-to-paper map retained for historical reference. New
+  paper-facing work should start from `paper-alignment-v12.md`.
 
 ## Code Semantics
 

@@ -50,7 +50,7 @@ Implemented claim levels are:
 - `engineering_compatibility_only`
 - `engineering_smoke_only`
 - `replayable_artifact_evidence`
-- `synthetic_structural_only`
+- `vinfo_proxy_supported`
 - `operational_utility_only`
 - `ambiguous`
 - `pilot_only`

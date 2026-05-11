@@ -30,7 +30,7 @@ Do not introduce language implying:
 
 - theorem-level deployment verification
 - runtime selector-regime proof
-- bridge-qualified V-information proxy certification without fresh matching bridge evidence
+- bridge-qualified V-information proxy support without fresh matching bridge evidence
 - CandidatePool as a core paper artifact
 - gamma_hat legacy/non-headline alias as a submodularity ratio
 - block_ratio_lcb_star as a paper-grade degree-adaptive estimator

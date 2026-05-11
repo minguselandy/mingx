@@ -4,6 +4,12 @@ This pack contains repository-ready Markdown documents for the next development 
 
 The documents are intended to be copied into the repository root while preserving the `docs/...` paths.
 
+Current status note: this package is preserved as the P37-P44/v10-era
+document pack. The current v12 follow-up planning entrypoint is
+`docs/roadmaps/mingx-followup-dev-experiment-plan-v0-2.md`, and the current
+paper-alignment entrypoint is `docs/paper-alignment-v12.md`. The v10 files
+remain legacy/archive references.
+
 ## Files
 
 | Path | Purpose |

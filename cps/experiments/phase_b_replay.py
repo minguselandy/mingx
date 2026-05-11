@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from cps.experiments.decision import derive_metric_claim_level
+from cps.experiments.decision import normalize_diagnostic_scope
+from cps.experiments.decision import normalize_selector_regime_label
 
 
 DENOMINATOR_THRESHOLD = 1e-9
@@ -76,6 +78,7 @@ class ReplayManifestRow:
     materialization_order_present: bool
     bridge_status: str
     metric_claim_level: str
+    diagnostic_scope: str
     selector_regime_label: str
     diagnostic_recompute_status: str
     headline_eligible: bool
@@ -508,6 +511,20 @@ def _bridge_scope(metric_bridge_witness: dict[str, Any] | None, metric_claim_lev
     return drift_status, metric_claim_level
 
 
+def _diagnostic_scope(
+    metric_bridge_witness: dict[str, Any] | None,
+    diagnostics: dict[str, Any] | None,
+) -> str:
+    witness = metric_bridge_witness or {}
+    diagnostic_payload = diagnostics or {}
+    scope = witness.get("diagnostic_scope") or diagnostic_payload.get("diagnostic_scope")
+    if scope:
+        return normalize_diagnostic_scope(scope)
+    if str(witness.get("metric_class") or "") == "synthetic_oracle":
+        return "synthetic_structural_only"
+    return "not_recorded"
+
+
 def classify_replay_bundle(
     bundle: ReplayArtifactBundle,
     *,
@@ -554,10 +571,14 @@ def classify_replay_bundle(
     realized_budget_present = _realized_budget_present(bundle)
     metric_claim_level = derive_metric_claim_level(bundle.metric_bridge_witness)
     bridge_status, replay_claim_scope = _bridge_scope(bundle.metric_bridge_witness, metric_claim_level)
+    diagnostic_scope = _diagnostic_scope(bundle.metric_bridge_witness, bundle.diagnostics)
     if contamination_status == "failed":
         metric_claim_level = "pilot_only"
         replay_claim_scope = "pilot_only"
-    selector_regime_label = str((bundle.diagnostics or {}).get("selector_regime_label") or "unknown")
+    selector_regime_label = normalize_selector_regime_label(
+        (bundle.diagnostics or {}).get("selector_regime_label") or "unknown",
+        bundle.diagnostics,
+    )
     selected_token_cost = _selected_token_cost(bundle, selected_ids)
     budget_utilization = _budget_utilization(bundle, selected_token_cost)
     diagnostic = _diagnostic_recompute(
@@ -660,7 +681,7 @@ def classify_replay_bundle(
             required_for="bridge_qualified_claim",
             reason="full claim-level replay requires a metric bridge witness",
         )
-    if metric_bridge_witness_present and metric_claim_level == "ambiguous":
+    if metric_bridge_witness_present and metric_claim_level in {"ambiguous", "ambiguous_metric"}:
         _add_missing(
             missing,
             bundle,
@@ -687,7 +708,7 @@ def classify_replay_bundle(
     missing_required_fields = [row.field for row in missing if row.severity == "error"]
     if not candidate_pool_present or not selected_ids_present or "missing_dispatch_binding" in replay_defects:
         replay_status = "replay_unusable"
-    elif not metric_bridge_witness_present or metric_claim_level == "ambiguous":
+    elif not metric_bridge_witness_present or metric_claim_level in {"ambiguous", "ambiguous_metric"}:
         replay_status = "replay_partial"
     elif (
         not projection_plan_present
@@ -711,7 +732,7 @@ def classify_replay_bundle(
         headline_exclusion_reason = str(diagnostic["diagnostic_recompute_status"])
     elif bridge_status in {"missing", "stale", "ambiguous", "unknown"}:
         headline_exclusion_reason = f"metric_bridge_{bridge_status}"
-    elif metric_claim_level in {"ambiguous", "operational_utility_only", "pilot_only"}:
+    elif metric_claim_level in {"ambiguous", "ambiguous_metric", "operational_utility_only", "pilot_only"}:
         headline_exclusion_reason = f"metric_claim_level_{metric_claim_level}"
     else:
         headline_exclusion_reason = ""
@@ -740,6 +761,7 @@ def classify_replay_bundle(
             materialization_order_present=materialization_order_present,
             bridge_status=bridge_status,
             metric_claim_level=metric_claim_level,
+            diagnostic_scope=diagnostic_scope,
             selector_regime_label=selector_regime_label,
             diagnostic_recompute_status=str(diagnostic["diagnostic_recompute_status"]),
             headline_eligible=headline_eligible,
@@ -821,6 +843,7 @@ def _per_dispatch_diagnostic_payload(row: ReplayManifestRow) -> dict[str, Any]:
         "round_id": row.round_id,
         "replay_status": row.replay_status,
         "metric_claim_level": row.metric_claim_level,
+        "diagnostic_scope": row.diagnostic_scope,
         "selector_regime_label": row.selector_regime_label,
         "diagnostic_recompute_status": row.diagnostic_recompute_status,
         "headline_eligible": row.headline_eligible,

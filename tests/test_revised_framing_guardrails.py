@@ -5,7 +5,9 @@ from pathlib import Path
 from typing import Iterable
 
 from cps.experiments.decision import derive_metric_claim_level, derive_selector_regime_label
+from cps.experiments.phase_c_benchmark import run_phase_c_benchmark
 from cps.experiments.synthetic_benchmark import evaluate_pre_registered_validity_gate
+from cps.experiments.synthetic_benchmark import run_synthetic_benchmark
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,9 +19,11 @@ def _read_text(path: Path) -> str:
 
 def _active_markdown_files() -> list[Path]:
     docs = _tracked_markdown_files_under_docs()
+    v12_alignment = ROOT / "docs" / "paper-alignment-v12.md"
     return [
         ROOT / "README.md",
         ROOT / "AGENTS.md",
+        *([v12_alignment] if v12_alignment.exists() else []),
         ROOT / "configs" / "runs" / "README.md",
         *sorted(docs),
     ]
@@ -86,6 +90,14 @@ def _assert_occurrences_are_qualified(paths: Iterable[Path], needle: str, marker
     assert not failures, f"{needle} occurrences lack legacy/non-headline qualification: {sorted(set(failures))}"
 
 
+def _artifact_text(root: Path) -> str:
+    parts: list[str] = []
+    for path in sorted(root.glob("*")):
+        if path.suffix in {".json", ".jsonl", ".md"}:
+            parts.append(path.read_text(encoding="utf-8"))
+    return "\n".join(parts)
+
+
 def _valid_gate_row(regime: str, **overrides) -> dict:
     row = {
         "dispatch_id": f"{regime}-fixture",
@@ -102,8 +114,9 @@ def _valid_gate_row(regime: str, **overrides) -> dict:
         "triple_excess_flag": "none_detected",
         "higher_order_ambiguity_flag": False,
         "greedy_augmented_gap": 0.0,
-        "metric_claim_level": "structural_synthetic_only",
-        "selector_regime_label": "greedy_valid",
+        "metric_claim_level": "ambiguous_metric",
+        "diagnostic_scope": "synthetic_structural_only",
+        "selector_regime_label": "greedy_supported",
         "selector_action": "monitored_greedy",
         "augmented_value": 1.0,
         "greedy_value": 1.0,
@@ -128,10 +141,11 @@ def _gate_summary(dispatch_count: int, *, metric_bridge_count: int | None = None
     }
 
 
-def test_active_docs_use_revised_paper_anchor_not_v8_as_current() -> None:
+def test_active_docs_use_current_v12_paper_anchor_not_v8_as_current() -> None:
     for path in (ROOT / "README.md", ROOT / "AGENTS.md"):
         text = _read_text(path)
-        assert "context_projection_revised_v10.md" in text
+        assert "context_projection_fixed_v12.md" in text
+        assert "paper-alignment-v12.md" in text
         for window in _occurrence_windows(path, "final_paper_context_projection_submission_final_v8.md"):
             assert any(marker in window for marker in ("historical", "archive", "older draft", "reference"))
             assert "current canonical" not in window
@@ -194,11 +208,51 @@ def test_metric_bridge_decision_guardrails() -> None:
     assert derive_metric_claim_level({"metric_class": "operational_only", "drift_status": "fresh"}) != (
         "Vinfo_proxy_certified"
     )
-    assert derive_metric_claim_level(None) == "ambiguous"
-    assert derive_metric_claim_level({"metric_class": "log_loss_aligned", "drift_status": "stale"}) == "ambiguous"
+    assert derive_metric_claim_level({"metric_class": "log_loss_aligned", "drift_status": "fresh"}) == (
+        "vinfo_proxy_supported"
+    )
+    assert derive_metric_claim_level({"metric_class": "bridge_calibrated", "drift_status": "fresh"}) == (
+        "calibrated_proxy_supported"
+    )
+    assert derive_metric_claim_level(None) == "ambiguous_metric"
+    assert derive_metric_claim_level({"metric_class": "log_loss_aligned", "drift_status": "stale"}) == (
+        "ambiguous_metric"
+    )
 
 
-def test_higher_order_not_evaluable_guardrail_prevents_greedy_valid() -> None:
+def test_active_generated_reports_do_not_emit_v10_labels(workspace_tmp_dir) -> None:
+    synthetic_dir = workspace_tmp_dir / "synthetic"
+    phase_c_dir = workspace_tmp_dir / "phase_c"
+
+    run_synthetic_benchmark(
+        config_path="configs/runs/synthetic-regime-smoke.json",
+        output_dir=synthetic_dir,
+    )
+    run_phase_c_benchmark(output_dir=phase_c_dir)
+
+    synthetic_text = _artifact_text(synthetic_dir)
+    phase_c_text = _artifact_text(phase_c_dir)
+    combined = synthetic_text + "\n" + phase_c_text
+    for legacy_label in (
+        "Vinfo_proxy_certified",
+        "greedy_valid",
+        '"escalate"',
+        "structural_synthetic_only",
+    ):
+        assert legacy_label not in combined
+    assert "vinfo_proxy_supported" not in synthetic_text
+    assert "measurement_validated" not in synthetic_text
+    assert "synthetic_structural_only" in synthetic_text
+    for current_label in (
+        "greedy_supported",
+        "pairwise_escalate",
+        "higher_order_risk",
+        "operational_utility_only",
+    ):
+        assert current_label in combined
+
+
+def test_higher_order_not_evaluable_guardrail_remains_ambiguous() -> None:
     diagnostics = {
         "block_ratio_lcb_b2": 1.0,
         "block_ratio_lcb_star": 1.0,
@@ -213,7 +267,7 @@ def test_higher_order_not_evaluable_guardrail_prevents_greedy_valid() -> None:
         "higher_order_ambiguity_flag": True,
     }
 
-    assert derive_selector_regime_label(diagnostics, "structural_synthetic_only", {}) == "ambiguous"
+    assert derive_selector_regime_label(diagnostics, "vinfo_proxy_supported", {}) == "ambiguous"
 
 
 def test_pre_registered_gate_requires_metric_bridge_and_counts_ambiguity_separately() -> None:
@@ -237,7 +291,7 @@ def test_pre_registered_gate_requires_metric_bridge_and_counts_ambiguity_separat
             triple_excess_flag="positive",
             higher_order_ambiguity_flag=True,
             greedy_augmented_gap=0.5,
-            selector_regime_label="escalate",
+            selector_regime_label="higher_order_risk",
             selector_action="interaction_aware_local_search",
         ),
     ]

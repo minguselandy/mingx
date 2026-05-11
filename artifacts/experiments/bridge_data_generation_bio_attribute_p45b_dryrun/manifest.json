@@ -1,0 +1,32 @@
+{
+  "data_origin": "api_generated",
+  "denied_claims": [
+    "measurement_validated",
+    "scientific_validation",
+    "human_labeled_validation",
+    "human_kappa",
+    "deployed_v_information_verification"
+  ],
+  "fixed_model_id": "",
+  "human_labels_present": false,
+  "kappa_present": false,
+  "live_api_used": false,
+  "measurement_validated_allowed": false,
+  "measurement_validation_claim": false,
+  "mode": "dry_run",
+  "operator_approval": false,
+  "protocol_version": "bridge_data_generation.v1",
+  "provider_profile": "",
+  "source": "operator_provided",
+  "strong_review_model_id": "",
+  "summary": {
+    "accepted_rows": 0,
+    "ambiguous_rows": 0,
+    "bridge_uninformative_rows": 0,
+    "measurement_validated_allowed": false,
+    "negative_delta_logloss_rows": 0,
+    "rejected_rows": 0,
+    "total_rows": 0,
+    "unusable_rows": 0
+  }
+}

@@ -32,7 +32,7 @@ Forbidden:
 - theorem-level deployment claims
 - inferring missing materialization order
 - inferring excluded candidates without an explicit complete considered-candidate set
-- emitting `Vinfo_proxy_certified` without a fresh matching `MetricBridgeWitness`
+- emitting `vinfo_proxy_supported` without a fresh matching `MetricBridgeWitness`
 
 ## Supported input files for B1/B2
 
@@ -219,7 +219,7 @@ For a synthetic bridge, preserve:
 - `metric_class = synthetic_oracle`
 - `utility_metric = synthetic_oracle_value`
 - `drift_status = fresh`
-- `diagnostic_claim_level = structural_synthetic_only`
+- `diagnostic_claim_level = vinfo_proxy_supported`
 
 For an operational-only bridge:
 
@@ -231,7 +231,7 @@ For a stale bridge:
 - `replay_claim_scope` should be `recalibration_required`, `ambiguous`, or `no_bridge_qualified_claim`
 - do not bridge-qualify the replay
 
-Do not emit `Vinfo_proxy_certified` unless there is a fresh matching `MetricBridgeWitness`.
+Do not emit `vinfo_proxy_supported` unless there is a fresh matching `MetricBridgeWitness`.
 
 ## CandidatePool rule
 
@@ -250,10 +250,10 @@ The four core artifacts are:
 
 Use conservative severity labels:
 
-- `replay_unusable` — prevents reconstructing dispatch identity, candidate pool, or selected set
-- `replay_defect` — structural/materialization replay evidence is incomplete
-- `claim_gap` — diagnostic or claim-level prerequisite is missing
-- `optional_gap` — useful but not required for current replay classification
+- `replay_unusable` - prevents reconstructing dispatch identity, candidate pool, or selected set
+- `replay_defect` - structural/materialization replay evidence is incomplete
+- `claim_gap` - diagnostic or claim-level prerequisite is missing
+- `optional_gap` - useful but not required for current replay classification
 
 ## Output determinism
 
@@ -278,8 +278,8 @@ Add or preserve tests for:
 4. missing excluded candidates -> not `replay_usable`; replay defect recorded; normally `replay_unusable` unless explicit complete considered-candidate set is available
 5. missing candidate pool -> `replay_unusable`
 6. operational-only `MetricBridgeWitness` -> `metric_claim_level` remains `operational_utility_only`
-7. structural synthetic `MetricBridgeWitness` -> `metric_claim_level` remains `structural_synthetic_only`
-8. stale `MetricBridgeWitness` -> conservative/recalibration-required `replay_claim_scope`; no `Vinfo_proxy_certified`
+7. structural synthetic `MetricBridgeWitness` -> `metric_claim_level` remains `vinfo_proxy_supported`
+8. stale `MetricBridgeWitness` -> conservative/recalibration-required `replay_claim_scope`; no `vinfo_proxy_supported`
 9. CLI writes `replay_manifest.jsonl`, `missing_fields.json`, and `replay_summary.json`
 10. `CandidatePool` is recorded as replay substrate, not as a core paper artifact
 

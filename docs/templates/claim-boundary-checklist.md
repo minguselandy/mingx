@@ -21,7 +21,7 @@ Use this checklist for every experiment, review, and manuscript integration mile
 | missing human-human kappa | not `measurement_validated` |
 | stale metric bridge | `operational_utility_only` or `ambiguous` |
 | missing metric bridge | `operational_utility_only` or `ambiguous` |
-| synthetic-only evidence | `structural_synthetic_only` |
+| synthetic-only evidence | `vinfo_proxy_supported` |
 | replay completeness only | replay / observability evidence |
 | model-adjudicated labels | `model_adjudicated_pilot_only` or `operational_utility_only` |
 | live API success alone | operational evidence only |

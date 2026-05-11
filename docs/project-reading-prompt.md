@@ -13,8 +13,8 @@ Your job:
 Reading order:
 1. docs/README.md
 2. AGENTS.md
-3. docs/paper-alignment-v10.md
-4. docs/archive/context_projection_revised_v10.md
+3. docs/paper-alignment-v12.md
+4. docs/archive/context_projection_fixed_v12.md
    - Focus on the abstract, bridge statement, metric bridge, runtime artifacts, and extraction bridge-risk sections.
 5. docs/protocols/execution-readiness-checklist.md
 6. docs/protocols/phase1-protocol.md
@@ -31,8 +31,9 @@ How to interpret the repo:
 - `cps/` is the canonical implementation package.
 - `api/` owns provider/model profiles, backend factories, and live probe helpers.
 - `docs/protocols/` contains active execution contracts.
-- `docs/archive/context_projection_revised_v10.md` is the current paper-framing anchor.
-- `docs/paper-alignment-v10.md` maps revised paper layers to repository modules and claim rules.
+- `docs/archive/context_projection_fixed_v12.md` is the current paper-framing anchor.
+- `docs/paper-alignment-v12.md` maps current v12 paper layers to repository modules and claim rules.
+- `docs/archive/context_projection_revised_v10.md` and `docs/paper-alignment-v10.md` are legacy/archive references.
 - `artifacts/` contains run outputs. Treat these as time-sensitive state, not stable rules.
 - `events.jsonl` is the runtime source of truth for a run.
 
@@ -43,7 +44,8 @@ Non-negotiable constraints:
 - Reuse existing artifacts, manifests, scripts, and protocol documents before adding new abstractions.
 - Do not silently reinterpret a run as hypothesis validation when the protocol says it is only measurement validation or pilot-only.
 - A contamination gate fail is a scientific stop, not an engineering retry signal.
-- The revised paper controls research framing, not run completion status.
+- The current v12 paper controls research framing, not run completion status.
+- v12 uses proxy-regime diagnosis terminology; bridge calibration remains the highest-priority missing experiment.
 - `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`, and `MetricBridgeWitness` are target auditable runtime interfaces from the paper; do not assume the current code fully implements them unless you verify it locally.
 - Legacy `gamma_hat` fields should be read as `trace_decay_proxy` or `legacy_trace_ratio`, not as headline weak-submodularity diagnostics.
 

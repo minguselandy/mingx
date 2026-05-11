@@ -104,7 +104,12 @@ def _absolute_outputs(output_root: Path) -> dict[str, str]:
 
 
 def _proxy_regime_scopes(matrix: Mapping[str, Any]) -> list[str]:
-    return sorted({str(entry.get("certification_scope", "ambiguous")) for entry in matrix.get("entries", [])})
+    return sorted(
+        {
+            str(entry.get("diagnostic_scope", entry.get("certification_scope", "ambiguous")))
+            for entry in matrix.get("entries", [])
+        }
+    )
 
 
 def _manifest(
@@ -205,8 +210,8 @@ def _format_demo_summary(
         "",
         f"- Matrix version: `{matrix.get('matrix_version', 'unknown')}`",
         f"- Entry count: {len(matrix.get('entries', []))}",
-        f"- Certification scopes: {', '.join(manifest.get('proxy_regime_scopes', []))}",
-        "- Proxy-regime certification is not deployed V-information certification.",
+        f"- Diagnostic scopes: {', '.join(manifest.get('proxy_regime_scopes', []))}",
+        "- Proxy-regime diagnosis is not deployed V-information certification.",
         "",
         "## Replay Package Summary",
         "",

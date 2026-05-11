@@ -23,10 +23,11 @@ def _complete_summary(**overrides) -> dict:
     dispatch_count = int(overrides.pop("dispatch_count", 1))
     summary = {
         "run_id": "paper-evidence-fixture",
-        "claim_level": "synthetic_structural_only",
+        "claim_level": "ambiguous_metric",
         "dispatch_count": dispatch_count,
         "artifact_counts": {name: dispatch_count for name in REQUIRED_EVIDENCE_ARTIFACTS},
-        "metric_claim_level_counts": {"structural_synthetic_only": dispatch_count},
+        "metric_claim_level_counts": {"ambiguous_metric": dispatch_count},
+        "diagnostic_scope_counts": {"synthetic_structural_only": dispatch_count},
         "complete_artifact_sets": True,
     }
     summary.update(overrides)
@@ -61,6 +62,7 @@ def test_summary_builder_creates_stable_json_from_replay_package(workspace_tmp_d
     assert payload["paper_evidence_schema_version"] == "PaperEvidenceSummaryV1"
     assert payload["source_run_id"] == "paper-evidence-fixture"
     assert payload["evidence_mode"] == "synthetic_structural_only"
+    assert payload["evidence_scope"] == "synthetic_structural_only"
     assert payload["measurement_validated_allowed"] is False
     assert payload["p04_status"] == "BLOCKED_OPERATOR_REQUIRED"
     assert payload["p09_status"] == "BLOCKED_OPERATOR_REQUIRED"
@@ -147,14 +149,14 @@ def test_claim_boundaries_are_preserved_for_missing_labels_and_kappa():
     assert "missing_human_labels" in summary["reason_codes"]
     assert "missing_kappa" in summary["reason_codes"]
     assert "measurement_validated" in summary["denied_claims"]
-    assert summary["claim_gate_summary"]["allowed_claim_level"] == "synthetic_structural_only"
+    assert summary["claim_gate_summary"]["allowed_claim_level"] == "ambiguous_metric"
 
 
 def test_complete_artifacts_and_replay_package_do_not_allow_validation():
     summary = build_paper_evidence_summary_from_replay_package(_package())
 
     assert summary["artifact_summary"]["required_artifacts_present"] is True
-    assert summary["replay_package_summary"]["package_claim_scope"] == "synthetic_structural_only"
+    assert summary["replay_package_summary"]["package_claim_scope"] == "ambiguous_metric"
     assert summary["measurement_validated_allowed"] is False
     assert "complete_artifacts_not_validation" in summary["reason_codes"]
     assert "Replay package completeness is not scientific validation." in summary["limitations"]

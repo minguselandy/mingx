@@ -7,6 +7,15 @@
 **Roadmap status:** planning document  
 **Live API authorization:** not granted by this roadmap
 
+Current status note: this P37-P44 roadmap is preserved as the v10-era
+development-cycle record. The current v12 paper direction is anchored at
+`docs/archive/context_projection_fixed_v12.md` and mapped in
+`docs/paper-alignment-v12.md`. For the next active development cycle, start
+with `docs/roadmaps/mingx-followup-dev-experiment-plan-v0-2.md`; it keeps v10
+documents as legacy/archive material and makes one-stratum metric bridge
+calibration the highest-priority missing experiment. No measurement validation
+is claimed by either roadmap.
+
 
 ## Source Basis
 
@@ -53,7 +62,7 @@ Conservative claim rules:
 - missing human labels => not `measurement_validated`
 - missing human-human kappa => not `measurement_validated`
 - stale or missing metric bridge => `operational_utility_only` or `ambiguous`
-- synthetic-only evidence => `structural_synthetic_only`, not deployed V-information certification
+- synthetic-only evidence => `vinfo_proxy_supported`, not deployed V-information certification
 - replay package completeness => replay/observability evidence only, not scientific validation
 - model-adjudicated labels => not human labels
 - Codex/model audit => not human review
@@ -65,7 +74,7 @@ Conservative claim rules:
 | Milestone | Name | Primary goal | Live API? | Maximum claim |
 |---|---|---|---|---|
 | P37 | Repo-state and claim-boundary lock | Reconcile GitHub main, local repos, paper framing, and current evidence status | No | engineering status lock |
-| P38 | Synthetic structural benchmark hardening | Strengthen Phase A synthetic diagnostics and reports | No | `structural_synthetic_only` |
+| P38 | Synthetic structural benchmark hardening | Strengthen Phase A synthetic diagnostics and reports | No | `vinfo_proxy_supported` |
 | P39 | Artifact schema freeze | Freeze replay-critical artifact schema and hash behavior | No | replay readiness |
 | P40 | Phase B offline replay implementation | Recompute diagnostics from recorded traces and cached utility records | No | replay / observability evidence |
 | P41 | Route B model-adjudicated evaluation | Build fully automated prelabel/audit/adjudication route | Maybe, but not required initially | `model_adjudicated_pilot_only` or `operational_utility_only` |

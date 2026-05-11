@@ -293,7 +293,7 @@ def _redundancy_signature_passes(row: dict[str, Any], thresholds: dict[str, Any]
         and block_ratio >= float(monitored["block_ratio_lcb_star_gte"])
         and synergy <= float(monitored["synergy_fraction_lte"])
         and gap <= float(monitored["greedy_augmented_gap_lte"])
-        and row.get("selector_regime_label") == "greedy_valid"
+        and row.get("selector_regime_label") == "greedy_supported"
         and row.get("selector_action") == "monitored_greedy"
     )
 
@@ -311,7 +311,7 @@ def _pairwise_signature_passes(
     augmented_value = _as_float(row, "augmented_value", 0.0) or 0.0
     greedy_value = _as_float(row, "greedy_value", 0.0) or 0.0
     complementarity_sensitive = (
-        row.get("selector_regime_label") == "escalate"
+        row.get("selector_regime_label") == "pairwise_escalate"
         or synergy > float(monitored["synergy_fraction_lte"])
         or (pair_b2 is not None and redundancy_b2_lcb is not None and pair_b2 < redundancy_b2_lcb)
     )
@@ -323,13 +323,14 @@ def _pairwise_signature_passes(
 
 
 def _higher_order_safety_passes(row: dict[str, Any]) -> bool:
-    return row.get("selector_regime_label") != "greedy_valid" and row.get("selector_action") != "monitored_greedy"
+    return row.get("selector_regime_label") != "greedy_supported" and row.get("selector_action") != "monitored_greedy"
 
 
 def _triple_excess_gate_passes(row: dict[str, Any]) -> bool:
     return (
         row.get("triple_excess_flag") == "positive"
         or bool(row.get("higher_order_ambiguity_flag"))
+        or row.get("selector_regime_label") == "higher_order_risk"
         or row.get("selector_regime_label") == "ambiguous"
     )
 
@@ -384,7 +385,7 @@ def evaluate_pre_registered_validity_gate(
         _record_failure(
             failures,
             gate="redundancy_signature",
-            reason="redundancy rows must show high block-ratio LCB, low synergy, small gap, greedy_valid label, and monitored_greedy action",
+            reason="redundancy rows must show high block-ratio LCB, low synergy, small gap, greedy_supported label, and monitored_greedy action",
             rows=failed_rows,
         )
 
@@ -429,7 +430,7 @@ def evaluate_pre_registered_validity_gate(
         _record_failure(
             failures,
             gate="higher_order_safety",
-            reason="higher-order rows must not be labeled high-confidence greedy_valid",
+            reason="higher-order rows must not be labeled greedy_supported",
             rows=failed_rows,
         )
 
@@ -648,7 +649,8 @@ def _run_instance(
         effective_sample_size=None,
         drift_status="fresh",
         diagnostic_mode="synthetic_oracle",
-        diagnostic_claim_level="structural_synthetic_only",
+        diagnostic_claim_level="ambiguous_metric",
+        diagnostic_scope="synthetic_structural_only",
     )
     metric_bridge_payload = {
         **to_payload(metric_bridge_witness),
@@ -682,6 +684,7 @@ def _run_instance(
         higher_order_ambiguity_flag=diagnostics.higher_order_ambiguity_flag,
         greedy_augmented_gap=diagnostics.greedy_augmented_gap,
         metric_claim_level=diagnostics.metric_claim_level,
+        diagnostic_scope=diagnostics.diagnostic_scope,
         selector_regime_label=diagnostics.selector_regime_label,
         selector_action=diagnostics.selector_action,
         policy_recommendation=diagnostics.policy_recommendation,
@@ -715,6 +718,7 @@ def _run_instance(
         "triple_excess_mass": diagnostics.triple_excess_lcb_max,
         "selector_regime_label_synthetic": f"{diagnostics.selector_regime_label}_synthetic",
         "metric_claim_level_synthetic": diagnostics.metric_claim_level,
+        "diagnostic_scope_synthetic": diagnostics.diagnostic_scope,
         "oracle_status": oracle_result.oracle_status,
         "oracle_value": oracle_value,
         "oracle_gap": oracle_gap,

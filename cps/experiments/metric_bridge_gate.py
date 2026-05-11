@@ -4,14 +4,19 @@ from collections.abc import Mapping
 from copy import deepcopy
 from typing import Any
 
+from cps.experiments.decision import is_synthetic_diagnostic_scope
+from cps.experiments.decision import normalize_diagnostic_scope
+from cps.experiments.decision import normalize_metric_claim_level
+
 
 CLAIM_LEVELS = (
     "engineering_compatibility_only",
     "engineering_smoke_only",
     "replayable_artifact_evidence",
-    "synthetic_structural_only",
+    "vinfo_proxy_supported",
+    "calibrated_proxy_supported",
     "operational_utility_only",
-    "ambiguous",
+    "ambiguous_metric",
     "pilot_only",
     "measurement_validated",
 )
@@ -54,17 +59,28 @@ def _normal_mode(value: Any) -> str:
         "provider_offline_smoke": "engineering_smoke_only",
         "synthetic": "synthetic_structural_only",
         "synthetic_structural": "synthetic_structural_only",
+        "structural_synthetic_only": "synthetic_structural_only",
     }
-    return aliases.get(mode, mode)
+    return aliases.get(mode, normalize_metric_claim_level(mode))
 
 
 def _base_claim_level(payload: Mapping[str, Any]) -> str:
     mode = _normal_mode(payload.get("evidence_mode"))
     if mode in CLAIM_LEVELS:
         return mode
+    if is_synthetic_diagnostic_scope(mode):
+        return "ambiguous_metric"
     if bool(payload.get("replay_available")):
         return "replayable_artifact_evidence"
-    return "ambiguous"
+    return "ambiguous_metric"
+
+
+def _evidence_scope(payload: Mapping[str, Any], evidence_mode: str) -> str:
+    scope = payload.get("evidence_scope") or payload.get("diagnostic_scope") or evidence_mode
+    normalized = normalize_diagnostic_scope(scope)
+    if is_synthetic_diagnostic_scope(normalized) or str(payload.get("metric_class")) == "synthetic_oracle":
+        return "synthetic_structural_only"
+    return normalized
 
 
 def evaluate_metric_bridge_gate(evidence: Mapping[str, Any]) -> dict[str, Any]:
@@ -72,9 +88,13 @@ def evaluate_metric_bridge_gate(evidence: Mapping[str, Any]) -> dict[str, Any]:
     metric_bridge_witness_count = int(payload.get("metric_bridge_witness_count", 0) or 0)
     bridge_freshness = str(payload.get("bridge_freshness", "missing") or "missing")
     metric_class = str(payload.get("metric_class", "unknown") or "unknown")
-    diagnostic_claim_level = str(payload.get("diagnostic_claim_level", "ambiguous") or "ambiguous")
+    diagnostic_claim_level = normalize_metric_claim_level(
+        payload.get("diagnostic_claim_level", "ambiguous_metric")
+    )
     contamination_status = str(payload.get("contamination_status", "unknown") or "unknown")
+    raw_evidence_mode = str(payload.get("evidence_mode", "") or "")
     evidence_mode = _normal_mode(payload.get("evidence_mode"))
+    evidence_scope = _evidence_scope(payload, evidence_mode)
     required_artifacts_present = bool(payload.get("required_artifacts_present", False))
     projection_bundle_count = int(payload.get("projection_bundle_count", 0) or 0)
     p04_status = str(payload.get("p04_status", "BLOCKED_OPERATOR_REQUIRED") or "BLOCKED_OPERATOR_REQUIRED")
@@ -99,9 +119,14 @@ def evaluate_metric_bridge_gate(evidence: Mapping[str, Any]) -> dict[str, Any]:
         reasons.add("missing_kappa")
     if metric_class == "operational_only":
         reasons.add("operational_metric_class_only")
+    synthetic_evidence_mode = (
+        "synthetic" in raw_evidence_mode
+        or metric_class == "synthetic_oracle"
+        or is_synthetic_diagnostic_scope(evidence_scope)
+    )
     if diagnostic_claim_level == "operational_utility_only":
         reasons.add("operational_diagnostic_claim_only")
-    if "synthetic" in evidence_mode or diagnostic_claim_level == "structural_synthetic_only":
+    if synthetic_evidence_mode:
         reasons.add("synthetic_only_not_deployed_certification")
     if evidence_mode.startswith("engineering"):
         reasons.add("engineering_evidence_only")
@@ -119,7 +144,7 @@ def evaluate_metric_bridge_gate(evidence: Mapping[str, Any]) -> dict[str, Any]:
         and projection_bundle_count > 0
         and metric_class != "operational_only"
         and diagnostic_claim_level != "operational_utility_only"
-        and "synthetic" not in evidence_mode
+        and not synthetic_evidence_mode
         and not evidence_mode.startswith("engineering")
         and measurement_validation_evidence_present
         and p04_status == "ACCEPT"
@@ -140,14 +165,17 @@ def evaluate_metric_bridge_gate(evidence: Mapping[str, Any]) -> dict[str, Any]:
         allowed_bridge_claim_level = "pilot_only"
         bridge_gate_status = "failed"
     elif "missing_projection_bundles" in reasons or "missing_required_artifacts" in reasons:
-        allowed_bridge_claim_level = "ambiguous"
+        allowed_bridge_claim_level = "ambiguous_metric"
         bridge_gate_status = "artifact_incomplete"
     elif "missing_metric_bridge" in reasons:
-        allowed_bridge_claim_level = "ambiguous"
+        allowed_bridge_claim_level = "ambiguous_metric"
         bridge_gate_status = "missing_bridge"
     elif "stale_metric_bridge" in reasons:
         allowed_bridge_claim_level = "operational_utility_only"
         bridge_gate_status = "stale_bridge"
+    elif synthetic_evidence_mode:
+        allowed_bridge_claim_level = "ambiguous_metric"
+        bridge_gate_status = "evidence_limited"
     else:
         base_claim_level = _base_claim_level(payload)
         if (
@@ -179,6 +207,7 @@ def evaluate_metric_bridge_gate(evidence: Mapping[str, Any]) -> dict[str, Any]:
         "reason_codes": reason_codes,
         "reason_code_order": list(BRIDGE_REASON_ORDER),
         "measurement_validated_allowed": measurement_validated_allowed,
+        "evidence_scope": evidence_scope,
         "p04_status": p04_status,
         "p09_status": p09_status,
         "summary": summary,

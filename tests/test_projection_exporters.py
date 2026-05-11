@@ -65,7 +65,7 @@ def _bundle(include_diagnostics: bool = True) -> ProjectionBundleV1:
             "agent_id": "synthetic-agent",
             "round_id": "round-1",
             "metric_class": "synthetic_oracle",
-            "diagnostic_claim_level": "structural_synthetic_only",
+            "diagnostic_claim_level": "vinfo_proxy_supported",
             "drift_status": "fresh",
             "active_stratum": {"regime": "redundancy_dominated"},
         },
@@ -73,8 +73,8 @@ def _bundle(include_diagnostics: bool = True) -> ProjectionBundleV1:
     }
     if include_diagnostics:
         payload["diagnostics"] = {
-            "metric_claim_level": "structural_synthetic_only",
-            "selector_regime_label": "greedy_valid",
+            "metric_claim_level": "vinfo_proxy_supported",
+            "selector_regime_label": "greedy_supported",
             "selector_action": "monitored_greedy",
             "contamination_gate_decision": "not_evaluated",
             "annotation_mode": "none",
@@ -135,8 +135,8 @@ def test_otel_export_is_deterministic_and_contains_core_fields():
     assert attributes["cps.budget_tokens"] == 20
     assert attributes["cps.realized_tokens"] == 9
     assert attributes["cps.within_budget"] is True
-    assert attributes["cps.metric_claim_level"] == "structural_synthetic_only"
-    assert attributes["cps.selector_regime_label"] == "greedy_valid"
+    assert attributes["cps.metric_claim_level"] == "vinfo_proxy_supported"
+    assert attributes["cps.selector_regime_label"] == "greedy_supported"
     assert attributes["cps.selector_action"] == "monitored_greedy"
 
 
@@ -173,7 +173,7 @@ def test_phoenix_export_is_deterministic_and_has_evaluations():
     assert first["span_name"] == "cps.projection_bundle"
     assert first["attributes"]["cps.context_hash"] == "context-hash"
     assert first["evaluations"][0]["name"] == "metric_claim_level"
-    assert first["evaluations"][0]["value"] == "structural_synthetic_only"
+    assert first["evaluations"][0]["value"] == "vinfo_proxy_supported"
 
 
 def test_missing_optional_diagnostics_do_not_crash():
@@ -182,7 +182,7 @@ def test_missing_optional_diagnostics_do_not_crash():
     payload = projection_bundle_to_otel_span(_bundle(include_diagnostics=False))
     attributes = payload["attributes"]
 
-    assert attributes["cps.diagnostic_claim_level"] == "structural_synthetic_only"
+    assert attributes["cps.diagnostic_claim_level"] == "vinfo_proxy_supported"
     assert "cps.metric_claim_level" not in attributes
     assert "cps.selector_action" not in attributes
 

@@ -1,0 +1,26 @@
+{
+  "accepted_rows": 0,
+  "canary_logprob_passed": false,
+  "delta_logloss_source": "unavailable",
+  "delta_matches_losses": false,
+  "finite_losses": false,
+  "logprob_reason_codes": [
+    "delta_logloss_not_measured_logprob",
+    "logprob_unavailable",
+    "missing_measured_logloss",
+    "missing_or_degenerate_logprobs_with",
+    "missing_or_degenerate_logprobs_without"
+  ],
+  "review_status": "accepted",
+  "reviewed_rows": 1,
+  "summary": {
+    "accepted_rows": 0,
+    "ambiguous_rows": 0,
+    "measurement_validated_allowed": false,
+    "rejected_rows": 0,
+    "total_rows": 1,
+    "unusable_rows": 1
+  },
+  "task_id": "p45-bio-attribute-smoke-001",
+  "usable_for_bridge_calibration": false
+}

@@ -6,6 +6,9 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
+from cps.experiments.decision import is_synthetic_diagnostic_scope
+from cps.experiments.decision import normalize_diagnostic_scope
+from cps.experiments.decision import normalize_metric_claim_level
 from cps.experiments.metric_bridge_gate import BRIDGE_REASON_ORDER, evaluate_metric_bridge_gate
 
 
@@ -13,9 +16,10 @@ CLAIM_LEVELS = (
     "engineering_compatibility_only",
     "engineering_smoke_only",
     "replayable_artifact_evidence",
-    "synthetic_structural_only",
+    "vinfo_proxy_supported",
+    "calibrated_proxy_supported",
     "operational_utility_only",
-    "ambiguous",
+    "ambiguous_metric",
     "pilot_only",
     "measurement_validated",
 )
@@ -48,18 +52,32 @@ def _stable_write_json(path: str | Path, payload: Mapping[str, Any]) -> Path:
 
 
 def _base_claim_level(ledger: Mapping[str, Any]) -> str:
-    mode = str(ledger.get("evidence_mode") or "ambiguous")
+    mode = str(ledger.get("evidence_mode") or "ambiguous_metric")
+    aliases = {
+        "synthetic": "synthetic_structural_only",
+        "synthetic_structural": "synthetic_structural_only",
+        "structural_synthetic_only": "synthetic_structural_only",
+    }
+    mode = aliases.get(mode, normalize_metric_claim_level(mode))
     if mode in CLAIM_LEVELS:
         return mode
+    if is_synthetic_diagnostic_scope(mode):
+        return "ambiguous_metric"
     if mode in {"engineering_smoke", "provider_offline_smoke"}:
         return "engineering_smoke_only"
     if mode in {"engineering_compatibility", "provider_normalizer"}:
         return "engineering_compatibility_only"
-    if mode in {"synthetic", "synthetic_structural"}:
-        return "synthetic_structural_only"
     if bool(ledger.get("replay_available")):
         return "replayable_artifact_evidence"
-    return "ambiguous"
+    return "ambiguous_metric"
+
+
+def _evidence_scope(payload: Mapping[str, Any], mode: str) -> str:
+    scope = payload.get("evidence_scope") or payload.get("diagnostic_scope") or mode
+    normalized = normalize_diagnostic_scope(scope)
+    if is_synthetic_diagnostic_scope(normalized) or str(payload.get("metric_class")) == "synthetic_oracle":
+        return "synthetic_structural_only"
+    return normalized
 
 
 def build_claim_gate_report(ledger: Mapping[str, Any]) -> dict[str, Any]:
@@ -89,11 +107,15 @@ def build_claim_gate_report(ledger: Mapping[str, Any]) -> dict[str, Any]:
     if not bool(payload.get("kappa_present", False)):
         reasons.add("missing_kappa")
 
-    mode = str(payload.get("evidence_mode", "ambiguous"))
-    metric_claim_levels = set((payload.get("metric_claim_level_counts") or {}).keys())
-    if "synthetic" in mode or "structural_synthetic_only" in metric_claim_levels:
+    mode = str(payload.get("evidence_mode", "ambiguous_metric"))
+    normalized_metric_claim_levels = {
+        normalize_metric_claim_level(level) for level in (payload.get("metric_claim_level_counts") or {}).keys()
+    }
+    evidence_scope = _evidence_scope(payload, mode)
+    synthetic_evidence_mode = "synthetic" in mode or is_synthetic_diagnostic_scope(evidence_scope)
+    if synthetic_evidence_mode:
         reasons.add("synthetic_only_not_deployed_certification")
-    if mode.startswith("engineering") or "engineering_smoke_only" in metric_claim_levels:
+    if mode.startswith("engineering") or "engineering_smoke_only" in normalized_metric_claim_levels:
         reasons.add("engineering_evidence_only")
     if "BLOCKED" in p04_status or "OPERATOR" in p04_status or "BLOCKED" in p09_status or "OPERATOR" in p09_status:
         reasons.add("operator_required_phase")
@@ -108,11 +130,13 @@ def build_claim_gate_report(ledger: Mapping[str, Any]) -> dict[str, Any]:
     elif contamination_status == "failed":
         allowed_claim_level = "pilot_only"
     elif "missing_required_artifacts" in reasons or "missing_projection_bundles" in reasons:
-        allowed_claim_level = "ambiguous"
+        allowed_claim_level = "ambiguous_metric"
+    elif synthetic_evidence_mode:
+        allowed_claim_level = "ambiguous_metric"
     else:
         allowed_claim_level = _base_claim_level(payload)
         if allowed_claim_level == "measurement_validated":
-            allowed_claim_level = "ambiguous"
+            allowed_claim_level = "ambiguous_metric"
         if bridge_freshness in {"missing", "stale"} and allowed_claim_level == "replayable_artifact_evidence":
             allowed_claim_level = "operational_utility_only"
 
@@ -133,6 +157,7 @@ def build_claim_gate_report(ledger: Mapping[str, Any]) -> dict[str, Any]:
         "allowed_bridge_claim_level": metric_bridge_gate["allowed_bridge_claim_level"],
         "metric_bridge_reason_codes": metric_bridge_gate["reason_codes"],
         "measurement_validated_allowed": measurement_validated_allowed,
+        "evidence_scope": evidence_scope,
         "p04_status": p04_status,
         "p09_status": p09_status,
         "summary": summary,
@@ -153,7 +178,7 @@ def format_claim_gate_markdown(report: Mapping[str, Any]) -> str:
         f"- P04 status: `{report['p04_status']}`",
         f"- P09 status: `{report['p09_status']}`",
         f"- Metric bridge gate status: `{report.get('metric_bridge_gate_status', 'unknown')}`",
-        f"- Allowed bridge claim level: `{report.get('allowed_bridge_claim_level', 'ambiguous')}`",
+        f"- Allowed bridge claim level: `{report.get('allowed_bridge_claim_level', 'ambiguous_metric')}`",
         "",
         "## Reason codes",
         "",

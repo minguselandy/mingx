@@ -1,0 +1,23 @@
+{
+  "allow_multi_stratum": false,
+  "bridge_freshness": "fresh",
+  "diagnostic_scope": "one_stratum_bridge_calibration",
+  "evidence_scope": "one_stratum_bridge_calibration",
+  "experiment_id": "bridge_calibration_one_stratum_v1",
+  "fit_method": "ols_through_origin",
+  "dry_validation_mode": "schema_and_threshold_preflight_only",
+  "input_file": "artifacts/fixtures/bridge_calibration_pairs_fixture.jsonl",
+  "max_allowed_zeta": 0.05,
+  "minimum_abs_delta_logloss_for_bridge_evidence": 0.001,
+  "min_pearson_correlation": 0.9,
+  "min_sign_agreement": 0.9,
+  "min_spearman_correlation": 0.9,
+  "minimum_effective_sample_size": 6,
+  "minimum_sample_size": 6,
+  "operator_template_file": "docs/templates/bridge-calibration-pairs-template.jsonl",
+  "output_dir": "artifacts/experiments/bridge_calibration_one_stratum",
+  "protocol_version": "bridge_calibration.v1",
+  "selector_regime_label": "ambiguous",
+  "zeta_mode": "max",
+  "zeta_quantile": 0.95
+}

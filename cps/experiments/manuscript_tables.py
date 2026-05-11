@@ -55,7 +55,7 @@ ARTIFACT_ROWS = (
     (
         "ProxyRegimeMatrix",
         "Manuscript-facing proxy/synthetic regime diagnostic matrix.",
-        "P14 proxy-regime certification",
+        "P14 proxy-regime diagnosis",
     ),
     (
         "ReplayEvidencePackage",
@@ -78,9 +78,9 @@ CLAIM_GATE_ROWS = (
     ("contamination failure", "pilot_only", "measurement_validated", "Contamination failure restricts claims to pilot-only evidence."),
     ("missing human labels", "not measurement_validated", "measurement_validated", "Human labels remain required for measurement validation."),
     ("missing kappa", "not measurement_validated", "measurement_validated", "Inter-annotator agreement remains required for measurement validation."),
-    ("stale metric bridge", "operational_utility_only or ambiguous", "measurement validation", "A stale bridge cannot support validation-level claims."),
-    ("missing metric bridge", "operational_utility_only or ambiguous", "measurement validation", "A missing bridge cannot support validation-level claims."),
-    ("synthetic-only evidence", "synthetic_structural_only", "deployed V-information certification", "Synthetic structure is not deployed V-information certification."),
+    ("stale metric bridge", "operational_utility_only or ambiguous_metric", "measurement validation", "A stale bridge cannot support validation-level claims."),
+    ("missing metric bridge", "operational_utility_only or ambiguous_metric", "measurement validation", "A missing bridge cannot support validation-level claims."),
+    ("synthetic-only evidence", "ambiguous_metric", "deployed V-information proxy support", "Synthetic structure remains a diagnostic scope, not deployed V-information proxy support."),
     ("engineering-only evidence", "engineering_smoke_only", "scientific validation", "Engineering smoke success is not scientific validation."),
     ("replay package completeness", "replayable_artifact_evidence", "scientific validation", "Packaging completeness is audit evidence only."),
     ("paper-facing summary", "no claim upgrade", "measurement validation", "Paper summaries surface existing gates but do not raise claims."),
@@ -93,11 +93,11 @@ PROXY_REGIME_ROWS = (
     ("sparse_pairwise_synergy", "synthetic/proxy diagnostic row", "synthetic_structural_only"),
     ("higher_order_synergy", "higher-order/prerequisite boundary row", "synthetic_structural_only"),
     ("contamination_failed", "negative claim-gate boundary row", "pilot_only"),
-    ("missing_human_labels", "negative claim-gate boundary row", "ambiguous"),
-    ("missing_kappa", "negative claim-gate boundary row", "ambiguous"),
-    ("stale_metric_bridge", "metric bridge boundary row", "operational_utility_only or ambiguous"),
-    ("missing_metric_bridge", "metric bridge boundary row", "operational_utility_only or ambiguous"),
-    ("artifact_incomplete", "artifact completeness boundary row", "ambiguous"),
+    ("missing_human_labels", "negative claim-gate boundary row", "ambiguous_metric"),
+    ("missing_kappa", "negative claim-gate boundary row", "ambiguous_metric"),
+    ("stale_metric_bridge", "metric bridge boundary row", "operational_utility_only or ambiguous_metric"),
+    ("missing_metric_bridge", "metric bridge boundary row", "operational_utility_only or ambiguous_metric"),
+    ("artifact_incomplete", "artifact completeness boundary row", "ambiguous_metric"),
 )
 
 REPLAY_OUTPUT_ROWS = (
@@ -135,7 +135,7 @@ SUGGESTED_INSERTION_POINTS = (
     },
     {
         "section": "4.3.1 Synthetic regime benchmark",
-        "action": "Add the experiment/evidence and proxy-regime certification patch after the validity gate table.",
+        "action": "Add the experiment/evidence and proxy-regime diagnosis patch after the validity gate table.",
     },
     {
         "section": "6 Runtime Interface Requirements",
@@ -243,8 +243,8 @@ def _proxy_regime_table() -> list[dict[str, str]]:
         {
             "regime": regime,
             "manuscript_role": role,
-            "certification_scope": scope,
-            "claim_boundary": "proxy-regime certification is not deployed V-information certification",
+            "diagnostic_scope": scope,
+            "claim_boundary": "proxy-regime diagnosis is not deployed V-information certification",
         }
         for regime, role, scope in PROXY_REGIME_ROWS
     ]
@@ -289,7 +289,7 @@ def _section_patches(source: Mapping[str, Any], claim_summary: Mapping[str, Any]
             "evidence remain outside this offline patch."
         ),
         "proxy_regime_section_patch": (
-            "Add the proxy-regime matrix as a manuscript-facing diagnostic table. Its certification scope is "
+            "Add the proxy-regime matrix as a manuscript-facing diagnostic table. Its diagnostic scope is "
             "limited to proxy/synthetic diagnostic behavior. It must not be described as deployed "
             "V-information certification."
         ),
@@ -376,10 +376,10 @@ def format_context_projection_v10_patch_markdown(patch: Mapping[str, Any]) -> st
             list(patch["claim_gate_table"]),
         ),
         "",
-        "## Table 3: Proxy-Regime Certification Matrix",
+        "## Table 3: Proxy-Regime Diagnosis Matrix",
         "",
         *_markdown_table(
-            ("regime", "manuscript_role", "certification_scope", "claim_boundary"),
+            ("regime", "manuscript_role", "diagnostic_scope", "claim_boundary"),
             list(patch["proxy_regime_table"]),
         ),
         "",
@@ -402,7 +402,7 @@ def format_context_projection_v10_patch_markdown(patch: Mapping[str, Any]) -> st
         "",
         patch["metric_bridge_section_patch"],
         "",
-        "## Proxy-Regime Certification Patch",
+        "## Proxy-Regime Diagnosis Patch",
         "",
         patch["proxy_regime_section_patch"],
         "",

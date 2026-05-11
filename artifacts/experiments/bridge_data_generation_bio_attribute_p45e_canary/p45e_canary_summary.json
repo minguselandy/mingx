@@ -1,0 +1,105 @@
+{
+  "accepted_rows": 2,
+  "ambiguous_rows": 0,
+  "bridge_fit_eligible_rows": 6,
+  "bridge_fit_ineligible_rows": 2,
+  "bridge_metrics": {
+    "bridge_scale_c_s": 56.092845501063664,
+    "claim_gate_status": "failed_closed",
+    "measurement_validation_claim": false,
+    "metric_claim_level": "ambiguous_metric",
+    "paper_evidence_eligible": false,
+    "pass_flags": {
+      "bridge_freshness_pass": true,
+      "bridge_informative_delta_pass": true,
+      "effective_sample_size_pass": false,
+      "fit_denominator_pass": true,
+      "one_stratum_pass": true,
+      "pearson_pass": true,
+      "sample_size_pass": false,
+      "sign_agreement_pass": true,
+      "source_kind_pass": true,
+      "spearman_pass": true,
+      "synthetic_scope_pass": true,
+      "zeta_pass": false
+    },
+    "pearson_correlation": 1.0,
+    "reason_codes": [
+      "effective_sample_size_failed",
+      "sample_size_failed",
+      "zeta_failed"
+    ],
+    "sign_agreement": 1.0,
+    "spearman_correlation": 1.0,
+    "zeta_s": 0.6149804388887039
+  },
+  "bridge_uninformative_rows": 5,
+  "candidate_set_size_after_distribution": {
+    "1": 2,
+    "2": 4,
+    "4": 1,
+    "8": 1
+  },
+  "candidate_set_size_before_distribution": {
+    "8": 8
+  },
+  "data_origin": "api_generated",
+  "delta_logloss_range": [
+    -0.03001067159334525,
+    0.01920193757450761
+  ],
+  "delta_utility_range": [
+    0.0,
+    1.0
+  ],
+  "diagnostic_scope": "api_live_canary",
+  "dry_validation_result": {
+    "reason_codes": [
+      "effective_sample_size_failed",
+      "sample_size_failed",
+      "zeta_failed"
+    ],
+    "threshold_validation_status": "failed",
+    "would_be_metric_claim_level": "ambiguous_metric"
+  },
+  "evidence_strength_band_distribution": {
+    "explicit_answer": 2,
+    "irrelevant": 1,
+    "partial_constraint": 2,
+    "strong_clue": 2,
+    "weak_hint": 1
+  },
+  "fixed_model_id": "qwen3.6-flash",
+  "human_labels_present": false,
+  "kappa_present": false,
+  "low_signal_rows": 2,
+  "measured_logprob_rows": 8,
+  "measurement_validated_allowed": false,
+  "measurement_validation_claim": false,
+  "median_delta_logloss": 0.0005973971105959208,
+  "negative_delta_logloss_rows": 3,
+  "paper_evidence_eligible": false,
+  "positive_delta_logloss_rows": 5,
+  "probe_kind": "p45e_candidate_set_constrained_bridge_canary",
+  "provider_profile": "dashscope-qwen-phase1",
+  "rejected_rows": 0,
+  "sufficient_signal_rows": 3,
+  "task_packet_mode": "bridge_canary_v4",
+  "total_rows": 8,
+  "total_task_packets": 8,
+  "unusable_rows": 6,
+  "utility_unique_values": [
+    0.0,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "utility_with_range": [
+    0.0,
+    1.0
+  ],
+  "utility_without_range": [
+    0.0,
+    0.0
+  ]
+}

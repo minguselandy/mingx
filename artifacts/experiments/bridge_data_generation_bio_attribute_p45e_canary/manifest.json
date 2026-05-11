@@ -1,0 +1,88 @@
+{
+  "data_origin": "api_generated",
+  "denied_claims": [
+    "measurement_validated",
+    "scientific_validation",
+    "human_labeled_validation",
+    "human_kappa",
+    "deployed_v_information_verification"
+  ],
+  "fixed_model_id": "qwen3.6-flash",
+  "human_labels_present": false,
+  "kappa_present": false,
+  "live_api_used": true,
+  "measurement_validated_allowed": false,
+  "measurement_validation_claim": false,
+  "mode": "live_operator_approved",
+  "operator_approval": true,
+  "protocol_version": "bridge_data_generation.v1",
+  "provider_profile": "dashscope-qwen-phase1",
+  "source": "operator_provided",
+  "strong_review_model_id": "qwen3.6-plus",
+  "summary": {
+    "accepted_rows": 2,
+    "ambiguous_rows": 0,
+    "bridge_fit_eligible_rows": 6,
+    "bridge_fit_ineligible_rows": 2,
+    "bridge_uninformative_rows": 5,
+    "candidate_set_size_after_distribution": {
+      "1": 2,
+      "2": 4,
+      "4": 1,
+      "8": 1
+    },
+    "candidate_set_size_before_distribution": {
+      "8": 8
+    },
+    "data_origin": "api_generated",
+    "delta_logloss_range": [
+      -0.03001067159334525,
+      0.01920193757450761
+    ],
+    "delta_utility_range": [
+      0.0,
+      1.0
+    ],
+    "diagnostic_scope": "api_live_canary",
+    "evidence_strength_band_distribution": {
+      "explicit_answer": 2,
+      "irrelevant": 1,
+      "partial_constraint": 2,
+      "strong_clue": 2,
+      "weak_hint": 1
+    },
+    "fixed_model_id": "qwen3.6-flash",
+    "human_labels_present": false,
+    "kappa_present": false,
+    "low_signal_rows": 2,
+    "measured_logprob_rows": 8,
+    "measurement_validated_allowed": false,
+    "measurement_validation_claim": false,
+    "median_delta_logloss": 0.0005973971105959208,
+    "negative_delta_logloss_rows": 3,
+    "paper_evidence_eligible": false,
+    "positive_delta_logloss_rows": 5,
+    "probe_kind": "p45e_candidate_set_constrained_bridge_canary",
+    "provider_profile": "dashscope-qwen-phase1",
+    "rejected_rows": 0,
+    "sufficient_signal_rows": 3,
+    "task_packet_mode": "bridge_canary_v4",
+    "total_rows": 8,
+    "total_task_packets": 8,
+    "unusable_rows": 6,
+    "utility_unique_values": [
+      0.0,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "utility_with_range": [
+      0.0,
+      1.0
+    ],
+    "utility_without_range": [
+      0.0,
+      0.0
+    ]
+  }
+}

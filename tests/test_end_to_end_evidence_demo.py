@@ -107,7 +107,7 @@ def test_demo_outputs_include_expected_markdown_reports(workspace_tmp_dir):
     result = build_end_to_end_evidence_demo(workspace_tmp_dir / "demo")
 
     assert "Metric bridge gate status" in _read(result["generated_outputs"]["claim_gate_report_markdown"])
-    assert "proxy-regime certification is not deployed V-information certification" in _read(
+    assert "proxy-regime diagnosis is not deployed V-information certification" in _read(
         result["generated_outputs"]["proxy_regime_matrix_markdown"]
     )
     assert "Replay package completeness is not scientific validation" in _read(

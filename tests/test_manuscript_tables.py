@@ -40,7 +40,7 @@ def _paper_summary() -> dict:
                 "sparse_pairwise_synergy",
                 "higher_order_synergy",
             ],
-            "certification_scopes": [
+            "diagnostic_scopes": [
                 "proxy_regime_diagnostic_only",
                 "synthetic_structural_only",
             ],
@@ -105,9 +105,10 @@ def test_claim_gate_table_contains_required_denials():
 
     assert conditions["missing human labels"]["denied_claim"] == "measurement_validated"
     assert conditions["missing kappa"]["denied_claim"] == "measurement_validated"
-    assert conditions["stale metric bridge"]["allowed_claim_boundary"] == "operational_utility_only or ambiguous"
-    assert conditions["missing metric bridge"]["allowed_claim_boundary"] == "operational_utility_only or ambiguous"
-    assert conditions["synthetic-only evidence"]["denied_claim"] == "deployed V-information certification"
+    assert conditions["stale metric bridge"]["allowed_claim_boundary"] == "operational_utility_only or ambiguous_metric"
+    assert conditions["missing metric bridge"]["allowed_claim_boundary"] == "operational_utility_only or ambiguous_metric"
+    assert conditions["synthetic-only evidence"]["allowed_claim_boundary"] == "ambiguous_metric"
+    assert conditions["synthetic-only evidence"]["denied_claim"] == "deployed V-information proxy support"
     assert conditions["engineering-only evidence"]["denied_claim"] == "scientific validation"
     assert conditions["replay package completeness"]["denied_claim"] == "scientific validation"
     assert conditions["paper-facing summary"]["allowed_claim_boundary"] == "no claim upgrade"

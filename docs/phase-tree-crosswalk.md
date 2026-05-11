@@ -46,7 +46,7 @@ extraction-validity infrastructure. They do not prove selector-regime validity.
 
 | Experiment milestone | Measurement-validity counterpart | Gates | Scientific question | Consumes | Produces | Current status |
 |---|---|---|---|---|---|---|
-| Phase A synthetic structural benchmark | No direct Phase 0/1/2/3 counterpart; proxy-layer sidecar | None | Do block-ratio LCB, interaction mass, triple-excess diagnostics, and greedy-vs-augmented gap separate controlled structural regimes? | Synthetic set-function configs and fixed reporting thresholds | `events.jsonl`, candidate pools, `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`, `MetricBridgeWitness`, diagnostics, report | Current synthetic smoke passes under the pre-registered structural gate when tests are run; this remains `structural_synthetic_only` evidence |
+| Phase A synthetic structural benchmark | No direct Phase 0/1/2/3 counterpart; proxy-layer sidecar | None | Do block-ratio LCB, interaction mass, triple-excess diagnostics, and greedy-vs-augmented gap separate controlled structural regimes? | Synthetic set-function configs and fixed reporting thresholds | `events.jsonl`, candidate pools, `ProjectionPlan`, `BudgetWitness`, `MaterializedContext`, `MetricBridgeWitness`, diagnostics, report | Current synthetic smoke passes under the pre-registered structural gate when tests are run; this remains synthetic structural diagnostic evidence, not measurement validation or deployed V-information verification |
 | Phase B offline replay | Uses Phase 1 or openWorker traces only if replay fields are present | Gate 2 completion package and Gate 5 feasibility input | Can dispatch traces reconstruct candidate pools, selections, budgets, materialized context, metric bridge witnesses, and diagnostics without live inference? | `events.jsonl`, candidate pools, selected and excluded ids, proxy utility signal, materialization order, token accounting | Per-dispatch diagnostic report, missing-field classification, pipeline-vs-proxy alignment summary, claim-level labels | Planned; protocol now specified separately |
 | Phase C realistic-task benchmark | Overlaps structurally with Phase 2/3/4 on MuSiQue when MuSiQue is selected | Gates 3-5 for MuSiQue-derived inputs | Does diagnostic-guided context projection correlate with realistic task behavior under explicit metric-bridge qualification? | Phase B replay schema, task-derived context pools, controlled budgets, task scoring | Task success, token cost, diagnostic labels, selector regime labels, selection summaries, failure analysis | Planned after Phase B replay works |
 | Phase 1 MuSiQue probe | Measurement-validity stack Phase 1 | Gates 1-3 | Is the `delta_loo` measurement apparatus stable, bridgeable, contamination-aware, and label-reliable? | MuSiQue dev split, DashScope model access, annotator process | Measurement store, bridge diagnostics, contamination diagnostic, tertile labels, kappa values | Implementation complete locally; protocol-full live execution remains operationally gated |
@@ -120,7 +120,8 @@ the replay protocol directly.
 Use this crosswalk as the navigation page when deciding which document answers
 which question:
 
-- `docs/paper-alignment-v10.md` maps the revised paper to repository modules.
+- `docs/paper-alignment-v12.md` maps the current fixed v12 paper direction to
+  repository modules. `docs/paper-alignment-v10.md` is legacy/archive context.
 - `docs/experiment-design-overview.md` defines the Phase A/B/C experiment stack.
 - `docs/protocols/phase0-specification.md`, `phase1-protocol.md`, and
   `phase2-design.md` define the measurement-validity stack.
@@ -132,12 +133,27 @@ which question:
 
 ## P37-P44 Follow-Up Planning
 
+The controlling Codex development/reference package for the next v12 follow-up
+work is:
+
+- [P45-P50 v12 Phase Docs](./codex/v12-phase-docs/README.md)
+- [P45 One-Stratum Bridge Calibration Plan](./codex/v12-phase-docs/P45-one-stratum-bridge-calibration-plan.md)
+- [Common Guardrails](./codex/v12-phase-docs/COMMON-GUARDRAILS.md)
+
+P45, one-stratum metric bridge calibration, is the next priority. P50 is
+optional and must not precede P45-P49. These phase docs do not claim
+`measurement_validated` evidence and do not supply bridge calibration results
+by themselves.
+
 The follow-up planning package is indexed at:
 
+- [Mingx Follow-up Development and Experiment Plan v0.2](./roadmaps/mingx-followup-dev-experiment-plan-v0-2.md)
 - [P37-P44 Development and Experiment Roadmap](./roadmaps/P37-P44-development-and-experiment-roadmap.md)
 - [openWorker Trace Audit Protocol](./protocols/openworker-trace-audit-protocol.md)
 - [Extraction Uniformity Sidecar Plan](./protocols/extraction-uniformity-sidecar-plan.md)
 
 These are planning and sidecar protocol documents. The openWorker trace audit
 and extraction-uniformity sidecar remain future or conditional work; they are
-not completed evidence and do not upgrade any claim level.
+not completed evidence and do not upgrade any claim level. The v12 follow-up
+plan identifies one-stratum metric bridge calibration as the highest-priority
+missing experiment and does not claim measurement validation.

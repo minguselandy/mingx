@@ -23,7 +23,7 @@ Local execution status must always be verified from `git status`, run plans, `ru
 
 ## 1. Purpose
 
-P44 integrates new evidence from P38-P43 into the revised v10 manuscript without claim inflation. The manuscript should continue to read as conditional theory + bridge statement + proxy-regime certification + runtime-audit evidence, not as deployed scientific validation.
+P44 integrates new evidence from P38-P43 into the revised v10 manuscript without claim inflation. The manuscript should continue to read as conditional theory + bridge statement + proxy-regime diagnosis + runtime-audit evidence, not as deployed scientific validation.
 
 ## P44 No-Git Automation Result
 
@@ -49,7 +49,7 @@ Conservative claim rules:
 - missing human labels => not `measurement_validated`
 - missing human-human kappa => not `measurement_validated`
 - stale or missing metric bridge => `operational_utility_only` or `ambiguous`
-- synthetic-only evidence => `structural_synthetic_only`, not deployed V-information certification
+- synthetic-only evidence => `vinfo_proxy_supported`, not deployed V-information certification
 - replay package completeness => replay/observability evidence only, not scientific validation
 - model-adjudicated labels => not human labels
 - Codex/model audit => not human review
@@ -62,7 +62,7 @@ Candidate sources:
 
 | Source | Eligible manuscript use | Maximum claim |
 |---|---|---|
-| P38 synthetic benchmark | structural validity floor for diagnostics | `structural_synthetic_only` |
+| P38 synthetic benchmark | structural validity floor for diagnostics | `vinfo_proxy_supported` |
 | P39 schema freeze | artifact stability / replay readiness | engineering / replay readiness |
 | P40 Phase B replay | observability and diagnostic recomputation evidence | replay evidence only |
 | P41 Route B | model-adjudicated operational pilot evidence | `model_adjudicated_pilot_only` / `operational_utility_only` |
@@ -82,9 +82,9 @@ Add a concise results table:
 
 | Family | Expected signature | Observed result | Claim level |
 |---|---|---|---|
-| redundancy-dominated | high block-ratio, low synergy | TBD | `structural_synthetic_only` |
-| pairwise-synergy | interaction mass, seeded greedy improves | TBD | `structural_synthetic_only` |
-| higher-order | triple-excess / ambiguity; no greedy-valid false positive | TBD | `structural_synthetic_only` |
+| redundancy-dominated | high block-ratio, low synergy | TBD | `vinfo_proxy_supported` |
+| pairwise-synergy | interaction mass, seeded greedy improves | TBD | `vinfo_proxy_supported` |
+| higher-order | triple-excess / ambiguity; no greedy-valid false positive | TBD | `vinfo_proxy_supported` |
 
 ### 3.3 Section 6 Runtime artifacts
 

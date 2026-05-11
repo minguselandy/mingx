@@ -7,6 +7,9 @@ from pathlib import Path
 from typing import Any
 
 from cps.experiments.artifacts import rebuild_projection_summary_from_events
+from cps.experiments.decision import is_synthetic_diagnostic_scope
+from cps.experiments.decision import normalize_diagnostic_scope
+from cps.experiments.decision import normalize_metric_claim_level
 
 
 REQUIRED_EVIDENCE_ARTIFACTS = (
@@ -30,6 +33,16 @@ ARTIFACT_JSONL_FILENAMES = {
 }
 DEFAULT_P04_STATUS = "BLOCKED_OPERATOR_REQUIRED"
 DEFAULT_P09_STATUS = "BLOCKED_OPERATOR_REQUIRED"
+
+
+def _normalize_evidence_mode(value: Any) -> str:
+    mode = str(value or "ambiguous_metric")
+    aliases = {
+        "synthetic": "synthetic_structural_only",
+        "synthetic_structural": "synthetic_structural_only",
+        "structural_synthetic_only": "synthetic_structural_only",
+    }
+    return aliases.get(mode, normalize_metric_claim_level(mode))
 
 
 def _stable_write_json(path: str | Path, payload: Mapping[str, Any]) -> Path:
@@ -81,20 +94,26 @@ def _missing_required_artifacts(
 
 def _infer_evidence_mode(summary: Mapping[str, Any], overrides: Mapping[str, Any]) -> str:
     if overrides.get("evidence_mode"):
-        return str(overrides["evidence_mode"])
+        return _normalize_evidence_mode(overrides["evidence_mode"])
     if summary.get("evidence_mode"):
-        return str(summary["evidence_mode"])
+        return _normalize_evidence_mode(summary["evidence_mode"])
     claim_level = str(summary.get("claim_level") or "")
-    if claim_level:
-        return claim_level
-    metric_claims = set((summary.get("metric_claim_level_counts") or {}).keys())
+    normalized_claim_level = _normalize_evidence_mode(claim_level) if claim_level else ""
+    metric_claims = {
+        normalize_metric_claim_level(level) for level in (summary.get("metric_claim_level_counts") or {}).keys()
+    }
     if "engineering_smoke_only" in metric_claims:
         return "engineering_smoke_only"
-    if "structural_synthetic_only" in metric_claims:
+    diagnostic_scopes = {
+        normalize_diagnostic_scope(scope) for scope in (summary.get("diagnostic_scope_counts") or {}).keys()
+    }
+    if any(is_synthetic_diagnostic_scope(scope) for scope in diagnostic_scopes):
         return "synthetic_structural_only"
+    if normalized_claim_level:
+        return normalized_claim_level
     if summary.get("complete_artifact_sets"):
         return "replayable_artifact_evidence"
-    return "ambiguous"
+    return "ambiguous_metric"
 
 
 def _infer_source_phase(summary: Mapping[str, Any], overrides: Mapping[str, Any], evidence_mode: str) -> str:
@@ -104,7 +123,7 @@ def _infer_source_phase(summary: Mapping[str, Any], overrides: Mapping[str, Any]
         return str(summary["source_phase"])
     if evidence_mode == "engineering_smoke_only":
         return "P11"
-    if evidence_mode == "synthetic_structural_only":
+    if is_synthetic_diagnostic_scope(evidence_mode):
         return "P05"
     return "unknown"
 
@@ -139,6 +158,17 @@ def build_evidence_ledger_from_summary(
     required_artifacts_present = not missing_required_artifacts and _complete_artifact_sets(artifact_counts)
     evidence_mode = _infer_evidence_mode(source, override_payload)
     source_phase = _infer_source_phase(source, override_payload, evidence_mode)
+    diagnostic_scope_counts = dict(sorted((source.get("diagnostic_scope_counts") or {}).items()))
+    override_scope = override_payload.get("evidence_scope") or override_payload.get("diagnostic_scope")
+    evidence_scope = normalize_diagnostic_scope(override_scope or evidence_mode)
+    if not override_scope and not is_synthetic_diagnostic_scope(evidence_scope) and diagnostic_scope_counts:
+        synthetic_scopes = [
+            normalize_diagnostic_scope(scope)
+            for scope in diagnostic_scope_counts
+            if is_synthetic_diagnostic_scope(normalize_diagnostic_scope(scope))
+        ]
+        if evidence_scope == "ambiguous_metric" and synthetic_scopes:
+            evidence_scope = synthetic_scopes[0]
 
     ledger: dict[str, Any] = {
         "run_id": str(override_payload.pop("run_id", source.get("run_id", ""))),
@@ -174,6 +204,8 @@ def build_evidence_ledger_from_summary(
         "p04_status": str(override_payload.pop("p04_status", source.get("p04_status", DEFAULT_P04_STATUS))),
         "p09_status": str(override_payload.pop("p09_status", source.get("p09_status", DEFAULT_P09_STATUS))),
         "metric_claim_level_counts": dict(sorted((source.get("metric_claim_level_counts") or {}).items())),
+        "diagnostic_scope_counts": diagnostic_scope_counts,
+        "evidence_scope": evidence_scope,
         "selector_action_counts": dict(sorted((source.get("selector_action_counts") or {}).items())),
     }
     for key, value in sorted(override_payload.items()):

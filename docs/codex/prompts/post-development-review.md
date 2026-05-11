@@ -23,7 +23,7 @@ Review focus:
 - phase-boundary violations
 - claim inflation
 - theorem-level wording
-- accidental `Vinfo_proxy_certified` emission
+- accidental `vinfo_proxy_supported` emission
 - `CandidatePool` treated as core paper artifact
 - `gamma_hat` legacy/non-headline alias treated as a submodularity ratio
 - `block_ratio_lcb_star` described as degree-adaptive or paper-grade

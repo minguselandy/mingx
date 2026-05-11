@@ -136,8 +136,8 @@ def test_phase_b_replay_protocol_defines_claim_level_downgrades() -> None:
         assert downgrade_rule in phase_b
 
     assert "operational_utility_only" in phase_b
-    assert "Vinfo_proxy_certified" in phase_b
-    assert "ambiguous" in phase_b
+    assert "vinfo_proxy_supported" in phase_b
+    assert "ambiguous_metric" in phase_b
 
 
 def test_extraction_docs_state_m_star_to_m_bridge_risk_boundary() -> None:

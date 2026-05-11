@@ -1,0 +1,37 @@
+{
+  "allowed_claim_level": "calibrated_proxy_supported",
+  "bridge_scale_c_s": 2.0,
+  "claim_gate_status": "calibrated_proxy_supported",
+  "data_source_kind": "fixture",
+  "denied_claims": [
+    "measurement_validated",
+    "scientific_validation",
+    "deployed_v_information_verification",
+    "deployed_v_information_certification"
+  ],
+  "deployed_v_information_verification_claim": false,
+  "diagnostic_scope": "one_stratum_bridge_calibration",
+  "effective_sample_size": 6,
+  "evidence_scope": "one_stratum_bridge_calibration",
+  "measurement_validated_allowed": false,
+  "measurement_validation_claim": false,
+  "metric_claim_level": "calibrated_proxy_supported",
+  "paper_evidence_eligible": false,
+  "pass_flags": {
+    "bridge_freshness_pass": true,
+    "effective_sample_size_pass": true,
+    "fit_denominator_pass": true,
+    "one_stratum_pass": true,
+    "pearson_pass": true,
+    "sample_size_pass": true,
+    "sign_agreement_pass": true,
+    "source_kind_pass": true,
+    "spearman_pass": true,
+    "synthetic_scope_pass": true,
+    "zeta_pass": true
+  },
+  "reason_codes": [],
+  "sample_size": 6,
+  "selector_regime_label": "ambiguous",
+  "zeta_s": 0.0050000000000000044
+}
