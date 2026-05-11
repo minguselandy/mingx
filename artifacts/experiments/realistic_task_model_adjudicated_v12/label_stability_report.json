@@ -1,0 +1,29 @@
+{
+  "data_source_kind": "fixture",
+  "duplicate_judging_stability": {
+    "stable": null,
+    "status": "fixture_not_measured"
+  },
+  "label_stability_schema_version": "P47LabelStabilityReportV1",
+  "order_reversal_status": {
+    "stable": null,
+    "status": "fixture_not_measured"
+  },
+  "paper_evidence_eligible": false,
+  "paraphrase_robustness_status": {
+    "stable": null,
+    "status": "fixture_not_measured"
+  },
+  "prerequisite_ablation_status": {
+    "stable": null,
+    "status": "fixture_not_measured"
+  },
+  "task_count": 3,
+  "unstable_label_downgrade": {
+    "downgraded_task_ids": [
+      "repo_change_review_claim_boundary"
+    ],
+    "selector_regime_label": "ambiguous",
+    "unstable_label_count": 1
+  }
+}

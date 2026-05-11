@@ -18,6 +18,7 @@ from cps.experiments.synthetic_regimes import SyntheticItem
 
 DEFAULT_LCB_QUANTILE = 0.1
 DEFAULT_DENOMINATOR_THRESHOLD = 1e-9
+DEFAULT_TRIPLE_EXCESS_EPSILON = 1e-5
 DEFAULT_POLICY_THRESHOLDS = {
     name: dict(values)
     for name, values in DEFAULT_SELECTOR_THRESHOLDS.items()
@@ -372,7 +373,7 @@ def _triple_excess_status(
         return None, "not_evaluable", higher_order_risk_hint
 
     max_omega = _round(max(float(row.get("omega_ijk", row.get("triple_excess", 0.0))) for row in triple_samples))
-    if max_omega > DEFAULT_DENOMINATOR_THRESHOLD:
+    if max_omega > DEFAULT_TRIPLE_EXCESS_EPSILON:
         return max_omega, "positive", True
     if higher_order_risk_hint:
         return max_omega, "ambiguous", True

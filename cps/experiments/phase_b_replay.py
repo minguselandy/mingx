@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from collections import Counter
 from dataclasses import asdict, dataclass
@@ -40,6 +41,55 @@ CORE_PAPER_ARTIFACTS = [
 ]
 REPLAY_SUBSTRATE_ARTIFACTS = ["CandidatePool"]
 REPLAY_STATUSES = ("replay_usable", "pilot_degraded", "replay_partial", "replay_unusable")
+ALLOWED_METRIC_CLAIM_LEVELS = {
+    "vinfo_proxy_supported",
+    "calibrated_proxy_supported",
+    "operational_utility_only",
+    "ambiguous_metric",
+}
+ALLOWED_SELECTOR_REGIME_LABELS = {"greedy_supported", "pairwise_escalate", "higher_order_risk", "ambiguous"}
+DISPATCH_IDENTITY_FIELDS = ("run_id", "dispatch_id", "agent_id", "round_id")
+REASON_CODE_ORDER = (
+    "missing_identity_run_id",
+    "missing_identity_dispatch_id",
+    "missing_identity_agent_id",
+    "missing_identity_round_id",
+    "identity_mismatch_run_id",
+    "identity_mismatch_dispatch_id",
+    "identity_mismatch_agent_id",
+    "identity_mismatch_round_id",
+    "missing_candidate_pool",
+    "missing_candidate_pool_hash",
+    "incomplete_candidate_pool_provenance",
+    "candidate_pool_hash_mismatch",
+    "missing_projection_plan",
+    "missing_selected_ids",
+    "missing_excluded_candidates",
+    "missing_budget_witness",
+    "missing_realized_budget",
+    "missing_materialized_context",
+    "missing_materialization_order",
+    "metric_bridge_missing",
+    "metric_bridge_incomplete",
+    "metric_bridge_stale",
+    "metric_bridge_ambiguous",
+    "synthetic_only_not_metric_bridge_evidence",
+    "fixture_only_replay_not_paper_evidence",
+    "contamination_failed",
+    "contamination_incomplete",
+    "contamination_unknown",
+    "replay_status_replay_unusable",
+    "replay_status_pilot_degraded",
+    "replay_status_replay_partial",
+    "insufficient_utility_records",
+    "uninformative_denominator",
+    "metric_claim_level_ambiguous_metric",
+    "metric_claim_level_operational_utility_only",
+    "measurement_validation_denied",
+    "human_labels_missing",
+    "human_kappa_missing",
+    "deployed_v_information_verification_denied",
+)
 
 
 @dataclass
@@ -67,6 +117,7 @@ class ReplayManifestRow:
     round_id: str | None
     replay_status: str
     replay_claim_scope: str
+    data_source_kind: str
     candidate_pool_present: bool
     projection_plan_present: bool
     budget_witness_present: bool
@@ -79,10 +130,16 @@ class ReplayManifestRow:
     bridge_status: str
     metric_claim_level: str
     diagnostic_scope: str
+    evidence_scope: str
     selector_regime_label: str
     diagnostic_recompute_status: str
     headline_eligible: bool
     headline_exclusion_reason: str
+    paper_evidence_eligible: bool
+    measurement_validation_claim: bool
+    human_labels_present: bool
+    human_kappa_present: bool
+    deployed_v_information_verification_claim: bool
     selected_token_cost: int | None
     budget_utilization: float | None
     observed_proxy_value: float | None
@@ -91,6 +148,7 @@ class ReplayManifestRow:
     missing_required_fields: list[str]
     missing_optional_fields: list[str]
     replay_defects: list[str]
+    reason_codes: list[str]
     notes: str
 
 
@@ -121,6 +179,8 @@ class ReplaySummary:
     replay_nonusable_dispatches: int
     headline_eligible_dispatches: int
     headline_excluded_dispatches: int
+    paper_evidence_eligible_dispatches: int
+    measurement_validation_claims: int
     replay_usable_dispatch_ids: list[str]
     replay_nonusable_dispatch_ids: list[str]
     headline_eligible_dispatch_ids: list[str]
@@ -170,6 +230,20 @@ def _write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> None:
             handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
 
 
+def _write_csv(path: Path, fieldnames: list[str], rows: Iterable[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+
+def _write_count_csv(path: Path, *, key_field: str, count_field: str, counts: dict[str, int]) -> None:
+    rows = [{key_field: key, count_field: counts[key]} for key in sorted(counts)]
+    _write_csv(path, [key_field, count_field], rows)
+
+
 def _clean_id(value: Any) -> str | None:
     if value is None:
         return None
@@ -186,13 +260,92 @@ def _record_identity(record: dict[str, Any]) -> dict[str, str | None]:
     }
 
 
+def _iter_bundle_records(bundle: ReplayArtifactBundle) -> Iterable[dict[str, Any]]:
+    for record in (
+        bundle.candidate_pool,
+        bundle.projection_plan,
+        bundle.budget_witness,
+        bundle.materialized_context,
+        bundle.metric_bridge_witness,
+        bundle.diagnostics,
+    ):
+        if record:
+            yield record
+    yield from bundle.utility_records
+
+
+def _identity_mismatch_fields(bundle: ReplayArtifactBundle) -> list[str]:
+    bundle_identity = {
+        "run_id": bundle.run_id,
+        "dispatch_id": bundle.dispatch_id,
+        "agent_id": bundle.agent_id,
+        "round_id": bundle.round_id,
+    }
+    values_by_field: dict[str, set[str]] = {field: set() for field in DISPATCH_IDENTITY_FIELDS}
+    for field, value in bundle_identity.items():
+        clean_value = _clean_id(value)
+        if clean_value:
+            values_by_field[field].add(clean_value)
+    for record in _iter_bundle_records(bundle):
+        for field, value in _record_identity(record).items():
+            if value:
+                values_by_field[field].add(value)
+    for event in bundle.raw_event_records:
+        for field, value in _record_identity(event).items():
+            if value:
+                values_by_field[field].add(value)
+    return [field for field in DISPATCH_IDENTITY_FIELDS if len(values_by_field[field]) > 1]
+
+
+def _candidate_pool_hash_status(bundle: ReplayArtifactBundle) -> tuple[list[str], list[str]]:
+    required_artifacts = (
+        ("CandidatePool", bundle.candidate_pool),
+        ("ProjectionPlan", bundle.projection_plan),
+    )
+    missing_artifacts: list[str] = []
+    hash_values: set[str] = set()
+    for artifact_name, record in required_artifacts:
+        if record is None:
+            continue
+        hash_value = _clean_id(record.get("candidate_pool_hash"))
+        if hash_value:
+            hash_values.add(hash_value)
+        else:
+            missing_artifacts.append(artifact_name)
+    for record in _iter_bundle_records(bundle):
+        hash_value = _clean_id(record.get("candidate_pool_hash"))
+        if hash_value:
+            hash_values.add(hash_value)
+    return sorted(hash_values), sorted(set(missing_artifacts))
+
+
+def _bundle_data_source_kind(bundle: ReplayArtifactBundle) -> str:
+    for record in _iter_bundle_records(bundle):
+        for field in ("data_source_kind", "source_kind", "source"):
+            value = record.get(field)
+            if value:
+                return str(value)
+    if any(str(record.get("regime") or "") == "fixture" for record in _iter_bundle_records(bundle)):
+        return "fixture"
+    witness = bundle.metric_bridge_witness or {}
+    if str(witness.get("metric_class") or "") == "synthetic_oracle":
+        return "synthetic"
+    return "replay"
+
+
+def _ordered_reason_codes(reasons: Iterable[str]) -> list[str]:
+    order = {reason: index for index, reason in enumerate(REASON_CODE_ORDER)}
+    return sorted(set(reasons), key=lambda reason: (order.get(reason, len(order)), reason))
+
+
 def _dispatch_group_key(identity: dict[str, str | None], source_file: str, index: int) -> tuple[Any, ...]:
+    run_id = identity.get("run_id")
     dispatch_id = identity.get("dispatch_id")
     agent_id = identity.get("agent_id")
     round_id = identity.get("round_id")
-    if dispatch_id or agent_id or round_id:
-        return ("dispatch", dispatch_id, agent_id, round_id)
-    return ("unbound", identity.get("run_id"), source_file, index)
+    if run_id or dispatch_id or agent_id or round_id:
+        return ("dispatch", run_id, dispatch_id, agent_id, round_id)
+    return ("unbound", source_file, index)
 
 
 def _merge_identity(current: dict[str, str | None], record: dict[str, Any]) -> None:
@@ -511,6 +664,72 @@ def _bridge_scope(metric_bridge_witness: dict[str, Any] | None, metric_claim_lev
     return drift_status, metric_claim_level
 
 
+def _bridge_incomplete(metric_bridge_witness: dict[str, Any] | None) -> bool:
+    if not metric_bridge_witness:
+        return False
+    required_fields = ("metric_class", "drift_status", "diagnostic_claim_level")
+    if any(not metric_bridge_witness.get(field) for field in required_fields):
+        return True
+    metric_class = str(metric_bridge_witness.get("metric_class") or "")
+    if metric_class in {"log_loss_aligned", "bridge_calibrated"}:
+        calibrated_fields = ("utility_metric", "effective_sample_size")
+        if any(metric_bridge_witness.get(field) is None for field in calibrated_fields):
+            return True
+    if metric_class == "bridge_calibrated":
+        bridge_fields = ("bridge_scale", "bridge_residual_zeta")
+        if any(metric_bridge_witness.get(field) is None for field in bridge_fields):
+            return True
+    return False
+
+
+def _derive_replay_metric_claim_level(
+    bundle: ReplayArtifactBundle,
+    *,
+    data_source_kind: str,
+    contamination_status: str,
+    diagnostic_scope: str,
+) -> tuple[str, str, str, list[str]]:
+    witness = bundle.metric_bridge_witness
+    reasons: list[str] = []
+    if not witness:
+        return "ambiguous_metric", "missing", "observability_only", ["metric_bridge_missing"]
+
+    if _bridge_incomplete(witness):
+        return "ambiguous_metric", "incomplete", "bridge_witness_incomplete", ["metric_bridge_incomplete"]
+
+    metric_class = str(witness.get("metric_class") or "")
+    drift_status = str(witness.get("drift_status") or "unknown")
+    if drift_status == "stale":
+        return "ambiguous_metric", "stale", "recalibration_required", ["metric_bridge_stale"]
+    if drift_status in {"ambiguous", "unknown"}:
+        return "ambiguous_metric", drift_status, "ambiguous", [f"metric_bridge_{drift_status}"]
+
+    if metric_class == "synthetic_oracle" or diagnostic_scope == "synthetic_structural_only" or data_source_kind == "synthetic":
+        return (
+            "ambiguous_metric",
+            drift_status,
+            "synthetic_structural_only",
+            ["synthetic_only_not_metric_bridge_evidence"],
+        )
+
+    if data_source_kind == "fixture":
+        return (
+            "operational_utility_only",
+            drift_status,
+            "fixture_replay_only",
+            ["fixture_only_replay_not_paper_evidence"],
+        )
+
+    metric_claim_level = derive_metric_claim_level(witness)
+    if contamination_status == "failed":
+        return "operational_utility_only", drift_status, "operational_utility_only", ["contamination_failed"]
+    if metric_claim_level not in ALLOWED_METRIC_CLAIM_LEVELS:
+        reasons.append("metric_claim_level_ambiguous_metric")
+        metric_claim_level = "ambiguous_metric"
+    bridge_status, replay_claim_scope = _bridge_scope(witness, metric_claim_level)
+    return metric_claim_level, bridge_status, replay_claim_scope, reasons
+
+
 def _diagnostic_scope(
     metric_bridge_witness: dict[str, Any] | None,
     diagnostics: dict[str, Any] | None,
@@ -525,6 +744,26 @@ def _diagnostic_scope(
     return "not_recorded"
 
 
+def _evidence_scope(
+    *,
+    data_source_kind: str,
+    diagnostic_scope: str,
+    metric_claim_level: str,
+    replay_claim_scope: str,
+) -> str:
+    if data_source_kind == "fixture":
+        return "fixture_replay_only"
+    if data_source_kind == "synthetic" or diagnostic_scope == "synthetic_structural_only":
+        return "synthetic_structural_only"
+    if metric_claim_level == "calibrated_proxy_supported":
+        return "calibrated_bridge_replay"
+    if metric_claim_level == "vinfo_proxy_supported":
+        return "replayable_artifact_evidence"
+    if metric_claim_level == "operational_utility_only":
+        return "operational_utility_only"
+    return replay_claim_scope if replay_claim_scope else "ambiguous_metric"
+
+
 def classify_replay_bundle(
     bundle: ReplayArtifactBundle,
     *,
@@ -532,8 +771,14 @@ def classify_replay_bundle(
 ) -> tuple[ReplayManifestRow, list[MissingFieldRecord]]:
     missing: list[MissingFieldRecord] = []
     replay_defects: list[str] = []
+    reason_codes: list[str] = []
     missing_optional_fields: list[str] = []
     selected_ids = _selected_ids(bundle)
+    data_source_kind = _bundle_data_source_kind(bundle)
+    identity_mismatch_fields = _identity_mismatch_fields(bundle)
+    candidate_pool_hash_values, missing_candidate_pool_hash_artifacts = _candidate_pool_hash_status(bundle)
+    candidate_pool_hash_mismatch = len(candidate_pool_hash_values) > 1
+    incomplete_candidate_pool_provenance = bool(missing_candidate_pool_hash_artifacts)
 
     if not bundle.run_id:
         _add_missing(
@@ -546,6 +791,7 @@ def classify_replay_bundle(
             reason="run_id is required to reconstruct a dispatch binding",
         )
         replay_defects.append("missing_dispatch_binding")
+        reason_codes.append("missing_identity_run_id")
     for field in ("dispatch_id", "agent_id", "round_id"):
         if not getattr(bundle, field):
             _add_missing(
@@ -558,6 +804,45 @@ def classify_replay_bundle(
                 reason=f"{field} is required to reconstruct a dispatch binding",
             )
             replay_defects.append("missing_dispatch_binding")
+            reason_codes.append(f"missing_identity_{field}")
+
+    for field in identity_mismatch_fields:
+        _add_missing(
+            missing,
+            bundle,
+            field=field,
+            artifact="identity",
+            severity="error",
+            required_for="dispatch_binding",
+            reason=f"{field} has conflicting values across replay artifacts",
+        )
+        replay_defects.append("identity_mismatch")
+        reason_codes.append(f"identity_mismatch_{field}")
+
+    if candidate_pool_hash_mismatch:
+        _add_missing(
+            missing,
+            bundle,
+            field="candidate_pool_hash",
+            artifact="candidate_pool_provenance",
+            severity="error",
+            required_for="replay_comparable_claim",
+            reason="candidate_pool_hash differs across candidate-pool-bound replay artifacts",
+        )
+        replay_defects.append("candidate_pool_hash_mismatch")
+        reason_codes.append("candidate_pool_hash_mismatch")
+    if incomplete_candidate_pool_provenance:
+        _add_missing(
+            missing,
+            bundle,
+            field="candidate_pool_hash",
+            artifact=",".join(missing_candidate_pool_hash_artifacts),
+            severity="error",
+            required_for="replay_comparable_claim",
+            reason="candidate-pool-bound replay artifacts must carry candidate_pool_hash",
+        )
+        replay_defects.append("incomplete_candidate_pool_provenance")
+        reason_codes.extend(["missing_candidate_pool_hash", "incomplete_candidate_pool_provenance"])
 
     candidate_pool_present = bundle.candidate_pool is not None
     projection_plan_present = bundle.projection_plan is not None
@@ -569,16 +854,38 @@ def classify_replay_bundle(
     excluded_ids_present = _excluded_ids_present(bundle, selected_ids)
     materialization_order_present = _materialization_order_present(bundle)
     realized_budget_present = _realized_budget_present(bundle)
-    metric_claim_level = derive_metric_claim_level(bundle.metric_bridge_witness)
-    bridge_status, replay_claim_scope = _bridge_scope(bundle.metric_bridge_witness, metric_claim_level)
     diagnostic_scope = _diagnostic_scope(bundle.metric_bridge_witness, bundle.diagnostics)
-    if contamination_status == "failed":
-        metric_claim_level = "pilot_only"
-        replay_claim_scope = "pilot_only"
+    metric_claim_level, bridge_status, replay_claim_scope, bridge_reason_codes = _derive_replay_metric_claim_level(
+        bundle,
+        data_source_kind=data_source_kind,
+        contamination_status=contamination_status,
+        diagnostic_scope=diagnostic_scope,
+    )
+    reason_codes.extend(bridge_reason_codes)
+    if identity_mismatch_fields:
+        metric_claim_level = "ambiguous_metric"
+        bridge_status = "identity_mismatch"
+        replay_claim_scope = "identity_mismatch"
+    elif candidate_pool_hash_mismatch:
+        metric_claim_level = "ambiguous_metric"
+        bridge_status = "candidate_pool_hash_mismatch"
+        replay_claim_scope = "candidate_pool_hash_mismatch"
+    elif incomplete_candidate_pool_provenance:
+        metric_claim_level = "ambiguous_metric"
+        bridge_status = "incomplete_candidate_pool_provenance"
+        replay_claim_scope = "incomplete_candidate_pool_provenance"
+    evidence_scope = _evidence_scope(
+        data_source_kind=data_source_kind,
+        diagnostic_scope=diagnostic_scope,
+        metric_claim_level=metric_claim_level,
+        replay_claim_scope=replay_claim_scope,
+    )
     selector_regime_label = normalize_selector_regime_label(
         (bundle.diagnostics or {}).get("selector_regime_label") or "unknown",
         bundle.diagnostics,
     )
+    if selector_regime_label not in ALLOWED_SELECTOR_REGIME_LABELS:
+        selector_regime_label = "ambiguous"
     selected_token_cost = _selected_token_cost(bundle, selected_ids)
     budget_utilization = _budget_utilization(bundle, selected_token_cost)
     diagnostic = _diagnostic_recompute(
@@ -598,6 +905,7 @@ def classify_replay_bundle(
             required_for="replay_usable",
             reason="candidate pool is replay substrate required to reconstruct M",
         )
+        reason_codes.append("missing_candidate_pool")
     if not projection_plan_present:
         _add_missing(
             missing,
@@ -608,6 +916,7 @@ def classify_replay_bundle(
             required_for="replay_usable",
             reason="projection plan is required to reconstruct observed selector output",
         )
+        reason_codes.append("missing_projection_plan")
     if not selected_ids_present:
         _add_missing(
             missing,
@@ -618,6 +927,7 @@ def classify_replay_bundle(
             required_for="dispatch_binding",
             reason="selected candidate ids are required to reconstruct S_i",
         )
+        reason_codes.append("missing_selected_ids")
     if not excluded_ids_present:
         _add_missing(
             missing,
@@ -629,6 +939,7 @@ def classify_replay_bundle(
             reason="excluded candidates are required to audit candidate-pool completeness",
         )
         replay_defects.append("missing_excluded_candidates")
+        reason_codes.append("missing_excluded_candidates")
     if not budget_witness_present:
         _add_missing(
             missing,
@@ -639,6 +950,7 @@ def classify_replay_bundle(
             required_for="replay_usable",
             reason="budget witness is required to reconstruct B_i",
         )
+        reason_codes.append("missing_budget_witness")
     elif not realized_budget_present:
         _add_missing(
             missing,
@@ -650,6 +962,7 @@ def classify_replay_bundle(
             reason="realized or estimated token usage is required to reconstruct B_i",
         )
         replay_defects.append("missing_realized_budget")
+        reason_codes.append("missing_realized_budget")
     if not materialized_context_present:
         _add_missing(
             missing,
@@ -660,6 +973,7 @@ def classify_replay_bundle(
             required_for="replay_usable",
             reason="materialized context is required to audit context assembly",
         )
+        reason_codes.append("missing_materialized_context")
     if not materialization_order_present:
         _add_missing(
             missing,
@@ -671,6 +985,7 @@ def classify_replay_bundle(
             reason="materialization order must be recorded and cannot be inferred from selected ids",
         )
         replay_defects.append("missing_materialization_order")
+        reason_codes.append("missing_materialization_order")
     if not metric_bridge_witness_present:
         _add_missing(
             missing,
@@ -681,7 +996,7 @@ def classify_replay_bundle(
             required_for="bridge_qualified_claim",
             reason="full claim-level replay requires a metric bridge witness",
         )
-    if metric_bridge_witness_present and metric_claim_level in {"ambiguous", "ambiguous_metric"}:
+    if metric_bridge_witness_present and bridge_status in {"incomplete", "stale", "ambiguous", "unknown"}:
         _add_missing(
             missing,
             bundle,
@@ -702,11 +1017,19 @@ def classify_replay_bundle(
             required_for="future_diagnostic_recomputation",
             reason="cached utility or log-loss records are required for future diagnostic recomputation",
         )
+        reason_codes.append("insufficient_utility_records")
     if bundle.diagnostics is None:
         missing_optional_fields.append("diagnostics")
 
     missing_required_fields = [row.field for row in missing if row.severity == "error"]
-    if not candidate_pool_present or not selected_ids_present or "missing_dispatch_binding" in replay_defects:
+    if (
+        not candidate_pool_present
+        or not selected_ids_present
+        or "missing_dispatch_binding" in replay_defects
+        or "identity_mismatch" in replay_defects
+        or "candidate_pool_hash_mismatch" in replay_defects
+        or "incomplete_candidate_pool_provenance" in replay_defects
+    ):
         replay_status = "replay_unusable"
     elif not metric_bridge_witness_present or metric_claim_level in {"ambiguous", "ambiguous_metric"}:
         replay_status = "replay_partial"
@@ -724,19 +1047,49 @@ def classify_replay_bundle(
 
     if contamination_status == "failed":
         headline_exclusion_reason = "contamination_failed"
+        reason_codes.append("contamination_failed")
     elif contamination_status in {"incomplete", "unknown"}:
         headline_exclusion_reason = f"contamination_{contamination_status}"
+        reason_codes.append(headline_exclusion_reason)
+    elif identity_mismatch_fields:
+        headline_exclusion_reason = f"identity_mismatch_{identity_mismatch_fields[0]}"
+        reason_codes.append(headline_exclusion_reason)
+    elif candidate_pool_hash_mismatch:
+        headline_exclusion_reason = "candidate_pool_hash_mismatch"
+        reason_codes.append(headline_exclusion_reason)
+    elif incomplete_candidate_pool_provenance:
+        headline_exclusion_reason = "incomplete_candidate_pool_provenance"
+        reason_codes.append(headline_exclusion_reason)
     elif replay_status != "replay_usable":
         headline_exclusion_reason = f"replay_status_{replay_status}"
+        reason_codes.append(headline_exclusion_reason)
     elif diagnostic["diagnostic_recompute_status"] != "recomputed":
         headline_exclusion_reason = str(diagnostic["diagnostic_recompute_status"])
+        reason_codes.append(headline_exclusion_reason)
     elif bridge_status in {"missing", "stale", "ambiguous", "unknown"}:
         headline_exclusion_reason = f"metric_bridge_{bridge_status}"
-    elif metric_claim_level in {"ambiguous", "ambiguous_metric", "operational_utility_only", "pilot_only"}:
+        reason_codes.append(headline_exclusion_reason)
+    elif data_source_kind == "fixture":
+        headline_exclusion_reason = "fixture_only_replay_not_paper_evidence"
+        reason_codes.append(headline_exclusion_reason)
+    elif evidence_scope == "synthetic_structural_only":
+        headline_exclusion_reason = "synthetic_only_not_metric_bridge_evidence"
+        reason_codes.append(headline_exclusion_reason)
+    elif metric_claim_level in {"ambiguous", "ambiguous_metric", "operational_utility_only"}:
         headline_exclusion_reason = f"metric_claim_level_{metric_claim_level}"
+        reason_codes.append(headline_exclusion_reason)
     else:
         headline_exclusion_reason = ""
     headline_eligible = headline_exclusion_reason == ""
+    paper_evidence_eligible = headline_eligible
+    reason_codes.extend(
+        [
+            "measurement_validation_denied",
+            "human_labels_missing",
+            "human_kappa_missing",
+            "deployed_v_information_verification_denied",
+        ]
+    )
 
     notes = (
         "CandidatePool is replay substrate, not one of the four core paper artifacts. "
@@ -750,6 +1103,7 @@ def classify_replay_bundle(
             round_id=bundle.round_id,
             replay_status=replay_status,
             replay_claim_scope=replay_claim_scope,
+            data_source_kind=data_source_kind,
             candidate_pool_present=candidate_pool_present,
             projection_plan_present=projection_plan_present,
             budget_witness_present=budget_witness_present,
@@ -762,10 +1116,16 @@ def classify_replay_bundle(
             bridge_status=bridge_status,
             metric_claim_level=metric_claim_level,
             diagnostic_scope=diagnostic_scope,
+            evidence_scope=evidence_scope,
             selector_regime_label=selector_regime_label,
             diagnostic_recompute_status=str(diagnostic["diagnostic_recompute_status"]),
             headline_eligible=headline_eligible,
             headline_exclusion_reason=headline_exclusion_reason,
+            paper_evidence_eligible=paper_evidence_eligible,
+            measurement_validation_claim=False,
+            human_labels_present=False,
+            human_kappa_present=False,
+            deployed_v_information_verification_claim=False,
             selected_token_cost=diagnostic["selected_token_cost"],
             budget_utilization=diagnostic["budget_utilization"],
             observed_proxy_value=diagnostic["observed_proxy_value"],
@@ -774,6 +1134,7 @@ def classify_replay_bundle(
             missing_required_fields=missing_required_fields,
             missing_optional_fields=missing_optional_fields,
             replay_defects=sorted(set(replay_defects)),
+            reason_codes=_ordered_reason_codes(reason_codes),
             notes=notes,
         ),
         missing,
@@ -807,6 +1168,7 @@ def build_replay_summary(rows: list[ReplayManifestRow], missing: list[MissingFie
     usable = [row for row in rows if row.replay_status == "replay_usable"]
     nonusable = [row for row in rows if row.replay_status != "replay_usable"]
     headline_excluded = [row for row in rows if not row.headline_eligible]
+    paper_evidence = [row for row in rows if row.paper_evidence_eligible]
     return ReplaySummary(
         total_dispatches=len(rows),
         replay_status_counts={status: status_counts[status] for status in REPLAY_STATUSES if status_counts[status]},
@@ -820,6 +1182,8 @@ def build_replay_summary(rows: list[ReplayManifestRow], missing: list[MissingFie
         replay_nonusable_dispatches=len(nonusable),
         headline_eligible_dispatches=len(headline_rows),
         headline_excluded_dispatches=len(headline_excluded),
+        paper_evidence_eligible_dispatches=len(paper_evidence),
+        measurement_validation_claims=sum(1 for row in rows if row.measurement_validation_claim),
         replay_usable_dispatch_ids=[_dispatch_label(row) for row in usable],
         replay_nonusable_dispatch_ids=[_dispatch_label(row) for row in nonusable],
         headline_eligible_dispatch_ids=[_dispatch_label(row) for row in headline_rows],
@@ -842,16 +1206,22 @@ def _per_dispatch_diagnostic_payload(row: ReplayManifestRow) -> dict[str, Any]:
         "agent_id": row.agent_id,
         "round_id": row.round_id,
         "replay_status": row.replay_status,
+        "replay_claim_scope": row.replay_claim_scope,
+        "data_source_kind": row.data_source_kind,
         "metric_claim_level": row.metric_claim_level,
         "diagnostic_scope": row.diagnostic_scope,
+        "evidence_scope": row.evidence_scope,
         "selector_regime_label": row.selector_regime_label,
         "diagnostic_recompute_status": row.diagnostic_recompute_status,
         "headline_eligible": row.headline_eligible,
         "headline_exclusion_reason": row.headline_exclusion_reason,
+        "paper_evidence_eligible": row.paper_evidence_eligible,
+        "measurement_validation_claim": row.measurement_validation_claim,
         "selected_token_cost": row.selected_token_cost,
         "budget_utilization": row.budget_utilization,
         "observed_proxy_value": row.observed_proxy_value,
         "block_ratio_lcb_b2": row.block_ratio_lcb_b2,
+        "reason_codes": row.reason_codes,
     }
 
 
@@ -905,23 +1275,100 @@ def _selector_regime_summary(rows: list[ReplayManifestRow]) -> dict[str, Any]:
     }
 
 
+def _phase_b_claim_gate_report(rows: list[ReplayManifestRow]) -> dict[str, Any]:
+    reason_counts = Counter(reason for row in rows for reason in row.reason_codes)
+    data_source_counts = Counter(row.data_source_kind for row in rows)
+    evidence_scope_counts = Counter(row.evidence_scope for row in rows)
+    return {
+        "claim_gate_schema_version": "PhaseBReplayV12ClaimGateV1",
+        "allowed_metric_claim_levels": sorted(ALLOWED_METRIC_CLAIM_LEVELS),
+        "calibrated_proxy_supported_allowed": any(
+            row.metric_claim_level == "calibrated_proxy_supported"
+            and row.paper_evidence_eligible
+            and row.replay_status == "replay_usable"
+            for row in rows
+        ),
+        "data_source_kind_counts": dict(sorted(data_source_counts.items())),
+        "denied_claims": [
+            "measurement_validated",
+            "human_label_validation",
+            "human_human_kappa",
+            "deployed_v_information_verification",
+        ],
+        "evidence_scope_counts": dict(sorted(evidence_scope_counts.items())),
+        "fixture_only_replay_promoted_to_paper_evidence": False,
+        "human_kappa_present": False,
+        "human_labels_present": False,
+        "measurement_validation_claim": False,
+        "paper_evidence_eligible_dispatches": sum(1 for row in rows if row.paper_evidence_eligible),
+        "reason_code_counts": {reason: reason_counts[reason] for reason in _ordered_reason_codes(reason_counts)},
+        "replay_dispatches": len(rows),
+        "synthetic_only_evidence_promoted_to_bridge_evidence": False,
+    }
+
+
+def _observed_vs_alternative_rows(rows: list[ReplayManifestRow]) -> list[dict[str, Any]]:
+    return [
+        {
+            "run_id": row.run_id,
+            "dispatch_id": row.dispatch_id,
+            "agent_id": row.agent_id,
+            "round_id": row.round_id,
+            "replay_status": row.replay_status,
+            "metric_claim_level": row.metric_claim_level,
+            "selector_regime_label": row.selector_regime_label,
+            "diagnostic_recompute_status": row.diagnostic_recompute_status,
+            "observed_proxy_value": row.observed_proxy_value,
+            "selected_token_cost": row.selected_token_cost,
+            "budget_utilization": row.budget_utilization,
+            "alternative_policy": "not_recomputed_in_p48_fixture",
+            "alternative_proxy_value": None,
+            "action_agreement": "not_evaluable",
+            "paper_evidence_eligible": row.paper_evidence_eligible,
+            "headline_eligible": row.headline_eligible,
+            "headline_exclusion_reason": row.headline_exclusion_reason,
+        }
+        for row in sorted(rows, key=lambda row: (str(row.run_id), str(row.dispatch_id), str(row.agent_id), str(row.round_id)))
+    ]
+
+
+def _missing_field_defect_rows(missing_records: list[MissingFieldRecord]) -> list[dict[str, Any]]:
+    return [
+        asdict(record)
+        for record in sorted(
+            missing_records,
+            key=lambda row: (
+                str(row.run_id),
+                str(row.dispatch_id),
+                str(row.agent_id),
+                str(row.round_id),
+                row.field,
+                row.artifact,
+            ),
+        )
+    ]
+
+
 def _format_report(summary: dict[str, Any], alignment: dict[str, Any]) -> str:
     lines = [
-        "# Phase B Offline Replay Report",
+        "# Phase B Replay v12 Report",
         "",
-        "P40 is offline replay / observability evidence only. It does not run live APIs and does not claim measurement validation.",
+        "Phase B replay is offline replay / observability evidence. It does not run live APIs and does not claim measurement validation.",
         "",
         "## Claim Boundary",
         "",
-        "- Replay package completeness is not scientific validation.",
-        "- Missing human labels or missing kappa prevents `measurement_validated`.",
-        "- Contamination failure downgrades claim level to `pilot_only`.",
-        "- Stale or missing metric bridge downgrades claim level to `operational_utility_only` or `ambiguous`.",
+        "- Replay package completeness is not measurement validation.",
+        "- Missing human labels or missing kappa keeps `measurement_validated` denied.",
+        "- Contamination failure blocks paper evidence eligibility and keeps the metric claim conservative.",
+        "- Stale, missing, incomplete, synthetic-only, or fixture-only bridge evidence cannot produce calibrated proxy support.",
+        "- Replay usability is reported separately from metric claim level.",
         "",
         "## Replay Summary",
         "",
         f"- Total dispatches: {summary['total_dispatches']}",
         f"- Headline eligible dispatches: {summary['headline_eligible_dispatches']} / {summary['total_dispatches']}",
+        f"- Paper evidence eligible dispatches: {summary['paper_evidence_eligible_dispatches']} / {summary['total_dispatches']}",
+        f"- Measurement validation claims: {summary['measurement_validation_claims']}",
         f"- Replay status counts: `{json.dumps(summary['replay_status_counts'], sort_keys=True)}`",
         f"- Metric claim level counts: `{json.dumps(summary['metric_claim_level_counts'], sort_keys=True)}`",
         f"- Headline exclusion counts: `{json.dumps(summary['headline_exclusion_counts'], sort_keys=True)}`",
@@ -961,6 +1408,9 @@ def run_phase_b_replay(*, input_dir: str | Path, output_dir: str | Path) -> dict
     alignment_payload = _pipeline_proxy_alignment(manifest_rows)
     metric_summary_payload = _metric_claim_level_summary(manifest_rows)
     selector_summary_payload = _selector_regime_summary(manifest_rows)
+    claim_gate_payload = _phase_b_claim_gate_report(manifest_rows)
+    observed_vs_alternative_rows = _observed_vs_alternative_rows(manifest_rows)
+    missing_field_defect_rows = _missing_field_defect_rows(missing_records)
     replay_status_counts_payload = {
         "replay_status_counts": summary_payload["replay_status_counts"],
         "headline_exclusion_counts": summary_payload["headline_exclusion_counts"],
@@ -980,9 +1430,68 @@ def run_phase_b_replay(*, input_dir: str | Path, output_dir: str | Path) -> dict
     _write_json(output_path / "pipeline_proxy_alignment.json", alignment_payload)
     _write_json(output_path / "metric_claim_level_summary.json", metric_summary_payload)
     _write_json(output_path / "selector_regime_summary.json", selector_summary_payload)
+    _write_json(output_path / "phase_b_replay_claim_gate_report.json", claim_gate_payload)
     _write_json(output_path / "replay_status_counts.json", replay_status_counts_payload)
     _write_json(output_path / "replay_summary.json", summary_payload)
-    (output_path / "report.md").write_text(_format_report(summary_payload, alignment_payload), encoding="utf-8")
+    report_text = _format_report(summary_payload, alignment_payload)
+    (output_path / "report.md").write_text(report_text, encoding="utf-8")
+    (output_path / "phase_b_replay_v12_report.md").write_text(report_text, encoding="utf-8")
+    _write_count_csv(
+        output_path / "replay_status_counts.csv",
+        key_field="replay_status",
+        count_field="dispatch_count",
+        counts=summary_payload["replay_status_counts"],
+    )
+    _write_count_csv(
+        output_path / "metric_claim_level_counts.csv",
+        key_field="metric_claim_level",
+        count_field="dispatch_count",
+        counts=summary_payload["metric_claim_level_counts"],
+    )
+    _write_count_csv(
+        output_path / "selector_regime_label_counts.csv",
+        key_field="selector_regime_label",
+        count_field="dispatch_count",
+        counts=selector_summary_payload["all_counts"],
+    )
+    _write_csv(
+        output_path / "missing_field_defects.csv",
+        [
+            "run_id",
+            "dispatch_id",
+            "agent_id",
+            "round_id",
+            "field",
+            "artifact",
+            "severity",
+            "required_for",
+            "reason",
+        ],
+        missing_field_defect_rows,
+    )
+    _write_csv(
+        output_path / "observed_vs_alternative.csv",
+        [
+            "run_id",
+            "dispatch_id",
+            "agent_id",
+            "round_id",
+            "replay_status",
+            "metric_claim_level",
+            "selector_regime_label",
+            "diagnostic_recompute_status",
+            "observed_proxy_value",
+            "selected_token_cost",
+            "budget_utilization",
+            "alternative_policy",
+            "alternative_proxy_value",
+            "action_agreement",
+            "paper_evidence_eligible",
+            "headline_eligible",
+            "headline_exclusion_reason",
+        ],
+        observed_vs_alternative_rows,
+    )
     return {
         "status": "classified",
         "input_dir": str(input_path),
@@ -995,9 +1504,16 @@ def run_phase_b_replay(*, input_dir: str | Path, output_dir: str | Path) -> dict
         "pipeline_proxy_alignment_path": str(output_path / "pipeline_proxy_alignment.json"),
         "metric_claim_level_summary_path": str(output_path / "metric_claim_level_summary.json"),
         "selector_regime_summary_path": str(output_path / "selector_regime_summary.json"),
+        "phase_b_replay_claim_gate_report_path": str(output_path / "phase_b_replay_claim_gate_report.json"),
         "replay_status_counts_path": str(output_path / "replay_status_counts.json"),
         "summary_path": str(output_path / "replay_summary.json"),
         "report_path": str(output_path / "report.md"),
+        "phase_b_replay_v12_report_path": str(output_path / "phase_b_replay_v12_report.md"),
+        "replay_status_counts_csv_path": str(output_path / "replay_status_counts.csv"),
+        "missing_field_defects_csv_path": str(output_path / "missing_field_defects.csv"),
+        "metric_claim_level_counts_csv_path": str(output_path / "metric_claim_level_counts.csv"),
+        "selector_regime_label_counts_csv_path": str(output_path / "selector_regime_label_counts.csv"),
+        "observed_vs_alternative_csv_path": str(output_path / "observed_vs_alternative.csv"),
         "summary": summary_payload,
     }
 

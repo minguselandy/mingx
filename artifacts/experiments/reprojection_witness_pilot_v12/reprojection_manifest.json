@@ -1,0 +1,22 @@
+{
+  "audit_scope": "reprojection_witness_pilot",
+  "data_source_kind": "fixture",
+  "evidence_scope": "fixture_reprojection_witness_only",
+  "live_api_used": false,
+  "measurement_validation_claim": false,
+  "output_dir": "artifacts/experiments/reprojection_witness_pilot_v12",
+  "output_files": [
+    "reprojection_cases.jsonl",
+    "reprojection_witnesses.jsonl",
+    "reprojection_actions.csv",
+    "reprojection_trigger_counts.csv",
+    "reprojection_claim_gate_report.json",
+    "reprojection_summary.json",
+    "reprojection_manifest.json",
+    "reprojection_report.md"
+  ],
+  "paper_evidence_eligible": false,
+  "protocol_version": "reprojection_witness_pilot.v12",
+  "run_id": "reprojection-witness-pilot-v12",
+  "schema_version": "ReprojectionWitnessPilotV1"
+}

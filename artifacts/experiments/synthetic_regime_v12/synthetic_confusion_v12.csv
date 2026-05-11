@@ -1,0 +1,6 @@
+true_family,selector_regime_label,count
+adversarial-redundancy,ambiguous,10
+higher-order-prerequisite,ambiguous,5
+higher-order-prerequisite,higher_order_risk,5
+pairwise-synergy,pairwise_escalate,10
+redundancy-dominated,greedy_supported,10

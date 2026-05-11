@@ -1,0 +1,27 @@
+{
+  "audit_scope": "extraction_audit_pilot",
+  "calibrated_proxy_supported": false,
+  "case_count": 6,
+  "data_source_kind": "fixture",
+  "defect_reason_counts": {
+    "contradictory_sources": 2,
+    "duplicate_finding": 2,
+    "missing_critical_finding": 1,
+    "over_merged_finding": 2,
+    "provenance_missing": 3,
+    "source_span_missing": 3,
+    "unsupported_finding": 1
+  },
+  "deployed_v_information_verification_claim": false,
+  "evidence_scope": "fixture_extraction_audit_only",
+  "finding_count": 10,
+  "human_kappa_present": false,
+  "human_labels_present": false,
+  "live_api_used": false,
+  "measurement_validation_claim": false,
+  "metric_claim_level": "operational_utility_only",
+  "paper_evidence_eligible": false,
+  "schema_version": "ExtractionAuditPilotV1",
+  "selector_regime_claim_upgraded": false,
+  "vinfo_proxy_supported": false
+}

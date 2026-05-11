@@ -386,10 +386,79 @@ def build_higher_order_synergy_instance(
     )
 
 
+def build_adversarial_redundancy_instance(
+    *,
+    seed: int,
+    instance_index: int,
+    n_items: int = 10,
+    budget_tokens: int = 18,
+    token_cost_range: tuple[int, int] | None = None,
+    cluster_count: int | None = None,
+    noise_level: float = 0.0,
+) -> SyntheticInstance:
+    prefix = f"adversarial_{instance_index}"
+    raw_items = [
+        ("a0", 6, 9.7, "claim_a", "primary_claim"),
+        ("a1", 6, 9.1, "claim_a", "near_duplicate"),
+        ("b0", 6, 8.8, "claim_b", "contradictory_claim"),
+        ("b1", 6, 8.2, "claim_b", "near_duplicate"),
+        ("c0", 6, 7.7, "claim_c", "ambiguous_corroboration"),
+        ("c1", 6, 7.3, "claim_c", "near_duplicate"),
+        ("d0", 6, 6.8, "claim_d", "decoy"),
+        ("d1", 6, 6.4, "claim_d", "near_duplicate"),
+        ("e0", 6, 5.9, "claim_e", "decoy"),
+        ("e1", 6, 5.5, "claim_e", "near_duplicate"),
+    ]
+    if cluster_count is not None and cluster_count > 0:
+        raw_items = [
+            (name, cost, value, f"claim_{index % cluster_count}", role)
+            for index, (name, cost, value, _cluster, role) in enumerate(raw_items)
+        ]
+    rows = raw_items[:n_items]
+    next_index = 0
+    while len(rows) < n_items:
+        cluster = f"claim_extra_{next_index % max(1, min(4, n_items))}"
+        rows.append((f"x{next_index}", 6, max(3.0, 5.0 - (0.1 * next_index)), cluster, "decoy"))
+        next_index += 1
+
+    items = tuple(
+        SyntheticItem(
+            item_id=f"{prefix}_{name}",
+            token_cost=_token_cost(cost, seed=seed, item_name=name, token_cost_range=token_cost_range),
+            singleton_value=_seed_scale(value, seed=seed, instance_index=instance_index, item_name=name, noise_level=noise_level),
+            text=f"Adversarial redundant finding {name} in {cluster}; role={role}; synthetic seed {seed}.",
+            cluster_id=cluster,
+            metadata={
+                "regime_role": role,
+                "higher_order_risk": True,
+                "seed": seed,
+            },
+            regime="adversarial_redundancy",
+            provenance={"regime_family": "adversarial-redundancy", "seed": seed},
+        )
+        for name, cost, value, cluster, role in rows
+    )
+    return SyntheticInstance(
+        instance_id=prefix,
+        regime="adversarial_redundancy",
+        agent_id="synthetic_agent",
+        round_id=f"round_{instance_index}",
+        budget_tokens=budget_tokens,
+        items=items,
+        pairwise_bonuses={},
+        triple_bonuses={},
+        redundancy_residual_ratio=0.05,
+        seed=seed,
+        expected_policy="no_certified_switch",
+        description="Redundant-looking findings with explicit adversarial ambiguity risk; should not certify greedy support.",
+    )
+
+
 REGIME_BUILDERS = {
     "redundancy_dominated": build_redundancy_dominated_instance,
     "sparse_pairwise_synergy": build_sparse_pairwise_synergy_instance,
     "higher_order_synergy": build_higher_order_synergy_instance,
+    "adversarial_redundancy": build_adversarial_redundancy_instance,
 }
 
 

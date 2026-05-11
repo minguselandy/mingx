@@ -42,6 +42,57 @@ pre-registered structural gate when tests are run, but broader runtime or
 deployed-interface claims still require code and artifact verification in the
 relevant lane.
 
+P46 has refreshed the synthetic benchmark under v12 labels at:
+
+- `artifacts/experiments/synthetic_regime_v12/`
+- `docs/experiments/synthetic-regime-v12.md`
+
+The refreshed artifacts add four-family structural coverage and cost-aware
+baseline comparisons while retaining `metric_claim_level = ambiguous_metric`
+and `diagnostic_scope = synthetic_structural_only`.
+
+P47 has added an offline fixture model-adjudicated realistic-task benchmark at:
+
+- `artifacts/experiments/realistic_task_model_adjudicated_v12/`
+- `docs/experiments/realistic-task-model-adjudicated-v12.md`
+
+The P47 fixture lane covers three realistic-task families, writes
+model-adjudicated schema artifacts, compares minimal/full/top-k/MMR/always-SAG
+and v12 cost-aware policies, and keeps `paper_evidence_eligible = false`.
+It does not create human labels, kappa, measurement validation, deployed
+V-information verification, or calibrated bridge support.
+
+P48 has hardened Phase B replay under v12 semantics. The replay lane now keeps
+replay usability separate from metric claim level, requires complete dispatch
+identity, checks candidate-pool provenance through `candidate_pool_hash`, records explicit `paper_evidence_eligible` and
+`measurement_validation_claim` fields, and treats fixture-only or synthetic-only
+replay as non-paper evidence. Missing, stale, or incomplete bridge witnesses
+fail closed, and identity or candidate-pool hash mismatches cannot produce
+headline or paper evidence.
+
+P49 has added a deterministic fixture extraction audit pilot at:
+
+- `artifacts/experiments/extraction_audit_pilot_v12/`
+- `docs/experiments/extraction-audit-pilot-v12.md`
+
+The P49 lane audits raw/source records into structured findings and candidate
+pool `M`, including source-span traceability, provenance handles, missing
+critical findings, unsupported findings, duplicate or over-merged findings, and
+contradictory sources. It remains fixture-only audit substrate:
+`paper_evidence_eligible = false`, `measurement_validation_claim = false`, and
+no selector-regime claim is upgraded.
+
+P50 has added an optional deterministic fixture ReprojectionWitness scaffold at:
+
+- `artifacts/experiments/reprojection_witness_pilot_v12/`
+- `docs/experiments/reprojection-witness-pilot-v12.md`
+
+The P50 lane records why re-projection was triggered, what changed between
+initial and revised context, whether budget status stayed comparable, and
+whether dispatch identity and candidate-pool provenance stayed consistent. It
+remains fixture-only operational audit substrate and does not upgrade P47/P48/P49
+claims.
+
 ## Current Stable Runtime Defaults
 
 The repository default Phase 1 live model pair is now:
@@ -185,13 +236,24 @@ development/reference package for v12 follow-up work:
 - [P45 One-Stratum Bridge Calibration Plan](./codex/v12-phase-docs/P45-one-stratum-bridge-calibration-plan.md)
 - [P45 Bridge Calibration Closure](./experiments/P45-bridge-calibration-closure.md)
 - [P46 Synthetic v12 Artifact Refresh Plan](./codex/v12-phase-docs/P46-synthetic-v12-artifact-refresh-plan.md)
+- [Synthetic Regime v12 Artifact Refresh](./experiments/synthetic-regime-v12.md)
+- [P47 Model-Adjudicated Realistic-Task Plan](./codex/v12-phase-docs/P47-model-adjudicated-realistic-benchmark-plan.md)
+- [P47 Model-Adjudicated Realistic-Task Benchmark](./experiments/realistic-task-model-adjudicated-v12.md)
+- [P48 Phase B Replay v12 Hardening Plan](./codex/v12-phase-docs/P48-phase-b-replay-v12-hardening-plan.md)
+- [Phase B Replay Protocol](./protocols/phase-b-replay-protocol.md)
+- [P49 Extraction Audit Pilot Plan](./codex/v12-phase-docs/P49-extraction-audit-pilot-plan.md)
+- [P49 Extraction Audit Pilot](./experiments/extraction-audit-pilot-v12.md)
+- [P50 Optional ReprojectionWitness Plan](./codex/v12-phase-docs/P50-optional-reprojection-witness-plan.md)
+- [P50 ReprojectionWitness Pilot](./experiments/reprojection-witness-pilot-v12.md)
 - [Common Guardrails](./codex/v12-phase-docs/COMMON-GUARDRAILS.md)
 
 P45 is closed for the current `bio_attribute` stratum as implemented but
-non-calibrated. The next active phase is P46 synthetic v12 artifact refresh.
-P50 is optional and must not precede P46-P49 unless explicitly deferred. These
-phase docs do not claim `measurement_validated` evidence and do not supply
-bridge calibration results by themselves.
+non-calibrated. P46 synthetic v12 artifacts have been refreshed, P47 has added
+an offline fixture realistic-task benchmark, P48 has hardened Phase B replay,
+P49 has added the fixture extraction audit pilot, and P50 has added the optional
+fixture ReprojectionWitness scaffold. These phase docs do not claim
+`measurement_validated` evidence and do not supply bridge calibration results
+by themselves.
 
 The P37-P44 planning package adds follow-up planning and review artifacts for
 the next development cycle:

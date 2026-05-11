@@ -1,0 +1,283 @@
+{
+  "source_of_truth": "event_log",
+  "run_id": "synthetic-regime-v12",
+  "dispatch_count": 40,
+  "artifact_counts": {
+    "candidate_pools": 40,
+    "projection_plans": 40,
+    "budget_witnesses": 40,
+    "materialized_contexts": 40,
+    "metric_bridge_witnesses": 40,
+    "diagnostics": 40,
+    "projection_bundles": 40
+  },
+  "complete_artifact_sets": true,
+  "selector_action_counts": {
+    "interaction_aware_local_search": 5,
+    "monitored_greedy": 10,
+    "no_certified_switch": 15,
+    "seeded_augmented_greedy": 10
+  },
+  "selector_regime_label_counts": {
+    "ambiguous": 15,
+    "greedy_supported": 10,
+    "higher_order_risk": 5,
+    "pairwise_escalate": 10
+  },
+  "policy_counts": {
+    "interaction_aware_local_search": 5,
+    "monitored_greedy": 10,
+    "no_certified_switch": 15,
+    "seeded_augmented_greedy": 10
+  },
+  "metric_claim_level_counts": {
+    "ambiguous_metric": 40
+  },
+  "diagnostic_scope_counts": {
+    "synthetic_structural_only": 40
+  },
+  "per_regime": {
+    "adversarial_redundancy": {
+      "dispatch_count": 10,
+      "avg_block_ratio_lcb_b2": 1.0,
+      "avg_block_ratio_lcb_star": 1.0,
+      "avg_block_ratio_lcb_b3": 1.0,
+      "avg_trace_decay_proxy": 1.0,
+      "avg_synergy_fraction": 0.0,
+      "avg_positive_interaction_mass_ucb": 0.0,
+      "avg_greedy_augmented_gap": 0.0,
+      "selector_actions": {
+        "no_certified_switch": 10
+      },
+      "selector_regime_labels": {
+        "ambiguous": 10
+      },
+      "metric_claim_levels": {
+        "ambiguous_metric": 10
+      },
+      "diagnostic_scopes": {
+        "synthetic_structural_only": 10
+      }
+    },
+    "higher_order_synergy": {
+      "dispatch_count": 10,
+      "avg_block_ratio_lcb_b2": 0.741325,
+      "avg_block_ratio_lcb_star": 0.738375,
+      "avg_block_ratio_lcb_b3": 0.779858,
+      "avg_trace_decay_proxy": 1.0,
+      "avg_synergy_fraction": 0.089286,
+      "avg_positive_interaction_mass_ucb": 0.183005,
+      "avg_greedy_augmented_gap": 0.49085,
+      "selector_actions": {
+        "interaction_aware_local_search": 5,
+        "no_certified_switch": 5
+      },
+      "selector_regime_labels": {
+        "higher_order_risk": 5,
+        "ambiguous": 5
+      },
+      "metric_claim_levels": {
+        "ambiguous_metric": 10
+      },
+      "diagnostic_scopes": {
+        "synthetic_structural_only": 10
+      }
+    },
+    "redundancy_dominated": {
+      "dispatch_count": 10,
+      "avg_block_ratio_lcb_b2": 1.0,
+      "avg_block_ratio_lcb_star": 1.0,
+      "avg_block_ratio_lcb_b3": 1.0,
+      "avg_trace_decay_proxy": 1.0,
+      "avg_synergy_fraction": 0.0,
+      "avg_positive_interaction_mass_ucb": 0.0,
+      "avg_greedy_augmented_gap": 0.0,
+      "selector_actions": {
+        "monitored_greedy": 10
+      },
+      "selector_regime_labels": {
+        "greedy_supported": 10
+      },
+      "metric_claim_levels": {
+        "ambiguous_metric": 10
+      },
+      "diagnostic_scopes": {
+        "synthetic_structural_only": 10
+      }
+    },
+    "sparse_pairwise_synergy": {
+      "dispatch_count": 10,
+      "avg_block_ratio_lcb_b2": 0.802406,
+      "avg_block_ratio_lcb_star": 0.802406,
+      "avg_block_ratio_lcb_b3": 0.818066,
+      "avg_trace_decay_proxy": 1.124667,
+      "avg_synergy_fraction": 0.142857,
+      "avg_positive_interaction_mass_ucb": 0.549655,
+      "avg_greedy_augmented_gap": 0.0,
+      "selector_actions": {
+        "seeded_augmented_greedy": 10
+      },
+      "selector_regime_labels": {
+        "pairwise_escalate": 10
+      },
+      "metric_claim_levels": {
+        "ambiguous_metric": 10
+      },
+      "diagnostic_scopes": {
+        "synthetic_structural_only": 10
+      }
+    }
+  },
+  "pre_registered_gate_passed": true,
+  "pre_registered_gate_failures": [],
+  "pre_registered_gate_results": {
+    "artifact_completeness": {
+      "passed": true,
+      "artifact_counts": {
+        "candidate_pools": 40,
+        "projection_plans": 40,
+        "budget_witnesses": 40,
+        "materialized_contexts": 40,
+        "metric_bridge_witnesses": 40,
+        "diagnostics": 40,
+        "projection_bundles": 40
+      }
+    },
+    "ambiguity_accounting": {
+      "passed": true,
+      "ambiguity_count": 15,
+      "expected_structural_ambiguity_count": 15,
+      "unexpected_ambiguity_count": 0,
+      "dispatch_ids": [
+        "adversarial_0",
+        "adversarial_1",
+        "adversarial_2",
+        "adversarial_3",
+        "adversarial_4",
+        "adversarial_5",
+        "adversarial_6",
+        "adversarial_7",
+        "adversarial_8",
+        "adversarial_9",
+        "higher_order_2",
+        "higher_order_3",
+        "higher_order_5",
+        "higher_order_6",
+        "higher_order_7"
+      ]
+    },
+    "redundancy_signature": {
+      "passed": true,
+      "dispatch_ids": [
+        "redundancy_0",
+        "redundancy_1",
+        "redundancy_2",
+        "redundancy_3",
+        "redundancy_4",
+        "redundancy_5",
+        "redundancy_6",
+        "redundancy_7",
+        "redundancy_8",
+        "redundancy_9"
+      ]
+    },
+    "pairwise_synergy_signature": {
+      "passed": true,
+      "dispatch_ids": [
+        "pairwise_0",
+        "pairwise_1",
+        "pairwise_2",
+        "pairwise_3",
+        "pairwise_4",
+        "pairwise_5",
+        "pairwise_6",
+        "pairwise_7",
+        "pairwise_8",
+        "pairwise_9"
+      ],
+      "redundancy_b2_lcb": 1.0
+    },
+    "higher_order_safety": {
+      "passed": true,
+      "dispatch_ids": [
+        "higher_order_0",
+        "higher_order_1",
+        "higher_order_2",
+        "higher_order_3",
+        "higher_order_4",
+        "higher_order_5",
+        "higher_order_6",
+        "higher_order_7",
+        "higher_order_8",
+        "higher_order_9"
+      ]
+    },
+    "triple_excess_detection": {
+      "passed": true,
+      "dispatch_ids": [
+        "higher_order_0",
+        "higher_order_1",
+        "higher_order_2",
+        "higher_order_3",
+        "higher_order_4",
+        "higher_order_5",
+        "higher_order_6",
+        "higher_order_7",
+        "higher_order_8",
+        "higher_order_9"
+      ]
+    },
+    "adversarial_redundancy_conservative": {
+      "passed": true,
+      "dispatch_ids": [
+        "adversarial_0",
+        "adversarial_1",
+        "adversarial_2",
+        "adversarial_3",
+        "adversarial_4",
+        "adversarial_5",
+        "adversarial_6",
+        "adversarial_7",
+        "adversarial_8",
+        "adversarial_9"
+      ]
+    }
+  },
+  "ambiguity_count": 15,
+  "status": "green",
+  "config_path": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\configs\\runs\\synthetic-regime-v12.json",
+  "output_dir": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12",
+  "expected_policy_matches": 35,
+  "optional_backends": {
+    "selector_backend": "native_greedy",
+    "oracle_backend": "brute_force",
+    "strict_optional_dependencies": false,
+    "unavailable_count": 0,
+    "selector_available_count": 40,
+    "oracle_available_count": 40
+  },
+  "artifact_paths": {
+    "events": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\events.jsonl",
+    "candidate_pool_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\candidate_pools.jsonl",
+    "projection_plan_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\projection_plans.jsonl",
+    "budget_witness_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\budget_witnesses.jsonl",
+    "materialized_context_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\materialized_contexts.jsonl",
+    "metric_bridge_witness_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\metric_bridge_witnesses.jsonl",
+    "projection_diagnostics_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\diagnostics.jsonl",
+    "projection_bundle_materialized": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\projection_bundles.jsonl"
+  },
+  "interpretation_limits": [
+    "synthetic proxy-layer diagnostic only",
+    "no scheduler implementation",
+    "no memory architecture implementation",
+    "no theorem-inheritance claim",
+    "no system-level performance claim"
+  ],
+  "v12_artifact_paths": {
+    "synthetic_confusion_v12": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\synthetic_confusion_v12.csv",
+    "synthetic_metrics_v12": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\synthetic_metrics_v12.csv",
+    "synthetic_cost_table_v12": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\synthetic_cost_table_v12.csv",
+    "synthetic_run_manifest_v12": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\synthetic_run_manifest_v12.json",
+    "synthetic_report_v12": "C:\\Users\\Mingx\\Documents\\mx-codex\\agentic-codex\\mingx-dev\\artifacts\\experiments\\synthetic_regime_v12\\synthetic_report_v12.md"
+  }
+}

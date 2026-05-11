@@ -1,0 +1,60 @@
+{
+  "allowed_claim_level": "operational_utility_only",
+  "allowed_claim_levels": [
+    "model_adjudicated_proxy_evidence",
+    "operational_utility_only",
+    "ambiguous_metric"
+  ],
+  "budget_comparable_baselines": [
+    "minimal_context",
+    "top_k_retrieval",
+    "mmr_density_greedy",
+    "always_sag",
+    "v12_cost_aware_diagnostic_policy"
+  ],
+  "budget_comparable_row_count": 15,
+  "budget_fair_aggregate_excludes": [
+    "full_context"
+  ],
+  "budget_fair_comparison_available": true,
+  "budget_status_counts": {
+    "over_budget_reference": 3,
+    "within_budget": 15
+  },
+  "calibrated_bridge_evidence_used": false,
+  "claim_gate_schema_version": "P47RealisticTaskClaimGateV1",
+  "data_source_kind": "fixture",
+  "deployed_v_information_verification_claim": false,
+  "human_kappa_present": false,
+  "human_labels_present": false,
+  "human_validation_claim": false,
+  "live_api_used": false,
+  "measurement_validation_claim": false,
+  "metric_claim_level": "operational_utility_only",
+  "model_adjudicated_label_rows": 3,
+  "non_budget_reference_baselines": [
+    "full_context"
+  ],
+  "non_budget_reference_row_count": 3,
+  "p45_bridge_evidence_reused": false,
+  "paper_evidence_eligible": false,
+  "reason_codes": [
+    "fixture_labels_not_paper_evidence",
+    "model_adjudicated_labels_not_human_labels",
+    "human_labels_missing",
+    "human_kappa_missing",
+    "bridge_not_established_for_current_stratum",
+    "live_api_not_used"
+  ],
+  "run_id": "realistic-task-model-adjudicated-v12",
+  "selector_regime_label_distribution": {
+    "ambiguous": 1,
+    "greedy_supported": 1,
+    "pairwise_escalate": 1
+  },
+  "v12_cost_aware_policy_outcome_distribution": {
+    "ambiguous_downgrade": 1,
+    "monitored_greedy": 1,
+    "pairwise_escalate": 1
+  }
+}

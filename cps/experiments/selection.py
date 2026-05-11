@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass
 from itertools import combinations
 from typing import Callable, Iterable, Sequence
@@ -37,6 +38,10 @@ def total_cost(selected_ids: Iterable[str], costs: dict[str, int]) -> int:
     return sum(costs[item_id] for item_id in selected_ids)
 
 
+def _stable_hash_key(*parts: str) -> str:
+    return hashlib.sha256("|".join(parts).encode("utf-8")).hexdigest()
+
+
 def _trace_for_prefix(
     *,
     prefix_ids: Sequence[str],
@@ -67,6 +72,66 @@ def _trace_for_prefix(
         )
         current_value = next_value
     return trace
+
+
+def random_budgeted_select(
+    *,
+    items: Sequence[SyntheticItem],
+    budget_tokens: int,
+    value_fn: ValueFunction,
+    seed: str | int,
+    algorithm: str = "random_budgeted",
+) -> SelectionResult:
+    costs = item_costs(items)
+    ordered_ids = sorted(
+        (item.item_id for item in items),
+        key=lambda item_id: (_stable_hash_key(str(seed), item_id), item_id),
+    )
+    selected: list[str] = []
+    for item_id in ordered_ids:
+        if total_cost([*selected, item_id], costs) <= budget_tokens:
+            selected.append(item_id)
+
+    return SelectionResult(
+        algorithm=algorithm,
+        selected_ids=selected,
+        token_cost=total_cost(selected, costs),
+        value=round(value_fn(selected), 6),
+        trace=_trace_for_prefix(prefix_ids=selected, value_fn=value_fn, costs=costs, source=algorithm),
+    )
+
+
+def top_k_relevance_select(
+    *,
+    items: Sequence[SyntheticItem],
+    budget_tokens: int,
+    value_fn: ValueFunction,
+    algorithm: str = "top_k_relevance",
+) -> SelectionResult:
+    costs = item_costs(items)
+    ranked_ids = [
+        item.item_id
+        for item in sorted(
+            items,
+            key=lambda item: (
+                -round(value_fn([item.item_id]), 6),
+                item.token_cost,
+                item.item_id,
+            ),
+        )
+    ]
+    selected: list[str] = []
+    for item_id in ranked_ids:
+        if total_cost([*selected, item_id], costs) <= budget_tokens:
+            selected.append(item_id)
+
+    return SelectionResult(
+        algorithm=algorithm,
+        selected_ids=selected,
+        token_cost=total_cost(selected, costs),
+        value=round(value_fn(selected), 6),
+        trace=_trace_for_prefix(prefix_ids=selected, value_fn=value_fn, costs=costs, source=algorithm),
+    )
 
 
 def greedy_select(
