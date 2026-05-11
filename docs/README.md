@@ -54,18 +54,31 @@ long-lived `phase0` / `phase1` code roots.
   Human-in-the-loop workflow for AI-assisted contamination judgement and
   minimal question rewrite planning after gate failure.
 
+## P51-P60 v12 Follow-Up Planning
+
+The next proposed v12 follow-up cycle begins with P51 state reconciliation,
+P52 manuscript proof/evidence-state integration, and P53 diagnostic threshold
+contract work. These documents are planning and review controls only: they do
+not mark P51-P60 complete, do not upgrade evidence claims, and do not claim
+measurement validation or deployed V-information verification.
+
+- [P51-P60 v12 Follow-up Development and Experiment Plan](./experiments/P51-P60-v12-followup-dev-experiment-plan.md)
+- [P51-P60 v12 Review and Claim-Gate Protocol](./reviews/P51-P60-v12-review-claim-gate-protocol.md)
+
 ## P45-P50 v12 Codex Phase Docs
 
-The controlling Codex development/reference package for v12 follow-up work is:
+P45-P50 are completed evidence/audit scaffold phases and should be used as
+reference material, not as current execution plans. The current P45
+`bio_attribute` stratum is closed as non-calibrated.
 
 - [P45-P50 v12 Phase Docs](./codex/v12-phase-docs/README.md)
+- [P45-P50 v12 Phase Summary](./reviews/P45-P50-v12-phase-summary.md)
 - [Common Guardrails](./codex/v12-phase-docs/COMMON-GUARDRAILS.md)
 - [P45 One-Stratum Bridge Calibration Plan](./codex/v12-phase-docs/P45-one-stratum-bridge-calibration-plan.md)
 
-P45, one-stratum metric bridge calibration, is the next priority. P50 is
-optional and should not precede P45-P49. These phase docs are planning and
-review controls only: they do not claim `measurement_validated` evidence and do
-not supply bridge calibration results by themselves.
+These phase docs are planning and review controls only: they do not claim
+`measurement_validated` evidence and do not supply bridge calibration results by
+themselves.
 
 ## P37-P44 Development and Experiment Planning
 
@@ -97,6 +110,7 @@ Experiments:
 - [P41 Route B Model-Adjudicated Evaluation Plan](./experiments/P41-route-b-model-adjudicated-evaluation-plan.md)
 - [P42 Fresh Reduced-Scope Follow-Up Batch Plan](./experiments/P42-fresh-reduced-scope-follow-up-batch-plan.md)
 - [P43 Phase C Realistic Task Context Projection Benchmark Plan](./experiments/P43-phase-c-realistic-task-context-projection-benchmark-plan.md)
+- [P51-P60 v12 Follow-up Development and Experiment Plan](./experiments/P51-P60-v12-followup-dev-experiment-plan.md)
 
 Paper integration:
 
@@ -112,6 +126,8 @@ Reviews:
 - [P42 Follow-Up Live Batch Decision Review](./reviews/P42-follow-up-live-batch-decision-review.md)
 - [P43 Phase C Benchmark Readiness Review](./reviews/P43-phase-c-benchmark-readiness-review.md)
 - [P44 Manuscript Evidence Integration Review](./reviews/P44-manuscript-evidence-integration-review.md)
+- [P45-P50 v12 Phase Summary](./reviews/P45-P50-v12-phase-summary.md)
+- [P51-P60 v12 Review and Claim-Gate Protocol](./reviews/P51-P60-v12-review-claim-gate-protocol.md)
 - [openWorker Trace Field Availability Map](./reviews/openworker-trace-field-availability-map.md)
 - [Extraction Uniformity Sidecar Review](./reviews/extraction-uniformity-sidecar-review.md)
 
@@ -121,9 +137,18 @@ Reviews:
   Active protocol documents that guide implementation and execution.
 - `roadmaps/`
   Active planning documents. The v12 follow-up plan is
-  `mingx-followup-dev-experiment-plan-v0-2.md`; it makes one-stratum metric
-  bridge calibration the highest-priority missing experiment and does not
-  claim measurement validation.
+  `mingx-followup-dev-experiment-plan-v0-2.md`; newer P51-P60 planning starts
+  from state reconciliation, manuscript proof/evidence-state integration, and
+  diagnostic threshold contract work. Roadmaps do not claim measurement
+  validation.
+- `experiments/`
+  Experiment and phase-planning documents. The P51-P60 v12 plan begins with
+  state reconciliation, manuscript proof/evidence-state integration, and a
+  diagnostic threshold contract.
+- `reviews/`
+  Review records and claim-gate protocols, including the P51-P60 conservative
+  review protocol for fixture, synthetic, replay, extraction-audit, and
+  re-projection boundaries.
 - `archive/`
   `context_projection_fixed_v12.md` is the current research-framing anchor.
   `context_projection_revised_v10.md` and older paper drafts, including final

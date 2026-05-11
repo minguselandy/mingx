@@ -1,0 +1,27 @@
+{
+  "artifact_schema_version": "p55_bridge_calibration_pilot.v1",
+  "blocked_operator_required": true,
+  "canonical_outputs": [
+    "manifest.json",
+    "claim_gate_report.json",
+    "report.md"
+  ],
+  "claim_gate_result": "failed_closed_no_rows",
+  "claim_gate_status": "failed_closed_no_rows",
+  "config_id": "bridge_calibration_evidence_packet_selection_microtask_v1_p55",
+  "input_file_status": "absent",
+  "input_rows_reference": "artifacts/operator_inputs/p55_evidence_packet_selection_microtask_v1_rows.jsonl",
+  "live_api_used": false,
+  "metric_claim_level": "ambiguous_metric",
+  "next_phase_allowed": false,
+  "operator_approval_scope": "route_a_operator_imported_rows_only",
+  "paper_evidence_eligible": false,
+  "phase": "P55",
+  "pilot_status": "blocked_operator_required",
+  "requires_operator": true,
+  "review_ceiling": "none",
+  "row_count": 0,
+  "rows_imported": 0,
+  "rows_validated": 0,
+  "stratum_id": "evidence_packet_selection_microtask_v1"
+}

@@ -44,15 +44,29 @@ Project entrypoints:
 
 ## Current development planning
 
-The current Codex development/reference package for v12 follow-up work is:
+The current proposed v12 follow-up cycle is P51-P60. It begins with P51 state
+reconciliation, P52 manuscript proof/evidence-state integration, and P53
+diagnostic threshold contract work:
+
+- [P51-P60 v12 Follow-up Development and Experiment Plan](docs/experiments/P51-P60-v12-followup-dev-experiment-plan.md)
+- [P51-P60 v12 Review and Claim-Gate Protocol](docs/reviews/P51-P60-v12-review-claim-gate-protocol.md)
+
+These documents are planning and review controls only. They do not mark P51-P60
+complete, do not upgrade evidence claims, and do not claim measurement
+validation or deployed V-information verification.
+
+The prior Codex development/reference scaffold package for v12 follow-up work
+is indexed at:
 
 - [P45-P50 v12 Phase Docs](docs/codex/v12-phase-docs/README.md)
+- [P45-P50 v12 Phase Summary](docs/reviews/P45-P50-v12-phase-summary.md)
 
-This package controls the next bounded Codex tasks. P45, one-stratum metric
-bridge calibration, is the next priority. P50 is optional and must not precede
-P45-P49. The package contains plans and reviews only; it does not claim
-`measurement_validated` evidence and does not supply bridge calibration results
-by itself.
+P45-P50 are completed evidence/audit scaffold phases. They cover the
+bridge-calibration lane, synthetic structural diagnostics, fixture
+realistic-task benchmark, Phase B replay hardening, extraction audit pilot, and
+optional `ReprojectionWitness` scaffold. The current P45 `bio_attribute`
+stratum is closed as non-calibrated: no `calibrated_proxy_supported`,
+`vinfo_proxy_supported`, or `measurement_validated` claim is made from it.
 
 The earlier P37-P44 development and experiment planning package is indexed at:
 
@@ -76,7 +90,9 @@ The v10 manuscript and alignment files remain preserved as legacy/archive
 material:
 [docs/archive/context_projection_revised_v10.md](./docs/archive/context_projection_revised_v10.md)
 and [docs/paper-alignment-v10.md](./docs/paper-alignment-v10.md).
-Bridge calibration remains the highest-priority missing experiment; the
+P45 closed the current `bio_attribute` bridge stratum as non-calibrated. The
+immediate next work is P51 state reconciliation, P52 manuscript proof and
+evidence-state integration, and P53 diagnostic threshold contract work. The
 repository does not claim `measurement_validated` evidence.
 
 This repository is not a full paper implementation. Protocol docs, run plans,
