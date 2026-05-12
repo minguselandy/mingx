@@ -1,0 +1,22 @@
+{
+  "artifact_set": "p56_realistic_dispatch_replay",
+  "calibrated_proxy_supported_allowed": false,
+  "canonical_outputs": [
+    "manifest.json",
+    "claim_gate_report.json",
+    "report.md"
+  ],
+  "claim_gate_result": "no_imported_traces",
+  "conditional_outputs": [],
+  "config_reference": "configs/runs/realistic-dispatch-replay-p56.json",
+  "input_traces_reference": "artifacts/operator_inputs/p56_realistic_dispatch_traces.jsonl",
+  "measurement_validation_claim": false,
+  "next_phase_allowed": false,
+  "output_reference": "artifacts/experiments/p56_realistic_dispatch_replay",
+  "paper_evidence_eligible": false,
+  "phase": "P56",
+  "trace_file_status": "absent",
+  "traces_imported": 0,
+  "traces_validated": 0,
+  "vinfo_proxy_supported_allowed": false
+}
