@@ -1,0 +1,174 @@
+{
+  "record_schema_version": "provenance_redundancy_diagnostic.v1",
+  "diagnostic_id": "template_diagnostic_id",
+  "candidate_pair_id": "template_candidate_pair_id",
+  "candidate_a_id": "template_candidate_a_id",
+  "candidate_b_id": "template_candidate_b_id",
+  "finding_a_hash": "template_finding_a_hash",
+  "finding_b_hash": "template_finding_b_hash",
+  "source_a_id": "template_source_a_id",
+  "source_b_id": "template_source_b_id",
+  "source_span_a_hash": "template_source_span_a_hash",
+  "source_span_b_hash": "template_source_span_b_hash",
+  "provenance_handle_a": "template_provenance_handle_a",
+  "provenance_handle_b": "template_provenance_handle_b",
+  "source_independence_score": null,
+  "provenance_overlap_score": null,
+  "semantic_similarity_score": null,
+  "contradiction_flag": false,
+  "qualifier_mismatch_flag": false,
+  "temporal_scope_mismatch_flag": false,
+  "prerequisite_relation_flag": false,
+  "category_label": "template_unclassified",
+  "category_confidence": null,
+  "selector_implication": "ambiguous_until_reviewed",
+  "escalation_required": true,
+  "audit_required": true,
+  "claim_ceiling": "operational_diagnostic_improvement_only",
+  "metric_claim_level": "operational_utility_only",
+  "selector_regime_label": "ambiguous",
+  "paper_evidence_eligible": false,
+  "measurement_validation_claim": false,
+  "category_definitions": {
+    "duplicate_redundancy": {
+      "description": "same finding with same or effectively identical provenance confirmed by finding and source-span hashes",
+      "selector_implication": "penalize_only_when_true_duplicate",
+      "escalation_behavior": "downgrade_to_ambiguous_and_audit_if_hash_or_provenance_identity_is_incomplete",
+      "claim_ceiling": "operational_diagnostic_improvement_only",
+      "failure_modes": [
+        "false_duplicate_from_paraphrase",
+        "lost_source_distinction",
+        "over_penalized_independent_corroboration"
+      ],
+      "source_independence_requirement": "low_or_none",
+      "escalation_required": false,
+      "audit_required": false
+    },
+    "independent_corroboration": {
+      "description": "compatible finding supported by independent sources or independently derived evidence",
+      "selector_implication": "preserve_when_source_independence_high_and_claim_important",
+      "escalation_behavior": "escalate_if_source_independence_is_uncertain_or_provenance_is_missing",
+      "claim_ceiling": "operational_diagnostic_improvement_only",
+      "failure_modes": [
+        "mistaken_source_independence",
+        "source_laundering",
+        "unsupported_consensus"
+      ],
+      "source_independence_requirement": "high",
+      "escalation_required": false,
+      "audit_required": true
+    },
+    "adversarial_repetition": {
+      "description": "repetition or paraphrase that may amplify artificial salience or false consensus",
+      "selector_implication": "trigger_contradiction_and_provenance_audit_not_simple_diversity_penalty",
+      "escalation_behavior": "audit_required_and_escalate_until_repetition_source_or_contradiction_context_is_resolved",
+      "claim_ceiling": "operational_diagnostic_improvement_only",
+      "failure_modes": [
+        "adversarial_restatement_mistaken_for_corroboration",
+        "spam_counted_as_signal",
+        "contradiction_hidden_by_repetition"
+      ],
+      "source_independence_requirement": "unknown_until_audited",
+      "escalation_required": true,
+      "audit_required": true
+    },
+    "source_conflict_pair": {
+      "description": "candidate pair with conflicting source claims or mutually incompatible evidence",
+      "selector_implication": "escalate_or_adjudicate",
+      "escalation_behavior": "audit_required_and_adjudication_recommended_before_selector_downgrades_either_side",
+      "claim_ceiling": "operational_diagnostic_improvement_only",
+      "failure_modes": [
+        "false_consensus",
+        "dropped_minority_evidence",
+        "unsupported_adjudication"
+      ],
+      "source_independence_requirement": "recorded_before_adjudication",
+      "escalation_required": true,
+      "audit_required": true
+    },
+    "prerequisite_overlap": {
+      "description": "overlap caused by a prerequisite finding needed to interpret another candidate",
+      "selector_implication": "preserve_or_escalate",
+      "escalation_behavior": "escalate_if_prerequisite_link_is_incomplete_missing_or_claim_relevant",
+      "claim_ceiling": "operational_diagnostic_improvement_only",
+      "failure_modes": [
+        "prerequisite_dropped_as_duplicate",
+        "causal_chain_broken",
+        "downstream_finding_overpromoted"
+      ],
+      "source_independence_requirement": "not_primary_gate",
+      "escalation_required": true,
+      "audit_required": true
+    },
+    "paraphrase_near_duplicate": {
+      "description": "semantically similar candidates without full hash identity",
+      "selector_implication": "lower_priority_unless_provenance_differs",
+      "escalation_behavior": "escalate_when_provenance_differs_qualifiers_differ_or_source_independence_is_unclear",
+      "claim_ceiling": "operational_diagnostic_improvement_only",
+      "failure_modes": [
+        "independent_corroboration_collapsed",
+        "qualifier_drift_missed",
+        "semantic_similarity_over_trusted"
+      ],
+      "source_independence_requirement": "must_check_if_provenance_differs",
+      "escalation_required": false,
+      "audit_required": true
+    },
+    "qualifier_mismatch": {
+      "description": "similar findings with different caveats, thresholds, uncertainty, negation, or scope qualifiers",
+      "selector_implication": "escalate_because_qualifier_loss_can_change_claim_meaning",
+      "escalation_behavior": "audit_required_and_preserve_both_until_qualifier_meaning_is_resolved",
+      "claim_ceiling": "operational_diagnostic_improvement_only",
+      "failure_modes": [
+        "caveat_loss",
+        "overclaim",
+        "condition_erased_by_redundancy_merge"
+      ],
+      "source_independence_requirement": "secondary_to_qualifier_resolution",
+      "escalation_required": true,
+      "audit_required": true
+    },
+    "temporal_scope_mismatch": {
+      "description": "similar findings with different dates, epochs, releases, phases, or validity windows",
+      "selector_implication": "escalate_because_time_scope_can_change_claim_truth",
+      "escalation_behavior": "audit_required_and_preserve_or_separate_by_epoch_until_temporal_scope_is_resolved",
+      "claim_ceiling": "operational_diagnostic_improvement_only",
+      "failure_modes": [
+        "stale_evidence_treated_as_current",
+        "phase_order_corrupted",
+        "temporal_contradiction_hidden"
+      ],
+      "source_independence_requirement": "secondary_to_temporal_resolution",
+      "escalation_required": true,
+      "audit_required": true
+    }
+  },
+  "claim_boundary": {
+    "p58_is_operational_diagnostic_only": true,
+    "p58_does_not_establish_selector_validity": true,
+    "p58_does_not_establish_metric_bridge_support": true,
+    "p58_does_not_establish_v_information_support": true,
+    "p58_does_not_establish_measurement_validation": true,
+    "p58_does_not_make_fixture_or_template_outputs_paper_evidence": true,
+    "p58_does_not_repair_p55_p56_blocked_states": true,
+    "p58_does_not_convert_p57_extraction_audit_into_selector_validity": true
+  },
+  "prior_phase_boundaries": {
+    "p55_status": "failed_closed_no_rows_blocked_operator_required",
+    "p56_status": "no_imported_traces",
+    "p57_status": "extraction_risk_scaffold_only"
+  },
+  "denied_claims": [
+    "selector_validity",
+    "metric_bridge_support",
+    "v_information_support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement_validation",
+    "measurement_validated",
+    "paper_grade_template_evidence",
+    "deployed_runtime_improvement",
+    "p55_p56_success_inheritance",
+    "p57_extraction_audit_as_selector_proof"
+  ]
+}

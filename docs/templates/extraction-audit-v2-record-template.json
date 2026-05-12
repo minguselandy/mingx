@@ -1,0 +1,118 @@
+{
+  "record_schema_version": "extraction_audit_v2_record.v1",
+  "audit_id": "template_audit_id",
+  "source_document_id": "template_source_document_id",
+  "source_document_hash": "template_source_document_hash",
+  "source_span_hash": "template_source_span_hash",
+  "extracted_item_id": "template_extracted_item_id",
+  "extracted_item_hash": "template_extracted_item_hash",
+  "candidate_pool_hash": "template_candidate_pool_hash",
+  "stratum": "template_stratum",
+  "ground_truth_finding": {
+    "text": "template_ground_truth_finding",
+    "source_support_required": true
+  },
+  "extracted_finding": {
+    "text": "template_extracted_finding",
+    "source_support_observed": false
+  },
+  "label": "missing",
+  "label_rationale": "template_label_rationale",
+  "provenance_expected": [
+    "template_expected_provenance_ref"
+  ],
+  "provenance_observed": [],
+  "qualifier_expected": [
+    "template_expected_qualifier"
+  ],
+  "qualifier_observed": [],
+  "temporal_scope_expected": "template_expected_temporal_scope",
+  "temporal_scope_observed": "template_observed_temporal_scope",
+  "contradiction_context": {
+    "present": false,
+    "expected_context": "template_contradiction_context"
+  },
+  "prerequisite_context": {
+    "present": false,
+    "expected_context": "template_prerequisite_context"
+  },
+  "value_weight": 1.0,
+  "criticality": "template_criticality",
+  "selector_impact_estimate": {
+    "value": "not_assessed",
+    "semantics": "risk_estimate_only",
+    "not_selector_validity": true,
+    "not_metric_support": true
+  },
+  "data_source_kind": "template_unexecuted",
+  "label_source_kind": "none_unexecuted_template",
+  "annotator_count": 0,
+  "adjudication_status": "not_adjudicated",
+  "agreement_statistic": {
+    "kind": "not_available",
+    "value": null,
+    "requires_actual_human_annotators": true
+  },
+  "human_human_kappa_present": false,
+  "model_adjudicated": false,
+  "paper_evidence_eligible": false,
+  "measurement_validation_claim": false,
+  "allowed_strata": [
+    "simple_factual",
+    "complex_conditional",
+    "qualifier_heavy",
+    "temporal_scope",
+    "cross_chunk",
+    "long_tail_entity",
+    "high_provenance_value",
+    "prerequisite",
+    "contradictory",
+    "adversarial_repetition_sensitive"
+  ],
+  "allowed_labels": [
+    "captured_exact",
+    "captured_core_preserved",
+    "captured_core_changed",
+    "missing",
+    "unsupported_added",
+    "duplicate_or_overmerged",
+    "contradiction_lost",
+    "qualifier_lost",
+    "temporal_scope_error",
+    "provenance_lost",
+    "selector_impact_estimate"
+  ],
+  "extraction_metrics": [
+    "extraction_completeness_by_stratum",
+    "effective_extraction_completeness",
+    "value_weighted_extraction_loss",
+    "critical_finding_miss_rate",
+    "unsupported_finding_rate",
+    "provenance_loss_rate"
+  ],
+  "claim_boundary": {
+    "extraction_audit_is_extraction_risk_evidence_only": true,
+    "extraction_audit_is_not_selector_validity": true,
+    "extraction_audit_is_not_metric_bridge_support": true,
+    "extraction_audit_is_not_v_information_support": true,
+    "extraction_audit_is_not_measurement_validation": true,
+    "fixture_only_extraction_audit_is_not_paper_grade_evidence": true,
+    "model_adjudicated_audit_is_not_human_validation": true,
+    "human_labels_require_operator_approval": true,
+    "human_human_kappa_requires_actual_human_annotators": true,
+    "p55_remains_failed_closed_no_rows_blocked_operator_required": true,
+    "p56_remains_no_imported_traces": true
+  },
+  "denied_claims": [
+    "selector_validity",
+    "metric_bridge_support",
+    "v_information_support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement_validation",
+    "paper_grade_fixture_evidence",
+    "model_adjudication_as_human_label",
+    "human_human_kappa_without_actual_human_annotators",
+    "p55_or_p56_success_inheritance"
+  ]
+}
