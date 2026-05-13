@@ -1,0 +1,39 @@
+{
+  "blocked_items": [
+    "claims_jsonl:local_fever_claims_not_supplied"
+  ],
+  "candidate_pools_generated": 0,
+  "claim_status": [
+    "no_claim_upgrade",
+    "adapter_only",
+    "candidate_pool_schema_ready",
+    "P55 still blocked_no_rows",
+    "P56 still blocked_no_traces"
+  ],
+  "dataset": "FEVER",
+  "denied_claims": [
+    "measurement_validated",
+    "human-label validation",
+    "human-human kappa",
+    "deployed V-information verification",
+    "theorem-level deployed submodularity verification",
+    "global calibrated proxy support",
+    "global V-information proxy support",
+    "fixture/synthetic/no-row/no-trace/scaffold paper evidence",
+    "deployed runtime improvement from ReprojectionWitness",
+    "P55 unblocked",
+    "P56 unblocked"
+  ],
+  "metric_bridge_support": false,
+  "next_phase": "P62R FEVER bridge row generator after independent review",
+  "p55_rows_generated": 0,
+  "p56_traces_generated": 0,
+  "phase": "P61R-A",
+  "reason_codes": [
+    "missing_claims_file",
+    "no_candidate_pools_generated"
+  ],
+  "schema_version": "p61r_blocked_data_report_v1",
+  "split": "dev",
+  "status": "blocked_data_unavailable"
+}
