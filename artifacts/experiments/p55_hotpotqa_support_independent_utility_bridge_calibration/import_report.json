@@ -1,0 +1,15 @@
+{
+  "active_stratum": "evidence_packet_selection_microtask_v1",
+  "calibration_epoch": "P63R-FixB-HotpotQA-independent-live-utility-v1",
+  "dataset": "HotpotQA",
+  "input_rows_path": "artifacts/operator_inputs/p55_hotpotqa_support_independent_utility_rows.jsonl",
+  "n_rows_imported": 826,
+  "n_rows_validated": 826,
+  "n_unique_instances": 826,
+  "phase": "P63R",
+  "rows_imported": 826,
+  "rows_validated": 826,
+  "schema_valid": true,
+  "task_family": "hotpotqa_support_classification_independent_utility",
+  "validation_errors": []
+}

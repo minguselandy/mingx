@@ -1,0 +1,103 @@
+{
+  "api_failure_examples": [
+    "5a713ea95542994082a3e6e4::support_independent::1ed2e75dfb585b3d:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7166395542994082a3e814::support_independent::7e0e3355ba72a156:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7166395542994082a3e814::support_independent::6eee0b974c19102b:ConnectionResetError:[WinError 10054] ",
+    "5a722b8655429971e9dc9329::support_independent::6f30477588dc8e1a:ConnectionResetError:[WinError 10054] ",
+    "5a722b8655429971e9dc9329::support_independent::7ee90dfc6bac4f57:RemoteDisconnected:Remote end closed connection without response",
+    "5a7332935542991f9a20c67d::support_independent::a4a51036a1bb4ff6:RuntimeError:DashScope request failed: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+    "5a7332935542991f9a20c67d::support_independent::337ce073eb94780c:RuntimeError:DashScope request failed: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1081)>",
+    "5a7332935542991f9a20c67d::support_independent::9aaa317547181b29:RemoteDisconnected:Remote end closed connection without response",
+    "5a738d27554299623ed4abf3::support_independent::5cee3704da1b039c:ValueError:logloss evaluator emitted 'SUPPORTING', expected 'NON_SUPPORTING'",
+    "5a738d27554299623ed4abf3::support_independent::2b60a6ee2d263769:RemoteDisconnected:Remote end closed connection without response",
+    "5a74106b55429979e288289e::support_independent::75844176d83b9839:ValueError:logloss evaluator emitted 'SUPPORTING', expected 'NON_SUPPORTING'",
+    "5a74c85055429916b0164218::support_independent::35cd045eb065fd70:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a74ce9655429974ef308c6c::support_independent::4f604a444780770f:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a75e05c55429976ec32bc5f::support_independent::85aae4b39bd4cce9:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a75e05c55429976ec32bc5f::support_independent::a9bc1c76e96a47e9:ValueError:logloss evaluator emitted 'SUPPORTING', expected 'NON_SUPPORTING'",
+    "5a75f79555429976ec32bcca::support_independent::91e2d8e5d38a5dad:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a760ab65542994ccc918697::support_independent::51b844a3806f3a9f:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a760ab65542994ccc918697::support_independent::790b3367bdb275d4:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7625c7554299109176e668::support_independent::9008e5c41ba493e5:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7625c7554299109176e668::support_independent::75ee2a90af9503d0:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'"
+  ],
+  "api_failure_reason_counts": {
+    "sanitized_failures": 193
+  },
+  "api_failures": 193,
+  "api_retries": 85,
+  "api_score_calls": 3304,
+  "append_attempts": 19,
+  "append_delta_records_generated": 12,
+  "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "claim_status": "no_claim_upgrade",
+  "classifier_prompt_version": "hotpotqa_support_label_classifier_prompt_v1",
+  "completion_tokens": 9912,
+  "delta_logloss_source": "live_api_support_label_nll_without_minus_with_block",
+  "delta_records_generated": 826,
+  "delta_records_path": "artifacts/benchmarks/hotpotqa_support_independent_utility_delta_records.jsonl",
+  "delta_records_validated": 826,
+  "delta_utility_source": "independent_live_api_support_classifier_accuracy_delta",
+  "evaluator": {
+    "classifier": {
+      "decoding_policy": "deterministic_logprob_scoring_v1",
+      "enable_thinking": false,
+      "endpoint_type": "openai_compatible_chat_completions",
+      "logprobs_supported": false,
+      "materialization_policy": "fixed_selector_order_with_source_boundaries",
+      "model_name": "qwen3.6-flash",
+      "provider": "dashscope",
+      "temperature": 0,
+      "top_p": 1,
+      "utility_evaluator_id": "approved_live_api_classifier_endpoint::dashscope::qwen3.6-flash::support_label_classifier_v1"
+    },
+    "logloss": {
+      "decoding_policy": "deterministic_logprob_scoring_v1",
+      "enable_thinking": false,
+      "endpoint_type": "openai_compatible_chat_completions_logprobs",
+      "logloss_evaluator_id": "approved_live_api_logprob_endpoint::dashscope::qwen3.6-flash::support_label_nll_v1",
+      "logprobs_supported": true,
+      "materialization_policy": "fixed_selector_order_with_source_boundaries",
+      "model_name": "qwen3.6-flash",
+      "provider": "dashscope",
+      "temperature": 0,
+      "top_logprobs": 0,
+      "top_p": 1
+    }
+  },
+  "instances_attempted": 200,
+  "instances_used": 200,
+  "logprob_prompt_version": "hotpotqa_support_label_logprob_prompt_v1",
+  "metric_claim_level": "no_claim_upgrade",
+  "metric_design": "independent_live_api_support_classifier_utility_v1",
+  "non_circularity_checks": {
+    "affine_delta_utility_from_delta_logloss": true,
+    "circular_delta_utility_matches_delta_logloss": true,
+    "clipped_delta_utility_from_delta_logloss": true,
+    "correlation_delta_utility_delta_logloss": 0.06569213784945453,
+    "delta_utility_distribution": {
+      "-1": 1,
+      "0": 821,
+      "1": 4
+    },
+    "fraction_delta_utility_equals_delta_logloss": 0.0,
+    "rounded_delta_utility_from_delta_logloss": true
+  },
+  "operator_rows_generated": 826,
+  "operator_rows_path": "artifacts/operator_inputs/p55_hotpotqa_support_independent_utility_rows.jsonl",
+  "operator_rows_validated": 826,
+  "phase": "P63R-FixB",
+  "prompt_tokens": 592210,
+  "records_attempted": 1000,
+  "row_validation_errors": [],
+  "status": "fixb_delta_records_generated",
+  "total_tokens": 602122,
+  "unique_instances": 826,
+  "utility_definition": "per_row_support_label_correctness_delta_from_independent_classifier_outputs",
+  "utility_prediction_distribution": {
+    "-1": 1,
+    "0": 821,
+    "1": 4
+  },
+  "validation_errors": []
+}

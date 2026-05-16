@@ -1,0 +1,19 @@
+{
+  "candidate_pools_loaded": 200,
+  "claim_status": "rows_generated_pending_calibration",
+  "dataset": "HotpotQA",
+  "delta_records_loaded": 600,
+  "generation_errors": [],
+  "metric_bridge_support": false,
+  "operator_rows_path": "artifacts/operator_inputs/p55_evidence_packet_selection_microtask_v1_rows.jsonl",
+  "p55_status": "rows_generated_pending_calibration",
+  "p56_status": "no_imported_traces",
+  "paper_evidence": false,
+  "phase": "P62R-HotpotQA",
+  "rows_generated": 600,
+  "rows_validated": 600,
+  "status": "rows_generated_pending_calibration",
+  "task_family": "hotpotqa_answer_support_selection",
+  "unique_instances": 150,
+  "validation_errors": []
+}

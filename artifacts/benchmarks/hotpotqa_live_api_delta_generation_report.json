@@ -1,0 +1,37 @@
+{
+  "api_failures": [],
+  "api_retries": 0,
+  "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "claim_status": "no_claim_upgrade",
+  "delta_records_path": "artifacts/benchmarks/hotpotqa_p55_delta_records.jsonl",
+  "estimated_cost": {
+    "billing_cost": "not_available_from_endpoint_response",
+    "completion_tokens": 91,
+    "prompt_tokens": 3817,
+    "score_calls": 32,
+    "total_tokens": 3908
+  },
+  "evaluator": {
+    "decoding_policy": "deterministic_logprob_scoring_v1",
+    "endpoint_type": "openai_compatible_chat_completions_logprobs",
+    "evaluator_id": "approved_live_api_logprob_endpoint::dashscope::qwen3.6-flash::deterministic_logprob_scoring_v1",
+    "failure_policy": "reject_missing_logprobs_degenerate_logprobs_reasoning_content_or_answer_replay_mismatch",
+    "logprobs_supported": true,
+    "materialization_policy": "fixed_selector_order_with_source_boundaries",
+    "max_tokens": 128,
+    "model_name": "qwen3.6-flash",
+    "model_tier": "approved_live_logprob_model_v1",
+    "model_version_or_snapshot_if_available": "not_reported_by_endpoint",
+    "provider": "dashscope",
+    "replicate_count": 1,
+    "retry_policy": "up_to_3_attempts_exponential_sleep_2s_4s",
+    "temperature": 0.0,
+    "top_p": 1.0
+  },
+  "phase": "HotpotQA-P55-live-api-delta-smoke",
+  "records_generated": 26,
+  "records_validated": 26,
+  "selected_instances": 6,
+  "status": "delta_records_ready_for_p62r",
+  "validation_errors": []
+}

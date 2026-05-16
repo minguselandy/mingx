@@ -1,0 +1,33 @@
+{
+  "active_stratum": "evidence_packet_selection_microtask_v1",
+  "calibrated_proxy_supported": false,
+  "calibrated_proxy_supported_candidate": false,
+  "calibration_epoch": "P63R-HotpotQA-qwen36flash-600x150-v1",
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "dataset": "HotpotQA",
+  "deployed_v_information_verification": false,
+  "effective_sample_size": 600,
+  "evaluator_id": "approved_live_api_logprob_endpoint::dashscope::qwen3.6-flash::deterministic_logprob_scoring_v1",
+  "gate_result": "failed_closed_gate_failed",
+  "measurement_validation": false,
+  "metric_claim_level": "operational_utility_only",
+  "metric_family": "hotpotqa_answer_logloss_to_supporting_fact_recall_delta",
+  "n_rows_validated": 600,
+  "n_unique_instances": 150,
+  "normalized_residual": 4.352219116658005,
+  "output_dir": "artifacts/experiments/p55_hotpotqa_bridge_calibration",
+  "p56_status": "no_imported_traces",
+  "paper_evidence": false,
+  "phase": "P63R",
+  "reason_codes": [
+    "normalized_residual_failed",
+    "sign_agreement_failed",
+    "spearman_rho_failed"
+  ],
+  "sign_agreement": 0.16666666666666666,
+  "spearman_rho": -0.2252188038852718,
+  "task_family": "hotpotqa_answer_support_selection",
+  "vinfo_proxy_supported": false,
+  "witness_schema_version": "metric_bridge_witness.p63r_hotpotqa.v1",
+  "zeta_hat_s": 0.9671598037016339
+}

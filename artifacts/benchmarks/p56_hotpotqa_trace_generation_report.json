@@ -1,0 +1,134 @@
+{
+  "bridge_witness_status": "failed_or_absent",
+  "budgets": [
+    512,
+    1024
+  ],
+  "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "candidate_pools_used": 200,
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "dataset": "HotpotQA",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement validation",
+    "paper evidence",
+    "P55 bridge support",
+    "selector superiority"
+  ],
+  "doc_path": "docs/experiments/P56-hotpotqa-operational-dispatch-traces.md",
+  "metric_bridge_witness": {
+    "bridge_status": "failed_or_absent",
+    "calibrated_proxy_supported": false,
+    "metric_claim_level": "operational_utility_only",
+    "source": "P63R HotpotQA failed_closed_gate_failed / FixB operational_utility_only",
+    "vinfo_proxy_supported": false
+  },
+  "metric_claim_level": "operational_utility_only",
+  "operational_metrics": {
+    "gold_support_oracle_upper_bound::budget_1024": {
+      "answer_available_count": 192,
+      "budget": 1024,
+      "mean_budget_used": 845.77,
+      "mean_selected_tokens": 845.77,
+      "mean_supporting_fact_recall_at_budget": 1.0,
+      "selector_name": "gold_support_oracle_upper_bound",
+      "trace_count": 200
+    },
+    "gold_support_oracle_upper_bound::budget_512": {
+      "answer_available_count": 191,
+      "budget": 512,
+      "mean_budget_used": 505.075,
+      "mean_selected_tokens": 505.075,
+      "mean_supporting_fact_recall_at_budget": 1.0,
+      "selector_name": "gold_support_oracle_upper_bound",
+      "trace_count": 200
+    },
+    "mmr_density_greedy::budget_1024": {
+      "answer_available_count": 189,
+      "budget": 1024,
+      "mean_budget_used": 845.61,
+      "mean_selected_tokens": 845.61,
+      "mean_supporting_fact_recall_at_budget": 0.980417,
+      "selector_name": "mmr_density_greedy",
+      "trace_count": 200
+    },
+    "mmr_density_greedy::budget_512": {
+      "answer_available_count": 172,
+      "budget": 512,
+      "mean_budget_used": 505.425,
+      "mean_selected_tokens": 505.425,
+      "mean_supporting_fact_recall_at_budget": 0.860167,
+      "selector_name": "mmr_density_greedy",
+      "trace_count": 200
+    },
+    "random_budget::budget_1024": {
+      "answer_available_count": 184,
+      "budget": 1024,
+      "mean_budget_used": 845.805,
+      "mean_selected_tokens": 845.805,
+      "mean_supporting_fact_recall_at_budget": 0.95,
+      "selector_name": "random_budget",
+      "trace_count": 200
+    },
+    "random_budget::budget_512": {
+      "answer_available_count": 136,
+      "budget": 512,
+      "mean_budget_used": 505.085,
+      "mean_selected_tokens": 505.085,
+      "mean_supporting_fact_recall_at_budget": 0.572917,
+      "selector_name": "random_budget",
+      "trace_count": 200
+    },
+    "topk_relevance_or_token_budget::budget_1024": {
+      "answer_available_count": 188,
+      "budget": 1024,
+      "mean_budget_used": 845.82,
+      "mean_selected_tokens": 845.82,
+      "mean_supporting_fact_recall_at_budget": 0.980833,
+      "selector_name": "topk_relevance_or_token_budget",
+      "trace_count": 200
+    },
+    "topk_relevance_or_token_budget::budget_512": {
+      "answer_available_count": 164,
+      "budget": 512,
+      "mean_budget_used": 505.16,
+      "mean_selected_tokens": 505.16,
+      "mean_supporting_fact_recall_at_budget": 0.866167,
+      "selector_name": "topk_relevance_or_token_budget",
+      "trace_count": 200
+    },
+    "v12_cost_aware_diagnostic_policy_operational_only::budget_1024": {
+      "answer_available_count": 190,
+      "budget": 1024,
+      "mean_budget_used": 846.085,
+      "mean_selected_tokens": 846.085,
+      "mean_supporting_fact_recall_at_budget": 0.995833,
+      "selector_name": "v12_cost_aware_diagnostic_policy_operational_only",
+      "trace_count": 200
+    },
+    "v12_cost_aware_diagnostic_policy_operational_only::budget_512": {
+      "answer_available_count": 173,
+      "budget": 512,
+      "mean_budget_used": 505.465,
+      "mean_selected_tokens": 505.465,
+      "mean_supporting_fact_recall_at_budget": 0.907833,
+      "selector_name": "v12_cost_aware_diagnostic_policy_operational_only",
+      "trace_count": 200
+    }
+  },
+  "phase": "P56-HotpotQA",
+  "selectors": [
+    "random_budget",
+    "topk_relevance_or_token_budget",
+    "mmr_density_greedy",
+    "v12_cost_aware_diagnostic_policy_operational_only",
+    "gold_support_oracle_upper_bound"
+  ],
+  "status": "p56_hotpotqa_operational_traces_generated",
+  "task_family": "hotpotqa_answer_support_selection",
+  "traces_generated": 2000,
+  "traces_path": "artifacts/operator_inputs/p56_realistic_dispatch_traces.jsonl",
+  "traces_validated": 2000,
+  "validation_errors": []
+}

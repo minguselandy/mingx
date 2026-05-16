@@ -5,13 +5,17 @@ from pathlib import Path
 from typing import Sequence
 
 from cps.benchmarks.fever_adapter import build_fever_candidate_pools
+from cps.benchmarks.hotpot_adapter import HOTPOTQA_DATASET
+from cps.benchmarks.hotpot_adapter import build_hotpot_candidate_pools
 from cps.benchmarks.schemas import write_json
 from cps.benchmarks.schemas import write_jsonl
+
+FEVER_DATASET = "FEVER"
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build P61R public benchmark candidate pools.")
-    parser.add_argument("--dataset", required=True, choices=["FEVER"])
+    parser.add_argument("--dataset", required=True, choices=[FEVER_DATASET, HOTPOTQA_DATASET])
     parser.add_argument("--claims-jsonl", required=True)
     parser.add_argument("--candidates-jsonl")
     parser.add_argument("--split", default="dev")
@@ -21,12 +25,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--blocked-report-json")
     args = parser.parse_args(argv)
 
-    result = build_fever_candidate_pools(
-        claims_jsonl=args.claims_jsonl,
-        candidates_jsonl=args.candidates_jsonl,
-        split=args.split,
-        limit=args.limit,
-    )
+    if args.dataset == HOTPOTQA_DATASET:
+        result = build_hotpot_candidate_pools(
+            input_json=args.claims_jsonl,
+            split=args.split,
+            limit=args.limit,
+        )
+    else:
+        result = build_fever_candidate_pools(
+            claims_jsonl=args.claims_jsonl,
+            candidates_jsonl=args.candidates_jsonl,
+            split=args.split,
+            limit=args.limit,
+        )
 
     if result.instances and args.output_jsonl:
         write_jsonl(Path(args.output_jsonl), result.instances)

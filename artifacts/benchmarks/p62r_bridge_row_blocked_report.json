@@ -1,0 +1,22 @@
+{
+  "calibrated_proxy_supported": false,
+  "candidate_pools_path": "artifacts/benchmarks/fever_candidate_pools.jsonl",
+  "claim_status": "no_claim_upgrade",
+  "delta_records_path": "artifacts/benchmarks/fever_p55_delta_records.jsonl",
+  "measurement_validation": false,
+  "metric_bridge_support": false,
+  "operator_rows_path": "artifacts/operator_inputs/p55_evidence_packet_selection_microtask_v1_rows.jsonl",
+  "p55_status": "failed_closed_no_rows / blocked_operator_required",
+  "p56_status": "no_imported_traces",
+  "paper_evidence": false,
+  "phase": "P62R",
+  "reason_codes": [
+    "missing_candidate_pools",
+    "missing_evaluator_delta_records",
+    "no_rows_generated"
+  ],
+  "rows_generated": 0,
+  "rows_validated": 0,
+  "status": "blocked_no_candidate_pools_or_evaluator",
+  "vinfo_proxy_supported": false
+}

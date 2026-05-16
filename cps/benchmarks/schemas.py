@@ -21,6 +21,7 @@ BLOCKED_DATA_REPORT_SCHEMA_VERSION = "p61r_blocked_data_report_v1"
 ALLOWED_TARGET_LABELS = {"SUPPORTED", "REFUTED", "NOTENOUGHINFO"}
 ALLOWED_GOLD_SUPPORT_LABELS = {
     "gold_supporting",
+    "same_context_distractor",
     "same_page_distractor",
     "retrieved_distractor",
     "random_distractor",
@@ -235,7 +236,7 @@ def make_candidate_pool(
     hard_negative_packets = [
         packet
         for packet in sorted_packets
-        if packet.gold_support_label in {"same_page_distractor", "retrieved_distractor"}
+        if packet.gold_support_label in {"same_context_distractor", "same_page_distractor", "retrieved_distractor"}
     ]
     random_negative_packets = [
         packet for packet in sorted_packets if packet.gold_support_label == "random_distractor"
@@ -265,15 +266,18 @@ def make_benchmark_instance(
     query: str,
     target_label: str,
     packets: Sequence[EvidencePacket],
+    task_family: str = "fever_claim_verification",
+    target_type: str = "classification_label",
+    adapter_name: str = "fever_adapter",
 ) -> BenchmarkInstance:
     return BenchmarkInstance(
         schema_version=BENCHMARK_INSTANCE_SCHEMA_VERSION,
         dataset=dataset,
         split=split,
         instance_id=str(instance_id),
-        task_family="fever_claim_verification",
+        task_family=task_family,
         query=query.strip(),
-        target={"label": target_label, "target_type": "classification_label"},
+        target={"label": target_label, "target_type": target_type},
         candidate_pool=make_candidate_pool(
             dataset=dataset,
             split=split,
@@ -281,7 +285,7 @@ def make_benchmark_instance(
             packets=packets,
         ),
         adapter_metadata={
-            "adapter_name": "fever_adapter",
+            "adapter_name": adapter_name,
             "claim_boundary": "adapter_only_no_bridge_claim",
             "gold_support_available": any(packet.gold_support_label == "gold_supporting" for packet in packets),
             "source_kind": "public_benchmark",
@@ -312,11 +316,12 @@ def validate_benchmark_instance(record: BenchmarkInstance | Mapping[str, Any]) -
         target_label = None
     else:
         target_label = target.get("label")
-        if target.get("target_type") != "classification_label":
+        target_type = target.get("target_type")
+        if target_type not in {"classification_label", "answer_string"}:
             errors.append("missing_or_invalid_target_type")
         if target_label is None or not str(target_label).strip():
             errors.append("missing_target_label")
-        elif str(target_label) not in ALLOWED_TARGET_LABELS:
+        elif target_type == "classification_label" and str(target_label) not in ALLOWED_TARGET_LABELS:
             errors.append("invalid_target_label")
 
     pool = payload.get("candidate_pool")
@@ -375,6 +380,8 @@ def validate_benchmark_instance(record: BenchmarkInstance | Mapping[str, Any]) -
     if str(pool.get("candidate_pool_hash", "")) != expected_hash:
         errors.append("unstable_candidate_pool_hash")
 
+    if payload.get("dataset") == "HotpotQA" and int(pool.get("n_gold_packets", 0) or 0) == 0:
+        errors.append("missing_gold_supporting_packets")
     if target_label in {"SUPPORTED", "REFUTED"} and int(pool.get("n_gold_packets", 0) or 0) == 0:
         warnings.append("no_gold_evidence_text_available")
     if int(pool.get("n_hard_negative_packets", 0) or 0) == 0:
@@ -418,6 +425,11 @@ def make_blocked_data_report(
     dataset: str = "FEVER",
     split: str = "dev",
 ) -> dict[str, Any]:
+    next_phase = (
+        "P62R HotpotQA bridge row generator after independent review"
+        if dataset == "HotpotQA"
+        else "P62R FEVER bridge row generator after independent review"
+    )
     return {
         "blocked_items": list(blocked_items),
         "candidate_pools_generated": 0,
@@ -425,7 +437,7 @@ def make_blocked_data_report(
         "dataset": dataset,
         "denied_claims": list(DENIED_CLAIMS),
         "metric_bridge_support": False,
-        "next_phase": "P62R FEVER bridge row generator after independent review",
+        "next_phase": next_phase,
         "p55_rows_generated": 0,
         "p56_traces_generated": 0,
         "phase": "P61R-A",

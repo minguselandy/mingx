@@ -1,0 +1,15 @@
+{
+  "active_stratum": "evidence_packet_selection_microtask_v1",
+  "calibration_epoch": "P63R-HotpotQA-qwen36flash-600x150-v1",
+  "dataset": "HotpotQA",
+  "input_rows_path": "artifacts/operator_inputs/p55_evidence_packet_selection_microtask_v1_rows.jsonl",
+  "n_rows_imported": 600,
+  "n_rows_validated": 600,
+  "n_unique_instances": 150,
+  "phase": "P63R",
+  "rows_imported": 600,
+  "rows_validated": 600,
+  "schema_valid": true,
+  "task_family": "hotpotqa_answer_support_selection",
+  "validation_errors": []
+}

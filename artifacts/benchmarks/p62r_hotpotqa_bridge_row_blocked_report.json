@@ -1,0 +1,23 @@
+{
+  "calibrated_proxy_supported": false,
+  "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "claim_status": "no_claim_upgrade",
+  "dataset": "HotpotQA",
+  "delta_records_path": "artifacts/benchmarks/hotpotqa_p55_delta_records.jsonl",
+  "measurement_validation": false,
+  "metric_bridge_support": false,
+  "operator_rows_path": "artifacts/operator_inputs/p55_evidence_packet_selection_microtask_v1_rows.jsonl",
+  "p55_status": "failed_closed_no_rows / blocked_operator_required",
+  "p56_status": "no_imported_traces",
+  "paper_evidence": false,
+  "phase": "P62R-HotpotQA",
+  "reason_codes": [
+    "missing_evaluator_delta_records",
+    "no_rows_generated"
+  ],
+  "rows_generated": 0,
+  "rows_validated": 0,
+  "status": "blocked_hotpotqa_evaluator_delta_records_missing",
+  "task_family": "hotpotqa_answer_support_selection",
+  "vinfo_proxy_supported": false
+}

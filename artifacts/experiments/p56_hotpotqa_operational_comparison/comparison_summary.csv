@@ -1,0 +1,11 @@
+selector_name,budget,trace_count,mean_supporting_fact_recall,mean_gold_support_packets_selected,mean_selected_tokens,mean_budget_used,within_budget_rate,quality_per_1k_tokens,selector_deployability
+gold_support_oracle_upper_bound,512,200,1.0,2.425,505.075,505.075,1.0,1.979904,non_deployable_upper_bound
+mmr_density_greedy,512,200,0.860167,2.07,505.425,505.425,1.0,1.701869,deployable_operational_baseline
+random_budget,512,200,0.572917,1.37,505.085,505.085,1.0,1.134298,deployable_operational_baseline
+topk_relevance_or_token_budget,512,200,0.866167,2.08,505.16,505.16,1.0,1.714639,deployable_operational_baseline
+v12_cost_aware_diagnostic_policy_operational_only,512,200,0.907833,2.18,505.465,505.465,1.0,1.796035,deployable_operational_baseline
+gold_support_oracle_upper_bound,1024,200,1.0,2.425,845.77,845.77,1.0,1.182355,non_deployable_upper_bound
+mmr_density_greedy,1024,200,0.980417,2.375,845.61,845.61,1.0,1.15942,deployable_operational_baseline
+random_budget,1024,200,0.95,2.305,845.805,845.805,1.0,1.12319,deployable_operational_baseline
+topk_relevance_or_token_budget,1024,200,0.980833,2.375,845.82,845.82,1.0,1.159624,deployable_operational_baseline
+v12_cost_aware_diagnostic_policy_operational_only,1024,200,0.995833,2.415,846.085,846.085,1.0,1.176989,deployable_operational_baseline
