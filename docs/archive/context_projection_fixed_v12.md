@@ -471,6 +471,27 @@ This negative result is fail-closed claim-gate evidence, not bridge support. It 
 
 Offline replay over realistic dispatch traces should come after this calibration step. Before replay, six choices must be fixed: model tier, utility metric, metric-claim regime, materialization ordering policy, decoding and variance-control policy, and candidate-slice policy. Replay records should include a `CounterfactualReplayWitness` with snapshot ID, frozen context state, item added or removed, continuation policy, evaluator model, replicate count, effective sample size, and metric-bridge status.
 
+### 4.8 Route 2 HotpotQA operational replay as a negative-bridge case study
+
+We ran a Route 2 HotpotQA evidence package to test the replay and comparison lane under real benchmark candidate pools. The bridge-calibration attempts did not establish calibrated metric support. The original HotpotQA answer-NLL bridge failed closed, FixA was retained only as a circular positive-control diagnostic, and FixB was a valid non-circular negative bridge attempt that also failed closed. Therefore the Route 2 result is interpreted only at `operational_utility_only`.
+
+Within that boundary, P56 produced 2,000 validated HotpotQA operational dispatch traces over budgets 512 and 1024. P66 compared the v12 cost-aware diagnostic policy against deployable baselines under matched candidate-pool and budget pairs. The v12 policy improved supporting-fact recall against `random_budget`, `topk_relevance_or_token_budget`, and `mmr_density_greedy` in all six paired operational comparisons. The oracle selector is reported only as a `non_deployable_upper_bound` and is not used as a deployable baseline.
+
+This evidence supports the following operational claim only: HotpotQA operational replay shows that the v12 diagnostic policy improves supporting-fact recall against deployable baselines under matched budgets. Because P63R bridge gates failed closed, this is `operational_utility_only`, not calibrated metric support.
+
+| Selector | Budget | Mean supporting-fact recall | Mean gold support packets selected | Mean selected tokens | Quality per 1k tokens | Deployability |
+|---|---:|---:|---:|---:|---:|---|
+| `random_budget` | 512 | 0.572917 | 1.37 | 505.085 | 1.134298 | deployable baseline |
+| `topk_relevance_or_token_budget` | 512 | 0.866167 | 2.08 | 505.160 | 1.714639 | deployable baseline |
+| `mmr_density_greedy` | 512 | 0.860167 | 2.07 | 505.425 | 1.701869 | deployable baseline |
+| `v12_cost_aware_diagnostic_policy_operational_only` | 512 | 0.907833 | 2.18 | 505.465 | 1.796035 | deployable operational policy |
+| `gold_support_oracle_upper_bound` | 512 | 1.000000 | 2.425 | 505.075 | 1.979904 | `non_deployable_upper_bound` |
+| `random_budget` | 1024 | 0.950000 | 2.305 | 845.805 | 1.123190 | deployable baseline |
+| `topk_relevance_or_token_budget` | 1024 | 0.980833 | 2.375 | 845.820 | 1.159624 | deployable baseline |
+| `mmr_density_greedy` | 1024 | 0.980417 | 2.375 | 845.610 | 1.159420 | deployable baseline |
+| `v12_cost_aware_diagnostic_policy_operational_only` | 1024 | 0.995833 | 2.415 | 846.085 | 1.176989 | deployable operational policy |
+| `gold_support_oracle_upper_bound` | 1024 | 1.000000 | 2.425 | 845.770 | 1.182355 | `non_deployable_upper_bound` |
+
 ## 5. Extraction Quality as a Testable End-to-End Bottleneck
 
 The theory and diagnostics optimize over the extracted candidate pool $M$. End-to-end performance depends on a richer upstream information space $M^*$ and on the extraction gate that maps free-form worker outputs, tool traces, and memory records into structured findings. Approximation or diagnostic statements over $M$ do not automatically transfer to $M^*$.
@@ -965,3 +986,20 @@ r_f(\varnothing,\{a,b\})
 \frac{2}{M},
 \]
 which matches the construction exactly. The coarser fractional active-context form with $\tau=1$ gives $1/(1+M-2)=1/(M-1)$, which is same-order but looser. This is why the paper makes the absolute-increase theorem primary and treats the fractional expression as a convenient active-context corollary rather than as the robust theorem statement.
+
+---
+
+## Appendix C: Route 2 HotpotQA operational evidence package
+
+Route 2 is included as an operational replay and negative-bridge evidence package. It does not establish metric bridge support. The original HotpotQA bridge and the non-circular FixB bridge both failed closed, while FixA is retained only as a circular positive-control diagnostic. Therefore, the P56/P66 HotpotQA results support an operational comparison claim only: v12 improves supporting-fact recall against deployable baselines under matched budgets.
+
+| Phase | Evidence type | Key result | Metric claim level | Paper use |
+|---|---|---|---|---|
+| P63R original bridge | failed-closed bridge calibration | `failed_closed_gate_failed`; normalized residual, sign agreement, and Spearman gates failed | `operational_utility_only` | negative bridge result only |
+| P63R-FixA | circular positive-control diagnostic | `positive_control_only`; proves calibration machinery detects circular alignment | `positive_control_only` | sanity check only, not metric bridge evidence |
+| P63R-FixB | valid non-circular negative bridge attempt | `failed_closed_gate_failed`; normalized residual, sign agreement, and Spearman gates failed | `operational_utility_only` | negative bridge result only |
+| P56 | operational dispatch traces | 2,000 / 2,000 HotpotQA traces validated | `operational_utility_only` | operational replay evidence only |
+| P66 | operational selector comparison | v12 wins 6 / 6 paired recall comparisons against deployable baselines | `operational_utility_only` | operational comparison only |
+| P67R | evidence package and claim ledger | claim ledger records no claim upgrade | `operational_utility_only; no_claim_upgrade` | audit and integration control |
+
+These results do not support `calibrated_proxy_supported`, `vinfo_proxy_supported`, measurement validation, paper evidence, P55 bridge support, P56 metric support, metric bridge support, global selector superiority, or deployed V-information verification.

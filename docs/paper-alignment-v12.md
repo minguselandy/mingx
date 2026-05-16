@@ -67,6 +67,7 @@ explicitly mark legacy vocabulary as compatibility or archive state.
 | synthetic structural evidence | `cps/experiments/synthetic_benchmark.py`, `docs/experiments/synthetic-regime-benchmark.md`, `docs/experiments/synthetic-regime-v12.md`, `artifacts/experiments/synthetic_regime_v12/` | P46 refreshed deterministic v12 structural artifacts with four families and cost-aware baseline tables; not measurement validation |
 | one-stratum metric bridge calibration | `cps/experiments/bridge_calibration.py`, `configs/runs/bridge-calibration-one-stratum.json`, `docs/experiments/bridge-calibration-one-stratum.md`, `docs/experiments/P45-bridge-calibration-closure.md` | P45 lane implemented and operator/API-ready; current `bio_attribute` stratum failed to establish the bridge, so no `calibrated_proxy_supported` claim is allowed |
 | Phase B replay | `cps/experiments/phase_b_replay.py`, `cps/experiments/replay_evidence_package.py`, `docs/protocols/phase-b-replay-protocol.md` | P48 hardened replay status vs metric-claim separation, dispatch identity checks, v12 report outputs, and fail-closed fixture/synthetic boundaries |
+| Route 2 HotpotQA operational replay/comparison | `docs/experiments/P67R-route2-operational-evidence-package.md`, `artifacts/experiments/route2_operational_evidence_package/`, `artifacts/operator_inputs/p56_realistic_dispatch_traces.jsonl`, `artifacts/experiments/p56_hotpotqa_operational_comparison/` | P63R bridge attempts failed closed or were positive-control only; P56/P66 were accepted as HotpotQA operational replay/comparison evidence under `operational_utility_only`; no metric bridge support claim is allowed |
 | model-adjudicated evidence | `cps/experiments/route_b_evidence_package.py`, `cps/experiments/model_adjudicated_labels.py`, `cps/experiments/realistic_tasks.py`, `docs/experiments/realistic-task-model-adjudicated-v12.md`, `artifacts/experiments/realistic_task_model_adjudicated_v12/` | P47 added an offline fixture realistic-task benchmark; model-adjudicated proxy evidence only, not human labels or kappa |
 | extraction audit | `cps/experiments/extraction_audit.py`, `docs/experiments/extraction-audit-pilot-v12.md`, `artifacts/experiments/extraction_audit_pilot_v12/` | P49 added a deterministic fixture extraction audit pilot for the M-star to M boundary; fixture audit only, not paper evidence |
 | optional re-projection witness | `cps/experiments/reprojection_witness.py`, `docs/experiments/reprojection-witness-pilot-v12.md`, `artifacts/experiments/reprojection_witness_pilot_v12/` | P50 added a deterministic fixture ReprojectionWitness scaffold; operational audit only, not paper evidence |
@@ -98,6 +99,35 @@ structural evidence only.
 Do not expand this same stratum to a 20-30 row P45 pilot without a new
 scientific rationale, a new active stratum, or a materially new
 fixed-logloss/utility design.
+
+## Route 2 HotpotQA Operational Evidence Package
+
+Route 2 adds a real-data HotpotQA lane as an operational replay and
+negative-bridge case study. The package pushed at commit `717796a` is anchored
+by `docs/experiments/P67R-route2-operational-evidence-package.md`,
+`artifacts/experiments/route2_operational_evidence_package/`, the P56
+HotpotQA dispatch traces, and the P66 operational comparison artifacts.
+
+The paper-facing claim is deliberately limited:
+
+```text
+HotpotQA operational replay shows that the v12 diagnostic policy improves
+supporting-fact recall against deployable baselines under matched budgets.
+Because P63R bridge gates failed closed, this is operational_utility_only, not
+calibrated metric support.
+```
+
+The original P63R HotpotQA bridge and the non-circular FixB bridge failed
+closed. FixA is retained only as a circular positive-control diagnostic. P56
+validated 2,000 HotpotQA operational traces, and P66 found v12 wins in all six
+paired recall comparisons against deployable baselines at budgets 512 and 1024.
+The `gold_support_oracle_upper_bound` selector is reported only as
+`non_deployable_upper_bound`.
+
+Route 2 does not authorize `calibrated_proxy_supported`,
+`vinfo_proxy_supported`, measurement validation, paper evidence, P55 bridge
+support, P56 metric support, metric bridge support, global selector superiority,
+or deployed V-information verification.
 
 ## P46 Synthetic v12 Refresh
 
