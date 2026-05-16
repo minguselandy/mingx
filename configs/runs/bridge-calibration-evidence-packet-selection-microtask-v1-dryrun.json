@@ -1,0 +1,145 @@
+{
+  "phase": "P54",
+  "stratum_id": "evidence_packet_selection_microtask_v1",
+  "task_family": "evidence_packet_selection_microtask_v1",
+  "target_type": {
+    "kind": "forced_choice_or_exact_field",
+    "allowed_target_shapes": [
+      "fixed_option_set",
+      "exact_short_field"
+    ],
+    "open_ended_free_text_allowed": false
+  },
+  "model_tier": "fixed_evaluated_model_tier",
+  "materialization_policy": {
+    "policy_id": "fixed_order_evidence_packet_v1",
+    "packet_order": "stable_candidate_order",
+    "prompt_format": "fixed_question_options_and_packet_headers",
+    "requires_materialized_context_hash": true
+  },
+  "decoding_policy": {
+    "policy_id": "deterministic_logloss_scoring_no_generation",
+    "temperature": 0,
+    "generation_required": false,
+    "replicate_control_required_if_utility_judging_is_used": true
+  },
+  "candidate_slice_band": {
+    "policy_id": "top_8_candidate_packets_fixed_before_projection",
+    "top_k": 8,
+    "requires_complete_candidate_pool_hash": true,
+    "selected_only_traces_allowed": false
+  },
+  "block_size": {
+    "minimum": 1,
+    "maximum": 2
+  },
+  "utility_metric": {
+    "metric_id": "decomposable_answer_correctness_v1",
+    "decomposable": true,
+    "utility_is_v_information_evidence": false
+  },
+  "logloss_measurement": {
+    "measurement_id": "fixed_model_target_logloss_for_declared_answer",
+    "requires_explicit_target_evidence": true,
+    "requires_target_tokenization_or_option_scoring": true,
+    "delta_logloss_source": "measured_token_logprobs_or_forced_choice_likelihood",
+    "fabricated_delta_logloss_allowed": false
+  },
+  "data_source_kind": "operator_imported_rows_pending_approval",
+  "contamination_policy": {
+    "policy_id": "operator_declared_or_unknown_fail_closed",
+    "allowed_statuses": [
+      "pass",
+      "fail",
+      "unknown",
+      "not_applicable"
+    ],
+    "missing_or_unknown_claim_behavior": "paper_ineligible_no_measurement_validation",
+    "failed_claim_behavior": "pilot_only_no_measurement_validation"
+  },
+  "claim_gate": {
+    "p54_claim_ceiling": {
+      "metric_claim_level_max": "none",
+      "selector_regime_label_max": "none",
+      "paper_evidence_eligible": false,
+      "measurement_validation_claim": false
+    },
+    "p55_preconditions": {
+      "requires_p54_independent_review_acceptance": true,
+      "requires_operator_approval_for_selected_data_source": true,
+      "requires_p53_diagnostic_threshold_contract": true,
+      "requires_active_stratum_match": true
+    },
+    "blocked_claims": [
+      "measurement_validated",
+      "human_label_validation",
+      "human_human_kappa",
+      "deployed_v_information_verification",
+      "theorem_level_deployed_submodularity_verification",
+      "synthetic_evidence_as_bridge_evidence",
+      "fixture_evidence_as_paper_grade_evidence",
+      "replay_usability_as_metric_support",
+      "extraction_audit_as_selector_validity",
+      "reprojection_witness_as_deployed_runtime_improvement",
+      "current_p45_bio_attribute_as_calibrated_proxy_supported",
+      "p54_design_as_calibrated_proxy_supported",
+      "p54_design_as_vinfo_proxy_supported"
+    ],
+    "calibrated_proxy_supported_allowed_in_p54": false,
+    "vinfo_proxy_supported_allowed_in_p54": false,
+    "calibrated_proxy_supported_allowed_in_p55_only_if_all_future_gates_pass": true
+  },
+  "diagnostic_threshold_contract": {
+    "contract_reference": "docs/templates/diagnostic-threshold-contract-template.json",
+    "protocol_reference": "docs/protocols/diagnostic-threshold-contract-v12.md",
+    "required_for_p55": true,
+    "thresholds_may_be_changed_post_hoc": false,
+    "underpowered_behavior": "fail_closed_to_ambiguous_metric_or_operational_utility_only"
+  },
+  "operator_gates": {
+    "p55_execution_default": "blocked_until_independent_review_and_operator_approval",
+    "imported_rows_allowed": false,
+    "live_api_allowed": false,
+    "human_labeled_rows_allowed": false,
+    "fixture_rehearsal_rows_paper_eligible": false,
+    "requires_operator_approval_for_imported_rows": true,
+    "requires_operator_approval_for_live_api": true,
+    "requires_operator_approval_for_human_labels": true
+  },
+  "negative_controls": [
+    "redundancy_heavy_cases",
+    "pairwise_complementarity_cases",
+    "underpowered_noisy_cases_expected_ambiguous_metric",
+    "stale_bridge_witness_fail_closed",
+    "mismatched_bridge_witness_fail_closed",
+    "candidate_pool_hash_mismatch_paper_ineligible",
+    "distractor_evidence_packets",
+    "prerequisite_missing_cases",
+    "qualifier_sensitive_cases",
+    "source_conflict_cases"
+  ],
+  "expected_outputs": [
+    "imported_row_manifest",
+    "canonical_bridge_calibration_pairs",
+    "bridge_calibration_fit",
+    "heldout_residual_report",
+    "sign_agreement_report",
+    "rank_correlation_report",
+    "effective_sample_size_report",
+    "drift_status_report",
+    "active_stratum_match_report",
+    "claim_gate_report",
+    "bridge_report"
+  ],
+  "claim_boundaries": {
+    "design_review_only": true,
+    "bridge_evidence_created": false,
+    "metric_bridge_validated": false,
+    "pilot_rows_imported_or_generated": false,
+    "live_api_used": false,
+    "human_labels_present": false,
+    "human_human_kappa_present": false,
+    "paper_evidence_eligible": false,
+    "current_p45_bio_attribute_remains_non_calibrated": true
+  }
+}

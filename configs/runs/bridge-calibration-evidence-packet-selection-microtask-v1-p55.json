@@ -1,0 +1,139 @@
+{
+  "phase": "P55",
+  "config_id": "bridge_calibration_evidence_packet_selection_microtask_v1_p55",
+  "stratum_id": "evidence_packet_selection_microtask_v1",
+  "task_family": "evidence_packet_selection_microtask_v1",
+  "target_type": {
+    "kind": "forced_choice_or_exact_field",
+    "allowed_target_shapes": [
+      "fixed_option_set",
+      "exact_short_field"
+    ],
+    "open_ended_free_text_allowed": false
+  },
+  "model_tier": "fixed_evaluated_model_tier",
+  "materialization_policy": {
+    "policy_id": "fixed_order_evidence_packet_v1",
+    "requires_materialized_context_hash": true
+  },
+  "decoding_policy": {
+    "policy_id": "deterministic_logloss_scoring_no_generation",
+    "generation_required": false,
+    "temperature": 0
+  },
+  "candidate_slice_band": {
+    "policy_id": "top_8_candidate_packets_fixed_before_projection",
+    "requires_complete_candidate_pool_hash": true,
+    "selected_only_traces_allowed": false,
+    "top_k": 8
+  },
+  "block_size": {
+    "minimum": 1,
+    "maximum": 2
+  },
+  "utility_metric": {
+    "metric_id": "decomposable_answer_correctness_v1",
+    "utility_is_v_information_evidence": false
+  },
+  "logloss_measurement": {
+    "measurement_id": "fixed_model_target_logloss_for_declared_answer",
+    "fabricated_delta_logloss_allowed": false,
+    "requires_explicit_target_evidence": true
+  },
+  "data_source_kind": "operator_imported_rows",
+  "input_rows_path": "artifacts/operator_inputs/p55_evidence_packet_selection_microtask_v1_rows.jsonl",
+  "output_dir": "artifacts/experiments/p55_bridge_calibration_pilot",
+  "diagnostic_threshold_contract_template": "docs/templates/diagnostic-threshold-contract-template.json",
+  "diagnostic_threshold_contract": {
+    "contract_id": "diagnostic_threshold_contract_v12_template",
+    "protocol_reference": "docs/protocols/diagnostic-threshold-contract-v12.md",
+    "template_reference": "docs/templates/diagnostic-threshold-contract-template.json"
+  },
+  "bridge_thresholds": {
+    "max_heldout_zeta_s": 0.05,
+    "max_residual_stability_gap": 0.02,
+    "min_abs_delta_logloss_signal": 0.0001,
+    "min_abs_heldout_rank_correlation": 0.9,
+    "min_dev_rows": 3,
+    "min_effective_sample_size": 6,
+    "min_heldout_rows": 3,
+    "min_heldout_sign_agreement": 0.9,
+    "min_total_rows": 6
+  },
+  "deterministic_split_policy": {
+    "preferred_split_field": "split",
+    "fallback": "stable_half_split",
+    "fit_c_s_on": "development_split_only",
+    "evaluate_zeta_s_on": "heldout_split_only"
+  },
+  "operator_approval": {
+    "approval_route": "Route A",
+    "approved_data_source": "operator_imported_rows",
+    "credentials_approved": false,
+    "human_labels_approved": false,
+    "human_human_kappa_approved": false,
+    "live_api_approved": false,
+    "measurement_validation_approved": false
+  },
+  "operator_gates": {
+    "imported_rows_allowed": true,
+    "live_api_allowed": false,
+    "human_labeled_rows_allowed": false,
+    "fixture_rehearsal_rows_paper_eligible": false,
+    "missing_or_invalid_rows_behavior": "fail_closed_blocked_report"
+  },
+  "required_row_fields": [
+    "run_id",
+    "dispatch_id",
+    "agent_id",
+    "round_id",
+    "candidate_pool_hash",
+    "projection_hash",
+    "context_L_hash",
+    "block_A_ids",
+    "materialization_policy",
+    "model_tier",
+    "decoding_policy",
+    "target_evidence",
+    "delta_logloss",
+    "delta_utility",
+    "utility_metric_version",
+    "replicate_count",
+    "effective_sample_size",
+    "data_source_kind",
+    "contamination_status",
+    "bridge_contract_id",
+    "stratum_id",
+    "task_family",
+    "candidate_slice_band",
+    "block_size",
+    "target_type",
+    "logloss_measurement_version",
+    "operator_approval_ref"
+  ],
+  "claim_gate": {
+    "calibrated_proxy_supported_allowed_only_if_all_p55_gates_pass": true,
+    "measurement_validation_claim": false,
+    "paper_evidence_requires_operator_rows_and_review": true,
+    "vinfo_proxy_supported_allowed": false
+  },
+  "claim_boundaries": {
+    "current_p45_bio_attribute_remains_non_calibrated": true,
+    "fixture_rows_can_be_unit_tests_only": true,
+    "fixture_rows_paper_evidence_eligible": false,
+    "human_human_kappa_present": false,
+    "human_labels_present": false,
+    "live_api_used": false,
+    "measurement_validation_claim": false,
+    "p55_does_not_start_p56": true,
+    "replay_usability_is_not_metric_support": true
+  },
+  "expected_outputs": [
+    "manifest.json",
+    "claim_gate_report.json",
+    "report.md",
+    "validated_rows.jsonl_if_rows_present",
+    "bridge_fit_summary.json_if_rows_present",
+    "bridge_fit_summary.csv_if_rows_present"
+  ]
+}

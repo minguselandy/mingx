@@ -1,0 +1,30 @@
+{
+  "bridge_witness_status": "failed_or_absent",
+  "calibrated_proxy_supported": false,
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "comparison_summary_path": "artifacts/experiments/p56_hotpotqa_operational_comparison/comparison_summary.csv",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement validation",
+    "paper evidence",
+    "P55 bridge support",
+    "metric bridge support",
+    "global selector superiority"
+  ],
+  "doc_path": "docs/experiments/P66-hotpotqa-operational-comparison.md",
+  "global_selector_superiority_claimed": false,
+  "measurement_validation": false,
+  "metric_bridge_support": false,
+  "metric_claim_level": "operational_utility_only",
+  "oracle_status": "non_deployable_upper_bound",
+  "oracle_trace_count": 400,
+  "oracle_used_as_deployable_baseline": false,
+  "p55_bridge_support": false,
+  "paper_evidence": false,
+  "phase": "P66-HotpotQA",
+  "selector_superiority_claimed": false,
+  "statistical_tests_path": "artifacts/experiments/p56_hotpotqa_operational_comparison/statistical_tests.json",
+  "traces_compared": 2000,
+  "vinfo_proxy_supported": false
+}

@@ -1,0 +1,77 @@
+{
+  "active_stratum_match": false,
+  "bridge_report": {
+    "c_s": null,
+    "drift_status": "missing",
+    "effective_sample_size": 0.0,
+    "fit_metrics_computed": false,
+    "heldout_sign_agreement": null,
+    "heldout_spearman_or_rank_correlation": null,
+    "residual_stability": {
+      "group_max_absolute_residual": {},
+      "passes": false,
+      "stability_gap": null,
+      "status": "unavailable"
+    },
+    "zeta_s": null
+  },
+  "candidate_pool_hash_status": "missing",
+  "claim_gate_result": {
+    "active_stratum_match": false,
+    "allowed_metric_claim_level": "ambiguous_metric",
+    "blocked_operator_required": true,
+    "calibrated_proxy_supported_allowed": false,
+    "claim_gate_status": "failed_closed_no_rows",
+    "contamination_status": "not_applicable",
+    "data_source_kind": "missing",
+    "denied_claims": [
+      "measurement_validation",
+      "human_label_validation",
+      "human_human_kappa",
+      "deployed_v_information_verification",
+      "theorem_level_deployed_submodularity_verification",
+      "synthetic_evidence_as_bridge_evidence",
+      "fixture_evidence_as_paper_grade_evidence",
+      "replay_usability_as_metric_support",
+      "extraction_audit_as_selector_validity",
+      "reprojection_witness_as_deployed_runtime_improvement",
+      "current_p45_bio_attribute_as_calibrated_proxy_supported",
+      "p55_fixture_rows_as_calibrated_proxy_supported",
+      "vinfo_proxy_supported_without_formal_bridge_review"
+    ],
+    "deployed_v_information_verification_claim": false,
+    "effective_sample_size": 0.0,
+    "fit_metrics_computed": false,
+    "human_human_kappa_present": false,
+    "human_labels_present": false,
+    "input_file_status": "absent",
+    "input_rows_present": false,
+    "live_api_used": false,
+    "measurement_validation_claim": false,
+    "metric_claim_level": "ambiguous_metric",
+    "next_phase_allowed": false,
+    "paper_evidence_eligible": false,
+    "pilot_status": "blocked_operator_required",
+    "reason_codes": [
+      "no_operator_imported_rows",
+      "operator_rows_required"
+    ],
+    "requires_operator": true,
+    "review_ceiling": "none",
+    "row_count": 0,
+    "rows_imported": 0,
+    "rows_validated": 0,
+    "selector_regime_label_max": "none",
+    "vinfo_proxy_supported_allowed": false
+  },
+  "contract_id": "diagnostic_threshold_contract_v12_template",
+  "metric_claim_level": "ambiguous_metric",
+  "paper_evidence_eligible": false,
+  "row_validation": {
+    "row_defects": [],
+    "rows_imported": 0,
+    "rows_validated": 0,
+    "schema_valid": false
+  },
+  "stratum_id": "evidence_packet_selection_microtask_v1"
+}

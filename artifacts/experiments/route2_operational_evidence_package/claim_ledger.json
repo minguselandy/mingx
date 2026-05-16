@@ -1,0 +1,136 @@
+{
+  "calibrated_proxy_supported": false,
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "measurement_validation": false,
+  "metric_bridge_support": false,
+  "package": "P67R-route2-operational-evidence-package",
+  "paper_evidence": false,
+  "rows": [
+    {
+      "allowed_claim": "P63R completed and failed bridge gates; downstream use is operational_utility_only only.",
+      "artifact_paths": [
+        "artifacts/experiments/p55_hotpotqa_bridge_calibration/import_report.json",
+        "artifacts/experiments/p55_hotpotqa_bridge_calibration/bridge_fit_summary.json",
+        "artifacts/experiments/p55_hotpotqa_bridge_calibration/metric_bridge_witness.json",
+        "docs/experiments/P63R-hotpotqa-real-bridge-calibration-report.md"
+      ],
+      "denied_claims": [
+        "calibrated_proxy_supported",
+        "vinfo_proxy_supported",
+        "measurement validation",
+        "paper evidence",
+        "P55 bridge support",
+        "metric bridge support",
+        "global selector superiority",
+        "P56 metric support",
+        "deployed V-information verification"
+      ],
+      "evidence_type": "failed_closed_bridge_calibration",
+      "metric_claim_level": "operational_utility_only",
+      "paper_use": "methods_or_appendix_negative_bridge_result_only",
+      "phase": "P63R original bridge",
+      "review_status": "accepted_negative_result"
+    },
+    {
+      "allowed_claim": "FixA is a circular positive control showing the calibration machinery detects a perfectly aligned control.",
+      "artifact_paths": [
+        "artifacts/experiments/p55_hotpotqa_support_classification_bridge_calibration/import_report.json",
+        "artifacts/experiments/p55_hotpotqa_support_classification_bridge_calibration/bridge_fit_summary.json",
+        "artifacts/experiments/p55_hotpotqa_support_classification_bridge_calibration/metric_bridge_witness.json",
+        "docs/experiments/P63R-FixA-hotpotqa-support-classification-bridge.md"
+      ],
+      "denied_claims": [
+        "calibrated_proxy_supported",
+        "vinfo_proxy_supported",
+        "measurement validation",
+        "paper evidence",
+        "P55 bridge support",
+        "metric bridge support",
+        "global selector superiority",
+        "P56 metric support",
+        "deployed V-information verification"
+      ],
+      "evidence_type": "circular_positive_control_diagnostic",
+      "metric_claim_level": "positive_control_only",
+      "paper_use": "sanity_check_only_not_metric_bridge_evidence",
+      "phase": "P63R-FixA positive control",
+      "review_status": "accepted_positive_control_relabel"
+    },
+    {
+      "allowed_claim": "FixB is a valid non-circular negative bridge attempt that failed closed.",
+      "artifact_paths": [
+        "artifacts/experiments/p55_hotpotqa_support_independent_utility_bridge_calibration/import_report.json",
+        "artifacts/experiments/p55_hotpotqa_support_independent_utility_bridge_calibration/bridge_fit_summary.json",
+        "artifacts/experiments/p55_hotpotqa_support_independent_utility_bridge_calibration/metric_bridge_witness.json",
+        "docs/experiments/P63R-FixB-hotpotqa-independent-support-utility-bridge.md"
+      ],
+      "denied_claims": [
+        "calibrated_proxy_supported",
+        "vinfo_proxy_supported",
+        "measurement validation",
+        "paper evidence",
+        "P55 bridge support",
+        "metric bridge support",
+        "global selector superiority",
+        "P56 metric support",
+        "deployed V-information verification"
+      ],
+      "evidence_type": "valid_non_circular_negative_bridge_attempt",
+      "metric_claim_level": "operational_utility_only",
+      "paper_use": "negative_bridge_result_only",
+      "phase": "P63R-FixB non-circular negative bridge",
+      "review_status": "accepted_negative_result"
+    },
+    {
+      "allowed_claim": "P56 HotpotQA operational dispatch traces were generated and validated under operational_utility_only.",
+      "artifact_paths": [
+        "artifacts/operator_inputs/p56_realistic_dispatch_traces.jsonl",
+        "artifacts/benchmarks/p56_hotpotqa_trace_generation_report.json",
+        "docs/experiments/P56-hotpotqa-operational-dispatch-traces.md"
+      ],
+      "denied_claims": [
+        "calibrated_proxy_supported",
+        "vinfo_proxy_supported",
+        "measurement validation",
+        "paper evidence",
+        "P55 bridge support",
+        "metric bridge support",
+        "global selector superiority",
+        "P56 metric support",
+        "deployed V-information verification"
+      ],
+      "evidence_type": "operational_dispatch_replay_traces",
+      "metric_claim_level": "operational_utility_only",
+      "paper_use": "operational_replay_evidence_only",
+      "phase": "P56 operational traces",
+      "review_status": "ACCEPT"
+    },
+    {
+      "allowed_claim": "P66 supports an operational-only HotpotQA comparison result: v12 improves supporting-fact recall against deployable baselines under matched budgets.",
+      "artifact_paths": [
+        "artifacts/experiments/p56_hotpotqa_operational_comparison/comparison_summary.csv",
+        "artifacts/experiments/p56_hotpotqa_operational_comparison/statistical_tests.json",
+        "artifacts/experiments/p56_hotpotqa_operational_comparison/diagnostic_safety_summary.json",
+        "docs/experiments/P66-hotpotqa-operational-comparison.md"
+      ],
+      "denied_claims": [
+        "calibrated_proxy_supported",
+        "vinfo_proxy_supported",
+        "measurement validation",
+        "paper evidence",
+        "P55 bridge support",
+        "metric bridge support",
+        "global selector superiority",
+        "P56 metric support",
+        "deployed V-information verification"
+      ],
+      "evidence_type": "operational_selector_comparison",
+      "metric_claim_level": "operational_utility_only",
+      "paper_use": "operational_comparison_only_not_metric_bridge_evidence",
+      "phase": "P66 operational comparison",
+      "review_status": "ACCEPT"
+    }
+  ],
+  "schema_version": "route2_claim_ledger_v1",
+  "vinfo_proxy_supported": false
+}

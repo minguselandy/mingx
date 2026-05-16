@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import subprocess
 from pathlib import Path
 from typing import Iterable
@@ -88,6 +89,41 @@ def _assert_occurrences_are_qualified(paths: Iterable[Path], needle: str, marker
             if not any(marker in window for marker in markers):
                 failures.append(str(path.relative_to(ROOT)))
     assert not failures, f"{needle} occurrences lack legacy/non-headline qualification: {sorted(set(failures))}"
+
+
+def _regex_occurrence_windows(path: Path, pattern: str, *, radius: int = 260) -> Iterable[str]:
+    text = _read_text(path)
+    lower = text.lower()
+    for match in re.finditer(pattern, lower, flags=re.IGNORECASE):
+        yield lower[max(0, match.start() - radius) : match.end() + radius]
+
+
+def _assert_regex_occurrences_are_qualified(
+    paths: Iterable[Path],
+    label: str,
+    pattern: str,
+    markers: tuple[str, ...],
+) -> None:
+    failures: list[str] = []
+    for path in paths:
+        for window in _regex_occurrence_windows(path, pattern):
+            if not any(marker in window for marker in markers):
+                failures.append(str(path.relative_to(ROOT)))
+    assert not failures, f"{label} occurrences lack denied/legacy qualification: {sorted(set(failures))}"
+
+
+def _active_claim_boundary_docs() -> list[Path]:
+    explicit = [
+        ROOT / "README.md",
+        ROOT / "AGENTS.md",
+        ROOT / "docs" / "README.md",
+        ROOT / "docs" / "paper-alignment-v12.md",
+        ROOT / "docs" / "templates" / "claim-boundary-checklist.md",
+        ROOT / "docs" / "reviews" / "P45-P50-v12-phase-summary.md",
+        ROOT / "docs" / "experiments" / "P51-P60-v12-followup-dev-experiment-plan.md",
+        ROOT / "docs" / "reviews" / "P51-P60-v12-review-claim-gate-protocol.md",
+    ]
+    return sorted({path for path in explicit if path.exists()})
 
 
 def _artifact_text(root: Path) -> str:
@@ -199,6 +235,84 @@ def test_primary_decision_outputs_are_documented_and_reported() -> None:
     for field_name in ("metric_claim_level", "selector_regime_label", "selector_action"):
         assert field_name in report_source
     assert "placeholder_conservative_min_b2_b3_not_degree_adaptive_star" in report_source
+
+
+def test_paper_facing_docs_do_not_map_synthetic_only_to_vinfo_proxy_supported() -> None:
+    failures: list[str] = []
+    unsafe_table_row = re.compile(r"^\|\s*synthetic-only evidence\s*\|\s*`?vinfo_proxy_supported`?\s*\|", re.I | re.M)
+    for path in _active_claim_boundary_docs():
+        if unsafe_table_row.search(_read_text(path)):
+            failures.append(str(path.relative_to(ROOT)))
+
+    assert not failures, (
+        "paper-facing docs must not map synthetic-only evidence to vinfo_proxy_supported: "
+        f"{sorted(failures)}"
+    )
+
+
+def test_active_docs_only_use_deprecated_claim_labels_as_denied_or_legacy_examples() -> None:
+    markers = (
+        "archive",
+        "compatibility",
+        "current non-calibrated",
+        "deprecated",
+        "denied",
+        "does not claim",
+        "do not claim",
+        "do not activate",
+        "forbidden",
+        "forbidden claim",
+        "hard rejection",
+        "legacy",
+        "must not",
+        "no ",
+        "not ",
+        "outside denied",
+        "risky active vocabulary",
+    )
+    docs = _active_claim_boundary_docs()
+
+    _assert_regex_occurrences_are_qualified(docs, "Vinfo_proxy_certified", r"\bVinfo_proxy_certified\b", markers)
+    _assert_regex_occurrences_are_qualified(docs, "greedy_valid", r"\bgreedy_valid\b", markers)
+    _assert_regex_occurrences_are_qualified(
+        docs,
+        "measurement_validated",
+        r"(?<![a-z0-9_])measurement_validated(?![a-z0-9_])",
+        markers,
+    )
+
+
+def test_v12_manuscript_appendix_b_proof_integrity_and_p45_closure() -> None:
+    manuscript = _read_text(ROOT / "docs" / "archive" / "context_projection_fixed_v12.md")
+    section_47 = manuscript.split("### 4.7 One-stratum bridge calibration and replay requirements", 1)[1].split(
+        "### 4.8",
+        1,
+    )[0]
+
+    assert "sum_{j 0" not in manuscript
+    for proof_step in (
+        r"\sum_{j<i}\eta(x_i,x_j\mid L)",
+        r"\Delta f(x_i\mid L)+\min(i-1,d)\eta_{\max}",
+        r"A(L,S)+\psi_{s,d}\eta_{\max}",
+    ):
+        assert proof_step in manuscript
+
+    assert "The P45 bridge-calibration lane has now been implemented for the current `bio_attribute` stratum" in manuscript
+    assert "For the current `bio_attribute` stratum, no `calibrated_proxy_supported` claim is allowed." in manuscript
+    assert "This negative result is fail-closed claim-gate evidence, not bridge support." in manuscript
+    assert "Future bridge work should use a materially new active stratum or a materially new fixed-logloss/utility design" in manuscript
+    assert "to be measured" not in section_47
+
+
+def test_v12_manuscript_vinfo_proxy_requires_fresh_bridge_or_predictive_family_evidence() -> None:
+    manuscript = _read_text(ROOT / "docs" / "archive" / "context_projection_fixed_v12.md")
+
+    assert "| `vinfo_proxy_supported` | log-loss aligned or formal-to-fixed-model bridge is fresh |" not in manuscript
+    assert (
+        "| `vinfo_proxy_supported` | log-loss alignment plus a fresh fixed-model-to-$V_i$ bridge, "
+        "a reviewed near-optimality argument, or actual empirical minimization over the declared predictive family |"
+    ) in manuscript
+    assert "Generic utility-to-log-loss correlation is not formal V-information support by itself." in manuscript
 
 
 def test_metric_bridge_decision_guardrails() -> None:

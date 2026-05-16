@@ -1,0 +1,59 @@
+{
+  "blocked_operator_required": true,
+  "calibrated_proxy_supported_allowed": false,
+  "candidate_pool_mismatch_count": 0,
+  "claim_gate_result": "no_imported_traces",
+  "data_source_kind": "operator_imported_traces",
+  "data_source_kinds": [
+    "operator_imported_traces"
+  ],
+  "denied_claims": [
+    "measurement_validation",
+    "human_label_validation",
+    "human_human_kappa",
+    "deployed_v_information_verification",
+    "theorem_level_deployed_submodularity_verification",
+    "synthetic_evidence_as_bridge_evidence",
+    "fixture_evidence_as_paper_grade_evidence",
+    "replay_usability_as_metric_support",
+    "replay_completeness_as_bridge_evidence",
+    "extraction_audit_as_selector_validity",
+    "reprojection_witness_as_deployed_runtime_improvement",
+    "p55_no_row_report_as_bridge_support",
+    "vinfo_proxy_supported_from_replay_only",
+    "calibrated_proxy_supported_from_replay_only"
+  ],
+  "measurement_validation_claim": false,
+  "metric_bridge_status_counts": {
+    "missing": 1
+  },
+  "metric_claim_level": "ambiguous_metric",
+  "next_phase_allowed": false,
+  "p55_blocked_state_preserved": true,
+  "paper_evidence_eligible": false,
+  "phase": "P56",
+  "reason_codes": [
+    "no_imported_traces",
+    "operator_traces_required",
+    "p55_blocked_state_preserved"
+  ],
+  "records": [],
+  "replay_classification_counts": {
+    "fail_closed_candidate_pool_mismatch": 0,
+    "fixture_only_engineering_evidence": 0,
+    "no_imported_traces": 1,
+    "not_replay_comparable": 0,
+    "not_selector_comparable": 0,
+    "replay_comparable": 0,
+    "replay_usable_metric_downgraded": 0
+  },
+  "requires_operator": true,
+  "review_ceiling": "none",
+  "selected_only_count": 0,
+  "selector_regime_label": "none",
+  "trace_file_status": "absent",
+  "trace_validation_failures": [],
+  "traces_imported": 0,
+  "traces_validated": 0,
+  "vinfo_proxy_supported_allowed": false
+}

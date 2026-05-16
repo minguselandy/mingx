@@ -1,0 +1,117 @@
+{
+  "phase": "P56",
+  "config_id": "realistic_dispatch_replay_p56",
+  "trace_schema_version": "p56_realistic_dispatch_trace.v1",
+  "active_stratum": "evidence_packet_selection_microtask_v1",
+  "data_source_kind": "operator_imported_traces",
+  "input_traces_path": "artifacts/operator_inputs/p56_realistic_dispatch_traces.jsonl",
+  "output_dir": "artifacts/experiments/p56_realistic_dispatch_replay",
+  "diagnostic_threshold_contract": {
+    "contract_id": "diagnostic_threshold_contract_v12_template",
+    "protocol_reference": "docs/protocols/diagnostic-threshold-contract-v12.md",
+    "template_reference": "docs/templates/diagnostic-threshold-contract-template.json"
+  },
+  "metric_bridge_contract_id": "diagnostic_threshold_contract_v12_template",
+  "candidate_pool_hash_policy": {
+    "algorithm": "sha256_json_sorted_considered_candidate_ids_v1",
+    "selected_only_traces_allowed": false,
+    "candidate_pool_mismatch_behavior": "fail_closed_candidate_pool_mismatch"
+  },
+  "materialization_policy": {
+    "policy_id": "fixed_context_materialization_v1",
+    "requires_materialized_context_hash": true
+  },
+  "evaluator_policy": {
+    "policy_id": "offline_replay_evaluator_v1",
+    "live_api_allowed": false
+  },
+  "metric_policy": {
+    "policy_id": "replay_metric_policy_v1",
+    "replay_usability_is_metric_support": false
+  },
+  "required_trace_fields": [
+    "run_id",
+    "dispatch_id",
+    "agent_id",
+    "round_id",
+    "candidate_pool_hash",
+    "considered_candidate_ids",
+    "selected_candidate_ids",
+    "excluded_candidate_ids",
+    "projection_plan_hash",
+    "budget_witness_hash",
+    "materialized_context_hash",
+    "materialization_policy",
+    "metric_bridge_witness_status",
+    "metric_bridge_contract_id",
+    "metric_bridge_active_stratum",
+    "metric_bridge_freshness",
+    "replay_intervention_id",
+    "evaluator_policy",
+    "metric_policy",
+    "replicate_count",
+    "effective_sample_size",
+    "data_source_kind",
+    "trace_schema_version"
+  ],
+  "optional_trace_fields": [
+    "candidate_pool_items_hash",
+    "candidate_pool_count",
+    "selected_token_estimate",
+    "realized_token_count",
+    "budget_limit",
+    "projection_bundle_hash",
+    "source_trace_id",
+    "operator_approval_ref",
+    "contamination_status"
+  ],
+  "classification_labels": [
+    "replay_comparable",
+    "replay_usable_metric_downgraded",
+    "not_replay_comparable",
+    "not_selector_comparable",
+    "fail_closed_candidate_pool_mismatch",
+    "fixture_only_engineering_evidence",
+    "no_imported_traces"
+  ],
+  "operator_gates": {
+    "operator_imported_traces_allowed": true,
+    "live_api_allowed": false,
+    "human_labels_allowed": false,
+    "human_human_kappa_allowed": false,
+    "missing_or_invalid_traces_behavior": "fail_closed_no_imported_traces_report"
+  },
+  "metric_bridge_witness_policy": {
+    "presence_is_not_support": true,
+    "fresh_matching_witness_required_for_metric_claim_inheritance": true,
+    "missing_stale_mismatched_underpowered_or_failed_behavior": "replay_usable_metric_downgraded"
+  },
+  "claim_gate": {
+    "measurement_validation_claim": false,
+    "paper_evidence_eligible_by_default": false,
+    "replay_completeness_is_bridge_evidence": false,
+    "replay_usability_is_metric_support": false,
+    "vinfo_proxy_supported_allowed": false,
+    "calibrated_proxy_supported_allowed": false,
+    "next_phase_allowed": false
+  },
+  "claim_boundaries": {
+    "p55_blocked_state_preserved": true,
+    "p56_non_p55_success_dependent": true,
+    "fixture_only_trace_paper_evidence_eligible": false,
+    "no_trace_artifacts_paper_evidence_eligible": false,
+    "human_labels_present": false,
+    "human_human_kappa_present": false,
+    "live_api_used": false,
+    "measurement_validation_claim": false,
+    "deployed_v_information_verification_claim": false,
+    "theorem_level_deployed_submodularity_verification_claim": false
+  },
+  "expected_outputs": [
+    "manifest.json",
+    "claim_gate_report.json",
+    "report.md",
+    "realistic_dispatch_replay_records.jsonl_if_valid_traces_present",
+    "realistic_dispatch_replay_summary.csv_if_valid_traces_present"
+  ]
+}

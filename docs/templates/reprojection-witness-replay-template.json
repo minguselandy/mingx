@@ -1,0 +1,134 @@
+{
+  "record_schema_version": "reprojection_witness_replay_integration.v1",
+  "witness_id": "template_witness_id",
+  "initial_run_id": "template_initial_run_id",
+  "initial_dispatch_id": "template_initial_dispatch_id",
+  "initial_agent_id": "template_initial_agent_id",
+  "initial_round_id": "template_initial_round_id",
+  "source_replay_record_id": "template_source_replay_record_id",
+  "trigger_type": "ambiguous",
+  "trigger_rationale": "template_trigger_rationale",
+  "original_budget": {
+    "budget_tokens": null,
+    "realized_tokens": null,
+    "budget_policy": "template_original_budget_policy"
+  },
+  "revised_budget": {
+    "budget_tokens": null,
+    "realized_tokens": null,
+    "budget_policy": "template_revised_budget_policy"
+  },
+  "budget_delta": null,
+  "selector_before": {
+    "selector_name": "template_selector_before",
+    "selector_regime_label": "ambiguous"
+  },
+  "selector_after": {
+    "selector_name": "template_selector_after",
+    "selector_regime_label": "ambiguous"
+  },
+  "candidate_pool_hash_before": "template_candidate_pool_hash_before",
+  "candidate_pool_hash_after": "template_candidate_pool_hash_after",
+  "candidate_pool_expansion_documented": false,
+  "materialized_context_hash_before": "template_materialized_context_hash_before",
+  "materialized_context_hash_after": "template_materialized_context_hash_after",
+  "selected_context_before": [],
+  "selected_context_after": [],
+  "excluded_context_before": [],
+  "excluded_context_after": [],
+  "context_diff_summary": {
+    "added_context_ids": [],
+    "removed_context_ids": [],
+    "retained_context_ids": [],
+    "diff_hash": "template_context_diff_hash"
+  },
+  "output_before_hash": "template_output_before_hash",
+  "output_after_hash": "template_output_after_hash",
+  "evaluator_policy": "template_evaluator_policy",
+  "uncertainty_label": "ambiguous",
+  "over_budget_flag": false,
+  "metric_bridge_status": "missing",
+  "metric_bridge_contract_id": "template_metric_bridge_contract_id",
+  "metric_claim_level": "operational_utility_only",
+  "selector_regime_label": "ambiguous",
+  "claim_gate_result": "audit_only_or_not_comparable",
+  "paper_evidence_eligible": false,
+  "measurement_validation_claim": false,
+  "deployed_runtime_improvement_claim": false,
+  "allowed_trigger_types": [
+    "unknown_due_to_missing_context",
+    "hallucination_risk",
+    "wrong_despite_context",
+    "ambiguous",
+    "operator_review_requested",
+    "budget_overflow",
+    "candidate_pool_mismatch"
+  ],
+  "decision_rules": {
+    "identity_mismatch": {
+      "classification": "not_comparable",
+      "paper_evidence_eligible": false,
+      "no_metric_claim_upgrade": true,
+      "claim_gate_result": "identity_mismatch_fail_closed"
+    },
+    "candidate_pool_mismatch_without_documented_expansion": {
+      "classification": "fail_closed_candidate_pool_mismatch",
+      "paper_evidence_eligible": false,
+      "no_metric_claim_upgrade": true,
+      "claim_gate_result": "candidate_pool_mismatch_fail_closed"
+    },
+    "over_budget_revised_context": {
+      "classification": "operational_violation",
+      "paper_evidence_eligible": false,
+      "no_metric_claim_upgrade": true,
+      "claim_gate_result": "over_budget_operational_violation"
+    },
+    "missing_stale_mismatched_or_underpowered_bridge": {
+      "metric_claim_level": "ambiguous_metric",
+      "denied_metric_claims": [
+        "calibrated_proxy_supported",
+        "vinfo_proxy_supported"
+      ],
+      "paper_evidence_eligible": false,
+      "no_metric_claim_upgrade": true
+    },
+    "fixture_only_before_after_improvement": {
+      "claim_ceiling": "operational_audit_only",
+      "deployed_runtime_improvement_claim": false,
+      "paper_evidence_eligible": false,
+      "measurement_validation_claim": false,
+      "no_metric_claim_upgrade": true
+    }
+  },
+  "claim_boundary": {
+    "reprojection_witness_is_audit_witness_not_validation": true,
+    "before_after_fixture_improvement_is_operational_audit_only": true,
+    "p59_does_not_prove_deployed_runtime_improvement": true,
+    "p59_does_not_prove_selector_validity": true,
+    "p59_does_not_establish_metric_bridge_support": true,
+    "p59_does_not_establish_v_information_support": true,
+    "p59_does_not_establish_measurement_validation": true,
+    "p59_does_not_make_fixture_or_template_outputs_paper_evidence": true,
+    "p59_does_not_repair_p55_p56_blocked_states": true,
+    "p59_does_not_convert_p57_p58_scaffolds_into_evidence_claims": true
+  },
+  "prior_phase_boundaries": {
+    "p55_status": "failed_closed_no_rows_blocked_operator_required",
+    "p56_status": "no_imported_traces",
+    "p57_status": "extraction_risk_scaffold_only",
+    "p58_status": "operational_diagnostic_scaffold_only"
+  },
+  "denied_claims": [
+    "deployed_runtime_improvement",
+    "selector_validity",
+    "metric_bridge_support",
+    "v_information_support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement_validation",
+    "measurement_validated",
+    "paper_grade_template_evidence",
+    "p55_p56_success_inheritance",
+    "p57_p58_scaffold_as_evidence_claim"
+  ]
+}

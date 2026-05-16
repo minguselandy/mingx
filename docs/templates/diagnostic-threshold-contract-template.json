@@ -1,0 +1,216 @@
+{
+  "contract_id": "diagnostic_threshold_contract_v12_template",
+  "contract_schema_version": "diagnostic_threshold_contract.v12.1",
+  "calibration_epoch": "template_unbound_epoch",
+  "active_stratum": {
+    "task_family": "template_task_family",
+    "model_tier": "template_model_tier",
+    "materialization_policy": "template_materialization_policy",
+    "block_size": 2,
+    "candidate_slice": "template_candidate_slice",
+    "metric": "template_metric",
+    "data_source_kind": "template_data_source_kind"
+  },
+  "metric_claim_level_precondition": {
+    "allowed_metric_claim_levels": [
+      "vinfo_proxy_supported",
+      "calibrated_proxy_supported",
+      "operational_utility_only",
+      "ambiguous_metric"
+    ],
+    "bridge_required_for": [
+      "vinfo_proxy_supported",
+      "calibrated_proxy_supported"
+    ],
+    "fail_closed_metric_claim_levels": [
+      "operational_utility_only",
+      "ambiguous_metric"
+    ],
+    "current_p45_bio_attribute_status": "non_calibrated_fail_closed_not_bridge_support"
+  },
+  "block_size_max": 2,
+  "signal_threshold": {
+    "value": 0.0001,
+    "inactive": false,
+    "null_behavior": "fail_closed_to_ambiguous"
+  },
+  "ratio_lcb_method": {
+    "method": "empirical_lower_quantile",
+    "fallback": "conservative_min_observed_or_fail_closed_to_ambiguous_if_underpowered"
+  },
+  "ratio_quantile": 0.1,
+  "ratio_lcb_threshold": 0.75,
+  "pairwise_excess_threshold": 0.1,
+  "sag_gap_threshold": 0.05,
+  "triple_excess_threshold": {
+    "value": 0.0,
+    "sentinel": "positive_excess_fires_higher_order_risk",
+    "inactive": false,
+    "null_behavior": "fail_closed_to_ambiguous"
+  },
+  "min_effective_sample_size": 6,
+  "drift_policy": {
+    "fresh": {
+      "metric_claim_level": "review_declared_metric_claim_level",
+      "selector_regime_label": "continue_to_threshold_review",
+      "requires_active_stratum_match": true
+    },
+    "stale": {
+      "metric_claim_level": "ambiguous_metric",
+      "selector_regime_label": "ambiguous",
+      "reason_code": "metric_bridge_stale"
+    },
+    "ambiguous": {
+      "metric_claim_level": "ambiguous_metric",
+      "selector_regime_label": "ambiguous",
+      "reason_code": "metric_bridge_ambiguous"
+    },
+    "missing": {
+      "metric_claim_level": "ambiguous_metric",
+      "selector_regime_label": "ambiguous",
+      "reason_code": "metric_bridge_missing"
+    },
+    "mismatched": {
+      "metric_claim_level": "ambiguous_metric",
+      "selector_regime_label": "ambiguous",
+      "reason_code": "metric_bridge_stratum_mismatched"
+    }
+  },
+  "underpowered_policy": {
+    "if_effective_sample_size_below_min": {
+      "metric_claim_level": "ambiguous_metric",
+      "selector_regime_label": "ambiguous",
+      "reason_code": "effective_sample_size_underpowered"
+    },
+    "if_signal_denominator_below_threshold": {
+      "metric_claim_level": "operational_utility_only",
+      "selector_regime_label": "ambiguous",
+      "reason_code": "signal_denominator_underpowered"
+    },
+    "allowed_fail_closed_outputs": [
+      "ambiguous",
+      "ambiguous_metric",
+      "operational_utility_only"
+    ]
+  },
+  "fixture_policy": {
+    "paper_evidence_eligible": false,
+    "required_statement": "fixture-only evidence remains paper-ineligible",
+    "cannot_emit_metric_claim_levels": [
+      "vinfo_proxy_supported",
+      "calibrated_proxy_supported"
+    ],
+    "required_fail_closed_metric_claim_levels": [
+      "operational_utility_only",
+      "ambiguous_metric"
+    ]
+  },
+  "synthetic_policy": {
+    "paper_evidence_eligible": false,
+    "required_statement": "synthetic-only evidence remains structural-only",
+    "cannot_emit_metric_claim_levels": [
+      "vinfo_proxy_supported",
+      "calibrated_proxy_supported"
+    ],
+    "required_fail_closed_metric_claim_levels": [
+      "ambiguous_metric"
+    ]
+  },
+  "decision_logic": {
+    "precedence_order": [
+      "hard_claim_boundary_failures",
+      "metric_bridge_missing_stale_mismatched_underpowered",
+      "fixture_only_or_synthetic_only_restrictions",
+      "signal_denominator_and_effective_sample_size_checks",
+      "triple_or_higher_order_risk_checks",
+      "pairwise_escalation_checks",
+      "greedy_supported_checks",
+      "ambiguous_fallback"
+    ],
+    "rules": [
+      {
+        "name": "metric_bridge_fail_closed",
+        "if": "metric_bridge_missing_or_stale_or_underpowered_or_mismatched",
+        "metric_claim_level": "ambiguous_metric",
+        "selector_regime_label": "ambiguous",
+        "denied_metric_claim_levels": [
+          "vinfo_proxy_supported",
+          "calibrated_proxy_supported"
+        ]
+      },
+      {
+        "name": "low_signal_denominator",
+        "if": "signal_denominator_below_threshold",
+        "selector_regime_label": "ambiguous"
+      },
+      {
+        "name": "higher_order_risk",
+        "if": "triple_sentinel_fires_or_hidden_synergy_conflict_appears",
+        "selector_regime_label": "higher_order_risk"
+      },
+      {
+        "name": "pairwise_escalate",
+        "if": "pair_excess_high_and_sag_gap_meaningful",
+        "selector_regime_label": "pairwise_escalate"
+      },
+      {
+        "name": "greedy_supported",
+        "if": "pair_ratio_healthy_and_pair_excess_low_and_sag_gap_small",
+        "selector_regime_label": "greedy_supported"
+      },
+      {
+        "name": "ambiguous_fallback",
+        "if": "signals_conflict_or_sample_underpowered_or_required_threshold_inactive",
+        "selector_regime_label": "ambiguous"
+      }
+    ]
+  },
+  "claim_boundary": {
+    "metric_claim_level_max_for_template": "none",
+    "selector_regime_label_max_for_template": "none",
+    "contract_is_bridge_evidence": false,
+    "contract_is_validation": false,
+    "measurement_validation_claim": false,
+    "deployed_v_information_verification_claim": false,
+    "theorem_level_deployed_submodularity_verification_claim": false,
+    "human_label_validation_claim": false,
+    "human_human_kappa_present": false,
+    "current_p45_bio_attribute_calibrated_proxy_supported": false,
+    "denied_inferences": [
+      "replay_usability_as_metric_support",
+      "synthetic_evidence_as_bridge_evidence",
+      "fixture_evidence_as_paper_grade_evidence",
+      "extraction_audit_as_selector_validity",
+      "reprojection_witness_as_deployed_runtime_improvement",
+      "model_adjudicated_labels_as_human_labels"
+    ]
+  },
+  "paper_evidence_policy": {
+    "contract_itself_paper_evidence_eligible": false,
+    "fixture_only_paper_evidence_eligible": false,
+    "synthetic_only_paper_evidence_eligible": false,
+    "replay_completeness_paper_evidence_eligible": false,
+    "requires_separate_phase_review_for_any_paper_evidence": true
+  },
+  "metric_bridge_witness_semantics": {
+    "presence_is_not_support": true,
+    "must_record_bridge_status_and_provenance": true,
+    "stale_missing_mismatched_underpowered_or_failed_witness_downgrades_claims": true,
+    "replay_usability_does_not_imply_metric_support": true,
+    "do_not_infer_bridge_from": [
+      "replay_completeness",
+      "synthetic_structural_signatures",
+      "fixture_realistic_task_success",
+      "extraction_audit_completeness",
+      "reprojection_witness_improvement_rows",
+      "model_adjudicated_labels"
+    ]
+  },
+  "threshold_policy": {
+    "universal_scientific_thresholds_assumed": false,
+    "thresholds_are_stratum_specific": true,
+    "null_threshold_allowed_only_when_gate_inactive": true,
+    "inactive_gate_must_fail_closed": true,
+    "missing_threshold_interpreted_post_hoc": false
+  }
+}

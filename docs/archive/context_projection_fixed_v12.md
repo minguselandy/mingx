@@ -281,11 +281,11 @@ The claim gate is conservative by construction. Missing evidence lowers the allo
 
 The formal-to-theorem transfer via a structural condition is an established template rather than a claim of novelty here. Das and Kempe (2018) use the submodularity ratio $\gamma$, Elenberg, Khanna, Dimakis, and Negahban (2018) use restricted strong convexity parameters to establish weak-submodularity consequences, and Bian, Buhmann, Krause, and Tschiatschek (2017) combine $\gamma$ with generalized curvature. What the bridge statement below adds on top of this established template is an explicit **proxy layer**, an explicit **pipeline layer**, a metric-scope gate, a conditional-equivalence analysis with enumerated failure modes, and the stratified diagnostic decomposition used in Section 4.
 
-**Proxy layer.** The diagnostics in Section 4 require marginal value gains. In practice these are estimated as fixed-model log-loss deltas $\Delta f_i^{\theta,\ell}$ or operational utility deltas $\Delta f_i^U$, for example through CI Value or counterfactual replay. These measurements become evidence about $f_i^{\mathcal V}$ only under a predictor-optimality bridge, a log-loss-aligned evaluation setup, or a measured utility-to-log-loss bridge.
+**Proxy layer.** The diagnostics in Section 4 require marginal value gains. In practice these are estimated as fixed-model log-loss deltas $\Delta f_i^{\theta,\ell}$ or operational utility deltas $\Delta f_i^U$, for example through CI Value or counterfactual replay. These measurements become evidence about $f_i^{\mathcal V}$ only under a predictor-optimality bridge, log-loss alignment plus a fresh fixed-model-to-$\mathcal V_i$ bridge, a near-optimality argument, actual empirical minimization over the declared predictive family, or a measured utility-to-log-loss bridge.
 
 **Metric-bridge regimes.** Full V-information-calibrated diagnostics apply only under log-loss evaluation or a validated utility-to-log-loss bridge; otherwise, the diagnostics are operational-utility-only signals and must not be reported as evidence about the formal V-information regime. We distinguish three metric regimes.
 
-1. **Regime A: log-loss aligned.** The predictive family $V_i$ matches the deployed model tier, the materialization order is fixed, and the evaluation metric is log-loss. In this regime, CI-style finite differences can be interpreted as proxy measurements of the formal V-information value function.
+1. **Regime A: log-loss aligned.** The predictive family $V_i$ matches the deployed model tier, the materialization order is fixed, and the evaluation metric is log-loss. In this regime, CI-style finite differences can be interpreted as proxy measurements of the formal V-information value function only when paired with a fresh fixed-model-to-$V_i$ bridge, a reviewed near-optimality argument, or actual empirical minimization over the declared predictive family. Generic utility-to-log-loss correlation is not formal V-information support by itself.
 
 2. **Regime B: bridge-calibrated decomposable utility.** Production uses a non-log-loss utility $U$, but a stratum-specific bridge calibration verifies that utility marginals track log-loss marginals. For stratum
 \[
@@ -306,7 +306,7 @@ B_U=\Delta_U(S\mid L).
 \]
 This bridge is valid only while the calibration epoch is fresh and the active stratum of the dispatch matches the stratum for which $\zeta_s$ was measured.
 
-**Bridge-calibration status.** The synthetic benchmark in Section 4.6 is an oracle structural check; it does not estimate a real utility-to-log-loss residual. This version therefore does not report a measured $(\hat c_s,\hat\zeta_s)$ for any deployed stratum. Until such a calibration is executed, utility-level diagnostics are reported as `operational_utility_only` or `synthetic_structural_only`, not as `calibrated_proxy_supported`. Section 4.7 specifies the one-stratum calibration needed to instantiate this bridge.
+**Bridge-calibration status.** The synthetic benchmark in Section 4.6 is an oracle structural check; it does not estimate a real utility-to-log-loss residual. The P45 bridge-calibration lane has now been implemented for the current `bio_attribute` stratum, and that stratum did not establish a stable utility-to-log-loss bridge. For the current `bio_attribute` stratum, no `calibrated_proxy_supported` claim is allowed. Downstream utility diagnostics remain `operational_utility_only`, while the underpowered failed bridge artifact remains `ambiguous_metric`. This is a fail-closed negative result and claim-gate record, not bridge support.
 
 3. **Regime C: non-decomposable or uncalibrated production utility.** Pass/fail task success, rubric scores with nonlinear aggregation, evaluator preferences, and human judgments can be measured through finite differences, but they do not automatically approximate log-loss deltas or V-information deltas. In this regime the protocol reports operational-utility-only labels for the utility objective
 \[
@@ -355,12 +355,12 @@ The first label says what the measurements are allowed to mean; the second says 
 
 | Metric claim level | Meaning |
 |---|---|
-| `vinfo_proxy_supported` | log-loss aligned or formal-to-fixed-model bridge is fresh |
+| `vinfo_proxy_supported` | log-loss alignment plus a fresh fixed-model-to-$V_i$ bridge, a reviewed near-optimality argument, or actual empirical minimization over the declared predictive family |
 | `calibrated_proxy_supported` | utility-to-log-loss bridge has a measured residual bound in the active stratum |
 | `operational_utility_only` | diagnostics are useful for the deployed utility but not for V-information claims |
 | `ambiguous_metric` | bridge missing, stale, underpowered, or stratum-mismatched |
 
-A fixed-model finite difference estimates $f_i^{\theta,\ell}$, not $f_i^{\mathcal V}$, unless the deployed predictor is known to be near-optimal within $\mathcal V_i$ or the empirical risk minimum over $\mathcal V_i$ is actually estimated. For utility metrics, a stratum-specific calibration is required:
+A fixed-model finite difference estimates $f_i^{\theta,\ell}$, not $f_i^{\mathcal V}$, unless the deployed predictor is known to be near-optimal within $\mathcal V_i$, a fresh fixed-model-to-$V_i$ bridge has been reviewed, or the empirical risk minimum over $\mathcal V_i$ is actually estimated. Generic utility-to-log-loss correlation is not formal V-information support by itself. For utility metrics, a stratum-specific calibration is required:
 \[
 \left|\Delta_U(A\mid L)-c_s\Delta_\ell(A\mid L)\right|\le \zeta_s.
 \]
@@ -461,16 +461,36 @@ The smoke test satisfies the conservative safety target: no higher-order prerequ
 
 ### 4.7 One-stratum bridge calibration and replay requirements
 
-The next empirical layer is a one-stratum bridge calibration, followed by offline replay. The purpose of the bridge calibration is to demonstrate that the metric contract in Section 3.4 is executable for at least one controlled stratum, not to validate all deployments. A suitable first stratum fixes task family, model tier, materialization order, decoding policy, block size $b\le2$, and candidate-slice band. For sampled context/block pairs $(L,A)$, the experiment measures both fixed-model log-loss marginals $\Delta_\ell(A\mid L)$ and operational or model-adjudicated utility marginals $\Delta_U(A\mid L)$, fits $\hat c_s$ on a development split, and reports a held-out residual bound $\hat\zeta_s$ together with sign agreement and rank correlation.
+The first one-stratum bridge-calibration lane has been executed for the current `bio_attribute` stratum. Its purpose was to test whether the metric contract in Section 3.4 is executable for a controlled stratum, not to validate all deployments. The lane fixed task family, model tier, materialization order, decoding policy, block size, and candidate-slice band, then compared fixed-model log-loss marginals $\Delta_\ell(A\mid L)$ with operational or model-adjudicated utility marginals $\Delta_U(A\mid L)$.
 
-| Stratum | $n$ blocks | $\hat c_s$ | $\hat\zeta_s$ | sign agreement | Spearman $
-ho$ | allowed claim |
-|---|---:|---:|---:|---:|---:|---|
-| fixed task family / fixed model tier / fixed materialization / $b\le2$ | to be measured | to be measured | to be measured | to be measured | to be measured | `calibrated_proxy_supported` only if residual and stability gates pass |
+| Stratum | P45 status | Bridge outcome | Allowed downstream label | Claim boundary |
+|---|---|---|---|---|
+| current `bio_attribute` stratum | implemented and closed | no stable utility-to-log-loss bridge; underpowered failed fit for the final bridge artifact | `operational_utility_only` or `ambiguous_metric` | no `calibrated_proxy_supported`, no `vinfo_proxy_supported`, no measurement validation |
 
-If the residual is large, unstable, or stratum-mismatched, the result is not rescued by terminology; the witness records `operational_utility_only` or `ambiguous_metric`. This negative outcome would still be useful because it would demonstrate that the claim gate can withhold V-information-facing labels when the utility bridge fails.
+This negative result is fail-closed claim-gate evidence, not bridge support. It shows that the measurement path and gate can withhold V-information-facing labels when the utility bridge fails. Future bridge work should use a materially new active stratum or a materially new fixed-logloss/utility design; it should not expand the same `bio_attribute` pilot by inertia.
 
 Offline replay over realistic dispatch traces should come after this calibration step. Before replay, six choices must be fixed: model tier, utility metric, metric-claim regime, materialization ordering policy, decoding and variance-control policy, and candidate-slice policy. Replay records should include a `CounterfactualReplayWitness` with snapshot ID, frozen context state, item added or removed, continuation policy, evaluator model, replicate count, effective sample size, and metric-bridge status.
+
+### 4.8 Route 2 HotpotQA operational replay as a negative-bridge case study
+
+We ran a Route 2 HotpotQA evidence package to test the replay and comparison lane under real benchmark candidate pools. The bridge-calibration attempts did not establish calibrated metric support. The original HotpotQA answer-NLL bridge failed closed, FixA was retained only as a circular positive-control diagnostic, and FixB was a valid non-circular negative bridge attempt that also failed closed. Therefore the Route 2 result is interpreted only at `operational_utility_only`.
+
+Within that boundary, P56 produced 2,000 validated HotpotQA operational dispatch traces over budgets 512 and 1024. P66 compared the v12 cost-aware diagnostic policy against deployable baselines under matched candidate-pool and budget pairs. The v12 policy improved supporting-fact recall against `random_budget`, `topk_relevance_or_token_budget`, and `mmr_density_greedy` in all six paired operational comparisons. The oracle selector is reported only as a `non_deployable_upper_bound` and is not used as a deployable baseline.
+
+This evidence supports the following operational claim only: HotpotQA operational replay shows that the v12 diagnostic policy improves supporting-fact recall against deployable baselines under matched budgets. Because P63R bridge gates failed closed, this is `operational_utility_only`, not calibrated metric support.
+
+| Selector | Budget | Mean supporting-fact recall | Mean gold support packets selected | Mean selected tokens | Quality per 1k tokens | Deployability |
+|---|---:|---:|---:|---:|---:|---|
+| `random_budget` | 512 | 0.572917 | 1.37 | 505.085 | 1.134298 | deployable baseline |
+| `topk_relevance_or_token_budget` | 512 | 0.866167 | 2.08 | 505.160 | 1.714639 | deployable baseline |
+| `mmr_density_greedy` | 512 | 0.860167 | 2.07 | 505.425 | 1.701869 | deployable baseline |
+| `v12_cost_aware_diagnostic_policy_operational_only` | 512 | 0.907833 | 2.18 | 505.465 | 1.796035 | deployable operational policy |
+| `gold_support_oracle_upper_bound` | 512 | 1.000000 | 2.425 | 505.075 | 1.979904 | `non_deployable_upper_bound` |
+| `random_budget` | 1024 | 0.950000 | 2.305 | 845.805 | 1.123190 | deployable baseline |
+| `topk_relevance_or_token_budget` | 1024 | 0.980833 | 2.375 | 845.820 | 1.159624 | deployable baseline |
+| `mmr_density_greedy` | 1024 | 0.980417 | 2.375 | 845.610 | 1.159420 | deployable baseline |
+| `v12_cost_aware_diagnostic_policy_operational_only` | 1024 | 0.995833 | 2.415 | 846.085 | 1.176989 | deployable operational policy |
+| `gold_support_oracle_upper_bound` | 1024 | 1.000000 | 2.425 | 845.770 | 1.182355 | `non_deployable_upper_bound` |
 
 ## 5. Extraction Quality as a Testable End-to-End Bottleneck
 
@@ -714,7 +734,7 @@ The gap is therefore not the absence of multi-agent scheduling mechanisms, but t
 
 The paper's main open problem is still objective-level: characterize when predictive V-information over natural-language context items is approximately submodular or weakly submodular for restricted model families. The current theorem supplies a pairwise-regime bound, not a proof of Condition A.
 
-The most important empirical next step is one-stratum bridge calibration. The synthetic benchmark in Section 4.6 is a structural smoke test, but it does not measure $(c_s,\zeta_s)$ for a deployed metric stratum. A first bridge experiment should fix the model tier, task family, materialization order, decoding policy, block size, and candidate slice, then compare utility marginals against fixed-model log-loss marginals on held-out context/block pairs.
+The current `bio_attribute` bridge lane has been executed and closed as non-calibrated. The synthetic benchmark in Section 4.6 is a structural smoke test, and the P45 negative closure shows that the current utility-to-log-loss bridge did not pass for the tested stratum. Future bridge work therefore requires either a materially new stratum or a materially new fixed-logloss/utility design, rather than scaling the same `bio_attribute` pilot by inertia.
 
 The second empirical step is offline replay on real dispatch traces. Realistic replay must test whether the same labels predict selector behavior under actual task distributions, materialization policies, and judge metrics, while preserving the metric-claim boundary recorded by the MetricBridgeWitness.
 
@@ -760,7 +780,7 @@ We formalized dispatch-time context projection as per-agent, token-budgeted cont
 
 The deployment contribution is a claim-gated diagnostic framework, not deployed V-information verification. The paper separates formal V-information value, fixed-model log-loss, operational utility, heuristic selector pipelines, metric-claim levels, runtime artifacts, and extraction risk. The resulting protocol conservatively labels selector regimes as `greedy_supported`, `pairwise_escalate`, `higher_order_risk`, or `ambiguous`.
 
-A small oracle synthetic benchmark provides initial structural evidence that the diagnostic policy separates redundancy, pairwise synergy, and higher-order prerequisite regimes without issuing false `greedy_supported` labels on higher-order cases. The remaining work is empirical: one-stratum metric-bridge calibration, model-adjudicated realistic-task benchmarks, offline replay on real dispatch traces, human sentinel audits, and value-stratified extraction measurement.
+A small oracle synthetic benchmark provides initial structural evidence that the diagnostic policy separates redundancy, pairwise synergy, and higher-order prerequisite regimes without issuing false `greedy_supported` labels on higher-order cases. The P45 bridge lane has also produced a fail-closed negative result for the current non-calibrated `bio_attribute` stratum. The remaining bridge work is empirical but no longer entirely unexecuted: it requires a materially new stratum or materially new fixed-logloss/utility design, alongside model-adjudicated realistic-task benchmarks, offline replay on real dispatch traces, human sentinel audits, and value-stratified extraction measurement.
 
 ## References
 
@@ -966,3 +986,20 @@ r_f(\varnothing,\{a,b\})
 \frac{2}{M},
 \]
 which matches the construction exactly. The coarser fractional active-context form with $\tau=1$ gives $1/(1+M-2)=1/(M-1)$, which is same-order but looser. This is why the paper makes the absolute-increase theorem primary and treats the fractional expression as a convenient active-context corollary rather than as the robust theorem statement.
+
+---
+
+## Appendix C: Route 2 HotpotQA operational evidence package
+
+Route 2 is included as an operational replay and negative-bridge evidence package. It does not establish metric bridge support. The original HotpotQA bridge and the non-circular FixB bridge both failed closed, while FixA is retained only as a circular positive-control diagnostic. Therefore, the P56/P66 HotpotQA results support an operational comparison claim only: v12 improves supporting-fact recall against deployable baselines under matched budgets.
+
+| Phase | Evidence type | Key result | Metric claim level | Paper use |
+|---|---|---|---|---|
+| P63R original bridge | failed-closed bridge calibration | `failed_closed_gate_failed`; normalized residual, sign agreement, and Spearman gates failed | `operational_utility_only` | negative bridge result only |
+| P63R-FixA | circular positive-control diagnostic | `positive_control_only`; proves calibration machinery detects circular alignment | `positive_control_only` | sanity check only, not metric bridge evidence |
+| P63R-FixB | valid non-circular negative bridge attempt | `failed_closed_gate_failed`; normalized residual, sign agreement, and Spearman gates failed | `operational_utility_only` | negative bridge result only |
+| P56 | operational dispatch traces | 2,000 / 2,000 HotpotQA traces validated | `operational_utility_only` | operational replay evidence only |
+| P66 | operational selector comparison | v12 wins 6 / 6 paired recall comparisons against deployable baselines | `operational_utility_only` | operational comparison only |
+| P67R | evidence package and claim ledger | claim ledger records no claim upgrade | `operational_utility_only; no_claim_upgrade` | audit and integration control |
+
+These results do not support `calibrated_proxy_supported`, `vinfo_proxy_supported`, measurement validation, paper evidence, P55 bridge support, P56 metric support, metric bridge support, global selector superiority, or deployed V-information verification.

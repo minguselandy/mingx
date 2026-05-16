@@ -1,0 +1,22 @@
+{
+  "adapter_name": "hotpot_adapter",
+  "candidate_pools_generated": 200,
+  "claim_status": [
+    "no_claim_upgrade",
+    "adapter_only",
+    "candidate_pool_schema_ready",
+    "P55 still blocked_no_rows",
+    "P56 still blocked_no_traces"
+  ],
+  "dataset": "HotpotQA",
+  "p55_rows_generated": 0,
+  "p56_traces_generated": 0,
+  "phase": "P61R-HotpotQA",
+  "split": "dev_distractor",
+  "status": "candidate_pools_ready",
+  "task_family": "hotpotqa_answer_support_selection",
+  "warnings": [
+    "skipped_exact_answer_packet:5ae5aba0554299546bf82f17:Teen Titans Go! (TV series):0",
+    "skipped_exact_answer_packet:5ac298f9554299657fa28fc9:Ian Watkins (Lostprophets):2"
+  ]
+}
