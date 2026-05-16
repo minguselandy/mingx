@@ -13,6 +13,27 @@ The implementation must remain aligned with the revised paper boundary.
 Current source manuscript anchor: `docs/archive/context_projection_fixed_v12.md`.
 Current alignment map: `docs/paper-alignment-v12.md`.
 
+Current proposed follow-up cycle:
+
+- `docs/experiments/P51-P60-v12-followup-dev-experiment-plan.md`
+- `docs/reviews/P51-P60-v12-review-claim-gate-protocol.md`
+
+This P51-P60 package is planning and review control only. It does not mark any
+P51-P60 phase complete and does not upgrade evidence claims.
+
+Current Route 2 real-data development-control entrypoints:
+
+- `docs/roadmaps/mingx-route2-real-data-dev-experiment-plan.md`
+- `docs/roadmaps/mingx-route2-development-control-chat-prompt.md`
+
+Route 2 is the proposed P61R-P70R real-data evidence package. Its starting
+state is P45-P60 scaffold/evidence-state package complete, P55
+`failed_closed_no_rows` / `blocked_operator_required`, and P56
+`no_imported_traces`. Route 2 exists to produce real public-benchmark candidate
+pools, P55 bridge rows, P55 bridge calibration, realistic P56 dispatch traces,
+matched-budget baseline comparisons, ablations, manuscript integration, and an
+independent claim audit. It does not relax the v12 evidence boundary.
+
 Legacy v10 references remain preserved as archive material:
 `docs/archive/context_projection_revised_v10.md` and
 `docs/paper-alignment-v10.md`.
@@ -26,12 +47,19 @@ For implementation tasks, read:
 - `docs/paper-alignment-v12.md`
 - `docs/protocols/phase-b-replay-protocol.md`
 - `docs/protocols/phase-b-readiness-and-first-replay-plan.md`
+- for P51-P60 work, `docs/experiments/P51-P60-v12-followup-dev-experiment-plan.md`
+- for P51-P60 work, `docs/reviews/P51-P60-v12-review-claim-gate-protocol.md`
+- for Route 2 / P61R-P70R work, `docs/roadmaps/mingx-route2-real-data-dev-experiment-plan.md`
+- for Route 2 development-control work, `docs/roadmaps/mingx-route2-development-control-chat-prompt.md`
+- for P55/P56 repair work, current `docs/reviews/*P55*` and `docs/reviews/*P56*` evidence-state reviews
 
 For review tasks, read:
 
 - `docs/codex/post-development-review-agent.md`
 - `docs/codex/guidance-document-review.md`
 - the relevant phase guidance under `docs/codex/phases/`
+- for P51-P60 reviews, `docs/reviews/P51-P60-v12-review-claim-gate-protocol.md`
+- for Route 2 reviews, `docs/roadmaps/mingx-route2-real-data-dev-experiment-plan.md` and the relevant P61R-P70R report/review docs
 
 ## Core scientific boundaries
 
@@ -52,6 +80,31 @@ For review tasks, read:
 - stale/missing metric bridge => `operational_utility_only` or ambiguous.
 - synthetic benchmark success does not certify deployed V-information submodularity.
 - engineering success must not be reported as scientific validation.
+- Route 2 real-data success can support stratum-local claims only.
+- `calibrated_proxy_supported` requires a fresh matching `MetricBridgeWitness`
+  with residual and stability gates passed for the active stratum and calibration
+  epoch.
+- Replay completeness alone is not metric support, selector validity, or
+  V-information proxy evidence.
+- Operational superiority claims must name the dataset, budget, baseline,
+  metric, evaluator/materialization regime, and statistical test status.
+- Public benchmark success must not be converted into `measurement_validated`,
+  human-label validation, human-human kappa, global calibrated proxy support, or
+  deployed V-information verification.
+
+Allowed active Route 2 metric labels:
+
+- `vinfo_proxy_supported`
+- `calibrated_proxy_supported`
+- `operational_utility_only`
+- `ambiguous_metric`
+
+Allowed active Route 2 selector labels:
+
+- `greedy_supported`
+- `pairwise_escalate`
+- `higher_order_risk`
+- `ambiguous`
 
 ## Core artifact ontology
 
@@ -86,6 +139,60 @@ Forbidden unless explicitly requested:
 - inference of missing materialization order
 - inference of excluded candidates without an explicit complete considered-candidate set
 - promotion of runtime diagnostics to deployment verification
+
+## Route 2 real-data controller
+
+Route 2 phases must proceed in order unless the user explicitly changes scope:
+
+1. P61R public benchmark adapters and candidate pools
+2. P62R P55 bridge row generator
+3. P63R P55 real bridge calibration
+4. P64R baseline selector suite
+5. P65R realistic dispatch trace generation
+6. P66R comparative realistic replay experiment
+7. P67R ablation and error analysis
+8. P68R manuscript integration package
+9. P69R independent review and claim audit
+10. P70R release / submission package
+
+Do not skip ahead to P56 comparison before P55 row generation and trace schema
+validation are working. Start with the shortest validating path: FEVER adapter
+dry-run, FEVER bridge-row generation, FEVER bridge calibration, minimal baseline
+interface, then one realistic replay dataset and two budgets.
+
+Route 2 public benchmark adapters should support local mirrors and fail closed
+with a blocked-data report when data are unavailable. No proprietary live API or
+evaluator is allowed unless the user/operator explicitly approves it. Public
+benchmark downloads are allowed only when the local environment and project
+policy permit them. Missing evaluator/log-loss outputs must produce
+`blocked_no_evaluator` or `failed_closed_no_evaluator_or_rows`, not fabricated
+rows or traces.
+
+Keep these out of commits unless explicitly approved:
+
+- `.codex/automation-state/`
+- `artifacts/operator_inputs/`
+- `artifacts/experiments/synthetic_regime_v12/events.jsonl`
+- duplicate `docs/mingx-v12-*` upload files
+- post-commit independent review leftovers unrelated to the active phase
+
+Every Route 2 phase report must include:
+
+```text
+Phase:
+Branch / HEAD:
+Files changed:
+Artifacts produced:
+Tests run:
+Test results:
+Data status:
+Claim status:
+Allowed paper claim:
+Denied paper claims:
+Blocked items:
+Next recommended phase:
+Commit recommendation:
+```
 
 ## Development workflow
 
@@ -169,6 +276,14 @@ python -m compileall scripts
 ```
 
 Do not run live API tests unless the phase explicitly requires operator approval for live execution.
+
+For Route 2 phases, prefer the focused acceptance commands from the route plan
+for the active P61R-P70R phase. At minimum, run the relevant targeted pytest
+file or package, the current framing guardrail test path when claims or reports
+change, and `python -m compileall cps` when Python implementation files under
+`cps/` change. If a dataset, evaluator, or optional dependency is unavailable,
+record the blocked command/result explicitly instead of substituting synthetic
+evidence.
 
 ## Dependency / optional integration rules
 
