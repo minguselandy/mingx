@@ -1,0 +1,22 @@
+{
+  "active_stratum": "route4b_hotpotqa_external_sufficiency_bridge_v1",
+  "artifact_type": "MetricBridgeWitness",
+  "bridge_status": "failed_closed_underpowered",
+  "calibrated_proxy_supported": false,
+  "calibration_epoch": "route4b_model_adjudicated_external_sufficiency_v1",
+  "claim_level": "ambiguous_metric",
+  "fresh_for_route4b": false,
+  "measurement_validation": false,
+  "metric_claim_level": "failed_closed_no_claim_upgrade",
+  "paper_evidence": false,
+  "phase_id": "route4b_bridge_to_external_sufficiency",
+  "reason_codes": [
+    "row_count_below_minimum",
+    "unique_instance_below_minimum",
+    "effective_sample_size_below_minimum",
+    "model_adjudication_not_human_measurement_validation"
+  ],
+  "rows_validated": 22,
+  "unique_original_instances": 22,
+  "vinfo_proxy_supported": false
+}

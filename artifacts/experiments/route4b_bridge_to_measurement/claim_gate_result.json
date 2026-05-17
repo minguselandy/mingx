@@ -1,0 +1,21 @@
+{
+  "calibrated_proxy_supported": false,
+  "claim_status": "no_claim_upgrade",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement validation",
+    "human-label validation",
+    "human-human kappa",
+    "paper evidence",
+    "metric bridge support",
+    "global selector superiority",
+    "deployed V-information verification"
+  ],
+  "gate_result": "failed_closed_underpowered",
+  "measurement_validation": false,
+  "metric_bridge_support_candidate": false,
+  "paper_evidence": false,
+  "phase_id": "route4b_bridge_to_external_sufficiency",
+  "vinfo_proxy_supported": false
+}
