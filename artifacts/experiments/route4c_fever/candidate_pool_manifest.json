@@ -1,0 +1,19 @@
+{
+  "artifact_type": "Route4CFeverCandidatePoolManifest",
+  "blocked_report_path": "artifacts/experiments/route4c_fever/blocked_report.json",
+  "candidate_pool_builder": "cps.benchmarks.fever_adapter.build_fever_candidate_pools",
+  "candidate_pool_builder_available": true,
+  "candidate_pool_path": "artifacts/benchmarks/fever_candidate_pools.jsonl",
+  "candidate_pool_rows_available": 0,
+  "candidate_pools_generated": 0,
+  "claim_status": "no_claim_upgrade",
+  "dataset": "FEVER",
+  "delta_record_path": "artifacts/benchmarks/fever_p55_delta_records.jsonl",
+  "delta_record_rows_available": 0,
+  "generated_candidate_pool_path": null,
+  "logloss_scoring_ready": false,
+  "raw_dataset_mirror_committed": false,
+  "required_min_candidate_pools": 150,
+  "required_min_delta_records": 500,
+  "schema_version": "route4c_fever_candidate_pool_manifest_v1"
+}

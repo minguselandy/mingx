@@ -1,0 +1,29 @@
+{
+  "artifact_type": "Route4CFeverReadinessReport",
+  "blocked_report_path": "artifacts/experiments/route4c_fever/blocked_report.json",
+  "calibrated_proxy_supported": false,
+  "candidate_bridge_evidence_accepted": false,
+  "candidate_pool_manifest_path": "artifacts/experiments/route4c_fever/candidate_pool_manifest.json",
+  "claim_status": "no_claim_upgrade",
+  "dataset": "FEVER",
+  "live_api_used": false,
+  "measurement_validation": false,
+  "metric_bridge_support": false,
+  "no_fabricated_fever_evidence": true,
+  "paper_evidence": false,
+  "reason_codes": [
+    "full_fever_evidence_source_unavailable",
+    "evidence_sentence_provenance_unverified",
+    "missing_fever_candidate_pools",
+    "missing_fever_delta_records",
+    "fever_logloss_scoring_not_ready",
+    "route4c_second_stratum_not_established"
+  ],
+  "route4c_second_stratum_supported": false,
+  "route5_start_condition_satisfied": false,
+  "schema_version": "route4c_fever_readiness_report_v1",
+  "source_manifest_path": "artifacts/experiments/route4c_fever/source_manifest.json",
+  "status": "blocked_fever_source_unavailable",
+  "stop_condition": "full FEVER evidence source is unavailable",
+  "vinfo_proxy_supported": false
+}
