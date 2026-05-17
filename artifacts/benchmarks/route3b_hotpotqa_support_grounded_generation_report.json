@@ -1,0 +1,119 @@
+{
+  "api_failure_examples": [
+    "5a713a5a5542994082a3e6a9::route3b::dd60da77f0026ac2:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a713ea95542994082a3e6e4::route3b::57a5bb093af65844:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7166395542994082a3e814::route3b::8411aa95d5265cc0:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7166395542994082a3e814::route3b::a771d3c0283236b6:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a74106b55429979e288289e::route3b::e50ce318b6cdb74e:ValueError:logloss evaluator emitted 'SUPPORTING', expected 'NON_SUPPORTING'",
+    "5a74c85055429916b0164218::route3b::58b582907925de69:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a74ce9655429974ef308c6c::route3b::e4822b5451c0e3ed:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a75e05c55429976ec32bc5f::route3b::7e7f5fe75f940fa6:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a75f79555429976ec32bcca::route3b::6eb9a0e977e6ea91:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a760ab65542994ccc918697::route3b::67b116034b9c1254:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a760ab65542994ccc918697::route3b::717b468b9ff4df47:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7625c7554299109176e668::route3b::2117c4d11e1b2d1e:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7625c7554299109176e668::route3b::d42f176bb915baf9:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7633ad5542992db9473741::route3b::8021ab66bc6e3abd:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a774e9c55429972597f14f3::route3b::1e779b109c73ce6a:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7759fc5542993569682d60::route3b::08cbcdba9d205567:ValueError:logloss evaluator emitted 'SUPPORTING', expected 'NON_SUPPORTING'",
+    "5a7759fc5542993569682d60::route3b::fa09b39d1c9d08b0:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a77724455429972597f153e::route3b::fd7f1e739c4ce62e:ValueError:logloss evaluator emitted 'SUPPORTING', expected 'NON_SUPPORTING'",
+    "5a77c1505542997042120b1b::route3b::1b27f69a1a95ab4c:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a77c1505542997042120b1b::route3b::8f2a7a8a03d33af8:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'"
+  ],
+  "api_failure_reason_counts": {
+    "RuntimeError": 2,
+    "ValueError": 173,
+    "unknown": 4
+  },
+  "api_failures": 179,
+  "api_retries": 39,
+  "api_score_calls": 1226,
+  "bridge_fit_summary_path": "artifacts/experiments/route3b_support_grounded_bridge_calibration/bridge_fit_summary.json",
+  "calibration_run": true,
+  "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "claim_status": "no_claim_upgrade",
+  "completion_tokens": 3678,
+  "delta_records_path": "artifacts/benchmarks/route3b_hotpotqa_support_grounded_delta_records.jsonl",
+  "delta_records_validated": 613,
+  "evaluator_id": "approved_live_api_logprob_endpoint::dashscope::qwen3.6-flash::route3b_support_label_nll_v1",
+  "gate_result": "failed_closed_gate_failed",
+  "generation_status": "completed_bounded_scoring",
+  "heldout_split_summary": {
+    "heldout_fraction_by_original_instance": 0.30456852791878175,
+    "heldout_original_instances": 60,
+    "split_id": "route3b_original_instance_hash_70_30_v1",
+    "split_unit": "original_hotpotqa_id",
+    "train_original_instances": 137
+  },
+  "metric_claim_level": "failed_closed_no_claim_upgrade",
+  "negative_control_report_path": "artifacts/experiments/route3b_support_grounded_bridge_calibration/negative_control_report.json",
+  "negative_control_results": {
+    "length_only_baseline": {
+      "pearson": null,
+      "sign_agreement": 0.49755301794453505,
+      "spearman": null
+    },
+    "packet_count_only_baseline": {
+      "pearson": null,
+      "sign_agreement": 0.49755301794453505,
+      "spearman": null
+    },
+    "random_score_baseline": {
+      "pearson": -0.04176443366428436,
+      "sign_agreement": 0.24306688417618272,
+      "spearman": -0.042058119367889744
+    },
+    "shuffled_delta_logloss_within_split_budget": {
+      "pearson": 0.02623022388978152,
+      "sign_agreement": 0.18270799347471453,
+      "spearman": 0.008345160553853192
+    },
+    "wrong_instance_join": {
+      "pearson": 0.046706219390711144,
+      "sign_agreement": 0.200652528548124,
+      "spearman": 0.0732832734394227
+    }
+  },
+  "non_circularity_checks": {
+    "affine_transform_detected": false,
+    "delta_utility_distribution": {
+      "0": 308,
+      "0.2": 3,
+      "0.25": 23,
+      "0.333333333333": 60,
+      "0.5": 219
+    },
+    "exact_equality_detected": false,
+    "fraction_delta_utility_equals_delta_logloss": 0.0,
+    "pearson_delta_utility_delta_logloss": 0.03939735040603246,
+    "rank_identity_detected": false,
+    "rounded_equality_detected": false,
+    "spearman_delta_utility_delta_logloss": -0.050786365122208375,
+    "utility_source_verified": true
+  },
+  "non_circularity_report_path": "artifacts/experiments/route3b_support_grounded_bridge_calibration/non_circularity_report.json",
+  "operator_rows_generated": 0,
+  "operator_rows_validated": 0,
+  "operator_rows_written": false,
+  "phase": "route3b_support_grounded_bridge_revision",
+  "pre_calibration_gate_passed": true,
+  "pre_calibration_reason_codes": [],
+  "pre_score_gate_passed": true,
+  "prompt_tokens": 206694,
+  "records_attempted": 792,
+  "records_validated": 613,
+  "revision_protocol_id": "route3b_all_eligible_support_grounded_v1",
+  "route_id": "route3_metric_bridge_repair",
+  "status": "calibration_completed",
+  "total_tokens": 210372,
+  "unique_original_instances": 197,
+  "validation_failure_categories": {
+    "candidate_pool_hash_or_packet_reference_errors": 0,
+    "duplicate_row_identity_errors": 0,
+    "live_logprob_label_mismatch_value_error": 173,
+    "live_logprob_runtime_error": 2,
+    "live_logprob_unknown_error": 4,
+    "row_validation_errors": 0
+  }
+}
