@@ -1,0 +1,17 @@
+{
+  "artifact_type": "Route7ComparisonGateReport",
+  "claim_status": "no_claim_upgrade",
+  "global_selector_superiority_claimed": false,
+  "hotpotqa_operational_cells_positive": true,
+  "hotpotqa_statistical_tests_path": "artifacts/experiments/p56_hotpotqa_operational_comparison/statistical_tests.json",
+  "multi_benchmark_gate_passed": false,
+  "oracle_used_as_deployable_baseline": false,
+  "route_dependencies": {
+    "route4_metric_bridge_candidate": false,
+    "route5_fixed_model_proxy_candidate": false,
+    "route6_measurement_validation": false
+  },
+  "route_dependencies_satisfied": false,
+  "schema_version": "route7_comparison_gate_report_v1",
+  "worst_cell_report_path": "artifacts/experiments/route7_scoped_selector_superiority/worst_cell_report.json"
+}

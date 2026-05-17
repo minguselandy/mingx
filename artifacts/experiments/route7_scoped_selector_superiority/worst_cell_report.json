@@ -1,0 +1,12 @@
+{
+  "artifact_type": "Route7WorstCellReport",
+  "available": true,
+  "baseline_selector": "topk_relevance_or_token_budget",
+  "budget": 1024,
+  "cell_id": "topk_relevance_or_token_budget::budget_1024",
+  "claim_use": "operational_hotpotqa_only",
+  "mean_paired_delta": 0.015,
+  "primary_metric": "supporting_fact_recall_at_budget",
+  "schema_version": "route7_worst_cell_report_v1",
+  "scope": "HotpotQA operational comparison only"
+}
