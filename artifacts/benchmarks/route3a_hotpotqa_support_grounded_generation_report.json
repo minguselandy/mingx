@@ -1,0 +1,105 @@
+{
+  "api_failure_examples": [
+    "5a713a5a5542994082a3e6a9::route3a::dd60da77f0026ac2:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a713ea95542994082a3e6e4::route3a::57a5bb093af65844:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7166395542994082a3e814::route3a::8411aa95d5265cc0:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7166395542994082a3e814::route3a::a771d3c0283236b6:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7320565542991f9a20c61d::route3a::1dc7ec839954c66f:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7320565542991f9a20c61d::route3a::3a031a4d9daab24b:ValueError:logloss evaluator emitted 'SUPPORTING', expected 'NON_SUPPORTING'",
+    "5a74106b55429979e288289e::route3a::e50ce318b6cdb74e:ValueError:logloss evaluator emitted 'SUPPORTING', expected 'NON_SUPPORTING'",
+    "5a74c85055429916b0164218::route3a::58b582907925de69:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a74ce9655429974ef308c6c::route3a::e4822b5451c0e3ed:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a75e05c55429976ec32bc5f::route3a::7e7f5fe75f940fa6:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a75f79555429976ec32bcca::route3a::6eb9a0e977e6ea91:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a760ab65542994ccc918697::route3a::67b116034b9c1254:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a760ab65542994ccc918697::route3a::717b468b9ff4df47:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7625c7554299109176e668::route3a::2117c4d11e1b2d1e:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7625c7554299109176e668::route3a::d42f176bb915baf9:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7633ad5542992db9473741::route3a::8021ab66bc6e3abd:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a77152355429966f1a36c2e::route3a::e0568f57a7b808ff:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a774e9c55429972597f14f3::route3a::1e779b109c73ce6a:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a7759fc5542993569682d60::route3a::fa09b39d1c9d08b0:ValueError:logloss evaluator emitted 'NON_SUPPORTING', expected 'SUPPORTING'",
+    "5a77724455429972597f153e::route3a::fd7f1e739c4ce62e:ValueError:logloss evaluator emitted 'SUPPORTING', expected 'NON_SUPPORTING'"
+  ],
+  "api_failure_reason_counts": {
+    "ValueError": 139
+  },
+  "api_failures": 139,
+  "api_retries": 11,
+  "api_score_calls": 922,
+  "calibration_run": false,
+  "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "claim_status": "no_claim_upgrade",
+  "completion_tokens": 2766,
+  "delta_records_path": "artifacts/benchmarks/route3a_hotpotqa_support_grounded_delta_records.jsonl",
+  "delta_records_validated": 461,
+  "evaluator_id": "approved_live_api_logprob_endpoint::dashscope::qwen3.6-flash::route3a_support_label_nll_v1",
+  "generation_status": "completed_bounded_scoring",
+  "heldout_split_summary": {
+    "heldout_fraction_by_original_instance": 0.3,
+    "heldout_original_instances": 45,
+    "split_id": "route3a_original_instance_hash_70_30_v1",
+    "split_unit": "original_hotpotqa_id",
+    "train_original_instances": 105
+  },
+  "negative_control_results": {
+    "length_only_baseline": {
+      "pearson": null,
+      "sign_agreement": 0.5010845986984815,
+      "spearman": null
+    },
+    "packet_count_only_baseline": {
+      "pearson": null,
+      "sign_agreement": 0.5010845986984815,
+      "spearman": null
+    },
+    "random_score_baseline": {
+      "pearson": -0.037746415685002546,
+      "sign_agreement": 0.2472885032537961,
+      "spearman": -0.03644812462543718
+    },
+    "shuffled_delta_logloss_within_split_budget": {
+      "pearson": -0.0896895752061858,
+      "sign_agreement": 0.18872017353579176,
+      "spearman": -0.012826611078600359
+    },
+    "wrong_instance_join": {
+      "pearson": 0.15038588319606688,
+      "sign_agreement": 0.20824295010845986,
+      "spearman": 0.0907210397542755
+    }
+  },
+  "non_circularity_checks": {
+    "affine_transform_detected": false,
+    "delta_utility_distribution": {
+      "0": 230,
+      "0.2": 2,
+      "0.25": 17,
+      "0.333333333333": 47,
+      "0.5": 165
+    },
+    "exact_equality_detected": false,
+    "fraction_delta_utility_equals_delta_logloss": 0.0,
+    "pearson_delta_utility_delta_logloss": -0.0008808597247588181,
+    "rank_identity_detected": false,
+    "rounded_equality_detected": false,
+    "spearman_delta_utility_delta_logloss": -0.0456359168592531,
+    "utility_source_verified": true
+  },
+  "operator_rows_generated": 0,
+  "operator_rows_validated": 0,
+  "operator_rows_written": false,
+  "phase": "route3a_support_grounded_bridge",
+  "pre_calibration_gate_passed": false,
+  "pre_calibration_reason_codes": [
+    "rows_validated_below_min_rows"
+  ],
+  "pre_score_gate_passed": true,
+  "prompt_tokens": 156004,
+  "records_attempted": 600,
+  "records_validated": 461,
+  "route_id": "route3_metric_bridge_repair",
+  "status": "failed_closed_below_min_rows",
+  "total_tokens": 158770,
+  "unique_original_instances": 150
+}
