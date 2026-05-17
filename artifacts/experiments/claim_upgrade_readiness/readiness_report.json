@@ -1,0 +1,204 @@
+{
+  "claim_status": "no_claim_upgrade",
+  "current_evidence_available": {
+    "Route2": {
+      "claim_level": "operational_utility_only",
+      "evidence": "HotpotQA operational replay and comparison accepted; v12 improved supporting-fact recall against deployable baselines under matched budgets.",
+      "limitation": "Route 2 bridge gates failed closed, so this is not metric bridge support."
+    },
+    "Route3A": {
+      "claim_level": "no_claim_upgrade",
+      "evidence": "Support-grounded bridge attempt executed.",
+      "limitation": "Failed closed below the minimum validated-row threshold; calibration did not run."
+    },
+    "Route3B": {
+      "claim_level": "failed_closed_no_claim_upgrade",
+      "evidence": "Revised support-grounded bridge attempt reached calibration scale and passed non-circularity checks.",
+      "limitation": "Failed preregistered sign-agreement, Spearman, and normalized-residual gates."
+    }
+  },
+  "estimated_execution_order": [
+    "Route4 metric bridge redesign and first-stratum calibration",
+    "Route5 fixed deployed-model/log-loss proxy verification using Route4-compatible rows",
+    "Route6 human or hybrid measurement validation",
+    "Route7 scoped multi-benchmark selector-superiority evaluation"
+  ],
+  "expected_high_risk_blockers": [
+    "Missing complete FEVER evidence source or candidate pools",
+    "Unavailable stable logprob evaluator",
+    "Circular or label-leaking utility definitions",
+    "Insufficient human annotation agreement",
+    "Strong-model adjudication bias",
+    "Proxy instability across model snapshots or materialization policies",
+    "Large artifact storage approval missing",
+    "Claim wording drift beyond no_claim_upgrade before review"
+  ],
+  "missing_evidence_by_target_claim": {
+    "calibrated_proxy_supported": [
+      "Non-circular Route4 bridge rows",
+      "Calibration gates passed on heldout rows",
+      "Negative controls failed",
+      "Independent bridge-package review accepted"
+    ],
+    "fixed_deployed_model_logloss_proxy_verification": [
+      "Pinned evaluator model and endpoint",
+      "Stable token logprob behavior",
+      "Proxy stability diagnostics",
+      "Route4-compatible row binding"
+    ],
+    "measurement_validation": [
+      "Frozen annotation rubric",
+      "Human sentinel or hybrid annotations",
+      "Agreement metrics",
+      "Contamination and model-bias audits"
+    ],
+    "metric_bridge_support": [
+      "Route4 sufficiency-grounded utility rows",
+      "Train/dev/heldout split without original-instance leakage",
+      "Bridge fit satisfying sign, rank, residual, and ESS gates"
+    ],
+    "paper_grade_evidence": [
+      "Accepted bridge/proxy/validation package matching the paper claim",
+      "Independent review records",
+      "Boundary-preserving manuscript integration"
+    ],
+    "scoped_multi_benchmark_selector_superiority": [
+      "Finite benchmark/task/budget matrix",
+      "Deployable baseline registry",
+      "Paired statistical tests",
+      "Worst-cell reporting",
+      "Route4-6 dependencies required by the intended paper claim"
+    ],
+    "vinfo_proxy_supported": [
+      "Scoped fixed deployed-model/log-loss proxy candidate",
+      "Proxy drift and stability gates passed",
+      "Independent fixed-model proxy review"
+    ]
+  },
+  "parallelizable_routes": [
+    {
+      "routes": [
+        "Route4",
+        "Route6",
+        "Route7"
+      ],
+      "work": "Bridge protocol design, annotation rubric design, and baseline registry can proceed in parallel before evidence generation."
+    },
+    {
+      "routes": [
+        "Route5",
+        "Route6"
+      ],
+      "work": "Fixed-model proxy specification and validation rubric preparation can proceed in parallel."
+    }
+  ],
+  "phase": "P70V",
+  "required_artifacts": {
+    "Route4": [
+      "pre_registration_plan",
+      "candidate_pool_manifest",
+      "bridge_delta_records",
+      "bridge_fit_summary",
+      "negative_control_report",
+      "non_circularity_report"
+    ],
+    "Route5": [
+      "fixed_model_proxy_config",
+      "proxy_stability_report",
+      "materialization_sensitivity_report",
+      "proxy_drift_report"
+    ],
+    "Route6": [
+      "annotation_rubric",
+      "annotation_manifest",
+      "agreement_report",
+      "contamination_audit",
+      "model_bias_audit"
+    ],
+    "Route7": [
+      "benchmark_matrix",
+      "baseline_registry",
+      "comparison_summary",
+      "statistical_tests",
+      "worst_cell_report"
+    ]
+  },
+  "required_baselines": [
+    "random_budget",
+    "topk_relevance_or_token_budget",
+    "BM25_or_dense_retrieval_when_available",
+    "mmr_density_greedy",
+    "v12_cost_aware_diagnostic_policy",
+    "ablated_cost_aware_policy",
+    "gold_support_oracle_upper_bound_non_deployable"
+  ],
+  "required_datasets": [
+    {
+      "dataset": "HotpotQA",
+      "need": "Existing candidate pools plus future Route4-compatible sufficiency labels or adjudication."
+    },
+    {
+      "dataset": "FEVER",
+      "need": "Complete evidence source, candidate pools, and evaluator records before first-stratum bridge use."
+    },
+    {
+      "dataset": "Additional finite Route7 benchmarks",
+      "need": "Only if predeclared before selector-superiority execution."
+    }
+  ],
+  "required_evaluator_apis_or_models": [
+    "Approved fixed logprob evaluator for Route4 and Route5 scoring",
+    "Pinned deployed-model or fixed-model endpoint with token logprobs",
+    "Approved strong-model adjudicator for Route6 broad adjudication",
+    "Human or hybrid annotation workflow for Route6 sentinel validation"
+  ],
+  "required_human_or_hybrid_annotation_resources": [
+    "Annotation rubric",
+    "Annotator instructions",
+    "Human sentinel sample",
+    "Adjudication escalation process",
+    "Agreement metric implementation",
+    "Contamination and model-bias audit reviewers"
+  ],
+  "schema_version": "claim_upgrade_readiness_v1",
+  "stop_continue_escalate_gates": {
+    "continue": [
+      "Route-specific pre-registration accepted",
+      "Required real data and evaluator resources present",
+      "Storage policy approved",
+      "Claim wording remains future-gated"
+    ],
+    "escalate": [
+      "Live API budget or endpoint approval needed",
+      "Human annotation resources needed",
+      "Large artifact storage needed",
+      "Candidate claim promotion proposed"
+    ],
+    "stop": [
+      "Utility is circular or derived from logloss",
+      "Evaluator lacks token logprobs where required",
+      "Contamination cannot be bounded",
+      "Agreement metrics fail",
+      "Proxy stability fails",
+      "Claim wording asserts target evidence as completed"
+    ]
+  },
+  "strict_dependencies": [
+    {
+      "dependency": "Route4 before calibrated proxy claims",
+      "reason": "No current bridge attempt has passed calibration gates."
+    },
+    {
+      "dependency": "Route4-compatible rows before Route5 verification",
+      "reason": "The fixed deployed-model/log-loss proxy must bind to the same row and materialization contract."
+    },
+    {
+      "dependency": "Route6 before measurement validation evidence",
+      "reason": "Current evidence lacks human or hybrid validation and agreement metrics."
+    },
+    {
+      "dependency": "Route7 finite matrix before scoped selector superiority",
+      "reason": "Current operational HotpotQA result is single-lane and cannot support scoped multi-benchmark selector superiority."
+    }
+  ]
+}

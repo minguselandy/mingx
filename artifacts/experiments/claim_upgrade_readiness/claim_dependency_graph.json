@@ -1,0 +1,219 @@
+{
+  "claim_status": "no_claim_upgrade",
+  "denied_transitions": [
+    {
+      "from": "operational_utility_only",
+      "reason": "Operational replay does not provide bridge calibration, fixed-model proxy verification, measurement validation, or scoped selector superiority evidence.",
+      "to": "calibrated_proxy_supported"
+    },
+    {
+      "from": "operational_utility_only",
+      "reason": "Operational utility is distinct from formal V-information and fixed deployed-model/log-loss proxy verification.",
+      "to": "vinfo_proxy_supported"
+    },
+    {
+      "from": "Route3B_failed_closed_gate_failed",
+      "reason": "Route 3B reached calibration scale but failed preregistered gates.",
+      "to": "metric_bridge_support_candidate"
+    },
+    {
+      "from": "positive_control_only",
+      "reason": "Circular controls can verify machinery sanity only.",
+      "to": "calibrated_proxy_supported_candidate"
+    },
+    {
+      "from": "single_benchmark_operational_win",
+      "reason": "A finite operational win cannot imply global selector superiority.",
+      "to": "global_selector_superiority"
+    }
+  ],
+  "edges": [
+    {
+      "from": "operational_utility_only",
+      "required_route": "Route4",
+      "to": "metric_bridge_support_candidate"
+    },
+    {
+      "from": "metric_bridge_support_candidate",
+      "required_route": "Route4",
+      "to": "calibrated_proxy_supported_candidate"
+    },
+    {
+      "from": "calibrated_proxy_supported_candidate",
+      "required_review": "independent_bridge_package_review",
+      "to": "calibrated_proxy_supported"
+    },
+    {
+      "from": "calibrated_proxy_supported_candidate",
+      "required_route": "Route5",
+      "to": "vinfo_proxy_supported_candidate"
+    },
+    {
+      "from": "vinfo_proxy_supported_candidate",
+      "required_review": "fixed_model_proxy_review",
+      "to": "vinfo_proxy_supported"
+    },
+    {
+      "from": "operational_utility_only",
+      "required_route": "Route6",
+      "to": "measurement_validation_candidate"
+    },
+    {
+      "from": "measurement_validation_candidate",
+      "required_review": "human_hybrid_validation_review",
+      "to": "measurement_validation_evidence"
+    },
+    {
+      "from": "operational_utility_only",
+      "required_route": "Route7",
+      "to": "scoped_multi_benchmark_selector_superiority"
+    }
+  ],
+  "nodes": [
+    {
+      "claim": "operational_utility_only",
+      "current_state": "available_from_Route2_only",
+      "description": "Operational replay and comparison evidence with no metric bridge support.",
+      "required_routes": [],
+      "review_required": false,
+      "status": "current_ceiling",
+      "strict_prerequisites": []
+    },
+    {
+      "claim": "metric_bridge_support_candidate",
+      "current_state": "not_achieved",
+      "description": "Candidate bridge evidence from a non-circular metric bridge protocol.",
+      "required_routes": [
+        "Route4"
+      ],
+      "review_required": true,
+      "status": "future_gated",
+      "strict_prerequisites": [
+        "non_circular_utility",
+        "validated_rows_and_instances",
+        "calibration_gates_pass",
+        "negative_controls_fail"
+      ]
+    },
+    {
+      "claim": "calibrated_proxy_supported_candidate",
+      "current_state": "not_achieved",
+      "description": "Candidate calibrated proxy support after Route 4 bridge calibration gates pass.",
+      "required_routes": [
+        "Route4"
+      ],
+      "review_required": true,
+      "status": "future_gated",
+      "strict_prerequisites": [
+        "metric_bridge_support_candidate",
+        "independent_bridge_review"
+      ]
+    },
+    {
+      "claim": "calibrated_proxy_supported",
+      "current_state": "denied_for_current_evidence",
+      "description": "Reviewed calibrated proxy support for a declared stratum.",
+      "required_routes": [
+        "Route4"
+      ],
+      "review_required": true,
+      "status": "denied_until_candidate_review_accepts",
+      "strict_prerequisites": [
+        "calibrated_proxy_supported_candidate",
+        "paper_level_claim_review"
+      ]
+    },
+    {
+      "claim": "vinfo_proxy_supported_candidate",
+      "current_state": "not_achieved",
+      "description": "Candidate support for a scoped fixed deployed-model/log-loss proxy protocol.",
+      "required_routes": [
+        "Route5"
+      ],
+      "review_required": true,
+      "status": "future_gated",
+      "strict_prerequisites": [
+        "Route4_compatible_rows",
+        "proxy_stability_diagnostics_pass"
+      ]
+    },
+    {
+      "claim": "vinfo_proxy_supported",
+      "current_state": "denied_for_current_evidence",
+      "description": "Reviewed support for a scoped fixed-model/log-loss proxy, not true deployed V-information verification.",
+      "required_routes": [
+        "Route5"
+      ],
+      "review_required": true,
+      "status": "denied_until_candidate_review_accepts",
+      "strict_prerequisites": [
+        "vinfo_proxy_supported_candidate",
+        "fixed_model_proxy_review"
+      ]
+    },
+    {
+      "claim": "measurement_validation_candidate",
+      "current_state": "not_achieved",
+      "description": "Candidate external measurement validation from human or hybrid evidence.",
+      "required_routes": [
+        "Route6"
+      ],
+      "review_required": true,
+      "status": "future_gated",
+      "strict_prerequisites": [
+        "frozen_annotation_rubric",
+        "human_or_hybrid_labels",
+        "agreement_metrics_pass",
+        "contamination_audit_pass"
+      ]
+    },
+    {
+      "claim": "measurement_validation_evidence",
+      "current_state": "denied_for_current_evidence",
+      "description": "Reviewed measurement validation evidence after Route 6 gates.",
+      "required_routes": [
+        "Route6"
+      ],
+      "review_required": true,
+      "status": "denied_until_candidate_review_accepts",
+      "strict_prerequisites": [
+        "measurement_validation_candidate",
+        "paper_level_validation_review"
+      ]
+    },
+    {
+      "claim": "scoped_multi_benchmark_selector_superiority",
+      "current_state": "not_achieved",
+      "description": "Selector superiority only over a finite declared benchmark, task, budget, and baseline distribution.",
+      "required_routes": [
+        "Route7"
+      ],
+      "review_required": true,
+      "status": "future_gated",
+      "strict_prerequisites": [
+        "finite_benchmark_matrix",
+        "deployable_baseline_registry",
+        "paired_tests_pass",
+        "worst_cell_reporting"
+      ]
+    }
+  ],
+  "phase": "P70V",
+  "route_claim_map": {
+    "Route4": [
+      "metric_bridge_support_candidate",
+      "calibrated_proxy_supported_candidate"
+    ],
+    "Route5": [
+      "vinfo_proxy_supported_candidate"
+    ],
+    "Route6": [
+      "measurement_validation_candidate",
+      "measurement_validation_evidence"
+    ],
+    "Route7": [
+      "scoped_multi_benchmark_selector_superiority"
+    ]
+  },
+  "schema_version": "claim_dependency_graph_v1"
+}
