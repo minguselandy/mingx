@@ -32,6 +32,13 @@ manuscript patch and creates no empirical evidence.
   FixB failed closed, and FixA is a circular positive-control diagnostic only.
 - Route 2 claim level remains `operational_utility_only`; no claim upgrade is
   allowed.
+- Route 3A failed closed below the predeclared minimum validated-row threshold;
+  calibration did not run.
+- Route 3B reached calibration scale and passed non-circularity checks, but
+  failed preregistered calibration gates. Its metric claim level is
+  `failed_closed_no_claim_upgrade`.
+- Route 3 does not repair the Route 2 bridge and does not authorize any claim
+  upgrade.
 - P57 remains extraction-risk scaffold only.
 - P58 remains operational diagnostic scaffold only.
 - P59 remains operational audit scaffold only.
@@ -52,6 +59,10 @@ manuscript patch and creates no empirical evidence.
 - Do not describe Route 2 as metric bridge support, P55 bridge support, P56
   metric support, paper evidence, measurement validation, global selector
   superiority, `calibrated_proxy_supported`, or `vinfo_proxy_supported`.
+- Do not describe Route 3A or Route 3B as support_grounded_bridge_candidate
+  achieved, bridge repaired, repair succeeded, metric bridge support, P55 bridge
+  support, P56 metric support, paper evidence, measurement validation, global
+  selector superiority, `calibrated_proxy_supported`, or `vinfo_proxy_supported`.
 - Do not present `gold_support_oracle_upper_bound` as deployable; it must remain
   marked `non_deployable_upper_bound`.
 
@@ -76,14 +87,29 @@ Allowed Route 2 wording:
 ```text
 HotpotQA operational replay shows that the v12 diagnostic policy improves
 supporting-fact recall against deployable baselines under matched budgets.
-Because P63R bridge gates failed closed, this is operational_utility_only, not
-calibrated metric support.
+Because Route 2 and Route 3 bridge gates failed closed, this is
+operational_utility_only, not calibrated metric support.
 ```
 
 Route 2 may be placed in Section 4.8 and Appendix C as an operational replay
 and negative-bridge case study. The appendix should list P63R original, FixA,
 FixB, P56, P66, and P67R with their evidence type, claim level, and denied
 claims.
+
+## Route 3 Negative Diagnostic Integration Rule
+
+Allowed Route 3 wording:
+
+```text
+Route 3A failed closed below the predeclared minimum validated-row threshold.
+Route 3B reached calibration scale, but preregistered calibration gates failed
+closed. These support-grounded bridge attempts are negative diagnostics only and
+do not repair the Route 2 bridge.
+```
+
+Route 3A and Route 3B may be listed in Appendix C or the evidence ledger as
+failed-closed bridge-repair diagnostics. They should not be used to upgrade the
+Route 2 operational claim.
 
 ## Safe Integration Rule
 

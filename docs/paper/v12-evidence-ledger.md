@@ -42,6 +42,8 @@ preserve claim boundaries.
 | P56-Route2 | HotpotQA operational dispatch traces | `artifacts/operator_inputs/p56_realistic_dispatch_traces.jsonl`; `docs/experiments/P56-hotpotqa-operational-dispatch-traces.md` | real HotpotQA candidate pools | accepted; 2,000 / 2,000 traces validated | bridge witness failed or absent | `operational_utility_only` | operational selector labels only; oracle marked `non_deployable_upper_bound` | false | false | P56 metric support, metric bridge support, calibrated proxy support, V-information support, paper evidence | Section 4.8 / Appendix C as operational replay only | P56 supplies operational HotpotQA replay traces only because bridge gates failed closed. |
 | P66-Route2 | HotpotQA operational comparison | `artifacts/experiments/p56_hotpotqa_operational_comparison/`; `docs/experiments/P66-hotpotqa-operational-comparison.md` | accepted P56 HotpotQA traces | accepted; v12 wins 6 / 6 paired recall comparisons against deployable baselines | bridge witness failed or absent | `operational_utility_only` | deployable baseline comparison only; oracle marked `non_deployable_upper_bound` | false | false | global selector superiority, metric bridge support, calibrated proxy support, V-information support, measurement validation, paper evidence | Section 4.8 / Appendix C as operational comparison only | P66 supports only an operational HotpotQA comparison result under matched budgets. |
 | P67R | Route 2 operational evidence package and claim ledger | `docs/experiments/P67R-route2-operational-evidence-package.md`; `artifacts/experiments/route2_operational_evidence_package/` | package over accepted Route 2 artifacts | accepted and pushed at `717796a` | no bridge upgrade | `operational_utility_only`; no claim upgrade | operational-only package | false | false | metric bridge support, calibrated proxy support, V-information support, measurement validation, paper evidence | Section 4.8 / Appendix C package reference | P67R packages operational-only Route 2 evidence and preserves the negative bridge results. |
+| Route 3A | support-grounded bridge protocol | `docs/experiments/Route3A-pre-registration-plan.md`; `docs/experiments/Route3A-support-grounded-bridge.md`; `artifacts/benchmarks/route3a_hotpotqa_support_grounded_generation_report.json` | real HotpotQA candidate pools and approved live logprob evaluator | executed and failed closed before calibration | below minimum validated rows; calibration did not run | `no_claim_upgrade` | none from bridge support | false | false | support_grounded_bridge_candidate achieved, metric bridge support, calibrated proxy support, V-information support, measurement validation, paper evidence, P55 bridge support | Appendix C / repo-only as negative bridge-repair diagnostic | Route 3A tested a support-grounded bridge protocol but validated only 461 / 600 rows, below the predeclared 500-row threshold. |
+| Route 3B | revised support-grounded bridge protocol | `docs/experiments/Route3B-route3a-revision-pre-registration-plan.md`; `docs/experiments/Route3B-support-grounded-bridge-revision.md`; `artifacts/benchmarks/route3b_hotpotqa_support_grounded_generation_report.json`; `artifacts/experiments/route3b_support_grounded_bridge_calibration/` | real HotpotQA candidate pools and approved live logprob evaluator | executed; reached calibration scale; failed closed at gates | failed preregistered sign-agreement, Spearman, and normalized-residual gates | `failed_closed_no_claim_upgrade` | none from bridge support | false | false | support_grounded_bridge_candidate achieved, bridge repaired, repair succeeded, metric bridge support, calibrated proxy support, V-information support, measurement validation, paper evidence, P55 bridge support | Appendix C / repo-only as negative bridge-repair diagnostic | Route 3B fixed row-count attrition and passed non-circularity checks, but calibration failed closed with no claim upgrade. |
 
 ## Main-Paper-Safe Evidence Table
 
@@ -54,7 +56,7 @@ These entries can be mentioned in the main paper only with the listed caveats.
 | P48 | Replay hardening as auditability/replayability infrastructure. | Replay usability is not metric support and is not paper evidence by itself. |
 | P52 | Proof repair and evidence-state integration as manuscript integrity work. | P52 is manuscript alignment only and creates no new empirical evidence. |
 | P53 | Diagnostic threshold contract as a predeclared audit protocol. | A contract can govern future diagnostics, but it is not validation or bridge evidence. |
-| P66-Route2 | HotpotQA operational replay/comparison result: v12 improves supporting-fact recall against deployable baselines under matched budgets. | Because P63R bridge gates failed closed, this remains `operational_utility_only`; it is not metric bridge support, paper evidence, or a global selector superiority claim. |
+| P66-Route2 | HotpotQA operational replay/comparison result: v12 improves supporting-fact recall against deployable baselines under matched budgets. | Because Route 2 and Route 3 bridge gates failed closed, this remains `operational_utility_only`; it is not metric bridge support, paper evidence, or a global selector superiority claim. |
 
 No fixture, synthetic, no-row, no-trace, or scaffold artifact should be described
 as validation.
@@ -84,6 +86,8 @@ as validation.
 | P63R | HotpotQA answer-NLL bridge failed closed. | Preserve as a negative bridge result; do not convert it into bridge support. |
 | P63R-FixA | Circular positive-control diagnostic. | Preserve as a sanity check only; do not treat perfect metrics as independent bridge evidence. |
 | P63R-FixB | Valid non-circular bridge attempt failed closed. | Preserve as a negative bridge result; downstream P56/P66 use remains operational-only. |
+| Route 3A | Support-grounded bridge attempt failed below the minimum validated-row gate. | Preserve as failed-closed bridge-repair diagnostic; calibration did not run. |
+| Route 3B | Revised support-grounded bridge attempt reached calibration scale but failed gates. | Preserve as failed-closed bridge-repair diagnostic; do not describe this as bridge repair success. |
 
 ## Future Work / Operator-Gated Table
 
@@ -144,6 +148,34 @@ validated HotpotQA operational traces, and P66-Route2 has an accepted matched
 budget comparison. Because P63R bridge gates failed closed and FixA is only a
 circular positive control, the Route 2 package remains `operational_utility_only`
 with no claim upgrade and no metric bridge support.
+
+The subsequent Route 3 support-grounded bridge line remains a negative
+diagnostic, not a repair. Route 3A failed closed below the predeclared minimum
+validated-row threshold. Route 3B reached calibration scale and passed
+non-circularity checks, but failed the preregistered sign-agreement, Spearman,
+and normalized-residual gates. Route 3B metric claim level is
+`failed_closed_no_claim_upgrade`; `calibrated_proxy_supported`,
+`vinfo_proxy_supported`, measurement validation, paper evidence, metric bridge
+support, P55 bridge support, P56 metric support, global selector superiority,
+and deployed V-information verification remain false.
+
+## Route 2 + Route 3 Final Claim Booleans
+
+| claim_flag | value |
+|---|---|
+| Route 2 metric_claim_level | `operational_utility_only` |
+| Route 3A status | `failed_closed_below_min_rows` |
+| Route 3B status | `failed_closed_gate_failed` |
+| Route 3B metric_claim_level | `failed_closed_no_claim_upgrade` |
+| calibrated_proxy_supported | false |
+| vinfo_proxy_supported | false |
+| measurement_validation | false |
+| paper_evidence | false |
+| metric_bridge_support | false |
+| p55_bridge_support | false |
+| p56_metric_support | false |
+| global_selector_superiority | false |
+| deployed_v_information_verification | false |
 
 P57 remains extraction-risk scaffold only. P58 remains operational diagnostic
 scaffold only. P59 remains operational audit scaffold only. P60 does not convert
