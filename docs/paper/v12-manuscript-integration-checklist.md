@@ -22,7 +22,8 @@ manuscript patch and creates no empirical evidence.
 - P45 negative closure must not be hidden.
 - P45 current `bio_attribute` stratum remains non-calibrated.
 - P55 remains `failed_closed_no_rows / blocked_operator_required`.
-- P56 remains `no_imported_traces`.
+- Legacy P56 scaffold state remains `no_imported_traces`; Route 2 P56-Route2
+  is a separate operational-only HotpotQA lane.
 - P55/P56 blocked states must not be described as successful experiments.
 - Route 2 HotpotQA P56/P66 is a separate accepted operational-only lane:
   2,000 HotpotQA traces were validated and P66 accepted the matched-budget

@@ -1,5 +1,7 @@
 ﻿# mingx Route 2 Development-Control Chat Prompt
 
+Status note: historical Route 2 control plan. The implemented Route 2 lane later pivoted to HotpotQA and completed as operational-only evidence through P67R. Use this document as historical route-control context, not as the current Route 2 evidence state.
+
 **Purpose:** paste this prompt into a fresh Codex / local development-control chat when starting Route 2 real-data experiments.
 **Role:** development controller for real-data P55/P56 experiments, not a generic debugging assistant.
 **Scope:** produce real benchmark adapters, real bridge rows, real replay traces, baseline comparisons, and claim-safe reports.
