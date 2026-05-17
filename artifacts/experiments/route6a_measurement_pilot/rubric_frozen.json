@@ -1,0 +1,69 @@
+{
+  "claim_status": "no_claim_upgrade",
+  "hidden_from_judge_fields": [
+    "delta_logloss",
+    "delta_utility",
+    "baseline_utility",
+    "augmented_utility",
+    "gold_support_label",
+    "utility_source_provenance",
+    "support_coverage_delta",
+    "source_coverage_delta",
+    "full_support_hit_delta",
+    "missing_prerequisite_delta"
+  ],
+  "human_annotation_required_for_measurement_validation": true,
+  "invalid_item_policy": "Use invalid only when the question, target, or contexts are malformed enough to prevent adjudication.",
+  "judge_visible_fields": [
+    "question",
+    "target_y",
+    "baseline_context_packets.content",
+    "added_block_packets.content",
+    "source_doc_id",
+    "provenance"
+  ],
+  "label_schema_version": "route6a_model_sufficiency_labels_v1",
+  "labels": {
+    "answer_supported": [
+      "unsupported",
+      "partial",
+      "supported",
+      "invalid"
+    ],
+    "augmented_sufficiency": [
+      "insufficient",
+      "partial",
+      "sufficient",
+      "invalid"
+    ],
+    "baseline_sufficiency": [
+      "insufficient",
+      "partial",
+      "sufficient",
+      "invalid"
+    ],
+    "delta_label": [
+      "improves",
+      "unchanged",
+      "worsens",
+      "invalid"
+    ],
+    "evidence_relevance": [
+      "irrelevant",
+      "mixed",
+      "relevant",
+      "invalid"
+    ],
+    "uncertainty": [
+      "low",
+      "medium",
+      "high"
+    ]
+  },
+  "measurement_validation_candidate_allowed": false,
+  "model_adjudication_counts_as_human_label": false,
+  "non_circularity_rule": "The judge must not receive delta_logloss, delta_utility, gold_support_label, or route4 utility scores.",
+  "prompt_version": "route6a_external_sufficiency_prompt_v1",
+  "rubric_version": "route6a_external_sufficiency_rubric_v1",
+  "task": "Judge whether baseline and augmented HotpotQA contexts are sufficient to support the target answer."
+}
