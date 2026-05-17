@@ -1,0 +1,62 @@
+{
+  "candidate_pool_source_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "phase": "Route3-Foundation-Pack-A",
+  "pool_summary": {
+    "answer_type_counts": {
+      "string_entity": 183,
+      "yes_no": 17
+    },
+    "candidate_pool_size": {
+      "max": 75,
+      "mean": 41.515,
+      "median": 40.0,
+      "min": 11
+    },
+    "candidate_pools": 200,
+    "gold_support_reachable_by_budget": {
+      "1024": 200,
+      "256": 200,
+      "512": 200
+    },
+    "gold_supporting_packets": 485,
+    "gold_token_sum": {
+      "max": 151,
+      "mean": 56.745,
+      "median": 53.0,
+      "min": 17
+    },
+    "label_counts": {
+      "gold_supporting": 485,
+      "same_context_distractor": 7818
+    },
+    "route3a_eligibility": {
+      "eligibility_rule": ">=2 gold-supporting packets, >=2 non-gold packets, candidate_pool_hash present, packet_id/source_doc_id/provenance present",
+      "eligible_instances": 198,
+      "first_150_eligible_instances_rows": 600,
+      "possible_rows": 792,
+      "proposed_rows_per_instance": 4
+    },
+    "support_doc_count": {
+      "max": 2,
+      "mean": 1.99,
+      "median": 2.0,
+      "min": 1
+    },
+    "total_packets": 8303,
+    "total_token_sum": {
+      "max": 2209,
+      "mean": 909.485,
+      "median": 861.5,
+      "min": 233
+    },
+    "unique_instances": 200
+  },
+  "route3a_planning_interpretation": {
+    "can_meet_confirmatory_sampling_target_before_scoring": true,
+    "confirmatory_instances_available": 150,
+    "confirmatory_rows_available": 600,
+    "not_calibration_evidence": true
+  },
+  "schema_version": "route3_pool_achievability_v1"
+}
