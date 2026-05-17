@@ -1,0 +1,80 @@
+{
+  "calibration_summaries": {
+    "fixa_positive_control": {
+      "artifact_dir": "artifacts/experiments/p55_hotpotqa_support_classification_bridge_calibration",
+      "claim_status": "positive_control_only; circular_alignment_control; not_metric_bridge_evidence; no_claim_upgrade",
+      "effective_sample_size": 643,
+      "gate_result": "positive_control_only",
+      "normalized_residual": 0.0,
+      "rows_validated": 643,
+      "sign_agreement": 1.0,
+      "spearman_rho": 1.0,
+      "unique_instances": 643
+    },
+    "fixb_independent_utility": {
+      "artifact_dir": "artifacts/experiments/p55_hotpotqa_support_independent_utility_bridge_calibration",
+      "claim_status": "operational_utility_only; no_claim_upgrade",
+      "effective_sample_size": 826,
+      "gate_result": "failed_closed_gate_failed",
+      "normalized_residual": 31159457568.380623,
+      "rows_validated": 826,
+      "sign_agreement": 0.0,
+      "spearman_rho": null,
+      "unique_instances": 826
+    },
+    "p63r_original": {
+      "artifact_dir": "artifacts/experiments/p55_hotpotqa_bridge_calibration",
+      "claim_status": "operational_utility_only; no_claim_upgrade",
+      "effective_sample_size": 600,
+      "gate_result": "failed_closed_gate_failed",
+      "normalized_residual": 4.352219116658005,
+      "rows_validated": 600,
+      "sign_agreement": 0.16666666666666666,
+      "spearman_rho": -0.2252188038852718,
+      "unique_instances": 150
+    }
+  },
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement validation",
+    "paper evidence",
+    "metric bridge support",
+    "P55 bridge support",
+    "P56 metric support",
+    "global selector superiority",
+    "deployed V-information verification"
+  ],
+  "phase": "Route3-Preflight",
+  "recovered_thresholds": {
+    "heldout_fraction": 0.3,
+    "max_normalized_residual": 0.5,
+    "max_normalized_residual_pre_run_configured": true,
+    "min_effective_sample_size": 100,
+    "min_rows_validated": 500,
+    "min_sign_agreement": 0.7,
+    "min_spearman_rho": 0.4,
+    "min_unique_instances": 150
+  },
+  "route3_framing": "new_bridge_protocol_not_p63r_repair",
+  "route3a_gate_policy": {
+    "forbidden_utility_sources": [
+      "delta_logloss",
+      "NLL values",
+      "token logprobs",
+      "rank of delta_logloss",
+      "rounded delta_logloss",
+      "clipped delta_logloss",
+      "affine transform of delta_logloss"
+    ],
+    "review_gate": "Route 3A must not run until Preflight receives independent review approval.",
+    "utility_requirement": "support_grounded_and_independent_from_nll_or_logprobs"
+  },
+  "route3c_gate_policy": {
+    "claim_policy": "passing claims can only be stratum-local and review-pending",
+    "failure_policy": "failed strata remain operational_utility_only or ambiguous_metric",
+    "strata_policy": "strata must be predeclared before row generation"
+  },
+  "schema_version": "route3_preflight_gate_recovery_v1"
+}
