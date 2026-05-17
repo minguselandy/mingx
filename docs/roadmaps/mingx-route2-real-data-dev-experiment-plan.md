@@ -1,5 +1,7 @@
 ﻿# mingx Route 2 Real-Data Development / Experiment Plan
 
+Status note: historical Route 2 control plan. The implemented Route 2 lane later pivoted to HotpotQA and completed as operational-only evidence through P67R. Use this document as historical route-control context, not as the current Route 2 evidence state.
+
 **Document status:** proposed development-control plan
 **Intended repo location:** `docs/roadmaps/mingx-route2-real-data-dev-experiment-plan.md`
 **Route:** real-data bridge calibration + realistic dispatch replay + comparative selector evaluation

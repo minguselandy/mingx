@@ -469,7 +469,7 @@ The first one-stratum bridge-calibration lane has been executed for the current 
 
 This negative result is fail-closed claim-gate evidence, not bridge support. It shows that the measurement path and gate can withhold V-information-facing labels when the utility bridge fails. Future bridge work should use a materially new active stratum or a materially new fixed-logloss/utility design; it should not expand the same `bio_attribute` pilot by inertia.
 
-Offline replay over realistic dispatch traces should come after this calibration step. Before replay, six choices must be fixed: model tier, utility metric, metric-claim regime, materialization ordering policy, decoding and variance-control policy, and candidate-slice policy. Replay records should include a `CounterfactualReplayWitness` with snapshot ID, frozen context state, item added or removed, continuation policy, evaluator model, replicate count, effective sample size, and metric-bridge status.
+Bridge-supported offline replay should come after a successful matching calibration step. The Route 2 replay below is reported separately as operational-only because its HotpotQA bridge gates failed closed. Before replay, six choices must be fixed: model tier, utility metric, metric-claim regime, materialization ordering policy, decoding and variance-control policy, and candidate-slice policy. Replay records should include a `CounterfactualReplayWitness` with snapshot ID, frozen context state, item added or removed, continuation policy, evaluator model, replicate count, effective sample size, and metric-bridge status.
 
 ### 4.8 Route 2 HotpotQA operational replay as a negative-bridge case study
 

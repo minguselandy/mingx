@@ -1,0 +1,193 @@
+{
+  "artifact_storage_policy_path": "artifacts/experiments/route3_preflight/artifact_storage_policy.md",
+  "candidate_pool_summary": {
+    "answer_type_counts": {
+      "string_entity": 183,
+      "yes_no": 17
+    },
+    "candidate_pool_size": {
+      "max": 75,
+      "mean": 41.515,
+      "median": 40.0,
+      "min": 11
+    },
+    "candidate_pools": 200,
+    "gold_support_reachable_by_budget": {
+      "1024": 200,
+      "256": 200,
+      "512": 200
+    },
+    "gold_supporting_packets": 485,
+    "gold_token_sum": {
+      "max": 151,
+      "mean": 56.745,
+      "median": 53.0,
+      "min": 17
+    },
+    "label_counts": {
+      "gold_supporting": 485,
+      "same_context_distractor": 7818
+    },
+    "route3a_eligibility": {
+      "eligibility_rule": ">=2 gold-supporting packets, >=2 non-gold packets, candidate_pool_hash present, packet_id/source_doc_id/provenance present",
+      "eligible_instances": 198,
+      "first_150_eligible_instances_rows": 600,
+      "possible_rows": 792,
+      "proposed_rows_per_instance": 4
+    },
+    "support_doc_count": {
+      "max": 2,
+      "mean": 1.99,
+      "median": 2.0,
+      "min": 1
+    },
+    "total_packets": 8303,
+    "total_token_sum": {
+      "max": 2209,
+      "mean": 909.485,
+      "median": 861.5,
+      "min": 233
+    },
+    "unique_instances": 200
+  },
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement validation",
+    "paper evidence",
+    "metric bridge support",
+    "P55 bridge support",
+    "P56 metric support",
+    "global selector superiority",
+    "deployed V-information verification"
+  ],
+  "inputs_inspected": [
+    "docs/experiments/P67R-route2-operational-evidence-package.md",
+    "artifacts/experiments/route2_operational_evidence_package/claim_ledger.json",
+    "artifacts/experiments/route2_operational_evidence_package/evidence_summary.json",
+    "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+    "artifacts/benchmarks/hotpotqa_p55_delta_records.jsonl",
+    "artifacts/benchmarks/hotpotqa_support_independent_utility_delta_records.jsonl",
+    "artifacts/operator_inputs/p55_evidence_packet_selection_microtask_v1_rows.jsonl",
+    "artifacts/operator_inputs/p55_hotpotqa_support_independent_utility_rows.jsonl",
+    "artifacts/operator_inputs/p56_realistic_dispatch_traces.jsonl",
+    "artifacts/experiments/p55_hotpotqa_bridge_calibration/",
+    "artifacts/experiments/p55_hotpotqa_support_classification_bridge_calibration/",
+    "artifacts/experiments/p55_hotpotqa_support_independent_utility_bridge_calibration/",
+    "artifacts/experiments/p56_hotpotqa_operational_comparison/",
+    "docs/archive/context_projection_fixed_v12.md",
+    "docs/paper/v12-evidence-ledger.md",
+    "docs/paper/v12-manuscript-integration-checklist.md"
+  ],
+  "missing_or_nonrecoverable": [
+    "Raw live API response dumps are intentionally absent from the repository.",
+    "Exact raw API replay is not recoverable from committed artifacts.",
+    "The recovered split policy is stable BridgeRowKey tail holdout; Route 3 requires original-instance split before future execution.",
+    "Route 3 Package A does not contain Route 3A or Route 3C execution rows."
+  ],
+  "p68p_status": "no_op_no_residual_diff",
+  "phase": "Route3-Foundation-Pack-A",
+  "recoverable_artifacts": {
+    "fixa_positive_control": {
+      "artifact_dir": "artifacts/experiments/p55_hotpotqa_support_classification_bridge_calibration",
+      "calibration_epoch": "P63R-FixA-HotpotQA-support-classification-qwen36flash-v1",
+      "claim_status": "positive_control_only; circular_alignment_control; not_metric_bridge_evidence; no_claim_upgrade",
+      "dataset": "HotpotQA",
+      "delta_records_path": "artifacts/benchmarks/hotpotqa_support_classification_delta_records.jsonl",
+      "doc_path": "docs/experiments/P63R-FixA-hotpotqa-support-classification-bridge.md",
+      "effective_sample_size": 643,
+      "gate_result": "positive_control_only",
+      "metric_claim_level": "positive_control_only",
+      "normalized_residual": 0.0,
+      "operator_rows_path": "artifacts/operator_inputs/p55_hotpotqa_support_classification_rows.jsonl",
+      "reason_codes": [
+        "circular_alignment_control",
+        "not_metric_bridge_evidence"
+      ],
+      "rows_validated": 643,
+      "sign_agreement": 1.0,
+      "spearman_rho": 1.0,
+      "task_family": "hotpotqa_supporting_fact_classification_bridge",
+      "thresholds_path": "artifacts/experiments/p55_hotpotqa_support_classification_bridge_calibration/bridge_fit_summary.json#thresholds",
+      "train_heldout_split": {
+        "heldout_fraction": 0.3001555209953344,
+        "heldout_rows": 193,
+        "recovered_split_policy": "stable_bridge_row_key_tail_holdout",
+        "train_rows": 450
+      },
+      "unique_instances": 643
+    },
+    "fixb_independent_utility": {
+      "artifact_dir": "artifacts/experiments/p55_hotpotqa_support_independent_utility_bridge_calibration",
+      "calibration_epoch": "P63R-FixB-HotpotQA-independent-live-utility-v1",
+      "claim_status": "operational_utility_only; no_claim_upgrade",
+      "dataset": "HotpotQA",
+      "delta_records_path": "artifacts/benchmarks/hotpotqa_support_independent_utility_delta_records.jsonl",
+      "doc_path": "docs/experiments/P63R-FixB-hotpotqa-independent-support-utility-bridge.md",
+      "effective_sample_size": 826,
+      "gate_result": "failed_closed_gate_failed",
+      "metric_claim_level": "operational_utility_only",
+      "normalized_residual": 31159457568.380623,
+      "operator_rows_path": "artifacts/operator_inputs/p55_hotpotqa_support_independent_utility_rows.jsonl",
+      "reason_codes": [
+        "normalized_residual_failed",
+        "sign_agreement_failed",
+        "spearman_rho_failed"
+      ],
+      "rows_validated": 826,
+      "sign_agreement": 0.0,
+      "spearman_rho": null,
+      "task_family": "hotpotqa_support_classification_independent_utility",
+      "thresholds_path": "artifacts/experiments/p55_hotpotqa_support_independent_utility_bridge_calibration/bridge_fit_summary.json#thresholds",
+      "train_heldout_split": {
+        "heldout_fraction": 0.30024213075060535,
+        "heldout_rows": 248,
+        "recovered_split_policy": "stable_bridge_row_key_tail_holdout",
+        "train_rows": 578
+      },
+      "unique_instances": 826
+    },
+    "p63r_original": {
+      "artifact_dir": "artifacts/experiments/p55_hotpotqa_bridge_calibration",
+      "calibration_epoch": "P63R-HotpotQA-qwen36flash-600x150-v1",
+      "claim_status": "operational_utility_only; no_claim_upgrade",
+      "dataset": "HotpotQA",
+      "delta_records_path": "artifacts/benchmarks/hotpotqa_p55_delta_records.jsonl",
+      "doc_path": "docs/experiments/P63R-hotpotqa-real-bridge-calibration-report.md",
+      "effective_sample_size": 600,
+      "gate_result": "failed_closed_gate_failed",
+      "metric_claim_level": "operational_utility_only",
+      "normalized_residual": 4.352219116658005,
+      "operator_rows_path": "artifacts/operator_inputs/p55_evidence_packet_selection_microtask_v1_rows.jsonl",
+      "reason_codes": [
+        "normalized_residual_failed",
+        "sign_agreement_failed",
+        "spearman_rho_failed"
+      ],
+      "rows_validated": 600,
+      "sign_agreement": 0.16666666666666666,
+      "spearman_rho": -0.2252188038852718,
+      "task_family": "hotpotqa_answer_support_selection",
+      "thresholds_path": "artifacts/experiments/p55_hotpotqa_bridge_calibration/bridge_fit_summary.json#thresholds",
+      "train_heldout_split": {
+        "heldout_fraction": 0.3,
+        "heldout_rows": 180,
+        "recovered_split_policy": "stable_bridge_row_key_tail_holdout",
+        "train_rows": 420
+      },
+      "unique_instances": 150
+    }
+  },
+  "route3_framing": "new_bridge_protocol_not_p63r_compatible_repair",
+  "route3a_execution_status": "not_executed_in_package_a",
+  "route3c_execution_status": "not_executed_in_package_a",
+  "schema_version": "route3_foundation_inventory_v1",
+  "source_commits": [
+    "717796a",
+    "d682a50",
+    "bb1bddb",
+    "48db6b9",
+    "5fa1528"
+  ]
+}
