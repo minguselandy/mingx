@@ -1,24 +1,31 @@
 {
   "artifact_type": "Route7ScopedSelectorSuperiorityReadinessReport",
-  "available_benchmark_count": 1,
+  "available_benchmark_count": 4,
   "claim_status": "no_claim_upgrade",
   "global_selector_superiority": false,
+  "hotpotqa_first_selector_comparison_available": false,
   "missing_deployable_baselines": [
     "BM25_or_dense_retrieval_when_available",
     "ablated_cost_aware_policy",
     "prior_v12_diagnostic_policy_variant"
   ],
+  "non_fever_task_families_available": [
+    "multi_hop_evidence_assembly",
+    "paper_revision_microtask",
+    "repo_change_review_microtask"
+  ],
   "operational_hotpotqa_result_preserved": true,
   "paper_evidence": false,
   "reason_codes": [
-    "single_benchmark_only_hotpotqa",
-    "missing_fever_benchmark_cell",
+    "non_fever_project_native_task_families_available",
     "missing_required_deployable_baselines",
-    "route4_5_6_dependencies_unsatisfied",
+    "project_native_fixture_operational_only_no_claim_upgrade",
+    "route4_5_6_dependencies_unsatisfied_for_claim_upgrade",
     "no_scoped_multi_benchmark_selector_superiority"
   ],
   "route7_claim_allowed": false,
   "schema_version": "route7_scoped_selector_superiority_readiness_v1",
+  "scope": "non_fever_scoped_multibenchmark",
   "scoped_multi_benchmark_selector_superiority": false,
-  "status": "blocked_multi_benchmark_requirements_unmet"
+  "status": "scoped_multibenchmark_comparison_completed"
 }

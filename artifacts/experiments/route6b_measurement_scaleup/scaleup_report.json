@@ -1,0 +1,12 @@
+{
+  "accepted_model_adjudicated_count": 300,
+  "adjudication_report_path": "artifacts/experiments/route6b_measurement_scaleup/adjudication_report.json",
+  "claim_status": "no_claim_upgrade",
+  "context_pair_sample_path": "artifacts/experiments/route6b_measurement_scaleup/context_pair_sample.jsonl",
+  "minimum_accepted_labels": 150,
+  "model_adjudicated_labels_path": "artifacts/experiments/route6b_measurement_scaleup/model_adjudicated_labels.jsonl",
+  "raw_api_responses_stored": false,
+  "route_id": "route6b_measurement_scaleup",
+  "schema_version": "route6b_measurement_scaleup_report_v1",
+  "terminal_status": "measurement_candidate_ready"
+}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -18,6 +19,9 @@ DEFAULT_ROUTE4B_CLAIM_GATE_PATH = Path("artifacts/experiments/route4b_bridge_to_
 DEFAULT_ROUTE4C_READINESS_PATH = Path("artifacts/experiments/route4c_fever/readiness_report.json")
 DEFAULT_ROUTE5_READINESS_PATH = Path("artifacts/experiments/route5_fixed_model_logloss_proxy/readiness_report.json")
 DEFAULT_ROUTE6A_ADJUDICATION_PATH = Path("artifacts/experiments/route6a_measurement_pilot/adjudication_report.json")
+DEFAULT_PROJECT_NATIVE_COMPARISON_PATH = Path(
+    "artifacts/experiments/realistic_task_model_adjudicated_v12/realistic_selector_comparison.csv"
+)
 
 REQUIRED_DEPLOYABLE_BASELINES = [
     "random_budget",
@@ -26,6 +30,12 @@ REQUIRED_DEPLOYABLE_BASELINES = [
     "mmr_density_greedy",
     "prior_v12_diagnostic_policy_variant",
     "ablated_cost_aware_policy",
+]
+
+PROJECT_NATIVE_TASK_FAMILIES = [
+    "multi_hop_evidence_assembly",
+    "paper_revision_microtask",
+    "repo_change_review_microtask",
 ]
 
 
@@ -58,6 +68,14 @@ def _read_json(root: Path, path: str | Path) -> dict[str, Any]:
         return {}
     payload = json.loads(resolved.read_text(encoding="utf-8"))
     return payload if isinstance(payload, dict) else {}
+
+
+def _read_csv_rows(root: Path, path: str | Path) -> list[dict[str, str]]:
+    resolved = _resolve(root, path)
+    if not resolved.exists() or not resolved.is_file():
+        return []
+    with resolved.open("r", encoding="utf-8", newline="") as handle:
+        return [dict(row) for row in csv.DictReader(handle)]
 
 
 def _hotpotqa_cells_positive(stats: dict[str, Any]) -> bool:
@@ -122,6 +140,55 @@ def _baseline_registry(stats: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _project_native_summary(rows: Sequence[dict[str, str]]) -> dict[str, Any]:
+    by_family: dict[str, list[dict[str, str]]] = {}
+    for row in rows:
+        family = str(row.get("task_family") or "")
+        if family in PROJECT_NATIVE_TASK_FAMILIES:
+            by_family.setdefault(family, []).append(row)
+
+    cells: dict[str, dict[str, Any]] = {}
+    for family, family_rows in sorted(by_family.items()):
+        v12_rows = [row for row in family_rows if row.get("baseline") == "v12_cost_aware_diagnostic_policy"]
+        comparable = [
+            row
+            for row in family_rows
+            if row.get("budget_comparable") == "true" and row.get("baseline") != "v12_cost_aware_diagnostic_policy"
+        ]
+        v12_score = max((float(row.get("sufficiency_score") or 0.0) for row in v12_rows), default=None)
+        baseline_scores = {
+            str(row.get("baseline") or ""): float(row.get("sufficiency_score") or 0.0)
+            for row in comparable
+            if str(row.get("baseline") or "")
+        }
+        data_source_kinds = sorted({str(row.get("data_source_kind") or "unknown") for row in family_rows})
+        cells[family] = {
+            "baseline_scores": baseline_scores,
+            "budget_comparable_baselines": sorted(baseline_scores),
+            "data_source_kinds": data_source_kinds,
+            "evidence_status": (
+                "fixture_operational_only_available"
+                if "fixture" in data_source_kinds
+                else "operational_only_available"
+            ),
+            "task_family": family,
+            "v12_best_sufficiency_score": v12_score,
+            "v12_ties_or_exceeds_budget_baselines": (
+                v12_score is not None
+                and bool(baseline_scores)
+                and all(v12_score >= score for score in baseline_scores.values())
+            ),
+        }
+    return {
+        "available_task_families": sorted(cells),
+        "cells": cells,
+        "fixture_only": any(
+            "fixture" in cell["data_source_kinds"]
+            for cell in cells.values()
+        ),
+    }
+
+
 def _dependencies(root: Path) -> dict[str, Any]:
     route4b = _read_json(root, DEFAULT_ROUTE4B_CLAIM_GATE_PATH)
     route4c = _read_json(root, DEFAULT_ROUTE4C_READINESS_PATH)
@@ -139,22 +206,27 @@ def assess_route7_gate(
     *,
     root: str | Path = ".",
     hotpotqa_only: bool = False,
+    fever_disabled: bool = False,
     hotpotqa_stats_path: str | Path = DEFAULT_HOTPOTQA_STATS_PATH,
     hotpotqa_safety_path: str | Path = DEFAULT_HOTPOTQA_SAFETY_PATH,
+    project_native_comparison_path: str | Path = DEFAULT_PROJECT_NATIVE_COMPARISON_PATH,
 ) -> Route7Package:
     repo_root = Path(root)
     stats = _read_json(repo_root, hotpotqa_stats_path)
     safety = _read_json(repo_root, hotpotqa_safety_path)
+    project_native = _project_native_summary(_read_csv_rows(repo_root, project_native_comparison_path))
     hotpotqa_available = bool(stats.get("v12_vs_baselines"))
     hotpotqa_positive = _hotpotqa_cells_positive(stats)
-    available_benchmark_count = 1 if hotpotqa_available else 0
+    non_fever_task_families = project_native["available_task_families"] if fever_disabled and not hotpotqa_only else []
+    available_benchmark_count = (1 if hotpotqa_available else 0) + len(non_fever_task_families)
     baseline_registry = _baseline_registry(stats)
     dependencies = _dependencies(repo_root)
     dependencies_satisfied = all(dependencies.values())
     missing_baselines = bool(baseline_registry["missing_deployable_baselines"]) and not hotpotqa_only
-    multi_benchmark_gate = available_benchmark_count >= 2
+    multi_benchmark_gate = available_benchmark_count >= 3 if fever_disabled and not hotpotqa_only else available_benchmark_count >= 2
     hotpotqa_first_gate = hotpotqa_only and hotpotqa_available and hotpotqa_positive
-    route7_claim_allowed = False if hotpotqa_only else (
+    project_native_fixture_only = bool(project_native["fixture_only"] and non_fever_task_families)
+    route7_claim_allowed = False if hotpotqa_only or project_native_fixture_only else (
         multi_benchmark_gate and not missing_baselines and dependencies_satisfied and hotpotqa_positive
     )
 
@@ -165,14 +237,18 @@ def assess_route7_gate(
         reason_codes.append("single_benchmark_only_hotpotqa")
     if not hotpotqa_available:
         reason_codes.append("missing_hotpotqa_operational_comparison")
-    if not hotpotqa_only:
+    if fever_disabled and not hotpotqa_only:
+        reason_codes.append("non_fever_project_native_task_families_available" if non_fever_task_families else "missing_non_fever_task_families")
+    elif not hotpotqa_only:
         reason_codes.append("missing_fever_benchmark_cell")
     if missing_baselines:
         reason_codes.append("missing_required_deployable_baselines")
+    if project_native_fixture_only:
+        reason_codes.append("project_native_fixture_operational_only_no_claim_upgrade")
     if not dependencies_satisfied:
         reason_codes.append(
             "route4_5_6_dependencies_unsatisfied_for_claim_upgrade"
-            if hotpotqa_only
+            if hotpotqa_only or fever_disabled
             else "route4_5_6_dependencies_unsatisfied"
         )
     if not route7_claim_allowed:
@@ -182,39 +258,49 @@ def assess_route7_gate(
             else "no_scoped_multi_benchmark_selector_superiority"
         )
 
+    benchmark_cells: dict[str, Any] = {
+        "FEVER": {
+            "evidence_status": (
+                "disabled_by_hotpotqa_only_scope"
+                if hotpotqa_only
+                else ("disabled_by_user_no_fever" if fever_disabled else "blocked_fever_source_unavailable")
+            ),
+            "task_family": "claim_verification",
+        },
+        "HotpotQA": {
+            "budgets": sorted(
+                {
+                    int(cell.get("budget"))
+                    for cell in stats.get("v12_vs_baselines", {}).values()
+                    if isinstance(cell, dict) and cell.get("budget") is not None
+                }
+            ),
+            "evidence_status": "operational_only_available" if hotpotqa_available else "missing",
+            "task_family": "answer_support_selection",
+        },
+        "NaturalQuestionsOrSimilarQA": {
+            "evidence_status": "not_available",
+            "task_family": "answer_support_selection",
+        },
+        "QasperOrLongContextQA": {
+            "evidence_status": "not_available",
+            "task_family": "document_grounded_qa",
+        },
+    }
+    if fever_disabled and not hotpotqa_only:
+        benchmark_cells.update(project_native["cells"])
+
     benchmark_matrix = {
         "artifact_type": "Route7BenchmarkMatrix",
-        "cells": {
-            "FEVER": {
-                "evidence_status": "disabled_by_hotpotqa_only_scope"
-                if hotpotqa_only
-                else "blocked_fever_source_unavailable",
-                "task_family": "claim_verification",
-            },
-            "HotpotQA": {
-                "budgets": sorted(
-                    {
-                        int(cell.get("budget"))
-                        for cell in stats.get("v12_vs_baselines", {}).values()
-                        if isinstance(cell, dict) and cell.get("budget") is not None
-                    }
-                ),
-                "evidence_status": "operational_only_available" if hotpotqa_available else "missing",
-                "task_family": "answer_support_selection",
-            },
-            "NaturalQuestionsOrSimilarQA": {
-                "evidence_status": "not_available",
-                "task_family": "answer_support_selection",
-            },
-            "QasperOrLongContextQA": {
-                "evidence_status": "not_available",
-                "task_family": "document_grounded_qa",
-            },
-        },
+        "cells": benchmark_cells,
         "claim_status": "no_claim_upgrade",
         "predeclared_matrix_satisfied": multi_benchmark_gate,
         "schema_version": "route7_benchmark_matrix_v1",
-        "scope": "hotpotqa_only" if hotpotqa_only else "multi_benchmark",
+        "scope": (
+            "hotpotqa_only"
+            if hotpotqa_only
+            else ("non_fever_scoped_multibenchmark" if fever_disabled else "multi_benchmark")
+        ),
     }
 
     worst_cell_report = _worst_hotpotqa_cell(stats)
@@ -230,6 +316,9 @@ def assess_route7_gate(
         "hotpotqa_first_gate_passed": hotpotqa_first_gate,
         "multi_benchmark_gate_passed": multi_benchmark_gate,
         "oracle_used_as_deployable_baseline": bool(safety.get("oracle_used_as_deployable_baseline", False)),
+        "project_native_comparison_path": _path_ref(project_native_comparison_path),
+        "project_native_task_families": non_fever_task_families,
+        "project_native_fixture_only": project_native_fixture_only,
         "route_dependencies": dependencies,
         "route_dependencies_satisfied": dependencies_satisfied,
         "schema_version": "route7_comparison_gate_report_v1",
@@ -243,20 +332,29 @@ def assess_route7_gate(
         "global_selector_superiority": False,
         "hotpotqa_first_selector_comparison_available": hotpotqa_first_gate,
         "missing_deployable_baselines": baseline_registry["missing_deployable_baselines"],
+        "non_fever_task_families_available": non_fever_task_families,
         "operational_hotpotqa_result_preserved": hotpotqa_available,
         "paper_evidence": False,
         "reason_codes": reason_codes,
         "route7_claim_allowed": route7_claim_allowed,
         "schema_version": "route7_scoped_selector_superiority_readiness_v1",
-        "scope": "hotpotqa_only" if hotpotqa_only else "multi_benchmark",
+        "scope": (
+            "hotpotqa_only"
+            if hotpotqa_only
+            else ("non_fever_scoped_multibenchmark" if fever_disabled else "multi_benchmark")
+        ),
         "scoped_multi_benchmark_selector_superiority": False,
         "status": (
             "ready_for_scoped_multi_benchmark_review"
             if route7_claim_allowed
             else (
+                "scoped_multibenchmark_comparison_completed"
+                if fever_disabled and multi_benchmark_gate
+                else (
                 "hotpotqa_first_operational_comparison_available_no_claim_upgrade"
                 if hotpotqa_only and hotpotqa_first_gate
                 else "blocked_multi_benchmark_requirements_unmet"
+                )
             )
         ),
     }
@@ -277,14 +375,28 @@ def render_route7_report(package: Route7Package) -> str:
     comparison = package.comparison_gate_report
     reason_codes = "\n".join(f"- `{code}`" for code in readiness["reason_codes"])
     missing = "\n".join(f"- `{name}`" for name in baselines["missing_deployable_baselines"])
+    completed = readiness["status"] == "scoped_multibenchmark_comparison_completed"
+    title = (
+        "# Route7 Non-FEVER Scoped Selector Comparison Report\n\n"
+        if completed
+        else "# Route7 Scoped Selector-superiority Blocked Report\n\n"
+    )
+    decision = (
+        "Route 7 completed a non-FEVER scoped comparison matrix using HotpotQA "
+        "plus available project-native task families. The comparison remains "
+        "operational-only because project-native rows are fixture/model-adjudicated "
+        "and upstream bridge/proxy dependencies are unsatisfied.\n\n"
+        if completed
+        else "Route 7 is blocked for scoped multi-benchmark selector superiority. "
+        "HotpotQA remains operational-only evidence from the existing P66 "
+        "comparison, but the finite multi-benchmark matrix is not satisfied.\n\n"
+    )
     return (
-        "# Route7 Scoped Selector-superiority Blocked Report\n\n"
+        title +
         f"Status: `{readiness['status']}`\n"
         "Claim status: `no_claim_upgrade`\n\n"
         "## Decision\n\n"
-        "Route 7 is blocked for scoped multi-benchmark selector superiority. "
-        "HotpotQA remains operational-only evidence from the existing P66 "
-        "comparison, but the finite multi-benchmark matrix is not satisfied.\n\n"
+        f"{decision}"
         "The global selector superiority remains denied, and no scoped "
         "multi-benchmark selector-superiority claim is introduced.\n\n"
         "## Matrix And Baselines\n\n"
@@ -309,9 +421,10 @@ def write_route7_artifacts(
     output_dir: str | Path = DEFAULT_OUTPUT_DIR,
     docs_path: str | Path = DEFAULT_DOCS_PATH,
     hotpotqa_only: bool = False,
+    fever_disabled: bool = False,
 ) -> dict[str, Path]:
     repo_root = Path(root)
-    package = assess_route7_gate(root=repo_root, hotpotqa_only=hotpotqa_only)
+    package = assess_route7_gate(root=repo_root, hotpotqa_only=hotpotqa_only, fever_disabled=fever_disabled)
     out = _resolve(repo_root, output_dir)
     docs = _resolve(repo_root, docs_path)
     paths = {
@@ -338,6 +451,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
     parser.add_argument("--docs-path", default=str(DEFAULT_DOCS_PATH))
     parser.add_argument("--hotpotqa-only", action="store_true")
+    parser.add_argument("--fever-disabled", action="store_true")
     args = parser.parse_args(argv)
 
     paths = write_route7_artifacts(
@@ -345,6 +459,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         output_dir=args.output_dir,
         docs_path=args.docs_path,
         hotpotqa_only=args.hotpotqa_only,
+        fever_disabled=args.fever_disabled,
     )
     readiness = json.loads(paths["readiness_report"].read_text(encoding="utf-8"))
     print(

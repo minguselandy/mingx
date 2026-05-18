@@ -149,3 +149,59 @@ def test_route8_hotpotqa_only_ignores_disabled_route4c_fever(workspace_tmp_dir: 
     )
     assert "hotpotqa_route4b_failed_closed_underpowered" in package.readiness_report["reason_codes"]
     assert "fever" not in json.dumps(package.readiness_report, sort_keys=True).lower()
+
+
+def test_route8_exhaustive_mode_requires_terminal_routes_and_keeps_fever_disabled(
+    workspace_tmp_dir: Path,
+) -> None:
+    _write_blocked_route_inputs(workspace_tmp_dir)
+    _write_json(
+        workspace_tmp_dir / "artifacts/experiments/route6b_measurement_scaleup/readiness_report.json",
+        {
+            "accepted_model_adjudicated_count": 150,
+            "claim_status": "no_claim_upgrade",
+            "measurement_validation_candidate_allowed": False,
+            "status": "measurement_candidate_ready",
+        },
+    )
+    _write_json(
+        workspace_tmp_dir / "artifacts/experiments/route5_fixed_model_logloss_proxy/readiness_report.json",
+        {
+            "claim_status": "no_claim_upgrade",
+            "scope": "route4b_fever_disabled",
+            "start_condition_satisfied": False,
+            "status": "skipped_no_bridge_candidate",
+            "vinfo_proxy_supported_candidate": False,
+        },
+    )
+    _write_json(
+        workspace_tmp_dir / "artifacts/experiments/route7_scoped_selector_superiority/readiness_report.json",
+        {
+            "claim_status": "no_claim_upgrade",
+            "non_fever_task_families_available": [
+                "multi_hop_evidence_assembly",
+                "paper_revision_microtask",
+            ],
+            "route7_claim_allowed": False,
+            "scope": "non_fever_scoped_multibenchmark",
+            "scoped_multi_benchmark_selector_superiority": False,
+            "status": "scoped_multibenchmark_comparison_completed",
+        },
+    )
+
+    package = assess_route8_final_integration(
+        root=workspace_tmp_dir,
+        exhaustive_route_mode=True,
+        fever_disabled=True,
+    )
+
+    assert package.readiness_report["status"] == "final_integration_blocked_no_accepted_evidence"
+    assert package.readiness_report["scope"] == "exhaustive_non_fever_routes"
+    assert package.readiness_report["final_program_status"] == "honestly_blocked"
+    assert package.readiness_report["accepted_evidence_packages"] == []
+    assert package.readiness_report["enabled_routes_terminal"] is True
+    assert "all_enabled_routes_terminal_no_accepted_evidence" in package.readiness_report["reason_codes"]
+    assert "Route4C" not in package.evidence_status_summary["routes"]
+    assert package.evidence_status_summary["routes"]["Route6B"]["status"] == "measurement_candidate_ready"
+    assert package.evidence_status_summary["routes"]["Route5"]["status"] == "skipped_no_bridge_candidate"
+    assert package.evidence_status_summary["routes"]["Route7"]["status"] == "scoped_multibenchmark_comparison_completed"

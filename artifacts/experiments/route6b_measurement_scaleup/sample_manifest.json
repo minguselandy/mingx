@@ -1,0 +1,35 @@
+{
+  "claim_status": "no_claim_upgrade",
+  "human_annotation_required_for_measurement_validation": true,
+  "judge_hidden_fields": [
+    "delta_logloss",
+    "delta_utility",
+    "baseline_utility",
+    "augmented_utility",
+    "gold_support_label",
+    "utility_source_provenance",
+    "support_coverage_delta",
+    "source_coverage_delta",
+    "full_support_hit_delta",
+    "missing_prerequisite_delta"
+  ],
+  "label_schema_version": "route6a_model_sufficiency_labels_v1",
+  "live_api_used": true,
+  "measurement_validation_candidate_allowed": false,
+  "operator_inputs_written": false,
+  "phase_id": "route6a_external_sufficiency_measurement_pilot",
+  "protocol_id": "route6a_hotpotqa_external_sufficiency_model_adjudication_v1",
+  "raw_api_responses_stored": false,
+  "route_id": "route6a_external_sufficiency_measurement_pilot",
+  "rubric_version": "route6a_external_sufficiency_rubric_v1",
+  "sample_count": 300,
+  "sample_schema_version": "route6a_context_pair_sample_v1",
+  "sampling_policy": "deterministic_balanced_positive_zero_delta_utility_internal_only",
+  "source_artifacts": {
+    "hotpotqa_candidate_pools": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+    "route4_bridge_rows": "artifacts/experiments/route4_bridge/bridge_rows.jsonl"
+  },
+  "source_bridge_rows_count": 600,
+  "source_candidate_pools_count": 200,
+  "unique_original_instances": 150
+}

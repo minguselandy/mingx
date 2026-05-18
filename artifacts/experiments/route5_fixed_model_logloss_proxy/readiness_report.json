@@ -11,12 +11,13 @@
   "reason_codes": [
     "no_accepted_route4_candidate_bridge_evidence",
     "route4b_failed_closed_underpowered",
-    "route4c_blocked_fever_source_unavailable",
-    "route5_live_api_not_used_start_condition_failed"
+    "route5_live_api_not_used_start_condition_failed",
+    "route5_terminal_skip_no_bridge_candidate"
   ],
   "schema_version": "route5_fixed_model_logloss_proxy_readiness_v1",
+  "scope": "route4b_fever_disabled",
   "start_condition_satisfied": false,
-  "status": "blocked_route4_candidate_bridge_required",
+  "status": "skipped_no_bridge_candidate",
   "true_deployed_vinformation_verification": false,
   "vinfo_proxy_supported": false,
   "vinfo_proxy_supported_candidate": false

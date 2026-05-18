@@ -1,0 +1,17 @@
+{
+  "accepted_model_adjudicated_count": 300,
+  "claim_status": "no_claim_upgrade",
+  "counts_as_human_labels": false,
+  "invalid_or_failed_count": 0,
+  "judge_model_id": "qwen3.6-plus",
+  "judge_provider": "dashscope",
+  "label_schema_version": "route6a_model_sufficiency_labels_v1",
+  "live_api_used": true,
+  "measurement_validation_candidate_allowed": false,
+  "normalized_label_count": 300,
+  "prompt_version": "route6a_external_sufficiency_prompt_v1",
+  "raw_api_responses_stored": false,
+  "route_id": "route6a_external_sufficiency_measurement_pilot",
+  "rubric_version": "route6a_external_sufficiency_rubric_v1",
+  "sample_count": 300
+}

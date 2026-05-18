@@ -114,3 +114,37 @@ def test_route5_hotpotqa_only_ignores_disabled_fever_route4c(workspace_tmp_dir: 
     assert "route4c" not in package.dependency_gate_report
     assert "route4b_failed_closed_underpowered" in package.readiness_report["reason_codes"]
     assert "route4c_blocked_fever_source_unavailable" not in package.readiness_report["reason_codes"]
+
+
+def test_route5_terminal_skip_when_fever_disabled_and_bridge_retry_has_no_candidate(workspace_tmp_dir: Path) -> None:
+    _write_json(
+        workspace_tmp_dir / "artifacts/experiments/route4b_bridge_to_measurement/claim_gate_result.json",
+        {
+            "claim_status": "no_claim_upgrade",
+            "gate_result": "failed_closed_underpowered",
+            "metric_bridge_support_candidate": False,
+        },
+    )
+    _write_json(
+        workspace_tmp_dir / "artifacts/experiments/route4b_bridge_to_measurement/metric_bridge_witness.json",
+        {
+            "bridge_status": "failed_closed_underpowered",
+            "metric_claim_level": "failed_closed_no_claim_upgrade",
+            "reason_codes": ["row_count_below_minimum"],
+        },
+    )
+
+    package = assess_route5_start_gate(
+        root=workspace_tmp_dir,
+        route4c_disabled=True,
+        terminal_skip_if_no_bridge_candidate=True,
+    )
+
+    assert package.readiness_report["status"] == "skipped_no_bridge_candidate"
+    assert package.readiness_report["scope"] == "route4b_fever_disabled"
+    assert package.readiness_report["start_condition_satisfied"] is False
+    assert package.readiness_report["fixed_model_logloss_proxy_verification_started"] is False
+    assert package.readiness_report["live_api_used"] is False
+    assert package.dependency_gate_report["route4c_disabled"] is True
+    assert "route4c" not in package.dependency_gate_report
+    assert "route5_terminal_skip_no_bridge_candidate" in package.readiness_report["reason_codes"]

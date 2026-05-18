@@ -32,6 +32,26 @@ def _write_hotpotqa_stats(root: Path) -> None:
             },
         },
     )
+
+
+def _write_project_native_comparison(root: Path) -> None:
+    path = root / "artifacts/experiments/realistic_task_model_adjudicated_v12/realistic_selector_comparison.csv"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "\n".join(
+            [
+                "task_id,task_family,baseline,sufficiency_score,budget_comparable,data_source_kind,metric_claim_level",
+                "mh,multi_hop_evidence_assembly,top_k_retrieval,0.5,true,fixture,operational_utility_only",
+                "mh,multi_hop_evidence_assembly,mmr_density_greedy,1.0,true,fixture,operational_utility_only",
+                "mh,multi_hop_evidence_assembly,v12_cost_aware_diagnostic_policy,1.0,true,fixture,operational_utility_only",
+                "paper,paper_revision_microtask,top_k_retrieval,1.0,true,fixture,operational_utility_only",
+                "paper,paper_revision_microtask,mmr_density_greedy,1.0,true,fixture,operational_utility_only",
+                "paper,paper_revision_microtask,v12_cost_aware_diagnostic_policy,1.0,true,fixture,operational_utility_only",
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     _write_json(
         root / "artifacts/experiments/p56_hotpotqa_operational_comparison/diagnostic_safety_summary.json",
         {
@@ -118,3 +138,29 @@ def test_route7_hotpotqa_only_preserves_available_hotpotqa_operational_compariso
     assert package.benchmark_matrix["cells"]["FEVER"]["evidence_status"] == "disabled_by_hotpotqa_only_scope"
     assert package.comparison_gate_report["hotpotqa_operational_cells_positive"] is True
     assert package.comparison_gate_report["hotpotqa_first_gate_passed"] is True
+
+
+def test_route7_fever_disabled_uses_project_native_tasks_as_terminal_non_claim_comparison(
+    workspace_tmp_dir: Path,
+) -> None:
+    _write_hotpotqa_stats(workspace_tmp_dir)
+    _write_project_native_comparison(workspace_tmp_dir)
+
+    package = assess_route7_gate(root=workspace_tmp_dir, fever_disabled=True)
+
+    assert package.readiness_report["status"] == "scoped_multibenchmark_comparison_completed"
+    assert package.readiness_report["scope"] == "non_fever_scoped_multibenchmark"
+    assert package.readiness_report["available_benchmark_count"] == 3
+    assert package.readiness_report["route7_claim_allowed"] is False
+    assert package.readiness_report["scoped_multi_benchmark_selector_superiority"] is False
+    assert package.readiness_report["global_selector_superiority"] is False
+    assert package.readiness_report["non_fever_task_families_available"] == [
+        "multi_hop_evidence_assembly",
+        "paper_revision_microtask",
+    ]
+    assert "non_fever_project_native_task_families_available" in package.readiness_report["reason_codes"]
+    assert "project_native_fixture_operational_only_no_claim_upgrade" in package.readiness_report["reason_codes"]
+    assert "missing_fever_benchmark_cell" not in package.readiness_report["reason_codes"]
+    assert package.benchmark_matrix["cells"]["FEVER"]["evidence_status"] == "disabled_by_user_no_fever"
+    assert package.benchmark_matrix["cells"]["paper_revision_microtask"]["evidence_status"] == "fixture_operational_only_available"
+    assert package.comparison_gate_report["multi_benchmark_gate_passed"] is True

@@ -1,5 +1,5 @@
 {
-  "bridge_rows_constructed": 22,
+  "bridge_rows_constructed": 300,
   "claim_status": "no_claim_upgrade",
   "claim_status_ceiling": "operational_utility_only/no_claim_upgrade",
   "human_human_kappa_present": false,
@@ -8,9 +8,9 @@
   "model_adjudication_counts_as_human_label": false,
   "phase_id": "route4b_bridge_to_external_sufficiency",
   "route4_rows_count": 600,
-  "route6a_label_count": 24,
-  "route6a_sample_count": 24,
-  "route6a_usable_model_label_count": 22,
+  "route6a_label_count": 300,
+  "route6a_sample_count": 300,
+  "route6a_usable_model_label_count": 300,
   "start_condition_satisfied": true,
   "status": "ready_model_adjudicated_underpowered_bridge_attempt"
 }

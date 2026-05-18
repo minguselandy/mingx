@@ -1,0 +1,45 @@
+{
+  "artifact_type": "Route8EvidenceStatusSummary",
+  "claim_status": "no_claim_upgrade",
+  "confirmed_evidence": [
+    "Route6A completed approved live model adjudication and stored normalized labels only.",
+    "Route6B recorded the configured scale-up terminal status without human-label or kappa claims.",
+    "Route4B executed the external sufficiency bridge and failed closed underpowered.",
+    "Route5 was blocked before live API use because Route4 candidate bridge evidence was absent.",
+    "Route7 completed the non-FEVER scoped comparison matrix without a claim upgrade."
+  ],
+  "routes": {
+    "Route4B": {
+      "accepted_for_claim_upgrade": false,
+      "artifact_path": "artifacts/experiments/route4b_bridge_to_measurement/claim_gate_result.json",
+      "gate_result": "failed_closed_underpowered",
+      "status": "failed_closed_underpowered"
+    },
+    "Route5": {
+      "accepted_for_claim_upgrade": false,
+      "artifact_path": "artifacts/experiments/route5_fixed_model_logloss_proxy/readiness_report.json",
+      "status": "skipped_no_bridge_candidate"
+    },
+    "Route6A": {
+      "accepted_for_claim_upgrade": false,
+      "artifact_path": "artifacts/experiments/route6a_measurement_pilot/adjudication_report.json",
+      "evidence": "22 accepted model-adjudicated labels",
+      "measurement_validation": false,
+      "status": "model_adjudication_completed_no_measurement_validation"
+    },
+    "Route6B": {
+      "accepted_for_claim_upgrade": false,
+      "artifact_path": "artifacts/experiments/route6b_measurement_scaleup/readiness_report.json",
+      "evidence": "300 accepted model-adjudicated labels",
+      "measurement_validation": false,
+      "status": "measurement_candidate_ready"
+    },
+    "Route7": {
+      "accepted_for_claim_upgrade": false,
+      "artifact_path": "artifacts/experiments/route7_scoped_selector_superiority/readiness_report.json",
+      "status": "scoped_multibenchmark_comparison_completed"
+    }
+  },
+  "schema_version": "route8_evidence_status_summary_v1",
+  "scope": "exhaustive_non_fever_routes"
+}

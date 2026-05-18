@@ -2,10 +2,18 @@
   "artifact_type": "Route7ComparisonGateReport",
   "claim_status": "no_claim_upgrade",
   "global_selector_superiority_claimed": false,
+  "hotpotqa_first_gate_passed": false,
   "hotpotqa_operational_cells_positive": true,
   "hotpotqa_statistical_tests_path": "artifacts/experiments/p56_hotpotqa_operational_comparison/statistical_tests.json",
-  "multi_benchmark_gate_passed": false,
+  "multi_benchmark_gate_passed": true,
   "oracle_used_as_deployable_baseline": false,
+  "project_native_comparison_path": "artifacts/experiments/realistic_task_model_adjudicated_v12/realistic_selector_comparison.csv",
+  "project_native_fixture_only": true,
+  "project_native_task_families": [
+    "multi_hop_evidence_assembly",
+    "paper_revision_microtask",
+    "repo_change_review_microtask"
+  ],
   "route_dependencies": {
     "route4_metric_bridge_candidate": false,
     "route5_fixed_model_proxy_candidate": false,

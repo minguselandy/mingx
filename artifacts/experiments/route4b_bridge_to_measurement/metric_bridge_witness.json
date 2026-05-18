@@ -12,11 +12,9 @@
   "phase_id": "route4b_bridge_to_external_sufficiency",
   "reason_codes": [
     "row_count_below_minimum",
-    "unique_instance_below_minimum",
-    "effective_sample_size_below_minimum",
     "model_adjudication_not_human_measurement_validation"
   ],
-  "rows_validated": 22,
-  "unique_original_instances": 22,
+  "rows_validated": 300,
+  "unique_original_instances": 150,
   "vinfo_proxy_supported": false
 }
