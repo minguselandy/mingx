@@ -183,6 +183,28 @@ def run_workbench(spec: WorkbenchRunSpec) -> dict[str, Any]:
         accepted_claims=["scoped_operational_improvement"],
         bridge_result=bridge_result,
         comparison_result=comparison_result,
+        evidence_items=[
+            {
+                "claim_area": "metric_bridge",
+                "evidence_class": "shadow",
+                "evidence_id": "workbench_metric_bridge_shadow",
+            },
+            {
+                "claim_area": "selector_comparison",
+                "evidence_class": "shadow",
+                "evidence_id": "workbench_selector_comparison_shadow",
+            },
+        ],
+        independent_review_complete=False,
+        portfolio_controls={
+            "accepted_evidence_requires_independent_review": spec.accepted_evidence_requires_independent_review,
+            "contamination_policy": spec.contamination_policy,
+            "label_source_policy": spec.label_source_policy,
+            "portfolio": spec.portfolio,
+            "route5_unlock_requires": list(spec.route5_unlock_requires),
+            "route8_claim_upgrade_requires": list(spec.route8_claim_upgrade_requires),
+            "uncertainty_policy": spec.uncertainty_policy,
+        },
     )
     result = {
         "artifact_paths": paths.to_manifest(),

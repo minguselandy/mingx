@@ -83,6 +83,13 @@ def test_runspec_defaults_to_shadow_claim_mode():
         "shadow_measurement_candidate",
         "shadow_selector_superiority",
     )
+    assert spec.portfolio == "integrated_validation_workbench"
+    assert spec.label_source_policy == "model_adjudicated_or_operational_only_no_measurement_validation"
+    assert spec.contamination_policy == "fail_closed_on_contamination_or_unreviewed_source_risk"
+    assert spec.uncertainty_policy == "missing_or_underpowered_evidence_blocks_claim_upgrade"
+    assert spec.accepted_evidence_requires_independent_review is True
+    assert spec.route5_unlock_requires == ("accepted_bridge_candidate", "independent_review")
+    assert spec.route8_claim_upgrade_requires == ("accepted_evidence_packages_nonempty", "independent_review")
 
 
 def test_artifact_paths_are_deterministic_and_relative():
@@ -108,6 +115,10 @@ def test_json_yaml_runspec_loads_without_external_yaml_dependency(workspace_tmp_
                 "budgets": [512],
                 "selectors": ["bm25_topk", "mmr_density_greedy", "v12_diagnostic_policy"],
                 "evaluators": ["operational", "diagnostic_safety", "claim_ledger"],
+                "portfolio": "iw_portfolio",
+                "label_source_policy": "external_human_required_for_measurement_validation",
+                "contamination_policy": "fail_closed",
+                "uncertainty_policy": "independent_review_required_for_acceptance",
             },
             sort_keys=True,
         ),
@@ -118,6 +129,10 @@ def test_json_yaml_runspec_loads_without_external_yaml_dependency(workspace_tmp_
 
     assert spec.run_id == "hotpotqa_smoke"
     assert spec.claim_mode == "shadow"
+    assert spec.portfolio == "iw_portfolio"
+    assert spec.label_source_policy == "external_human_required_for_measurement_validation"
+    assert spec.contamination_policy == "fail_closed"
+    assert spec.uncertainty_policy == "independent_review_required_for_acceptance"
     assert spec.selectors == ("bm25_topk", "mmr_density_greedy", "v12_diagnostic_policy")
 
 
