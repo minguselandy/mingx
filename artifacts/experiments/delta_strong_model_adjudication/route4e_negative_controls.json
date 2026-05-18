@@ -1,0 +1,15 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "control_status": "diagnostic_only_not_claim_enabling",
+  "negative_controls": {
+    "label_shuffle_control": {
+      "executed": true,
+      "status": "diagnostic_only_not_claim_enabling"
+    },
+    "zero_utility_control": {
+      "executed": true,
+      "status": "diagnostic_only_not_claim_enabling"
+    }
+  },
+  "schema_version": "delta_route4e_negative_controls_v1"
+}

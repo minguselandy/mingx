@@ -1,0 +1,28 @@
+{
+  "allowed_candidate_wording": [
+    "model_adjudicated_measurement_candidate",
+    "strong_model_adjudicated_sufficiency_evidence",
+    "model_adjudicated_bridge_candidate_pending_review"
+  ],
+  "claim_ledger_update_attempted": false,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "human measurement validation",
+    "human-validated evidence",
+    "measurement validation",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper evidence",
+    "metric bridge support",
+    "selector superiority",
+    "global selector superiority",
+    "deployed V-information verification"
+  ],
+  "human_annotation_required": false,
+  "live_api_used": false,
+  "live_fillin_attempt_status": "timeout_no_durable_labels_written",
+  "manuscript_update_attempted": false,
+  "raw_api_responses_stored": false,
+  "schema_version": "delta_strong_model_adjudication_final_status_v1",
+  "terminal_status": "FAILED_CLOSED_JUDGE_RELIABILITY"
+}

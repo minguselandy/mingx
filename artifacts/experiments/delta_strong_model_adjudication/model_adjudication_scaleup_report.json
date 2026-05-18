@@ -1,0 +1,31 @@
+{
+  "adjudicated_item_count": 800,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "counts_as_human_labels": false,
+  "human_annotation_required": false,
+  "live_api_used": false,
+  "minimum_adjudicated_items": 800,
+  "minimum_three_view_items": 300,
+  "minimum_unique_original_instances": 300,
+  "minimum_unique_parent_items": 300,
+  "preferred_adjudicated_items": 1200,
+  "raw_api_responses_stored": false,
+  "reason_codes": [
+    "live_adjudication_not_run_for_missing_delta_views",
+    "three_view_item_count_below_minimum",
+    "unique_original_instance_count_below_delta_minimum"
+  ],
+  "scaleup_checks": {
+    "adjudicated_item_count_pass": true,
+    "raw_response_policy_pass": true,
+    "three_view_item_count_pass": false,
+    "unique_original_instance_count_pass": false,
+    "unique_parent_item_count_pass": true
+  },
+  "schema_version": "delta_model_adjudication_scaleup_report_v1",
+  "source_label_count": 800,
+  "status": "failed_closed_underpowered",
+  "three_view_item_count": 0,
+  "unique_original_instance_count": 150,
+  "unique_parent_item_count": 600
+}

@@ -1,0 +1,9 @@
+{
+  "beta_doc_present": true,
+  "beta_portfolio_status": "BETA_FAILED_CLOSED_NO_CLAIM_UPGRADE",
+  "beta_reinterpreted": false,
+  "branch_required": "codex/integrated-validation-workbench",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "iw_beta_state_confirmed": true,
+  "schema_version": "delta0_iw_beta_state_check_v1"
+}

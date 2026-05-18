@@ -1,0 +1,4 @@
+budget,matched_budget,mean_model_adjudicated_sufficiency_utility,mean_selected_tokens,selector_name,trace_count
+512,True,0.147976,509.1,bm25_topk,20
+512,True,0.155119,508.65,mmr_density_greedy,20
+512,True,0.165119,509.2,v12_diagnostic_policy,20
