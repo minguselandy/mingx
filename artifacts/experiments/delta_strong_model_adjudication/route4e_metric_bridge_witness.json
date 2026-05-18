@@ -1,0 +1,11 @@
+{
+  "artifact_type": "MetricBridgeWitness",
+  "bridge_status": "FAILED_CLOSED_BRIDGE_GATES",
+  "calibrated_proxy_supported": false,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "metric_bridge_support": false,
+  "metric_claim_level": "operational_utility_only",
+  "model_adjudicated_bridge_candidate_pending_review": false,
+  "schema_version": "delta_route4e_metric_bridge_witness_v1",
+  "vinfo_proxy_supported": false
+}

@@ -1,0 +1,10 @@
+{
+  "affine_transform_detected": false,
+  "exact_equality_detected": false,
+  "fraction_delta_utility_equals_delta_logloss": 0.0,
+  "pearson_delta_utility_delta_logloss": 0.018417865436470858,
+  "rank_identity_detected": false,
+  "rounded_equality_detected": false,
+  "spearman_delta_utility_delta_logloss": 0.19186283402109633,
+  "utility_source_verified": true
+}

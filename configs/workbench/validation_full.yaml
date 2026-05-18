@@ -1,0 +1,18 @@
+{
+  "run_id": "validation_full",
+  "dataset": "HotpotQA",
+  "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "output_dir": "artifacts/experiments/integrated_validation_workbench/validation_full",
+  "limit": 200,
+  "budgets": [512, 1024, 2048],
+  "selectors": ["bm25_topk", "mmr_density_greedy", "v12_diagnostic_policy", "random_budget", "dense_topk", "rrf_topk", "always_sag_k2", "pair_local_search"],
+  "evaluators": ["operational", "sufficiency", "logloss", "diagnostic_safety", "claim_ledger"],
+  "claim_mode": "shadow",
+  "portfolio": "integrated_validation_workbench",
+  "label_source_policy": "model_adjudicated_or_operational_only_no_measurement_validation",
+  "contamination_policy": "fail_closed_on_contamination_or_unreviewed_source_risk",
+  "uncertainty_policy": "missing_or_underpowered_evidence_blocks_claim_upgrade",
+  "accepted_evidence_requires_independent_review": true,
+  "route5_unlock_requires": ["accepted_bridge_candidate", "independent_review"],
+  "route8_claim_upgrade_requires": ["accepted_evidence_packages_nonempty", "independent_review"]
+}

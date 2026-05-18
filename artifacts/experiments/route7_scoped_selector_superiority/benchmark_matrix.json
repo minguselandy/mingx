@@ -1,0 +1,92 @@
+{
+  "artifact_type": "Route7BenchmarkMatrix",
+  "cells": {
+    "FEVER": {
+      "evidence_status": "disabled_by_user_no_fever",
+      "task_family": "claim_verification"
+    },
+    "HotpotQA": {
+      "budgets": [
+        512,
+        1024
+      ],
+      "evidence_status": "operational_only_available",
+      "task_family": "answer_support_selection"
+    },
+    "NaturalQuestionsOrSimilarQA": {
+      "evidence_status": "not_available",
+      "task_family": "answer_support_selection"
+    },
+    "QasperOrLongContextQA": {
+      "evidence_status": "not_available",
+      "task_family": "document_grounded_qa"
+    },
+    "multi_hop_evidence_assembly": {
+      "baseline_scores": {
+        "always_sag": 1.0,
+        "minimal_context": 0.0,
+        "mmr_density_greedy": 1.0,
+        "top_k_retrieval": 0.5
+      },
+      "budget_comparable_baselines": [
+        "always_sag",
+        "minimal_context",
+        "mmr_density_greedy",
+        "top_k_retrieval"
+      ],
+      "data_source_kinds": [
+        "fixture"
+      ],
+      "evidence_status": "fixture_operational_only_available",
+      "task_family": "multi_hop_evidence_assembly",
+      "v12_best_sufficiency_score": 1.0,
+      "v12_ties_or_exceeds_budget_baselines": true
+    },
+    "paper_revision_microtask": {
+      "baseline_scores": {
+        "always_sag": 1.0,
+        "minimal_context": 0.0,
+        "mmr_density_greedy": 1.0,
+        "top_k_retrieval": 1.0
+      },
+      "budget_comparable_baselines": [
+        "always_sag",
+        "minimal_context",
+        "mmr_density_greedy",
+        "top_k_retrieval"
+      ],
+      "data_source_kinds": [
+        "fixture"
+      ],
+      "evidence_status": "fixture_operational_only_available",
+      "task_family": "paper_revision_microtask",
+      "v12_best_sufficiency_score": 1.0,
+      "v12_ties_or_exceeds_budget_baselines": true
+    },
+    "repo_change_review_microtask": {
+      "baseline_scores": {
+        "always_sag": 1.0,
+        "minimal_context": 0.0,
+        "mmr_density_greedy": 1.0,
+        "top_k_retrieval": 1.0
+      },
+      "budget_comparable_baselines": [
+        "always_sag",
+        "minimal_context",
+        "mmr_density_greedy",
+        "top_k_retrieval"
+      ],
+      "data_source_kinds": [
+        "fixture"
+      ],
+      "evidence_status": "fixture_operational_only_available",
+      "task_family": "repo_change_review_microtask",
+      "v12_best_sufficiency_score": 1.0,
+      "v12_ties_or_exceeds_budget_baselines": true
+    }
+  },
+  "claim_status": "no_claim_upgrade",
+  "predeclared_matrix_satisfied": true,
+  "schema_version": "route7_benchmark_matrix_v1",
+  "scope": "non_fever_scoped_multibenchmark"
+}

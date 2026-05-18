@@ -1,0 +1,30 @@
+{
+  "baseline_comparability_blocked": true,
+  "blocked_by": [
+    "baseline_comparability",
+    "claim_boundary"
+  ],
+  "claim_boundary_blocked": true,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "effect_size_blocked": false,
+  "missing_deployable_baselines": [
+    "BM25_or_dense_retrieval_when_available",
+    "ablated_cost_aware_policy",
+    "prior_v12_diagnostic_policy_variant"
+  ],
+  "reason_codes": [
+    "non_fever_project_native_task_families_available",
+    "missing_required_deployable_baselines",
+    "project_native_fixture_operational_only_no_claim_upgrade",
+    "route4_5_6_dependencies_unsatisfied_for_claim_upgrade",
+    "no_scoped_multi_benchmark_selector_superiority"
+  ],
+  "route7_claim_allowed": false,
+  "schema_version": "iw_route7_effect_audit_v1",
+  "task_family_coverage_blocked": false,
+  "unavailable_or_blocked_cells": [
+    "FEVER",
+    "NaturalQuestionsOrSimilarQA",
+    "QasperOrLongContextQA"
+  ]
+}

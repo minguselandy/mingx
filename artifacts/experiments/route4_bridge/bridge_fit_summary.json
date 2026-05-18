@@ -1,0 +1,34 @@
+{
+  "bridge_fit": {
+    "c_hat_s": -13.281279943616248,
+    "fit_method": "original_instance_split_ols_through_origin",
+    "normalized_residual": 4.94420697228462,
+    "spearman_rho": -0.19331980454683617,
+    "zeta_hat_s": 0.9771675724390297
+  },
+  "calibration_run": true,
+  "claim_status": "no_claim_upgrade",
+  "effective_sample_size": 600,
+  "gate_pass_flags": {
+    "effective_sample_size_pass": true,
+    "heldout_fraction_pass": true,
+    "normalized_residual_pass": false,
+    "row_count_pass": true,
+    "sign_agreement_pass": false,
+    "spearman_rho_pass": false,
+    "unique_instance_pass": true
+  },
+  "gate_result": "failed_closed_gate_failed",
+  "heldout_fraction": 0.3,
+  "heldout_rows": 180,
+  "metric_claim_level": "failed_closed_no_claim_upgrade",
+  "reason_codes": [
+    "normalized_residual_failed",
+    "sign_agreement_failed",
+    "spearman_rho_failed"
+  ],
+  "rows_validated": 600,
+  "sign_agreement": 0.16111111111111112,
+  "train_rows": 420,
+  "unique_original_instances": 150
+}

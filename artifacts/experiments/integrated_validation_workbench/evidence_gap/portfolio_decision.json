@@ -1,0 +1,26 @@
+{
+  "allowed_decisions": [
+    "GO_ALPHA_MEASUREMENT_FIRST",
+    "GO_BETA_HYBRID_LABEL_MODEL",
+    "GO_GAMMA_ALTERNATIVE_PROGRESS",
+    "GO_DIRECT_BRIDGE_SCALEUP",
+    "GO_PAPER_NEGATIVE",
+    "INSUFFICIENT_ARTIFACTS"
+  ],
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "decision": "GO_BETA_HYBRID_LABEL_MODEL",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement validation",
+    "metric bridge support",
+    "selector superiority",
+    "paper evidence"
+  ],
+  "no_live_api_calls": true,
+  "no_new_labels": true,
+  "rationale": "Route6B model-adjudicated labels have variance, but accepted evidence still requires independent review or human validation before any claim upgrade.",
+  "route5_locked": true,
+  "route8_locked": true,
+  "schema_version": "iw_portfolio_decision_v1"
+}

@@ -1,0 +1,42 @@
+{
+  "challenge_checks": {
+    "duplicate_consistency_pass": false,
+    "invalid_rate_pass": false,
+    "order_reversal_stability_pass": true,
+    "prompt_sensitivity_pass": false,
+    "three_view_item_count_pass": false
+  },
+  "challenge_set_status": "failed",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "confidence_calibration": {
+    "scope": "model_self_consistency_only_not_human_calibration",
+    "stable_pair_mean_confidence": 0.8971698113207548,
+    "unstable_pair_mean_confidence": 0.7792682926829269,
+    "usable_pair_count": 200
+  },
+  "counts_as_human_labels": false,
+  "disagreement_buckets": {
+    "minority_veto": 40,
+    "no_disagreement": 559,
+    "non_veto_disagreement": 1
+  },
+  "duplicate_consistency": {
+    "count": 0,
+    "match_rate": null
+  },
+  "human_annotation_required": false,
+  "invalid_label_rate": 0.06125,
+  "minority_veto_count": 481,
+  "order_reversal_stability": {
+    "count": 200,
+    "match_rate": 0.795
+  },
+  "prompt_sensitivity": {
+    "count": 0,
+    "match_rate": null
+  },
+  "raw_api_responses_stored": false,
+  "schema_version": "delta_judge_reliability_bias_audit_v1",
+  "status": "FAILED_CLOSED_JUDGE_RELIABILITY",
+  "three_view_item_count": 0
+}

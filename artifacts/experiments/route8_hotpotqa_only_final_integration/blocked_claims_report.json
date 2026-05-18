@@ -1,0 +1,29 @@
+{
+  "artifact_type": "Route8BlockedClaimsReport",
+  "blocked_claims": [
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement_validation",
+    "metric_bridge_support",
+    "paper_grade_evidence",
+    "scoped_multi_benchmark_selector_superiority",
+    "global_selector_superiority",
+    "deployed_V_information_verification"
+  ],
+  "claim_status": "no_claim_upgrade",
+  "missing_resources_or_gates": [
+    "accepted Route4 bridge candidate or calibrated proxy evidence",
+    "human or hybrid measurement labels with agreement metrics",
+    "Route5 fixed-model proxy stability diagnostics after start gate satisfaction",
+    "independent review accepting any candidate claim upgrade"
+  ],
+  "next_unlocks": [
+    "collect a larger accepted HotpotQA external sufficiency label set",
+    "produce at least 500 non-circular bridge rows over at least 150 original instances",
+    "pass Route4 bridge gates and independent bridge review",
+    "run Route5 fixed-model proxy verification only after Route4-compatible evidence exists",
+    "use HotpotQA-first selector comparison only as operational evidence until bridge and review gates pass"
+  ],
+  "schema_version": "route8_blocked_claims_report_v1",
+  "scope": "hotpotqa_only"
+}

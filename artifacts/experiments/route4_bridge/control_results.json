@@ -1,0 +1,32 @@
+{
+  "length_only_baseline": {
+    "pearson": -0.9330001867824329,
+    "sign_agreement": 0.5866666666666667,
+    "spearman": -0.9174874021255163
+  },
+  "packet_count_only_baseline": {
+    "pearson": null,
+    "sign_agreement": 0.5866666666666667,
+    "spearman": null
+  },
+  "random_score_baseline": {
+    "pearson": -0.01618151760243145,
+    "sign_agreement": 0.28,
+    "spearman": -0.026220166086524558
+  },
+  "shuffled_delta_logloss_within_stratum_split": {
+    "pearson": -0.054253926948227046,
+    "sign_agreement": 0.14333333333333334,
+    "spearman": -0.03468233210652952
+  },
+  "utility_shuffled_control": {
+    "pearson": -0.054253926948227046,
+    "sign_agreement": 0.14333333333333334,
+    "spearman": -0.03468233210652952
+  },
+  "wrong_instance_join": {
+    "pearson": 0.045233101772795055,
+    "sign_agreement": 0.13666666666666666,
+    "spearman": -0.04924686097039902
+  }
+}

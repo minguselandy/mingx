@@ -1,0 +1,23 @@
+{
+  "artifact_type": "Route5FixedModelLoglossProxyReadinessReport",
+  "calibrated_proxy_supported": false,
+  "claim_status": "no_claim_upgrade",
+  "dependency_gate_report_path": "artifacts/experiments/route5_hotpotqa_fixed_model_logloss_proxy/dependency_gate_report.json",
+  "fixed_model_logloss_proxy_verification_started": false,
+  "live_api_used": false,
+  "measurement_validation": false,
+  "metric_bridge_support": false,
+  "paper_evidence": false,
+  "reason_codes": [
+    "no_accepted_route4_candidate_bridge_evidence",
+    "route4b_failed_closed_underpowered",
+    "route5_live_api_not_used_start_condition_failed"
+  ],
+  "schema_version": "route5_fixed_model_logloss_proxy_readiness_v1",
+  "scope": "hotpotqa_only",
+  "start_condition_satisfied": false,
+  "status": "blocked_hotpotqa_route4b_candidate_bridge_required",
+  "true_deployed_vinformation_verification": false,
+  "vinfo_proxy_supported": false,
+  "vinfo_proxy_supported_candidate": false
+}

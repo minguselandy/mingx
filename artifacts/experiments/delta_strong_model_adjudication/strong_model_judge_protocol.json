@@ -1,0 +1,64 @@
+{
+  "allowed_candidate_wording": [
+    "model_adjudicated_measurement_candidate",
+    "strong_model_adjudicated_sufficiency_evidence",
+    "model_adjudicated_bridge_candidate_pending_review"
+  ],
+  "challenge_set_controls": {
+    "alternate_prompt_required": true,
+    "duplicate_consistency_required": true,
+    "order_reversal_required": true,
+    "raw_response_storage_allowed": false
+  },
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "confidence_calibration": {
+    "confidence_source": "normalized_uncertainty_enum",
+    "high": 0.9,
+    "low": 0.45,
+    "medium": 0.7,
+    "validation_scope": "model_self_consistency_only_not_human_calibration"
+  },
+  "denied_claims": [
+    "human measurement validation",
+    "human-validated evidence",
+    "measurement validation",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper evidence",
+    "metric bridge support",
+    "selector superiority",
+    "global selector superiority",
+    "deployed V-information verification"
+  ],
+  "evaluator_ids": [
+    "dashscope::qwen3.6-plus"
+  ],
+  "human_annotation_required": false,
+  "judge_model_ids": [
+    "qwen3.6-plus"
+  ],
+  "label_schema_version": "delta_strong_model_sufficiency_label_v1",
+  "no_raw_response_policy": {
+    "forbidden_fields": [
+      "api_key",
+      "choices",
+      "messages",
+      "raw_api_response",
+      "raw_response",
+      "request_body",
+      "response_body",
+      "secret"
+    ],
+    "raw_api_responses_stored": false
+  },
+  "normalization_version": "delta_strong_model_label_normalization_v1",
+  "prompt_versions": {
+    "alternate_prompt": "delta_strong_model_alternate_prompt_v1",
+    "duplicate": "delta_strong_model_duplicate_consistency_prompt_v1",
+    "order_reversal": "delta_strong_model_order_reversal_prompt_v1",
+    "primary": "delta_strong_model_sufficiency_prompt_v1"
+  },
+  "protocol_version": "delta_strong_model_judge_protocol_v1",
+  "rubric_version": "delta_strong_model_sufficiency_rubric_v1",
+  "schema_version": "delta_strong_model_judge_protocol_freeze_v1"
+}

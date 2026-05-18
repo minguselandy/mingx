@@ -1,0 +1,23 @@
+{
+  "active_stratum": "route4_hotpotqa_sufficiency_grounded_bridge_v1",
+  "block_size": 1,
+  "budget": 512,
+  "claim_status": "no_claim_upgrade",
+  "dataset": "HotpotQA",
+  "delta_logloss_source": "existing_approved_hotpotqa_answer_nll_delta_record",
+  "heldout_fraction": 0.3,
+  "materialization_policy": "fixed_selector_order_with_source_boundaries",
+  "min_pilot_rows": 500,
+  "min_unique_instances": 150,
+  "phase": "route4a_hotpotqa_sufficiency_pilot",
+  "protocol_id": "route4a_hotpotqa_sufficiency_answer_nll_v1",
+  "replicate_count_policy": "single_replicate_existing_approved_delta_record",
+  "route_id": "route4_metric_bridge_redesign",
+  "split": "dev_distractor",
+  "split_id": "route4_original_instance_hash_70_30_v1",
+  "target_representation": "hotpotqa_canonical_answer_string",
+  "task_family": "hotpotqa_answer_support_sufficiency_bridge",
+  "utility_definition": "route4_hotpotqa_sufficiency_coverage_v1",
+  "utility_source": "hotpotqa_gold_support_packets_and_source_doc_ids",
+  "utility_target_id": "hotpotqa_answer_support_sufficiency"
+}

@@ -1,0 +1,22 @@
+{
+  "accepted_model_adjudicated_count": 300,
+  "artifact_type": "Route6BMeasurementScaleupReadinessReport",
+  "claim_status": "no_claim_upgrade",
+  "context_pair_sample_count": 300,
+  "counts_as_human_labels": false,
+  "human_annotation_status": "blocked_human_annotation_required",
+  "human_human_kappa_present": false,
+  "human_labels_present": false,
+  "live_api_used": true,
+  "measurement_validation_candidate_allowed": false,
+  "minimum_accepted_labels": 150,
+  "normalized_label_count": 300,
+  "phase_id": "route6b_measurement_scaleup",
+  "raw_api_responses_stored": false,
+  "reason_codes": [],
+  "route6a_compatibility_status": "model_adjudication_completed",
+  "route_id": "route6b_measurement_scaleup",
+  "schema_version": "route6b_measurement_scaleup_readiness_v1",
+  "status": "measurement_candidate_ready",
+  "target_model_adjudicated_pairs": 300
+}

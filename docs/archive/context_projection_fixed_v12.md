@@ -477,7 +477,9 @@ We ran a Route 2 HotpotQA evidence package to test the replay and comparison lan
 
 Within that boundary, P56 produced 2,000 validated HotpotQA operational dispatch traces over budgets 512 and 1024. P66 compared the v12 cost-aware diagnostic policy against deployable baselines under matched candidate-pool and budget pairs. The v12 policy improved supporting-fact recall against `random_budget`, `topk_relevance_or_token_budget`, and `mmr_density_greedy` in all six paired operational comparisons. The oracle selector is reported only as a `non_deployable_upper_bound` and is not used as a deployable baseline.
 
-This evidence supports the following operational claim only: HotpotQA operational replay shows that the v12 diagnostic policy improves supporting-fact recall against deployable baselines under matched budgets. Because P63R bridge gates failed closed, this is `operational_utility_only`, not calibrated metric support.
+This evidence supports the following operational claim only: HotpotQA operational replay shows that the v12 diagnostic policy improves supporting-fact recall against deployable baselines under matched budgets. Because Route 2 and Route 3 bridge gates failed closed, this is `operational_utility_only`, not calibrated metric support.
+
+After Route 2, Route 3 tested whether a new support-grounded bridge protocol could repair the metric bridge. Route 3A failed closed below the predeclared minimum validated-row threshold, so calibration did not run. Route 3B prospectively revised sampling, reached calibration scale, and passed non-circularity checks, but the preregistered sign-agreement, Spearman, and normalized-residual gates failed closed. These Route 3 results are negative bridge-repair diagnostics only; they do not repair the Route 2 bridge and introduce no claim upgrade.
 
 | Selector | Budget | Mean supporting-fact recall | Mean gold support packets selected | Mean selected tokens | Quality per 1k tokens | Deployability |
 |---|---:|---:|---:|---:|---:|---|
@@ -1001,5 +1003,12 @@ Route 2 is included as an operational replay and negative-bridge evidence packag
 | P56 | operational dispatch traces | 2,000 / 2,000 HotpotQA traces validated | `operational_utility_only` | operational replay evidence only |
 | P66 | operational selector comparison | v12 wins 6 / 6 paired recall comparisons against deployable baselines | `operational_utility_only` | operational comparison only |
 | P67R | evidence package and claim ledger | claim ledger records no claim upgrade | `operational_utility_only; no_claim_upgrade` | audit and integration control |
+
+Subsequent Route 3 support-grounded bridge-repair attempts are also retained only as negative diagnostics:
+
+| Phase | Evidence type | Key result | Metric claim level | Paper use |
+|---|---|---|---|---|
+| Route 3A | support-grounded bridge protocol | `failed_closed_below_min_rows`; 600 attempted / 461 validated; calibration did not run | `no_claim_upgrade` | negative bridge-repair diagnostic only |
+| Route 3B | revised support-grounded bridge protocol | 792 attempted / 613 validated; non-circularity checks passed; `failed_closed_gate_failed` at calibration gates | `failed_closed_no_claim_upgrade` | negative bridge-repair diagnostic only |
 
 These results do not support `calibrated_proxy_supported`, `vinfo_proxy_supported`, measurement validation, paper evidence, P55 bridge support, P56 metric support, metric bridge support, global selector superiority, or deployed V-information verification.

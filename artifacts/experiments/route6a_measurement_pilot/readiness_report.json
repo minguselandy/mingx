@@ -1,0 +1,32 @@
+{
+  "allowed_claim": "model_adjudicated_candidate_evidence_only_if_labels_exist",
+  "approved_model_judge_available": true,
+  "candidate_pools_count": 200,
+  "claim_status": "no_claim_upgrade",
+  "context_pair_sample_count": 24,
+  "denied_claims": [
+    "measurement validation",
+    "human-label validation",
+    "human-human kappa",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper evidence",
+    "metric bridge support",
+    "global selector superiority",
+    "deployed V-information verification"
+  ],
+  "human_annotation_status": "blocked_human_annotation_required",
+  "human_human_kappa_present": false,
+  "human_labels_present": false,
+  "live_api_used": true,
+  "measurement_validation_candidate_allowed": false,
+  "model_adjudication_counts_as_human_label": false,
+  "phase_id": "route6a_external_sufficiency_measurement_pilot",
+  "raw_api_responses_stored": false,
+  "reason_codes": [],
+  "route4_clean_rows_count": 600,
+  "route4_rows_available": true,
+  "route4_rows_count": 600,
+  "route_id": "route6a_external_sufficiency_measurement_pilot",
+  "status": "model_adjudication_completed"
+}

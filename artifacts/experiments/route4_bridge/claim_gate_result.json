@@ -1,0 +1,9 @@
+{
+  "calibrated_proxy_supported": false,
+  "claim_status": "no_claim_upgrade",
+  "gate_result": "failed_closed_gate_failed",
+  "measurement_validation": false,
+  "metric_bridge_support_candidate": false,
+  "paper_evidence": false,
+  "vinfo_proxy_supported": false
+}

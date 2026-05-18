@@ -1,0 +1,38 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "comparison_rows": [
+    {
+      "budget": 512,
+      "matched_budget": true,
+      "mean_model_adjudicated_sufficiency_utility": 0.147976,
+      "mean_selected_tokens": 509.1,
+      "selector_name": "bm25_topk",
+      "trace_count": 20
+    },
+    {
+      "budget": 512,
+      "matched_budget": true,
+      "mean_model_adjudicated_sufficiency_utility": 0.155119,
+      "mean_selected_tokens": 508.65,
+      "selector_name": "mmr_density_greedy",
+      "trace_count": 20
+    },
+    {
+      "budget": 512,
+      "matched_budget": true,
+      "mean_model_adjudicated_sufficiency_utility": 0.165119,
+      "mean_selected_tokens": 509.2,
+      "selector_name": "v12_diagnostic_policy",
+      "trace_count": 20
+    }
+  ],
+  "global_selector_superiority_claimed": false,
+  "matched_budget_comparison_available": true,
+  "metric_scope": "model_adjudicated_operational_sufficiency_utility",
+  "route7_claim_allowed": false,
+  "schema_version": "delta_route7_model_adjudicated_selector_comparison_v1",
+  "scoped_selector_superiority_claimed": false,
+  "selector_superiority_claimed": false,
+  "status": "completed_model_adjudicated_operational_selector_comparison",
+  "top_selector_by_model_adjudicated_metric": "v12_diagnostic_policy"
+}

@@ -1,0 +1,24 @@
+{
+  "artifact_type": "Route7ScopedSelectorSuperiorityReadinessReport",
+  "available_benchmark_count": 1,
+  "claim_status": "no_claim_upgrade",
+  "global_selector_superiority": false,
+  "hotpotqa_first_selector_comparison_available": true,
+  "missing_deployable_baselines": [
+    "BM25_or_dense_retrieval_when_available",
+    "ablated_cost_aware_policy",
+    "prior_v12_diagnostic_policy_variant"
+  ],
+  "operational_hotpotqa_result_preserved": true,
+  "paper_evidence": false,
+  "reason_codes": [
+    "hotpotqa_operational_comparison_available",
+    "route4_5_6_dependencies_unsatisfied_for_claim_upgrade",
+    "hotpotqa_first_comparison_operational_only_no_claim_upgrade"
+  ],
+  "route7_claim_allowed": false,
+  "schema_version": "route7_scoped_selector_superiority_readiness_v1",
+  "scope": "hotpotqa_only",
+  "scoped_multi_benchmark_selector_superiority": false,
+  "status": "hotpotqa_first_operational_comparison_available_no_claim_upgrade"
+}

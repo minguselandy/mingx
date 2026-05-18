@@ -1,0 +1,22 @@
+{
+  "approved_scoring_backend_found": true,
+  "claim_status": "no_claim_upgrade",
+  "credential_base_url_configured": true,
+  "credential_config_detected": true,
+  "deterministic_scoring_settings": {
+    "decoding_policy": "deterministic_logprob_scoring_v1",
+    "enable_thinking": false,
+    "temperature": 0.0,
+    "top_logprobs": 0,
+    "top_p": 1.0
+  },
+  "evaluator_id": "approved_live_api_logprob_endpoint::dashscope::qwen3.6-flash::deterministic_logprob_scoring_v1",
+  "expected_target_representation": "hotpotqa_canonical_answer_string",
+  "fail_closed_behavior": "blocked_evaluator_unavailable_if_existing_approved_delta_records_absent_or_logprobs_unsupported",
+  "model_name": "qwen3.6-flash",
+  "no_raw_api_dump_policy": true,
+  "phase": "Route4-evaluator-readiness",
+  "provider": "dashscope",
+  "scoring_source": "existing_approved_hotpotqa_delta_records",
+  "token_logprobs_available": true
+}

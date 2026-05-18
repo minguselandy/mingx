@@ -1,0 +1,12 @@
+{
+  "accepted_evidence_packages": [],
+  "artifact_type": "Route8IntegrationGateReport",
+  "claim_ledger_update_allowed": false,
+  "claim_ledger_update_attempted": false,
+  "claim_status": "no_claim_upgrade",
+  "integration_allowed": false,
+  "manuscript_update_allowed": false,
+  "manuscript_update_attempted": false,
+  "review_required_before_claim_upgrade": true,
+  "schema_version": "route8_integration_gate_report_v1"
+}

@@ -1,0 +1,17 @@
+{
+  "affine_transform_detected": false,
+  "delta_utility_distribution": {
+    "0": 308,
+    "0.2": 3,
+    "0.25": 23,
+    "0.333333333333": 60,
+    "0.5": 219
+  },
+  "exact_equality_detected": false,
+  "fraction_delta_utility_equals_delta_logloss": 0.0,
+  "pearson_delta_utility_delta_logloss": 0.03939735040603246,
+  "rank_identity_detected": false,
+  "rounded_equality_detected": false,
+  "spearman_delta_utility_delta_logloss": -0.050786365122208375,
+  "utility_source_verified": true
+}

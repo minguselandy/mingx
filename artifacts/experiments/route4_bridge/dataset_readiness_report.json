@@ -1,0 +1,43 @@
+{
+  "available_strata": [
+    "HotpotQA"
+  ],
+  "blocked_strata": {
+    "FEVER": {
+      "blocker": "blocked_dataset_incomplete",
+      "candidate_pool_count": 0,
+      "delta_record_count": 0,
+      "missing_inputs": [
+        "fever_candidate_pools",
+        "fever_p55_delta_records"
+      ]
+    }
+  },
+  "claim_status": "no_claim_upgrade",
+  "phase": "Route4-dataset-readiness",
+  "strata": {
+    "FEVER": {
+      "can_support_future_confirmatory_rows": false,
+      "can_support_pilot_rows": false,
+      "candidate_pool_count": 0,
+      "delta_record_count": 0,
+      "source_paths": {
+        "candidate_pools": "artifacts/benchmarks/fever_candidate_pools.jsonl",
+        "delta_records": "artifacts/benchmarks/fever_p55_delta_records.jsonl"
+      }
+    },
+    "HotpotQA": {
+      "can_support_future_confirmatory_rows": true,
+      "can_support_pilot_rows": true,
+      "candidate_pool_count": 200,
+      "candidate_pool_hashes_present": 200,
+      "delta_record_count": 600,
+      "gold_evidence_coverage_count": 200,
+      "missing_gold_or_evidence_coverage": 0,
+      "source_paths": {
+        "candidate_pools": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+        "delta_records": "artifacts/benchmarks/hotpotqa_p55_delta_records.jsonl"
+      }
+    }
+  }
+}

@@ -68,6 +68,7 @@ explicitly mark legacy vocabulary as compatibility or archive state.
 | one-stratum metric bridge calibration | `cps/experiments/bridge_calibration.py`, `configs/runs/bridge-calibration-one-stratum.json`, `docs/experiments/bridge-calibration-one-stratum.md`, `docs/experiments/P45-bridge-calibration-closure.md` | P45 lane implemented and operator/API-ready; current `bio_attribute` stratum failed to establish the bridge, so no `calibrated_proxy_supported` claim is allowed |
 | Phase B replay | `cps/experiments/phase_b_replay.py`, `cps/experiments/replay_evidence_package.py`, `docs/protocols/phase-b-replay-protocol.md` | P48 hardened replay status vs metric-claim separation, dispatch identity checks, v12 report outputs, and fail-closed fixture/synthetic boundaries |
 | Route 2 HotpotQA operational replay/comparison | `docs/experiments/P67R-route2-operational-evidence-package.md`, `artifacts/experiments/route2_operational_evidence_package/`, `artifacts/operator_inputs/p56_realistic_dispatch_traces.jsonl`, `artifacts/experiments/p56_hotpotqa_operational_comparison/` | P63R bridge attempts failed closed or were positive-control only; P56/P66 were accepted as HotpotQA operational replay/comparison evidence under `operational_utility_only`; no metric bridge support claim is allowed |
+| Route 3 HotpotQA support-grounded bridge diagnostics | `docs/experiments/Route3A-support-grounded-bridge.md`, `docs/experiments/Route3B-support-grounded-bridge-revision.md`, `artifacts/benchmarks/route3a_hotpotqa_support_grounded_generation_report.json`, `artifacts/benchmarks/route3b_hotpotqa_support_grounded_generation_report.json`, `artifacts/experiments/route3b_support_grounded_bridge_calibration/` | Route 3A failed closed below the minimum validated-row gate; Route 3B reached calibration scale but failed preregistered gates; no claim upgrade |
 | model-adjudicated evidence | `cps/experiments/route_b_evidence_package.py`, `cps/experiments/model_adjudicated_labels.py`, `cps/experiments/realistic_tasks.py`, `docs/experiments/realistic-task-model-adjudicated-v12.md`, `artifacts/experiments/realistic_task_model_adjudicated_v12/` | P47 added an offline fixture realistic-task benchmark; model-adjudicated proxy evidence only, not human labels or kappa |
 | extraction audit | `cps/experiments/extraction_audit.py`, `docs/experiments/extraction-audit-pilot-v12.md`, `artifacts/experiments/extraction_audit_pilot_v12/` | P49 added a deterministic fixture extraction audit pilot for the M-star to M boundary; fixture audit only, not paper evidence |
 | optional re-projection witness | `cps/experiments/reprojection_witness.py`, `docs/experiments/reprojection-witness-pilot-v12.md`, `artifacts/experiments/reprojection_witness_pilot_v12/` | P50 added a deterministic fixture ReprojectionWitness scaffold; operational audit only, not paper evidence |
@@ -113,8 +114,8 @@ The paper-facing claim is deliberately limited:
 ```text
 HotpotQA operational replay shows that the v12 diagnostic policy improves
 supporting-fact recall against deployable baselines under matched budgets.
-Because P63R bridge gates failed closed, this is operational_utility_only, not
-calibrated metric support.
+Because Route 2 and Route 3 bridge gates failed closed, this is
+operational_utility_only, not calibrated metric support.
 ```
 
 The original P63R HotpotQA bridge and the non-circular FixB bridge failed
@@ -125,6 +126,28 @@ The `gold_support_oracle_upper_bound` selector is reported only as
 `non_deployable_upper_bound`.
 
 Route 2 does not authorize `calibrated_proxy_supported`,
+`vinfo_proxy_supported`, measurement validation, paper evidence, P55 bridge
+support, P56 metric support, metric bridge support, global selector superiority,
+or deployed V-information verification.
+
+## Route 3 Support-grounded Bridge Diagnostics
+
+Route 3 is a separate metric-bridge repair line informed by the Route 2
+negative results. It is not a P63R-compatible repair and does not reinterpret
+Route 2 as bridge support.
+
+Route 3A tested a support-grounded utility bridge and failed closed below the
+predeclared minimum validated-row threshold: 600 rows were attempted, 461
+validated, calibration did not run, and `operator_rows_written` remained false.
+
+Route 3B prospectively revised the sampling protocol to all eligible HotpotQA
+instances. It reached calibration scale with 792 attempted rows, 613 validated
+rows, and 197 unique original instances. Non-circularity checks passed, but
+calibration failed the preregistered sign-agreement, Spearman, and normalized
+residual gates. Its metric claim level is `failed_closed_no_claim_upgrade`.
+
+Route 3 therefore reinforces the paper boundary: the HotpotQA replay/comparison
+result remains operational-only. It does not authorize `calibrated_proxy_supported`,
 `vinfo_proxy_supported`, measurement validation, paper evidence, P55 bridge
 support, P56 metric support, metric bridge support, global selector superiority,
 or deployed V-information verification.

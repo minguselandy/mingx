@@ -1,0 +1,24 @@
+{
+  "artifact_type": "Route5DependencyGateReport",
+  "blocked_before_live_api": true,
+  "claim_status": "no_claim_upgrade",
+  "route4b": {
+    "accepted_candidate_bridge_evidence": false,
+    "claim_gate_path": "artifacts/experiments/route4b_bridge_to_measurement/claim_gate_result.json",
+    "gate_result": "failed_closed_underpowered",
+    "metric_bridge_support_candidate": false,
+    "reason_codes": [
+      "row_count_below_minimum",
+      "unique_instance_below_minimum",
+      "effective_sample_size_below_minimum",
+      "model_adjudication_not_human_measurement_validation"
+    ],
+    "witness_path": "artifacts/experiments/route4b_bridge_to_measurement/metric_bridge_witness.json"
+  },
+  "route4c_disabled": true,
+  "route5_live_api_allowed": false,
+  "schema_version": "route5_dependency_gate_report_v1",
+  "scope": "hotpotqa_only",
+  "start_condition": "HotpotQA Route 4B yields accepted candidate bridge evidence",
+  "start_condition_satisfied": false
+}

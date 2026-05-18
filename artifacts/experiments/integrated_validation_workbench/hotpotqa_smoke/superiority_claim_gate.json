@@ -1,0 +1,12 @@
+{
+  "claim_mode": "shadow",
+  "global_selector_superiority": false,
+  "reason_codes": [
+    "superiority_shadow_mode",
+    "no_independent_review_acceptance",
+    "no_claim_upgrade"
+  ],
+  "scoped_operational_improvement": true,
+  "selector_superiority_claimed": false,
+  "shadow_selector_superiority": true
+}

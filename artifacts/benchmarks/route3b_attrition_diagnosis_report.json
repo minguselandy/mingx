@@ -1,0 +1,136 @@
+{
+  "candidate_pool_revision_capacity": {
+    "eligible_instances": 198,
+    "expected_validated_rows_if_route3a_role_rates_repeat": 608.52,
+    "predeclared_possible_rows": 792,
+    "route3b_planned_by_role": {
+      "non_support_target_distractor_A": 198,
+      "non_support_target_gold_A": 198,
+      "support_target_distractor_A": 198,
+      "support_target_gold_A": 198
+    },
+    "route3b_planned_by_target": {
+      "NON_SUPPORTING": 396,
+      "SUPPORTING": 396
+    },
+    "route3b_planned_rows": 792,
+    "route3b_unique_original_instances": 198,
+    "supports_minimum_500_validated_rows_without_changing_utility_semantics": true
+  },
+  "claim_status": "no_claim_upgrade",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement validation",
+    "paper evidence",
+    "metric bridge support",
+    "P55 bridge support",
+    "P56 metric support",
+    "global selector superiority",
+    "deployed V-information verification"
+  ],
+  "diagnosed_primary_attrition_cause": "live_logprob_evaluator_emitted_opposite_label_and_row_failed_closed",
+  "phase": "Route3B-Attrition-Diagnosis",
+  "revision_decision": {
+    "circularity_or_leakage_introduced": false,
+    "evaluator_contract_changed": false,
+    "post_hoc_filtering_required": false,
+    "recommended_sampling_revision": "attempt_all_198_eligible_instances_for_792_predeclared_rows",
+    "safe_revision_supported": true,
+    "utility_semantics_changed": false
+  },
+  "route3a_planned_vs_validated": {
+    "attrition_by_role": {
+      "non_support_target_distractor_A": 10,
+      "non_support_target_gold_A": 10,
+      "support_target_distractor_A": 60,
+      "support_target_gold_A": 59
+    },
+    "attrition_by_target": {
+      "NON_SUPPORTING": 20,
+      "SUPPORTING": 119
+    },
+    "planned_by_role": {
+      "non_support_target_distractor_A": 150,
+      "non_support_target_gold_A": 150,
+      "support_target_distractor_A": 150,
+      "support_target_gold_A": 150
+    },
+    "planned_by_target": {
+      "NON_SUPPORTING": 300,
+      "SUPPORTING": 300
+    },
+    "role_validation_rates": {
+      "non_support_target_distractor_A": {
+        "attempted": 150,
+        "attrition": 10,
+        "attrition_rate": 0.066666666667,
+        "validated": 140,
+        "validation_rate": 0.933333333333
+      },
+      "non_support_target_gold_A": {
+        "attempted": 150,
+        "attrition": 10,
+        "attrition_rate": 0.066666666667,
+        "validated": 140,
+        "validation_rate": 0.933333333333
+      },
+      "support_target_distractor_A": {
+        "attempted": 150,
+        "attrition": 60,
+        "attrition_rate": 0.4,
+        "validated": 90,
+        "validation_rate": 0.6
+      },
+      "support_target_gold_A": {
+        "attempted": 150,
+        "attrition": 59,
+        "attrition_rate": 0.393333333333,
+        "validated": 91,
+        "validation_rate": 0.606666666667
+      }
+    },
+    "validated_by_role": {
+      "non_support_target_distractor_A": 140,
+      "non_support_target_gold_A": 140,
+      "support_target_distractor_A": 90,
+      "support_target_gold_A": 91
+    },
+    "validated_by_target": {
+      "NON_SUPPORTING": 280,
+      "SUPPORTING": 181
+    }
+  },
+  "route3a_result": {
+    "attrition_count": 139,
+    "calibration_run": false,
+    "operator_rows_written": false,
+    "records_attempted": 600,
+    "records_validated": 461,
+    "status": "failed_closed_below_min_rows",
+    "unique_original_instances": 150
+  },
+  "route3b_framing": "new_bridge_protocol_revision_not_p63r_repair",
+  "schema_version": "route3b_attrition_diagnosis_v1",
+  "source_artifacts": {
+    "candidate_pools": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+    "pool_achievability_report": "artifacts/experiments/route3_preflight/pool_achievability_report.json",
+    "route3a_delta_records": "artifacts/benchmarks/route3a_hotpotqa_support_grounded_delta_records.jsonl",
+    "route3a_generation_report": "artifacts/benchmarks/route3a_hotpotqa_support_grounded_generation_report.json"
+  },
+  "stop_continue_assessment": {
+    "candidate_pools_can_support_500_validated_rows_under_predeclared_revision": true,
+    "required_source_artifacts_missing": false,
+    "route3b_may_proceed_to_preregistration": true,
+    "validation_attrition_cause_diagnosed": true
+  },
+  "validation_failure_categories": {
+    "budget_infeasibility_errors": 0,
+    "candidate_pool_hash_or_packet_reference_errors": 0,
+    "duplicate_row_identity_errors": 0,
+    "empty_context_or_block_errors": 0,
+    "live_logprob_label_mismatch_value_error": 139,
+    "missing_utility_label_errors": 0,
+    "schema_validation_errors": 0
+  }
+}

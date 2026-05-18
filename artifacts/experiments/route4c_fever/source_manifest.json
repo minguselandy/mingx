@@ -1,0 +1,34 @@
+{
+  "artifact_type": "Route4CFeverSourceManifest",
+  "blocked_report_path": "artifacts/experiments/route4c_fever/blocked_report.json",
+  "claim_status": "no_claim_upgrade",
+  "dataset": "FEVER",
+  "evidence_sentence_provenance_verified": false,
+  "fever_claims_jsonl_configured": false,
+  "fever_claims_jsonl_path": null,
+  "official_fever_evidence_source_restored": false,
+  "prior_blocked_reports": {
+    "p61r": {
+      "exists": true,
+      "path": "artifacts/benchmarks/p61r_blocked_data_report.json",
+      "reason_codes": [
+        "missing_claims_file",
+        "no_candidate_pools_generated"
+      ],
+      "status": "blocked_data_unavailable"
+    },
+    "p62r": {
+      "exists": true,
+      "path": "artifacts/benchmarks/p62r_bridge_row_blocked_report.json",
+      "reason_codes": [
+        "missing_candidate_pools",
+        "missing_evaluator_delta_records",
+        "no_rows_generated"
+      ],
+      "status": "blocked_no_candidate_pools_or_evaluator"
+    }
+  },
+  "raw_dataset_mirror_committed": false,
+  "schema_version": "route4c_fever_source_manifest_v1",
+  "source_status": "missing_complete_fever_evidence_source"
+}

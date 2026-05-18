@@ -1,0 +1,34 @@
+{
+  "active_stratum": "route4b_hotpotqa_external_sufficiency_bridge_v1",
+  "bridge_fit": {
+    "c_hat_s": -21.055480429235438,
+    "normalized_residual": 0.9943939943352396,
+    "sign_agreement": 0.38,
+    "spearman_rho": 0.2315837581304158
+  },
+  "calibrated_proxy_supported": false,
+  "calibration_run": false,
+  "claim_status": "no_claim_upgrade",
+  "effective_sample_size": 300,
+  "gate_pass_flags": {
+    "effective_sample_size_pass": true,
+    "normalized_residual_pass": false,
+    "row_count_pass": false,
+    "sign_agreement_pass": false,
+    "spearman_rho_pass": false,
+    "unique_instance_pass": true
+  },
+  "gate_result": "failed_closed_underpowered",
+  "measurement_validation": false,
+  "metric_bridge_support_candidate": false,
+  "metric_claim_level": "failed_closed_no_claim_upgrade",
+  "paper_evidence": false,
+  "phase_id": "route4b_bridge_to_external_sufficiency",
+  "reason_codes": [
+    "row_count_below_minimum",
+    "model_adjudication_not_human_measurement_validation"
+  ],
+  "rows_validated": 300,
+  "unique_original_instances": 150,
+  "vinfo_proxy_supported": false
+}

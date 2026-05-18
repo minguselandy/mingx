@@ -1,0 +1,10 @@
+{
+  "heldout_fraction_by_original_instance": 0.3,
+  "heldout_original_instances": 45,
+  "heldout_rows": 180,
+  "split_id": "route4_original_instance_hash_70_30_v1",
+  "split_unit": "original_instance_id",
+  "train_original_instances": 105,
+  "train_rows": 420,
+  "unique_original_instances": 150
+}

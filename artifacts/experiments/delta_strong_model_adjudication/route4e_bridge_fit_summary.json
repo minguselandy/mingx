@@ -1,0 +1,42 @@
+{
+  "bridge_fit": {
+    "c_hat_s": -18.283921393339867,
+    "normalized_residual": 0.9954248641225202,
+    "sign_agreement": 0.42038216560509556,
+    "spearman_rho": 0.23651889662171885
+  },
+  "calibrated_proxy_supported": false,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "evidence_class": "shadow",
+  "gate_pass_flags": {
+    "normalized_residual_pass": false,
+    "row_count_pass": true,
+    "sign_agreement_pass": false,
+    "spearman_rho_pass": false,
+    "unique_instance_pass": true
+  },
+  "gate_result": "failed_closed_gate_failed",
+  "measurement_validation": false,
+  "metric_bridge_support": false,
+  "metric_bridge_support_candidate_pending_review": false,
+  "metric_claim_level": "operational_utility_only",
+  "model_adjudicated_bridge_candidate_pending_review": false,
+  "non_circularity_checks": {
+    "labels_include_delta_logloss": false,
+    "model_utility_derived_from_normalized_labels": true,
+    "raw_response_used_in_bridge": false
+  },
+  "paper_evidence": false,
+  "reason_codes": [
+    "normalized_residual_failed",
+    "sign_agreement_failed",
+    "spearman_rho_failed"
+  ],
+  "route4e_min_rows": 500,
+  "route4e_min_unique_instances": 150,
+  "rows_validated": 800,
+  "schema_version": "delta_route4e_bridge_fit_summary_v1",
+  "status": "FAILED_CLOSED_BRIDGE_GATES",
+  "unique_original_instances": 150,
+  "vinfo_proxy_supported": false
+}

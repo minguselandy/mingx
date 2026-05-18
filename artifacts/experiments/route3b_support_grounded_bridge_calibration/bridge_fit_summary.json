@@ -1,0 +1,33 @@
+{
+  "bridge_fit": {
+    "c_hat_s": 0.2140601175057874,
+    "fit_method": "original_instance_split_ols_through_origin",
+    "normalized_residual": 2.840392190009722,
+    "spearman_rho": -0.16279814315901273,
+    "zeta_hat_s": 0.6348966917772629
+  },
+  "claim_status": "no_claim_upgrade",
+  "effective_sample_size": 613,
+  "gate_pass_flags": {
+    "effective_sample_size_pass": true,
+    "heldout_fraction_pass": true,
+    "normalized_residual_pass": false,
+    "row_count_pass": true,
+    "sign_agreement_pass": false,
+    "spearman_rho_pass": false,
+    "unique_instance_pass": true
+  },
+  "gate_result": "failed_closed_gate_failed",
+  "heldout_fraction": 0.30456852791878175,
+  "heldout_rows": 192,
+  "metric_claim_level": "failed_closed_no_claim_upgrade",
+  "reason_codes": [
+    "normalized_residual_failed",
+    "sign_agreement_failed",
+    "spearman_rho_failed"
+  ],
+  "rows_validated": 613,
+  "sign_agreement": 0.11979166666666667,
+  "train_rows": 421,
+  "unique_original_instances": 197
+}

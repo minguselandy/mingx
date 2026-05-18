@@ -1,0 +1,10 @@
+{
+  "active_stratum": "route4_hotpotqa_sufficiency_grounded_bridge_v1",
+  "claim_status": "no_claim_upgrade",
+  "dataset": "HotpotQA",
+  "gate_result": "failed_closed_gate_failed",
+  "metric_claim_level": "failed_closed_no_claim_upgrade",
+  "phase": "route4a_hotpotqa_sufficiency_pilot",
+  "protocol_id": "route4a_hotpotqa_sufficiency_answer_nll_v1",
+  "task_family": "hotpotqa_answer_support_sufficiency_bridge"
+}

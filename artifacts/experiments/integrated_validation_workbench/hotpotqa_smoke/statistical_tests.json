@@ -1,0 +1,22 @@
+{
+  "v12_diagnostic_policy::vs::bm25_topk::budget_512": {
+    "baseline_selector": "bm25_topk",
+    "claim_mode": "shadow",
+    "matched_pairs": 20,
+    "mean_baseline": 0.863333,
+    "mean_delta": 0.075,
+    "mean_target": 0.938333,
+    "primary_metric": "supporting_fact_recall_at_budget",
+    "target_selector": "v12_diagnostic_policy"
+  },
+  "v12_diagnostic_policy::vs::mmr_density_greedy::budget_512": {
+    "baseline_selector": "mmr_density_greedy",
+    "claim_mode": "shadow",
+    "matched_pairs": 20,
+    "mean_baseline": 0.871667,
+    "mean_delta": 0.066667,
+    "mean_target": 0.938333,
+    "primary_metric": "supporting_fact_recall_at_budget",
+    "target_selector": "v12_diagnostic_policy"
+  }
+}

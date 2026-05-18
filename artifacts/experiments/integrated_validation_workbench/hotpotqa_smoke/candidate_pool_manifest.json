@@ -1,0 +1,38 @@
+{
+  "candidate_pool_hashes": [
+    "2aef785253bc391c87eb85587541c5110f6e099374ea170a1aa3e9b807174c56",
+    "32b35b670d941e827f3fdc148394ed1e0f623bff47044b690d9867870c8522f2",
+    "5b387aedc693772d9fe02a7aad3dcc08228e022b77d4e72eb91b17d87d46c838",
+    "651c89c0d901fc978d74f786fd2498d25386802213325d4b5514bab8e9c277ea",
+    "6dacea3c9a613bdb6a89a7b56573612d63737dded0534d1bdfe7ab9cc6f8556e",
+    "7368e5db3d68a11b9fee52b8d539f48bc30b15e6462927058907c668f4879c15",
+    "73d0d049db31d36b18f5ab4a5faad3b72cdb1d959675540594e2ed68369c8e39",
+    "7dfd1520c32bf6d5d84d9aeb3d951a1ad8c5055a3163d97587e0034439acdb67",
+    "7f09219d5f690baa16800051ee8c25be4dadc4c52f9bb8b4877b4de484cb1049",
+    "913e89345506a464d98379804e3d9cd7b98bfa663a515d425c263e704ccd1f75",
+    "936821c1e913d038190aa8333c0bcfc45b1c0a54da5707cde0ce1aa11ef4374f",
+    "a12f358de87d04b72f0c38ad2a01e07c436e9048641e82d7fcb0a70f5b7096b6",
+    "ad84a8850f2294ba47d2f21ff789937687284c63e80103ac4ff0eac1829a0487",
+    "af86c43eaee171707a552eaef3a27852f37b2c372c3deb472cbda850376a87a1",
+    "c28abb9d0dd4ca428ed1a8947ae7a0ce5b32d10fd1fec33e315b64d25ea85c6b",
+    "c37ccbccbcdcb546d26c358c4fa17dc5320cb9e496a69d5b6c6d25c50092f130",
+    "dc85ff6c7d5f9a2f8dfbb711c34dd5823770f687de05e3510fe3175eab2ba468",
+    "e60a9e3fe4aee52cab0f6c92cfe9c1b78e0d535b9367a9ea5760fa51ecb82df8",
+    "ed7ed184e6f007693cd8fd76c4a4febd68a3a243c5970f86b78db549f8ff0768",
+    "f6b4d1d60c6c3b5d9aaf7c55e3af4473797524c5923d5d9143b3d2e6459ac194"
+  ],
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "contract_errors": [],
+  "contract_warnings": [],
+  "dataset": "HotpotQA",
+  "gold_packets": 50,
+  "gold_reachable_by_budget": {
+    "512": 20
+  },
+  "hard_negative_packets": 847,
+  "pool_count": 20,
+  "provenance_complete": true,
+  "schema_valid": true,
+  "schema_version": "workbench_candidate_pool_manifest_v1",
+  "total_packets": 897
+}

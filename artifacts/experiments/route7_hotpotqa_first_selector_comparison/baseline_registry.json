@@ -1,0 +1,25 @@
+{
+  "artifact_type": "Route7BaselineRegistry",
+  "available_deployable_baselines": [
+    "mmr_density_greedy",
+    "random_budget",
+    "topk_relevance_or_token_budget"
+  ],
+  "claim_status": "no_claim_upgrade",
+  "missing_deployable_baselines": [
+    "BM25_or_dense_retrieval_when_available",
+    "ablated_cost_aware_policy",
+    "prior_v12_diagnostic_policy_variant"
+  ],
+  "non_deployable_reference": "gold_support_oracle_upper_bound",
+  "oracle_used_as_deployable_baseline": false,
+  "required_deployable_baselines": [
+    "random_budget",
+    "topk_relevance_or_token_budget",
+    "BM25_or_dense_retrieval_when_available",
+    "mmr_density_greedy",
+    "prior_v12_diagnostic_policy_variant",
+    "ablated_cost_aware_policy"
+  ],
+  "schema_version": "route7_baseline_registry_v1"
+}

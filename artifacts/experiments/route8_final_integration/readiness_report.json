@@ -1,0 +1,17 @@
+{
+  "accepted_evidence_packages": [],
+  "artifact_type": "Route8FinalIntegrationReadinessReport",
+  "claim_ledger_update_allowed": false,
+  "claim_ledger_update_attempted": false,
+  "claim_status": "no_claim_upgrade",
+  "final_program_status": "honestly_blocked",
+  "manuscript_update_allowed": false,
+  "manuscript_update_attempted": false,
+  "reason_codes": [
+    "no_accepted_evidence_packages",
+    "claim_upgrade_unsupported",
+    "no_route8_claim_ledger_or_manuscript_update"
+  ],
+  "schema_version": "route8_final_integration_readiness_v1",
+  "status": "blocked_no_accepted_evidence_packages"
+}

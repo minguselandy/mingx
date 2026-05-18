@@ -1,0 +1,13 @@
+{
+  "claim_status": "no_claim_upgrade",
+  "generation_errors": [],
+  "operator_inputs_written": false,
+  "phase": "route4a_hotpotqa_sufficiency_pilot",
+  "rows_attempted": 600,
+  "rows_generated": 600,
+  "rows_skipped": 0,
+  "rows_validated": 600,
+  "source_delta_records": 600,
+  "status": "bridge_rows_validated",
+  "validation_errors": []
+}

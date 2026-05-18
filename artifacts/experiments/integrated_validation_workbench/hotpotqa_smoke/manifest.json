@@ -1,0 +1,55 @@
+{
+  "artifact_paths": {
+    "blocked_claims": "blocked_claims.md",
+    "blocked_report": "blocked_report.json",
+    "bridge_fit_summary": "bridge_fit_summary.json",
+    "candidate_pool_manifest": "candidate_pool_manifest.json",
+    "claim_gate_result": "claim_gate_result.json",
+    "claim_ledger": "claim_ledger.json",
+    "comparison_summary": "comparison_summary.csv",
+    "control_results": "control_results.json",
+    "diagnostic_safety_report": "diagnostic_safety_report.json",
+    "manifest": "manifest.json",
+    "metric_bridge_witness": "metric_bridge_witness.json",
+    "next_repairs": "next_repairs.md",
+    "paper_tables": "paper_tables.md",
+    "statistical_tests": "statistical_tests.json",
+    "superiority_claim_gate": "superiority_claim_gate.json",
+    "traces": "workbench_traces.jsonl"
+  },
+  "candidate_pools_used": 20,
+  "claim_mode": "shadow",
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "config": {
+    "budgets": [
+      512
+    ],
+    "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+    "claim_mode": "shadow",
+    "claim_status": "operational_utility_only; no_claim_upgrade",
+    "dataset": "HotpotQA",
+    "evaluators": [
+      "operational",
+      "diagnostic_safety",
+      "claim_ledger"
+    ],
+    "limit": 20,
+    "output_dir": "artifacts/experiments/integrated_validation_workbench/hotpotqa_smoke",
+    "run_id": "hotpotqa_smoke",
+    "selectors": [
+      "bm25_topk",
+      "mmr_density_greedy",
+      "v12_diagnostic_policy"
+    ],
+    "shadow_labels": [
+      "shadow_metric_bridge",
+      "shadow_vinfo_proxy",
+      "shadow_measurement_candidate",
+      "shadow_selector_superiority"
+    ]
+  },
+  "run_id": "hotpotqa_smoke",
+  "schema_version": "workbench_manifest_v1",
+  "status": "completed_claim_safe_smoke",
+  "traces_generated": 60
+}

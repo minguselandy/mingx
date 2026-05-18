@@ -1,0 +1,27 @@
+{
+  "bridge_power_status": "underpowered_and_signal_weak",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "direct_bridge_scaleup_recommended": false,
+  "gate_result": "failed_closed_underpowered",
+  "metric_claim_level": "operational_utility_only",
+  "observed": {
+    "normalized_residual": 0.9943939943352396,
+    "rows_validated": 300,
+    "sign_agreement": 0.38,
+    "spearman_rho": 0.2315837581304158,
+    "unique_original_instances": 150
+  },
+  "power_gap": {
+    "min_rows": 500,
+    "row_shortfall": 200
+  },
+  "route4b_is_merely_underpowered": false,
+  "schema_version": "iw_bridge_power_projection_v1",
+  "signal_failures": [
+    "normalized_residual_gate_failed",
+    "sign_agreement_gate_failed",
+    "spearman_gate_failed"
+  ],
+  "signal_weak": true,
+  "underpowered": true
+}
