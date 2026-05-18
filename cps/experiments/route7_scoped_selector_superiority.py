@@ -138,6 +138,7 @@ def _dependencies(root: Path) -> dict[str, Any]:
 def assess_route7_gate(
     *,
     root: str | Path = ".",
+    hotpotqa_only: bool = False,
     hotpotqa_stats_path: str | Path = DEFAULT_HOTPOTQA_STATS_PATH,
     hotpotqa_safety_path: str | Path = DEFAULT_HOTPOTQA_SAFETY_PATH,
 ) -> Route7Package:
@@ -150,30 +151,44 @@ def assess_route7_gate(
     baseline_registry = _baseline_registry(stats)
     dependencies = _dependencies(repo_root)
     dependencies_satisfied = all(dependencies.values())
-    missing_baselines = bool(baseline_registry["missing_deployable_baselines"])
+    missing_baselines = bool(baseline_registry["missing_deployable_baselines"]) and not hotpotqa_only
     multi_benchmark_gate = available_benchmark_count >= 2
-    route7_claim_allowed = (
+    hotpotqa_first_gate = hotpotqa_only and hotpotqa_available and hotpotqa_positive
+    route7_claim_allowed = False if hotpotqa_only else (
         multi_benchmark_gate and not missing_baselines and dependencies_satisfied and hotpotqa_positive
     )
 
     reason_codes: list[str] = []
-    if available_benchmark_count == 1 and hotpotqa_available:
+    if hotpotqa_only and hotpotqa_first_gate:
+        reason_codes.append("hotpotqa_operational_comparison_available")
+    elif available_benchmark_count == 1 and hotpotqa_available:
         reason_codes.append("single_benchmark_only_hotpotqa")
     if not hotpotqa_available:
         reason_codes.append("missing_hotpotqa_operational_comparison")
-    reason_codes.append("missing_fever_benchmark_cell")
+    if not hotpotqa_only:
+        reason_codes.append("missing_fever_benchmark_cell")
     if missing_baselines:
         reason_codes.append("missing_required_deployable_baselines")
     if not dependencies_satisfied:
-        reason_codes.append("route4_5_6_dependencies_unsatisfied")
+        reason_codes.append(
+            "route4_5_6_dependencies_unsatisfied_for_claim_upgrade"
+            if hotpotqa_only
+            else "route4_5_6_dependencies_unsatisfied"
+        )
     if not route7_claim_allowed:
-        reason_codes.append("no_scoped_multi_benchmark_selector_superiority")
+        reason_codes.append(
+            "hotpotqa_first_comparison_operational_only_no_claim_upgrade"
+            if hotpotqa_only and hotpotqa_first_gate
+            else "no_scoped_multi_benchmark_selector_superiority"
+        )
 
     benchmark_matrix = {
         "artifact_type": "Route7BenchmarkMatrix",
         "cells": {
             "FEVER": {
-                "evidence_status": "blocked_fever_source_unavailable",
+                "evidence_status": "disabled_by_hotpotqa_only_scope"
+                if hotpotqa_only
+                else "blocked_fever_source_unavailable",
                 "task_family": "claim_verification",
             },
             "HotpotQA": {
@@ -199,6 +214,7 @@ def assess_route7_gate(
         "claim_status": "no_claim_upgrade",
         "predeclared_matrix_satisfied": multi_benchmark_gate,
         "schema_version": "route7_benchmark_matrix_v1",
+        "scope": "hotpotqa_only" if hotpotqa_only else "multi_benchmark",
     }
 
     worst_cell_report = _worst_hotpotqa_cell(stats)
@@ -211,6 +227,7 @@ def assess_route7_gate(
         "global_selector_superiority_claimed": bool(safety.get("global_selector_superiority_claimed", False)),
         "hotpotqa_operational_cells_positive": hotpotqa_positive,
         "hotpotqa_statistical_tests_path": _path_ref(hotpotqa_stats_path),
+        "hotpotqa_first_gate_passed": hotpotqa_first_gate,
         "multi_benchmark_gate_passed": multi_benchmark_gate,
         "oracle_used_as_deployable_baseline": bool(safety.get("oracle_used_as_deployable_baseline", False)),
         "route_dependencies": dependencies,
@@ -224,14 +241,24 @@ def assess_route7_gate(
         "available_benchmark_count": available_benchmark_count,
         "claim_status": "no_claim_upgrade",
         "global_selector_superiority": False,
+        "hotpotqa_first_selector_comparison_available": hotpotqa_first_gate,
         "missing_deployable_baselines": baseline_registry["missing_deployable_baselines"],
         "operational_hotpotqa_result_preserved": hotpotqa_available,
         "paper_evidence": False,
         "reason_codes": reason_codes,
         "route7_claim_allowed": route7_claim_allowed,
         "schema_version": "route7_scoped_selector_superiority_readiness_v1",
+        "scope": "hotpotqa_only" if hotpotqa_only else "multi_benchmark",
         "scoped_multi_benchmark_selector_superiority": False,
-        "status": "ready_for_scoped_multi_benchmark_review" if route7_claim_allowed else "blocked_multi_benchmark_requirements_unmet",
+        "status": (
+            "ready_for_scoped_multi_benchmark_review"
+            if route7_claim_allowed
+            else (
+                "hotpotqa_first_operational_comparison_available_no_claim_upgrade"
+                if hotpotqa_only and hotpotqa_first_gate
+                else "blocked_multi_benchmark_requirements_unmet"
+            )
+        ),
     }
 
     return Route7Package(
@@ -281,9 +308,10 @@ def write_route7_artifacts(
     root: str | Path = ".",
     output_dir: str | Path = DEFAULT_OUTPUT_DIR,
     docs_path: str | Path = DEFAULT_DOCS_PATH,
+    hotpotqa_only: bool = False,
 ) -> dict[str, Path]:
     repo_root = Path(root)
-    package = assess_route7_gate(root=repo_root)
+    package = assess_route7_gate(root=repo_root, hotpotqa_only=hotpotqa_only)
     out = _resolve(repo_root, output_dir)
     docs = _resolve(repo_root, docs_path)
     paths = {
@@ -309,9 +337,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--root", default=".")
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
     parser.add_argument("--docs-path", default=str(DEFAULT_DOCS_PATH))
+    parser.add_argument("--hotpotqa-only", action="store_true")
     args = parser.parse_args(argv)
 
-    paths = write_route7_artifacts(root=args.root, output_dir=args.output_dir, docs_path=args.docs_path)
+    paths = write_route7_artifacts(
+        root=args.root,
+        output_dir=args.output_dir,
+        docs_path=args.docs_path,
+        hotpotqa_only=args.hotpotqa_only,
+    )
     readiness = json.loads(paths["readiness_report"].read_text(encoding="utf-8"))
     print(
         json.dumps(

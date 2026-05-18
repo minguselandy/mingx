@@ -17,6 +17,12 @@ DEFAULT_ROUTE4B_CLAIM_GATE_PATH = Path("artifacts/experiments/route4b_bridge_to_
 DEFAULT_ROUTE4C_READINESS_PATH = Path("artifacts/experiments/route4c_fever/readiness_report.json")
 DEFAULT_ROUTE5_READINESS_PATH = Path("artifacts/experiments/route5_fixed_model_logloss_proxy/readiness_report.json")
 DEFAULT_ROUTE7_READINESS_PATH = Path("artifacts/experiments/route7_scoped_selector_superiority/readiness_report.json")
+DEFAULT_HOTPOTQA_ROUTE5_READINESS_PATH = Path(
+    "artifacts/experiments/route5_hotpotqa_fixed_model_logloss_proxy/readiness_report.json"
+)
+DEFAULT_HOTPOTQA_ROUTE7_READINESS_PATH = Path(
+    "artifacts/experiments/route7_hotpotqa_first_selector_comparison/readiness_report.json"
+)
 
 BLOCKED_CLAIMS = [
     "calibrated_proxy_supported",
@@ -60,13 +66,15 @@ def _read_json(root: Path, path: str | Path) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
-def _route_statuses(root: Path) -> dict[str, dict[str, Any]]:
+def _route_statuses(root: Path, *, hotpotqa_only: bool = False) -> dict[str, dict[str, Any]]:
     route6a = _read_json(root, DEFAULT_ROUTE6A_ADJUDICATION_PATH)
     route4b = _read_json(root, DEFAULT_ROUTE4B_CLAIM_GATE_PATH)
-    route4c = _read_json(root, DEFAULT_ROUTE4C_READINESS_PATH)
-    route5 = _read_json(root, DEFAULT_ROUTE5_READINESS_PATH)
-    route7 = _read_json(root, DEFAULT_ROUTE7_READINESS_PATH)
-    return {
+    route4c = {} if hotpotqa_only else _read_json(root, DEFAULT_ROUTE4C_READINESS_PATH)
+    route5_path = DEFAULT_HOTPOTQA_ROUTE5_READINESS_PATH if hotpotqa_only else DEFAULT_ROUTE5_READINESS_PATH
+    route7_path = DEFAULT_HOTPOTQA_ROUTE7_READINESS_PATH if hotpotqa_only else DEFAULT_ROUTE7_READINESS_PATH
+    route5 = _read_json(root, route5_path)
+    route7 = _read_json(root, route7_path)
+    routes: dict[str, dict[str, Any]] = {
         "Route6A": {
             "accepted_for_claim_upgrade": False,
             "artifact_path": _path_ref(DEFAULT_ROUTE6A_ADJUDICATION_PATH),
@@ -82,33 +90,38 @@ def _route_statuses(root: Path) -> dict[str, dict[str, Any]]:
             "gate_result": route4b.get("gate_result", "missing_route4b_claim_gate"),
             "status": str(route4b.get("gate_result") or "missing_route4b_claim_gate"),
         },
-        "Route4C": {
-            "accepted_for_claim_upgrade": bool(route4c.get("candidate_bridge_evidence_accepted")),
-            "artifact_path": _path_ref(DEFAULT_ROUTE4C_READINESS_PATH),
-            "status": str(route4c.get("status") or "missing_route4c_readiness"),
-        },
         "Route5": {
             "accepted_for_claim_upgrade": bool(route5.get("vinfo_proxy_supported_candidate")),
-            "artifact_path": _path_ref(DEFAULT_ROUTE5_READINESS_PATH),
+            "artifact_path": _path_ref(route5_path),
             "status": str(route5.get("status") or "missing_route5_readiness"),
         },
         "Route7": {
             "accepted_for_claim_upgrade": bool(route7.get("route7_claim_allowed")),
-            "artifact_path": _path_ref(DEFAULT_ROUTE7_READINESS_PATH),
+            "artifact_path": _path_ref(route7_path),
             "status": str(route7.get("status") or "missing_route7_readiness"),
         },
     }
+    if not hotpotqa_only:
+        routes["Route4C"] = {
+            "accepted_for_claim_upgrade": bool(route4c.get("candidate_bridge_evidence_accepted")),
+            "artifact_path": _path_ref(DEFAULT_ROUTE4C_READINESS_PATH),
+            "status": str(route4c.get("status") or "missing_route4c_readiness"),
+        }
+    return routes
 
 
-def assess_route8_final_integration(*, root: str | Path = ".") -> Route8Package:
+def assess_route8_final_integration(*, root: str | Path = ".", hotpotqa_only: bool = False) -> Route8Package:
     repo_root = Path(root)
-    routes = _route_statuses(repo_root)
+    routes = _route_statuses(repo_root, hotpotqa_only=hotpotqa_only)
     accepted = [name for name, route in routes.items() if route["accepted_for_claim_upgrade"]]
     integration_allowed = bool(accepted)
 
     reason_codes: list[str] = []
     if not accepted:
         reason_codes.append("no_accepted_evidence_packages")
+        if hotpotqa_only:
+            route4b_status = str(routes.get("Route4B", {}).get("status", "missing_route4b_claim_gate"))
+            reason_codes.append(f"hotpotqa_route4b_{route4b_status}")
         reason_codes.append("claim_upgrade_unsupported")
         reason_codes.append("no_route8_claim_ledger_or_manuscript_update")
 
@@ -118,12 +131,21 @@ def assess_route8_final_integration(*, root: str | Path = ".") -> Route8Package:
         "confirmed_evidence": [
             "Route6A completed approved live model adjudication and stored normalized labels only.",
             "Route4B executed the external sufficiency bridge and failed closed underpowered.",
-            "Route4C confirmed FEVER restoration remains blocked by missing evidence source and records.",
+            *(
+                []
+                if hotpotqa_only
+                else ["Route4C confirmed FEVER restoration remains blocked by missing evidence source and records."]
+            ),
             "Route5 was blocked before live API use because Route4 candidate bridge evidence was absent.",
-            "Route7 preserved the HotpotQA operational comparison but blocked multi-benchmark superiority.",
+            (
+                "Route7 preserved the HotpotQA-first operational comparison without a claim upgrade."
+                if hotpotqa_only
+                else "Route7 preserved the HotpotQA operational comparison but blocked multi-benchmark superiority."
+            ),
         ],
         "routes": routes,
         "schema_version": "route8_evidence_status_summary_v1",
+        "scope": "hotpotqa_only" if hotpotqa_only else "all_routes",
     }
 
     blocked_claims_report = {
@@ -132,21 +154,33 @@ def assess_route8_final_integration(*, root: str | Path = ".") -> Route8Package:
         "claim_status": "no_claim_upgrade",
         "missing_resources_or_gates": [
             "accepted Route4 bridge candidate or calibrated proxy evidence",
-            "complete FEVER evidence source, candidate pools, and evaluator delta records",
             "human or hybrid measurement labels with agreement metrics",
             "Route5 fixed-model proxy stability diagnostics after start gate satisfaction",
-            "finite multi-benchmark Route7 matrix with required deployable baselines",
             "independent review accepting any candidate claim upgrade",
         ],
         "next_unlocks": [
-            "restore complete FEVER evidence source or collect larger accepted external sufficiency labels",
+            "collect a larger accepted HotpotQA external sufficiency label set",
             "produce at least 500 non-circular bridge rows over at least 150 original instances",
             "pass Route4 bridge gates and independent bridge review",
             "run Route5 fixed-model proxy verification only after Route4-compatible evidence exists",
-            "build a predeclared Route7 multi-benchmark matrix with all deployable baselines",
+            "use HotpotQA-first selector comparison only as operational evidence until bridge and review gates pass",
         ],
         "schema_version": "route8_blocked_claims_report_v1",
+        "scope": "hotpotqa_only" if hotpotqa_only else "all_routes",
     }
+    if not hotpotqa_only:
+        blocked_claims_report["missing_resources_or_gates"].insert(
+            1, "complete FEVER evidence source, candidate pools, and evaluator delta records"
+        )
+        blocked_claims_report["missing_resources_or_gates"].insert(
+            -1, "finite multi-benchmark Route7 matrix with required deployable baselines"
+        )
+        blocked_claims_report["next_unlocks"][0] = (
+            "restore complete FEVER evidence source or collect larger accepted external sufficiency labels"
+        )
+        blocked_claims_report["next_unlocks"][-1] = (
+            "build a predeclared Route7 multi-benchmark matrix with all deployable baselines"
+        )
 
     integration_gate_report = {
         "artifact_type": "Route8IntegrationGateReport",
@@ -159,6 +193,7 @@ def assess_route8_final_integration(*, root: str | Path = ".") -> Route8Package:
         "manuscript_update_attempted": False,
         "review_required_before_claim_upgrade": True,
         "schema_version": "route8_integration_gate_report_v1",
+        "scope": "hotpotqa_only" if hotpotqa_only else "all_routes",
     }
 
     readiness_report = {
@@ -172,7 +207,16 @@ def assess_route8_final_integration(*, root: str | Path = ".") -> Route8Package:
         "manuscript_update_attempted": False,
         "reason_codes": reason_codes,
         "schema_version": "route8_final_integration_readiness_v1",
-        "status": "ready_for_reviewed_final_integration" if integration_allowed else "blocked_no_accepted_evidence_packages",
+        "scope": "hotpotqa_only" if hotpotqa_only else "all_routes",
+        "status": (
+            "ready_for_reviewed_final_integration"
+            if integration_allowed
+            else (
+                "blocked_hotpotqa_only_no_accepted_claim_upgrade_evidence"
+                if hotpotqa_only
+                else "blocked_no_accepted_evidence_packages"
+            )
+        ),
     }
 
     return Route8Package(
@@ -216,9 +260,10 @@ def write_route8_artifacts(
     root: str | Path = ".",
     output_dir: str | Path = DEFAULT_OUTPUT_DIR,
     docs_path: str | Path = DEFAULT_DOCS_PATH,
+    hotpotqa_only: bool = False,
 ) -> dict[str, Path]:
     repo_root = Path(root)
-    package = assess_route8_final_integration(root=repo_root)
+    package = assess_route8_final_integration(root=repo_root, hotpotqa_only=hotpotqa_only)
     out = _resolve(repo_root, output_dir)
     docs = _resolve(repo_root, docs_path)
     paths = {
@@ -242,9 +287,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--root", default=".")
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
     parser.add_argument("--docs-path", default=str(DEFAULT_DOCS_PATH))
+    parser.add_argument("--hotpotqa-only", action="store_true")
     args = parser.parse_args(argv)
 
-    paths = write_route8_artifacts(root=args.root, output_dir=args.output_dir, docs_path=args.docs_path)
+    paths = write_route8_artifacts(
+        root=args.root,
+        output_dir=args.output_dir,
+        docs_path=args.docs_path,
+        hotpotqa_only=args.hotpotqa_only,
+    )
     readiness = json.loads(paths["readiness_report"].read_text(encoding="utf-8"))
     print(
         json.dumps(

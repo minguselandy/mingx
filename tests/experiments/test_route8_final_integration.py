@@ -110,3 +110,42 @@ def test_route8_writes_final_blocked_artifacts_and_doc(workspace_tmp_dir: Path) 
     assert "Claim status: `no_claim_upgrade`" in doc
     assert "No manuscript or claim-ledger edits were made." in doc
     assert "Final program status: `honestly_blocked`" in doc
+
+
+def test_route8_hotpotqa_only_ignores_disabled_route4c_fever(workspace_tmp_dir: Path) -> None:
+    _write_blocked_route_inputs(workspace_tmp_dir)
+    _write_json(
+        workspace_tmp_dir / "artifacts/experiments/route5_hotpotqa_fixed_model_logloss_proxy/readiness_report.json",
+        {
+            "claim_status": "no_claim_upgrade",
+            "scope": "hotpotqa_only",
+            "start_condition_satisfied": False,
+            "status": "blocked_hotpotqa_route4b_candidate_bridge_required",
+            "vinfo_proxy_supported_candidate": False,
+        },
+    )
+    _write_json(
+        workspace_tmp_dir / "artifacts/experiments/route7_hotpotqa_first_selector_comparison/readiness_report.json",
+        {
+            "claim_status": "no_claim_upgrade",
+            "hotpotqa_first_selector_comparison_available": True,
+            "route7_claim_allowed": False,
+            "scope": "hotpotqa_only",
+            "status": "hotpotqa_first_operational_comparison_available_no_claim_upgrade",
+        },
+    )
+
+    package = assess_route8_final_integration(root=workspace_tmp_dir, hotpotqa_only=True)
+
+    assert package.readiness_report["status"] == "blocked_hotpotqa_only_no_accepted_claim_upgrade_evidence"
+    assert package.readiness_report["scope"] == "hotpotqa_only"
+    assert package.readiness_report["final_program_status"] == "honestly_blocked"
+    assert package.readiness_report["accepted_evidence_packages"] == []
+    assert "Route4C" not in package.evidence_status_summary["routes"]
+    assert package.evidence_status_summary["routes"]["Route5"]["status"] == "blocked_hotpotqa_route4b_candidate_bridge_required"
+    assert (
+        package.evidence_status_summary["routes"]["Route7"]["status"]
+        == "hotpotqa_first_operational_comparison_available_no_claim_upgrade"
+    )
+    assert "hotpotqa_route4b_failed_closed_underpowered" in package.readiness_report["reason_codes"]
+    assert "fever" not in json.dumps(package.readiness_report, sort_keys=True).lower()

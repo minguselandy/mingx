@@ -1,0 +1,37 @@
+{
+  "artifact_type": "Route8EvidenceStatusSummary",
+  "claim_status": "no_claim_upgrade",
+  "confirmed_evidence": [
+    "Route6A completed approved live model adjudication and stored normalized labels only.",
+    "Route4B executed the external sufficiency bridge and failed closed underpowered.",
+    "Route5 was blocked before live API use because Route4 candidate bridge evidence was absent.",
+    "Route7 preserved the HotpotQA-first operational comparison without a claim upgrade."
+  ],
+  "routes": {
+    "Route4B": {
+      "accepted_for_claim_upgrade": false,
+      "artifact_path": "artifacts/experiments/route4b_bridge_to_measurement/claim_gate_result.json",
+      "gate_result": "failed_closed_underpowered",
+      "status": "failed_closed_underpowered"
+    },
+    "Route5": {
+      "accepted_for_claim_upgrade": false,
+      "artifact_path": "artifacts/experiments/route5_hotpotqa_fixed_model_logloss_proxy/readiness_report.json",
+      "status": "blocked_hotpotqa_route4b_candidate_bridge_required"
+    },
+    "Route6A": {
+      "accepted_for_claim_upgrade": false,
+      "artifact_path": "artifacts/experiments/route6a_measurement_pilot/adjudication_report.json",
+      "evidence": "22 accepted model-adjudicated labels",
+      "measurement_validation": false,
+      "status": "model_adjudication_completed_no_measurement_validation"
+    },
+    "Route7": {
+      "accepted_for_claim_upgrade": false,
+      "artifact_path": "artifacts/experiments/route7_hotpotqa_first_selector_comparison/readiness_report.json",
+      "status": "hotpotqa_first_operational_comparison_available_no_claim_upgrade"
+    }
+  },
+  "schema_version": "route8_evidence_status_summary_v1",
+  "scope": "hotpotqa_only"
+}

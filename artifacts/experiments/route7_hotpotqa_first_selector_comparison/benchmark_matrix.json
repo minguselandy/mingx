@@ -1,0 +1,29 @@
+{
+  "artifact_type": "Route7BenchmarkMatrix",
+  "cells": {
+    "FEVER": {
+      "evidence_status": "disabled_by_hotpotqa_only_scope",
+      "task_family": "claim_verification"
+    },
+    "HotpotQA": {
+      "budgets": [
+        512,
+        1024
+      ],
+      "evidence_status": "operational_only_available",
+      "task_family": "answer_support_selection"
+    },
+    "NaturalQuestionsOrSimilarQA": {
+      "evidence_status": "not_available",
+      "task_family": "answer_support_selection"
+    },
+    "QasperOrLongContextQA": {
+      "evidence_status": "not_available",
+      "task_family": "document_grounded_qa"
+    }
+  },
+  "claim_status": "no_claim_upgrade",
+  "predeclared_matrix_satisfied": false,
+  "schema_version": "route7_benchmark_matrix_v1",
+  "scope": "hotpotqa_only"
+}

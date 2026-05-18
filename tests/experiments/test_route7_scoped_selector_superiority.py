@@ -98,3 +98,23 @@ def test_route7_writes_blocked_artifacts_and_doc(workspace_tmp_dir: Path) -> Non
     assert "Claim status: `no_claim_upgrade`" in doc
     assert "HotpotQA remains operational-only evidence" in doc
     assert "global selector superiority remains denied" in doc
+
+
+def test_route7_hotpotqa_only_preserves_available_hotpotqa_operational_comparison(workspace_tmp_dir: Path) -> None:
+    _write_hotpotqa_stats(workspace_tmp_dir)
+
+    package = assess_route7_gate(root=workspace_tmp_dir, hotpotqa_only=True)
+
+    assert package.readiness_report["status"] == "hotpotqa_first_operational_comparison_available_no_claim_upgrade"
+    assert package.readiness_report["claim_status"] == "no_claim_upgrade"
+    assert package.readiness_report["scope"] == "hotpotqa_only"
+    assert package.readiness_report["hotpotqa_first_selector_comparison_available"] is True
+    assert package.readiness_report["scoped_multi_benchmark_selector_superiority"] is False
+    assert package.readiness_report["global_selector_superiority"] is False
+    assert package.readiness_report["route7_claim_allowed"] is False
+    assert "hotpotqa_operational_comparison_available" in package.readiness_report["reason_codes"]
+    assert "missing_fever_benchmark_cell" not in package.readiness_report["reason_codes"]
+    assert "missing_required_deployable_baselines" not in package.readiness_report["reason_codes"]
+    assert package.benchmark_matrix["cells"]["FEVER"]["evidence_status"] == "disabled_by_hotpotqa_only_scope"
+    assert package.comparison_gate_report["hotpotqa_operational_cells_positive"] is True
+    assert package.comparison_gate_report["hotpotqa_first_gate_passed"] is True

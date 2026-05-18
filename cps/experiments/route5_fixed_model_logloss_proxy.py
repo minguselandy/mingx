@@ -81,21 +81,25 @@ def _route4c_gate(root: Path, readiness_path: str | Path) -> dict[str, Any]:
 def assess_route5_start_gate(
     *,
     root: str | Path = ".",
+    hotpotqa_only: bool = False,
     route4b_claim_gate_path: str | Path = DEFAULT_ROUTE4B_CLAIM_GATE_PATH,
     route4b_witness_path: str | Path = DEFAULT_ROUTE4B_WITNESS_PATH,
     route4c_readiness_path: str | Path = DEFAULT_ROUTE4C_READINESS_PATH,
 ) -> Route5Package:
     repo_root = Path(root)
     route4b = _route4b_gate(repo_root, route4b_claim_gate_path, route4b_witness_path)
-    route4c = _route4c_gate(repo_root, route4c_readiness_path)
-    start_condition = bool(route4b["accepted_candidate_bridge_evidence"] or route4c["accepted_candidate_bridge_evidence"])
+    route4c = None if hotpotqa_only else _route4c_gate(repo_root, route4c_readiness_path)
+    start_condition = bool(
+        route4b["accepted_candidate_bridge_evidence"]
+        or (False if route4c is None else route4c["accepted_candidate_bridge_evidence"])
+    )
 
     reason_codes: list[str] = []
     if not start_condition:
         reason_codes.append("no_accepted_route4_candidate_bridge_evidence")
     if not route4b["accepted_candidate_bridge_evidence"]:
         reason_codes.append(f"route4b_{route4b['gate_result']}")
-    if not route4c["accepted_candidate_bridge_evidence"]:
+    if route4c is not None and not route4c["accepted_candidate_bridge_evidence"]:
         reason_codes.append(f"route4c_{route4c['status']}")
     if not start_condition:
         reason_codes.append("route5_live_api_not_used_start_condition_failed")
@@ -105,12 +109,19 @@ def assess_route5_start_gate(
         "blocked_before_live_api": not start_condition,
         "claim_status": "no_claim_upgrade",
         "route4b": route4b,
-        "route4c": route4c,
+        "route4c_disabled": hotpotqa_only,
         "route5_live_api_allowed": start_condition,
         "schema_version": "route5_dependency_gate_report_v1",
-        "start_condition": "Route 4B or Route 4C yields accepted candidate bridge evidence",
+        "scope": "hotpotqa_only" if hotpotqa_only else "route4b_or_route4c",
+        "start_condition": (
+            "HotpotQA Route 4B yields accepted candidate bridge evidence"
+            if hotpotqa_only
+            else "Route 4B or Route 4C yields accepted candidate bridge evidence"
+        ),
         "start_condition_satisfied": start_condition,
     }
+    if route4c is not None:
+        dependency_gate_report["route4c"] = route4c
 
     readiness_report = {
         "artifact_type": "Route5FixedModelLoglossProxyReadinessReport",
@@ -124,8 +135,17 @@ def assess_route5_start_gate(
         "paper_evidence": False,
         "reason_codes": reason_codes,
         "schema_version": "route5_fixed_model_logloss_proxy_readiness_v1",
+        "scope": "hotpotqa_only" if hotpotqa_only else "route4b_or_route4c",
         "start_condition_satisfied": start_condition,
-        "status": "ready_for_scoped_logloss_proxy_verification" if start_condition else "blocked_route4_candidate_bridge_required",
+        "status": (
+            "ready_for_scoped_logloss_proxy_verification"
+            if start_condition
+            else (
+                "blocked_hotpotqa_route4b_candidate_bridge_required"
+                if hotpotqa_only
+                else "blocked_route4_candidate_bridge_required"
+            )
+        ),
         "true_deployed_vinformation_verification": False,
         "vinfo_proxy_supported": False,
         "vinfo_proxy_supported_candidate": False,
@@ -144,14 +164,13 @@ def render_route5_report(package: Route5Package) -> str:
         "Claim status: `no_claim_upgrade`\n\n"
         "## Decision\n\n"
         "Route 5 is blocked before fixed-model logloss proxy verification. The "
-        "required start condition is not satisfied because neither Route 4B nor "
-        "Route 4C produced accepted candidate bridge evidence.\n\n"
+        "required start condition is not satisfied because the scoped upstream "
+        "Route 4 evidence did not produce accepted candidate bridge evidence.\n\n"
         "Live API use was not invoked because the Route 5 start condition failed.\n\n"
         "## Dependency Gate\n\n"
         f"- Route 4B accepted candidate bridge evidence: `{str(gate['route4b']['accepted_candidate_bridge_evidence']).lower()}`.\n"
         f"- Route 4B gate result: `{gate['route4b']['gate_result']}`.\n"
-        f"- Route 4C accepted candidate bridge evidence: `{str(gate['route4c']['accepted_candidate_bridge_evidence']).lower()}`.\n"
-        f"- Route 4C status: `{gate['route4c']['status']}`.\n"
+        f"- Route 4C disabled by scope: `{str(gate['route4c_disabled']).lower()}`.\n"
         f"- Route 5 live API allowed: `{str(gate['route5_live_api_allowed']).lower()}`.\n\n"
         "## Reason Codes\n\n"
         f"{reason_codes}\n\n"
@@ -168,6 +187,7 @@ def write_route5_artifacts(
     root: str | Path = ".",
     output_dir: str | Path = DEFAULT_OUTPUT_DIR,
     docs_path: str | Path = DEFAULT_DOCS_PATH,
+    hotpotqa_only: bool = False,
     route4b_claim_gate_path: str | Path = DEFAULT_ROUTE4B_CLAIM_GATE_PATH,
     route4b_witness_path: str | Path = DEFAULT_ROUTE4B_WITNESS_PATH,
     route4c_readiness_path: str | Path = DEFAULT_ROUTE4C_READINESS_PATH,
@@ -175,6 +195,7 @@ def write_route5_artifacts(
     repo_root = Path(root)
     package = assess_route5_start_gate(
         root=repo_root,
+        hotpotqa_only=hotpotqa_only,
         route4b_claim_gate_path=route4b_claim_gate_path,
         route4b_witness_path=route4b_witness_path,
         route4c_readiness_path=route4c_readiness_path,
@@ -186,6 +207,9 @@ def write_route5_artifacts(
         "dependency_gate_report": out / "dependency_gate_report.json",
         "report_doc": docs,
     }
+    package.readiness_report["dependency_gate_report_path"] = _path_ref(
+        Path(output_dir) / "dependency_gate_report.json"
+    )
     write_json(paths["readiness_report"], package.readiness_report)
     write_json(paths["dependency_gate_report"], package.dependency_gate_report)
     docs.parent.mkdir(parents=True, exist_ok=True)
@@ -198,9 +222,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--root", default=".")
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
     parser.add_argument("--docs-path", default=str(DEFAULT_DOCS_PATH))
+    parser.add_argument("--hotpotqa-only", action="store_true")
     args = parser.parse_args(argv)
 
-    paths = write_route5_artifacts(root=args.root, output_dir=args.output_dir, docs_path=args.docs_path)
+    paths = write_route5_artifacts(
+        root=args.root,
+        output_dir=args.output_dir,
+        docs_path=args.docs_path,
+        hotpotqa_only=args.hotpotqa_only,
+    )
     readiness = json.loads(paths["readiness_report"].read_text(encoding="utf-8"))
     print(
         json.dumps(
