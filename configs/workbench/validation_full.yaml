@@ -1,0 +1,11 @@
+{
+  "run_id": "validation_full",
+  "dataset": "HotpotQA",
+  "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "output_dir": "artifacts/experiments/integrated_validation_workbench/validation_full",
+  "limit": 200,
+  "budgets": [512, 1024, 2048],
+  "selectors": ["bm25_topk", "mmr_density_greedy", "v12_diagnostic_policy", "random_budget", "dense_topk", "rrf_topk", "always_sag_k2", "pair_local_search"],
+  "evaluators": ["operational", "sufficiency", "logloss", "diagnostic_safety", "claim_ledger"],
+  "claim_mode": "shadow"
+}

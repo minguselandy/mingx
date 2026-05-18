@@ -1,0 +1,11 @@
+{
+  "run_id": "hotpotqa_smoke",
+  "dataset": "HotpotQA",
+  "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+  "output_dir": "artifacts/experiments/integrated_validation_workbench/hotpotqa_smoke",
+  "limit": 20,
+  "budgets": [512],
+  "selectors": ["bm25_topk", "mmr_density_greedy", "v12_diagnostic_policy"],
+  "evaluators": ["operational", "diagnostic_safety", "claim_ledger"],
+  "claim_mode": "shadow"
+}
