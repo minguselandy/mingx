@@ -1,0 +1,20 @@
+{
+  "accepted_model_adjudicated_count": 300,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "counts_as_human_labels": false,
+  "delta_label_distribution": {
+    "improves": 61,
+    "unchanged": 239
+  },
+  "human_human_kappa_present": false,
+  "label_source": "model_adjudicated",
+  "label_variance_status": "variance_present",
+  "low_uncertainty_share": 1.0,
+  "measurement_validation_candidate_allowed": false,
+  "model_labels_only_no_measurement_validation": true,
+  "schema_version": "iw_route6b_label_quality_audit_v1",
+  "stability_status": "model_adjudicated_low_uncertainty_only",
+  "uncertainty_distribution": {
+    "low": 300
+  }
+}

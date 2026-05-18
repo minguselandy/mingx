@@ -1,0 +1,23 @@
+{
+  "run_id": "iw_p_evidence_gap",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "input_artifacts": {
+    "route4b_bridge_fit": "artifacts/experiments/route4b_bridge_to_measurement/bridge_fit_summary.json",
+    "route6b_labels": "artifacts/experiments/route6b_measurement_scaleup/model_adjudicated_labels.jsonl",
+    "route6b_readiness": "artifacts/experiments/route6b_measurement_scaleup/readiness_report.json",
+    "route7_benchmark_matrix": "artifacts/experiments/route7_scoped_selector_superiority/benchmark_matrix.json",
+    "route7_comparison_gate": "artifacts/experiments/route7_scoped_selector_superiority/comparison_gate_report.json",
+    "route7_readiness": "artifacts/experiments/route7_scoped_selector_superiority/readiness_report.json"
+  },
+  "output_dir": "artifacts/experiments/integrated_validation_workbench/evidence_gap",
+  "allowed_portfolio_decisions": [
+    "GO_ALPHA_MEASUREMENT_FIRST",
+    "GO_BETA_HYBRID_LABEL_MODEL",
+    "GO_GAMMA_ALTERNATIVE_PROGRESS",
+    "GO_DIRECT_BRIDGE_SCALEUP",
+    "GO_PAPER_NEGATIVE",
+    "INSUFFICIENT_ARTIFACTS"
+  ],
+  "no_live_api_calls": true,
+  "no_new_labels": true
+}
