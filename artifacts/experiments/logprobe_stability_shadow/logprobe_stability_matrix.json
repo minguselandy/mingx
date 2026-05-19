@@ -1,0 +1,25 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "contract_hash": "6f828007a144d503bde2fe7a321a09a731ecc88b605ad95f63a1a26369e8dfe4",
+  "fever_disabled": true,
+  "logprobe_stability_passed": false,
+  "new_live_api_calls": false,
+  "schema_version": "logprobe_stability_matrix_v1",
+  "stability_status": "shadow_only_instability_present",
+  "targets": {
+    "answer_nll": {
+      "api_retries": 15,
+      "failure_count": 0,
+      "network_failure_count": 0,
+      "records_validated": 600,
+      "target_verbalization_failure_count": 0
+    },
+    "support_classification_nll": {
+      "api_retries": 75,
+      "failure_count": 155,
+      "network_failure_count": 15,
+      "records_validated": 643,
+      "target_verbalization_failure_count": 148
+    }
+  }
+}

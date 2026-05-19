@@ -1,0 +1,118 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "schema_version": "residual_tail_audit_v1",
+  "tail_count": 22,
+  "tail_rows": [
+    {
+      "abs_residual": 1.107180524781,
+      "candidate_pool_hash": "",
+      "delta_logloss": 0.005862009712,
+      "delta_utility": 1.0,
+      "original_instance_id": "5a88658955429938390d3f47",
+      "residual": 1.107180524781,
+      "route_id": "DeltaRoute4E",
+      "row_index": 192,
+      "target_representation": "unknown"
+    },
+    {
+      "abs_residual": 1.107180524781,
+      "candidate_pool_hash": "",
+      "delta_logloss": 0.005862009712,
+      "delta_utility": 1.0,
+      "original_instance_id": "5a88658955429938390d3f47",
+      "residual": 1.107180524781,
+      "route_id": "DeltaRoute4E",
+      "row_index": 193,
+      "target_representation": "unknown"
+    },
+    {
+      "abs_residual": 1.092202291635,
+      "candidate_pool_hash": "",
+      "delta_logloss": 0.005042807265,
+      "delta_utility": 1.0,
+      "original_instance_id": "5ae73c065542991e8301cc18",
+      "residual": 1.092202291635,
+      "route_id": "DeltaRoute4E",
+      "row_index": 707,
+      "target_representation": "unknown"
+    },
+    {
+      "abs_residual": 1.03041658109,
+      "candidate_pool_hash": "b8307c167914aa75a790173340543e69f7bb999eb29415c42bc9d55503ac6d87",
+      "delta_logloss": 0.001444592119,
+      "delta_utility": 1.0,
+      "original_instance_id": "5ab4e3065542990594ba9cb4",
+      "residual": 1.03041658109,
+      "route_id": "Route4B",
+      "row_index": 233,
+      "target_representation": "unknown"
+    },
+    {
+      "abs_residual": 1.026412808749,
+      "candidate_pool_hash": "",
+      "delta_logloss": 0.001444592119,
+      "delta_utility": 1.0,
+      "original_instance_id": "5ab4e3065542990594ba9cb4",
+      "residual": 1.026412808749,
+      "route_id": "DeltaRoute4E",
+      "row_index": 675,
+      "target_representation": "unknown"
+    },
+    {
+      "abs_residual": 1.023879185261,
+      "candidate_pool_hash": "fc4edcde03be49ec8b3b751e2583a3c80facf667e31703062d854fcabf715961",
+      "delta_logloss": 0.001134107832,
+      "delta_utility": 1.0,
+      "original_instance_id": "5ac1b8ee5542994d76dccedc",
+      "residual": 1.023879185261,
+      "route_id": "Route4B",
+      "row_index": 129,
+      "target_representation": "unknown"
+    },
+    {
+      "abs_residual": 1.020735938452,
+      "candidate_pool_hash": "",
+      "delta_logloss": 0.001134107832,
+      "delta_utility": 1.0,
+      "original_instance_id": "5ac1b8ee5542994d76dccedc",
+      "residual": 1.020735938452,
+      "route_id": "DeltaRoute4E",
+      "row_index": 476,
+      "target_representation": "unknown"
+    },
+    {
+      "abs_residual": 1.019764228668,
+      "candidate_pool_hash": "0b482fa27425cae1e41b7aa0bc2b98956a166e67fbbf83785143367ca344007a",
+      "delta_logloss": 0.00093867384,
+      "delta_utility": 1.0,
+      "original_instance_id": "5a75f0ea5542994ccc91866c",
+      "residual": 1.019764228668,
+      "route_id": "Route4B",
+      "row_index": 231,
+      "target_representation": "unknown"
+    },
+    {
+      "abs_residual": 1.01769919815,
+      "candidate_pool_hash": "",
+      "delta_logloss": 0.000968019812,
+      "delta_utility": 1.0,
+      "original_instance_id": "5ab2d3df554299194fa9352c",
+      "residual": 1.01769919815,
+      "route_id": "DeltaRoute4E",
+      "row_index": 462,
+      "target_representation": "unknown"
+    },
+    {
+      "abs_residual": 1.017162638705,
+      "candidate_pool_hash": "",
+      "delta_logloss": 0.00093867384,
+      "delta_utility": 1.0,
+      "original_instance_id": "5a75f0ea5542994ccc91866c",
+      "residual": 1.017162638705,
+      "route_id": "DeltaRoute4E",
+      "row_index": 671,
+      "target_representation": "unknown"
+    }
+  ],
+  "tail_threshold_abs_residual": 0.553590262391
+}
