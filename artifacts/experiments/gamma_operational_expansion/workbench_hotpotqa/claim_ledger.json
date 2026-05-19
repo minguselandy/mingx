@@ -1,0 +1,128 @@
+{
+  "accepted_claims": [],
+  "bridge_gate": {
+    "accepted_metric_claim": "operational_utility_only",
+    "calibrated_proxy_supported": false,
+    "claim_mode": "shadow",
+    "control_status": "shadow_mode_no_claim_upgrade",
+    "non_circularity_review_required_before_acceptance": true,
+    "reason_codes": [
+      "failed_closed_no_rows",
+      "bridge_shadow_mode",
+      "no_claim_upgrade"
+    ],
+    "shadow_labels": [
+      "shadow_metric_bridge",
+      "shadow_vinfo_proxy"
+    ],
+    "vinfo_proxy_supported": false
+  },
+  "claim_mode": "shadow",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_attempted": false,
+  "comparison_gate": {
+    "claim_mode": "shadow",
+    "global_selector_superiority": false,
+    "reason_codes": [
+      "superiority_shadow_mode",
+      "no_independent_review_acceptance",
+      "no_claim_upgrade"
+    ],
+    "scoped_operational_improvement": true,
+    "selector_superiority_claimed": false,
+    "shadow_selector_superiority": true
+  },
+  "denied_claims": {
+    "calibrated_proxy_supported": {
+      "blocking_artifact": "metric_bridge_witness.json",
+      "claim_boundary_note": "Bridge output is shadow or fail-closed until gates and review pass.",
+      "next_repair": "Collect sufficient non-circular bridge rows and pass residual/stability gates.",
+      "reason": "No accepted MetricBridgeWitness is available for this run."
+    },
+    "global selector superiority": {
+      "blocking_artifact": "superiority_claim_gate.json",
+      "claim_boundary_note": "Comparison outputs are scoped and shadow-gated.",
+      "next_repair": "Predeclare a multi-benchmark matrix and pass paired tests plus independent review.",
+      "reason": "Selector superiority is not accepted by this workbench run."
+    },
+    "measurement validation": {
+      "blocking_artifact": "diagnostic_safety_report.json",
+      "claim_boundary_note": "Model-adjudicated or operational labels are not human measurement validation.",
+      "next_repair": "Run approved human or external validation with agreement metrics.",
+      "reason": "No human labels or kappa artifact is present."
+    },
+    "vinfo_proxy_supported": {
+      "blocking_artifact": "claim_gate_result.json",
+      "claim_boundary_note": "Operational utility is not V-information proxy evidence.",
+      "next_repair": "Run fixed-model proxy verification only after compatible bridge evidence exists.",
+      "reason": "V-information proxy evidence remains shadow mode."
+    }
+  },
+  "evidence_classes": {
+    "accepted": [],
+    "candidate_pending_review": [],
+    "shadow": [
+      {
+        "claim_area": "metric_bridge",
+        "evidence_class": "shadow",
+        "evidence_id": "workbench_metric_bridge_shadow"
+      },
+      {
+        "claim_area": "selector_comparison",
+        "evidence_class": "shadow",
+        "evidence_id": "workbench_selector_comparison_shadow"
+      }
+    ]
+  },
+  "gamma_operational_observations_shadow_only": [
+    "scoped_operational_improvement"
+  ],
+  "independent_review_complete": false,
+  "measurement_validation_claim": false,
+  "portfolio_controls": {
+    "accepted_evidence_requires_independent_review": true,
+    "contamination_policy": "fail_closed_on_contamination_or_unreviewed_source_risk",
+    "label_source_policy": "model_adjudicated_or_operational_only_no_measurement_validation",
+    "portfolio": "integrated_validation_workbench",
+    "route5_unlock_requires": [
+      "accepted_bridge_candidate",
+      "independent_review"
+    ],
+    "route8_claim_upgrade_requires": [
+      "accepted_evidence_packages_nonempty",
+      "independent_review"
+    ],
+    "uncertainty_policy": "missing_or_underpowered_evidence_blocks_claim_upgrade"
+  },
+  "route_gates": {
+    "route5": {
+      "locked": true,
+      "reason_codes": [
+        "missing_accepted_bridge_candidate",
+        "missing_independent_review"
+      ],
+      "requires": [
+        "accepted_bridge_candidate",
+        "independent_review"
+      ],
+      "route": "route5",
+      "satisfied": []
+    },
+    "route8": {
+      "locked": true,
+      "reason_codes": [
+        "missing_accepted_evidence_packages_nonempty",
+        "missing_independent_review"
+      ],
+      "requires": [
+        "accepted_evidence_packages_nonempty",
+        "independent_review"
+      ],
+      "route": "route8",
+      "satisfied": []
+    }
+  },
+  "run_id": "gamma_hotpotqa_non_fever_operational",
+  "schema_version": "workbench_claim_ledger_v1",
+  "selector_superiority_claimed": false
+}

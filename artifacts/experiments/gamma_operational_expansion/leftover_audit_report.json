@@ -1,0 +1,187 @@
+{
+  "audited_leftover_count": 19,
+  "category_counts": {
+    "Beta": 8,
+    "Route4D": 7,
+    "Route6C": 4
+  },
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "leftovers": [
+    {
+      "category": "Beta",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/beta_hybrid_label_model/hybrid_label_model/hybrid_label_model_report.json",
+      "size_bytes": 360,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Beta",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/beta_hybrid_label_model/hybrid_label_model/hybrid_utility_labels.jsonl",
+      "size_bytes": 438215,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Beta",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/beta_hybrid_label_model/portfolio_update.json",
+      "size_bytes": 777,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route4D",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/bridge_fit_summary.json",
+      "size_bytes": 1015,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route4D",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/bridge_rows.jsonl",
+      "size_bytes": 407568,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route4D",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/claim_gate_result.json",
+      "size_bytes": 399,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route4D",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/control_results.json",
+      "size_bytes": 511,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route4D",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/metric_bridge_witness.json",
+      "size_bytes": 377,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route4D",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/readiness_report.json",
+      "size_bytes": 221,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route6C",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/route6c_model_adjudication_scaleup/adjudication_report.json",
+      "size_bytes": 1364,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route6C",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/route6c_model_adjudication_scaleup/model_adjudicated_labels.jsonl",
+      "size_bytes": 1064854,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route6C",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "artifacts/experiments/route6c_model_adjudication_scaleup/readiness_report.json",
+      "size_bytes": 944,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Beta",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "cps/experiments/beta_label_source_contract.py",
+      "size_bytes": 2528,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Beta",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "cps/experiments/beta_portfolio_report.py",
+      "size_bytes": 5136,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Beta",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "cps/experiments/hybrid_label_model.py",
+      "size_bytes": 5952,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route4D",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "cps/experiments/route4d_hybrid_utility_bridge.py",
+      "size_bytes": 12332,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Route6C",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "cps/experiments/route6c_model_adjudication_scaleup.py",
+      "size_bytes": 15409,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Beta",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "docs/experiments/Beta-hybrid-label-model-final-report.md",
+      "size_bytes": 641,
+      "staged": false,
+      "status": "untracked"
+    },
+    {
+      "category": "Beta",
+      "forbidden_stage_reason": null,
+      "gamma_staging_action": "left_unstaged",
+      "path": "tests/experiments/test_beta_hybrid_label_model.py",
+      "size_bytes": 13771,
+      "staged": false,
+      "status": "untracked"
+    }
+  ],
+  "schema_version": "gamma_leftover_audit_report_v1",
+  "staged_leftover_count": 0,
+  "staged_leftover_paths": [],
+  "status": "pass_leftovers_unstaged",
+  "total_untracked_leftover_count": 19
+}

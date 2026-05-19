@@ -1,0 +1,15 @@
+{
+  "ESS": 0,
+  "bridge_status": "failed_closed_no_rows",
+  "claim_mode": "shadow",
+  "normalized_MAE": 0.0,
+  "residual_distribution": {
+    "max_abs_residual": null,
+    "mean_abs_residual": 0.0
+  },
+  "rows_imported": 0,
+  "rows_validated": 0,
+  "sign_agreement": null,
+  "spearman_rho": null,
+  "unique_instances": 0
+}

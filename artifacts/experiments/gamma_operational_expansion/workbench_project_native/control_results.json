@@ -1,0 +1,7 @@
+{
+  "accepted_metric_claim": "operational_utility_only",
+  "calibrated_proxy_supported": false,
+  "control_status": "shadow_mode_no_claim_upgrade",
+  "non_circularity_review_required_before_acceptance": true,
+  "vinfo_proxy_supported": false
+}

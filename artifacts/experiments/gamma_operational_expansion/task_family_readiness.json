@@ -1,0 +1,37 @@
+{
+  "checked_task_families": {
+    "2WikiMultiHopQA": {
+      "candidate_pool_available": false,
+      "status": "not_available_without_raw_external_mirror"
+    },
+    "FEVER": {
+      "candidate_pool_available": false,
+      "status": "disabled_by_gamma_goal"
+    },
+    "HotpotQA": {
+      "candidate_pool_available": true,
+      "candidate_pools_path": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+      "status": "available_operational_only"
+    },
+    "MuSiQue": {
+      "candidate_pool_available": false,
+      "status": "not_available_without_raw_external_mirror"
+    },
+    "project_native": {
+      "comparison_path": "artifacts/experiments/realistic_task_model_adjudicated_v12/realistic_selector_comparison.csv",
+      "packets_path": "artifacts/experiments/realistic_task_model_adjudicated_v12/realistic_task_packets.jsonl",
+      "status": "available_fixture_operational_only"
+    }
+  },
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "fever_disabled": true,
+  "raw_external_mirrors_created": false,
+  "safe_task_families": [
+    "HotpotQA",
+    "multi_hop_evidence_assembly",
+    "paper_revision_microtask",
+    "repo_change_review_microtask"
+  ],
+  "schema_version": "gamma_task_family_readiness_v1",
+  "status": "ready_for_non_fever_operational_comparison"
+}
