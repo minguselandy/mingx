@@ -1,0 +1,28 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "controls": [
+    "empty_evidence_path_negative_control",
+    "distractor_only_evidence_path_negative_control",
+    "shuffled_gold_path_order_sensitivity_control",
+    "answer_string_target_mismatch_control",
+    "source_doc_span_masking_control"
+  ],
+  "fever_disabled": true,
+  "gate_preregistration": {
+    "contract_gate": "target_contract_validation_passed",
+    "independent_review_gate": "required_before_any_bridge_pilot",
+    "minimum_unique_instances_before_bridge_pilot": 150,
+    "minimum_valid_target_rows_before_bridge_pilot": 500,
+    "non_circularity_gate": "utility_labels_must_not_use_evidence_path_nll_or_model_logprob",
+    "raw_storage_gate": "no_raw_api_responses_no_secrets_no_raw_dataset_mirrors",
+    "route5_gate": "locked",
+    "route8_gate": "locked",
+    "scoring_gate": "bounded_live_probe_or_documented_missing_evaluator_config"
+  },
+  "lp6_bridge_repair_run": false,
+  "measurement_validation_claim": false,
+  "route5_locked": true,
+  "route8_locked": true,
+  "schema_version": "evidence_path_controls_and_gate_preregistration_v1",
+  "status": "preregistered"
+}

@@ -1,0 +1,17 @@
+{
+  "ambiguity_flags": {
+    "missing_candidate_pool_count": 0,
+    "missing_gold_path_count": 0,
+    "missing_span_count": 0
+  },
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "fever_disabled": true,
+  "input_candidate_pool_count": 200,
+  "input_route4a_row_count": 600,
+  "repeated_target_hash_count": 150,
+  "repeated_target_hash_policy": "expected_when_multiple_route_rows_share_one_original_instance",
+  "row_builder_ready": true,
+  "schema_version": "evidence_path_row_builder_readiness_v1",
+  "target_rows_built": 600,
+  "unique_original_instances": 150
+}

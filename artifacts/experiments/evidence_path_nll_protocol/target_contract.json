@@ -1,0 +1,50 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "contract_hash": "f98c1af48047e3f3e3e29bc7bdff132c59a952a4984233eeb244ae01b39ea28b",
+  "contract_status": "canonical_protocol_specification_only",
+  "disabled_decisions": [
+    "SWITCH_TO_FEVER_LABEL_NLL"
+  ],
+  "fever_disabled": true,
+  "lp6_bridge_repair_run": false,
+  "materialization_policy": {
+    "context_policy": "route4a_materialized_context_with_source_boundaries",
+    "target_text_storage": "hash_and_metadata_only",
+    "target_text_use": "in_memory_teacher_forced_scoring_only"
+  },
+  "materialization_policy_hash": "a2231cf638f5c2cb3d094f13ccf5e92c7688ec88d38bf7272686f96040dac2dd",
+  "prompt_template_hash": "c726d897167bb3aa8f8ee5834fb87aa6a4c49d77a334d671d1794a196f432597",
+  "route5_locked": true,
+  "route8_locked": true,
+  "row_provenance": {
+    "candidate_pools": "artifacts/benchmarks/hotpotqa_candidate_pools.jsonl",
+    "route_rows": "artifacts/experiments/route4_bridge/bridge_rows.jsonl",
+    "source": "existing_hotpotqa_candidate_pools_and_route4a_rows"
+  },
+  "schema_version": "evidence_path_nll_target_contract_v1",
+  "scoring_policy": {
+    "api_response_storage": "forbidden",
+    "normalized_outputs_only": true,
+    "scorer_requires_logprobs": true,
+    "store_raw_api_response": false,
+    "teacher_forced": true
+  },
+  "target_format": {
+    "canonical_ordering": "gold_supporting_packets_sorted_by_hop_index_then_packet_id",
+    "line_format": "rank<TAB>source_doc_id<TAB>span<TAB>packet_id<TAB>packet_hash",
+    "schema": "EVIDENCE_PATH_V1",
+    "target_representation": "hotpotqa_gold_support_source_doc_span_packet_path_v1",
+    "target_type": "evidence_path_nll"
+  },
+  "target_format_hash": "2afa7903f50d75b70cda83e864ecd69701df3a0a6106e4f2f8a4bd4cf737949e",
+  "target_provenance": {
+    "active_dataset": "HotpotQA",
+    "active_split": "dev_distractor",
+    "disabled_dataset": "FEVER",
+    "target_source": "gold_supporting_candidate_pool_packets"
+  },
+  "target_representation": "hotpotqa_gold_support_source_doc_span_packet_path_v1",
+  "target_text_template_hash": "e71af55cb9d14cd0ac51bc0d6d984121da5c99c0799f65c95a2c264f93deb84f",
+  "target_type": "evidence_path_nll",
+  "teacher_forced_scoring_required": true
+}

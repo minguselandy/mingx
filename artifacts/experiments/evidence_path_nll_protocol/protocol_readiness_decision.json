@@ -1,0 +1,34 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "contract_validation": {
+    "errors": [],
+    "passed": true
+  },
+  "controls_preregistered": true,
+  "denied_claims": [
+    "measurement_validation",
+    "metric_bridge_support",
+    "calibrated_proxy_support",
+    "V-info_proxy_support",
+    "selector_superiority",
+    "paper_evidence"
+  ],
+  "disabled_decision": "SWITCH_TO_FEVER_LABEL_NLL",
+  "fever_disabled": true,
+  "live_api_scoring_probe": {
+    "api_call_count": 3,
+    "api_failure_count": 3,
+    "api_success_count": 0,
+    "live_api_used": true,
+    "raw_api_responses_stored": false,
+    "secrets_stored": false
+  },
+  "lp6_bridge_repair_run": false,
+  "protocol_scope": "EPN1_EPN5_only",
+  "route5_locked": true,
+  "route8_locked": true,
+  "schema_version": "evidence_path_protocol_readiness_decision_v1",
+  "target_decision": "SWITCH_TO_EVIDENCE_PATH_NLL",
+  "target_rows_built": 600,
+  "terminal_protocol_decision": "HONESTLY_BLOCKED"
+}
