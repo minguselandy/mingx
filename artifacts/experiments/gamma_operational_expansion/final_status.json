@@ -1,0 +1,33 @@
+{
+  "bridge_retry_performed": false,
+  "calibrated_proxy_supported": false,
+  "claim_ledger_upgrade_attempted": false,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "selector superiority",
+    "metric bridge support",
+    "measurement validation",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper evidence"
+  ],
+  "fever_disabled": true,
+  "global_selector_superiority_claimed": false,
+  "live_api_used": false,
+  "manuscript_claim_files_edited": false,
+  "measurement_validation": false,
+  "metric_bridge_support": false,
+  "oracle_used_as_deployable_baseline": false,
+  "project_native_fixture_only": true,
+  "raw_api_responses_stored": false,
+  "raw_dataset_mirrors_created": false,
+  "run_ids": [
+    "gamma_hotpotqa_non_fever_operational",
+    "gamma_project_native_fixture_operational"
+  ],
+  "schema_version": "gamma_final_status_v1",
+  "selector_superiority_claimed": false,
+  "terminal_status": "GAMMA_OPERATIONAL_COMPARISON_COMPLETED",
+  "traces_compared": 76,
+  "vinfo_proxy_supported": false
+}

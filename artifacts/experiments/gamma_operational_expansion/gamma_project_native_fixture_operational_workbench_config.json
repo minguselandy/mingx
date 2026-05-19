@@ -1,0 +1,44 @@
+{
+  "accepted_evidence_requires_independent_review": true,
+  "budgets": [
+    32,
+    34,
+    38
+  ],
+  "candidate_pools_path": "artifacts/experiments/gamma_operational_expansion/project_native_candidate_pools.jsonl",
+  "claim_mode": "shadow",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "contamination_policy": "fail_closed_on_contamination_or_unreviewed_source_risk",
+  "dataset": "ProjectNativeRealisticTasks",
+  "evaluators": [
+    "operational",
+    "diagnostic_safety",
+    "claim_ledger"
+  ],
+  "label_source_policy": "model_adjudicated_or_operational_only_no_measurement_validation",
+  "limit": 3,
+  "output_dir": "artifacts/experiments/gamma_operational_expansion/workbench_project_native",
+  "portfolio": "integrated_validation_workbench",
+  "route5_unlock_requires": [
+    "accepted_bridge_candidate",
+    "independent_review"
+  ],
+  "route8_claim_upgrade_requires": [
+    "accepted_evidence_packages_nonempty",
+    "independent_review"
+  ],
+  "run_id": "gamma_project_native_fixture_operational",
+  "selectors": [
+    "random_budget",
+    "bm25_topk",
+    "mmr_density_greedy",
+    "v12_diagnostic_policy"
+  ],
+  "shadow_labels": [
+    "shadow_metric_bridge",
+    "shadow_vinfo_proxy",
+    "shadow_measurement_candidate",
+    "shadow_selector_superiority"
+  ],
+  "uncertainty_policy": "missing_or_underpowered_evidence_blocks_claim_upgrade"
+}

@@ -1,0 +1,99 @@
+{
+  "audit_live_api_used": false,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "failure_factor_assessment": {
+    "fixed_model_logloss_proxy": {
+      "status": "skipped_no_bridge_candidate",
+      "summary": "Route 5 remained stopped before fixed-model logloss proxy verification."
+    },
+    "logprobe_instability": {
+      "status": "present",
+      "summary": "Existing reports show retry or failure signals; this audit did not rerun scoring."
+    },
+    "target_verbalization_tokenization": {
+      "status": "present",
+      "summary": "Support-classification scoring produced label or token mismatch failures."
+    }
+  },
+  "generation_reports": {
+    "answer_nll": {
+      "api_failure_count": 0,
+      "api_retries": 15,
+      "delta_records_validated": 600,
+      "evaluator_id": "approved_live_api_logprob_endpoint::dashscope::qwen3.6-flash::deterministic_logprob_scoring_v1",
+      "model_name": "qwen3.6-flash",
+      "name": "HotpotQA answer NLL delta records",
+      "network_failure_count": 0,
+      "score_calls": 750,
+      "target_verbalization_failure_count": 0
+    },
+    "support_classification": {
+      "api_failure_count": 155,
+      "api_retries": 75,
+      "delta_records_validated": 643,
+      "evaluator_id": "approved_live_api_logprob_endpoint::dashscope::qwen3.6-flash::support_classification_logprob_v1",
+      "model_name": "qwen3.6-flash",
+      "name": "HotpotQA support-classification delta records",
+      "network_failure_count": 7,
+      "score_calls": 1286,
+      "target_verbalization_failure_count": 148
+    }
+  },
+  "logloss_evaluator_path_audit": {
+    "claim_flags": {
+      "calibrated_proxy_supported": false,
+      "shadow_vinfo_proxy": true,
+      "vinfo_proxy_supported": false
+    },
+    "metrics": {
+      "fixed_model_logloss_available": false,
+      "logloss_status": "shadow_vinfo_proxy_no_fixed_model_scoring"
+    },
+    "source_path": "cps/evaluators/logloss.py",
+    "status": "shadow_vinfo_proxy_no_fixed_model_scoring"
+  },
+  "new_live_api_calls": false,
+  "route5_logloss_proxy_gate": {
+    "fixed_model_logloss_proxy_verification_started": false,
+    "metric_bridge_support": false,
+    "start_condition_satisfied": false,
+    "status": "skipped_no_bridge_candidate",
+    "vinfo_proxy_supported": false
+  },
+  "route5_unlocked": false,
+  "route8_unlocked": false,
+  "schema_version": "logprobe_stability_report_v1",
+  "source_artifacts": {
+    "hotpotqa_answer_nll_generation_report": "artifacts/benchmarks/hotpotqa_p55_delta_generation_report.json",
+    "hotpotqa_support_classification_generation_report": "artifacts/benchmarks/hotpotqa_support_classification_delta_generation_report.json"
+  },
+  "workbench_bridge_analyzer_outputs": [
+    {
+      "calibrated_proxy_supported": false,
+      "claim_status": "operational_utility_only/no_claim_upgrade",
+      "effective_sample_size": 0,
+      "name": "integrated_validation_workbench_hotpotqa_smoke",
+      "rows_validated": 0,
+      "status": "failed_closed_no_rows",
+      "vinfo_proxy_supported": false
+    },
+    {
+      "calibrated_proxy_supported": false,
+      "claim_status": "operational_utility_only/no_claim_upgrade",
+      "effective_sample_size": 0,
+      "name": "gamma_workbench_hotpotqa",
+      "rows_validated": 0,
+      "status": "failed_closed_no_rows",
+      "vinfo_proxy_supported": false
+    },
+    {
+      "calibrated_proxy_supported": false,
+      "claim_status": "operational_utility_only/no_claim_upgrade",
+      "effective_sample_size": 0,
+      "name": "gamma_workbench_project_native",
+      "rows_validated": 0,
+      "status": "failed_closed_no_rows",
+      "vinfo_proxy_supported": false
+    }
+  ]
+}

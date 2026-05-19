@@ -1,0 +1,59 @@
+{
+  "audit_live_api_used": false,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "measurement_validation",
+    "metric_bridge_support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper_evidence",
+    "selector_superiority",
+    "deployed_v_information_verification"
+  ],
+  "failure_factors": {
+    "bridge_gate_strictness": {
+      "evidence": "Route4A and DeltaRoute4E had enough rows for the pilot threshold but failed sign, rank, or residual gates.",
+      "recommendation": "do_not_relax_claim_gate",
+      "status": "claim_gate_operating_as_designed"
+    },
+    "judge_label_noise": {
+      "evidence": {
+        "delta_judge_status": "FAILED_CLOSED_JUDGE_RELIABILITY",
+        "route6b_counts_as_human_labels": false
+      },
+      "status": "present"
+    },
+    "logprobe_instability": {
+      "status": "present",
+      "summary": "Existing reports show retry or failure signals; this audit did not rerun scoring."
+    },
+    "target_verbalization_tokenization": {
+      "status": "present",
+      "summary": "Support-classification scoring produced label or token mismatch failures."
+    },
+    "underpowered_rows": {
+      "evidence": {
+        "delta_three_view_item_count": 0,
+        "delta_unique_original_instance_count": 150,
+        "route4b_rows_validated": 300
+      },
+      "status": "present"
+    },
+    "weak_utility_logloss_alignment": {
+      "affected_routes": [
+        "Route4A",
+        "Route4B",
+        "DeltaRoute4E"
+      ],
+      "status": "present"
+    }
+  },
+  "locked_routes": {
+    "Route5": "locked_no_accepted_metric_bridge",
+    "Route8": "locked_no_accepted_evidence_package"
+  },
+  "new_live_api_calls": false,
+  "overall_status": "failed_closed_no_claim_upgrade",
+  "route8_reference_status": "blocked_no_accepted_evidence_packages",
+  "schema_version": "route4_failure_decomposition_v1"
+}

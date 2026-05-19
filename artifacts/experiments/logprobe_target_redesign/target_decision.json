@@ -1,0 +1,33 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "disabled_decisions": [
+    "SWITCH_TO_FEVER_LABEL_NLL"
+  ],
+  "lp6_bridge_repair_run": false,
+  "new_live_api_calls": false,
+  "primary_decision": "SWITCH_TO_EVIDENCE_PATH_NLL",
+  "rejected_decisions": [
+    {
+      "decision": "KEEP_CURRENT_TARGET_AND_SCALE",
+      "reason": "current_answer_nll_alignment_weak"
+    },
+    {
+      "decision": "SWITCH_TO_SUFFICIENCY_CLASSIFIER_NLL",
+      "reason": "support_classifier_target_verbalization_risk_present"
+    },
+    {
+      "decision": "SWITCH_TO_OPTION_NLL",
+      "reason": "no_existing_option_nll_artifacts_in_scope"
+    }
+  ],
+  "required_unlocks": [
+    "independent_review_before_lp6",
+    "operator_approval_before_any_future_live_scoring",
+    "new_target_shadow_stability_check",
+    "fresh_measured_delta_logloss_rows_for_new_target"
+  ],
+  "risk_level": "high",
+  "schema_version": "logprobe_target_redesign_decision_v1",
+  "secondary_decision": "ABANDON_LOGPROBE_BRIDGE_FOR_CURRENT_STRATUM",
+  "target_contract_passed": true
+}

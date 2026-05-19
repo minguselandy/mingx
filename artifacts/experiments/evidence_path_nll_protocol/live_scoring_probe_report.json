@@ -1,0 +1,58 @@
+{
+  "api_call_count": 3,
+  "api_failure_count": 3,
+  "api_success_count": 0,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "evaluator_id": "openai_compatible_chat_logprobs_teacher_forced_v1",
+  "live_api_used": true,
+  "missing_evaluator_config": [],
+  "model_id": "qwen-plus",
+  "probe_rows": [
+    {
+      "content_match": false,
+      "failure_reason_code": "content_mismatch_no_teacher_forced_target_score",
+      "model_id": "qwen-plus",
+      "nll": 0.008799972498025,
+      "prompt_template_hash": "c726d897167bb3aa8f8ee5834fb87aa6a4c49d77a334d671d1794a196f432597",
+      "prompt_token_count": 122,
+      "target_char_length": 363,
+      "target_format_hash": "2afa7903f50d75b70cda83e864ecd69701df3a0a6106e4f2f8a4bd4cf737949e",
+      "target_row_id": "a6d686c8cd1db466db36724cb5ddc2cd6e54640c67f39d795631c77b8e121e4c",
+      "target_text_hash": "4b20dd3a0f28b79e96b3989b120b9ef5f1d50d3e819e0b113cac05a6ccf37211",
+      "target_token_count": 19,
+      "token_logprob_count": 19
+    },
+    {
+      "content_match": false,
+      "failure_reason_code": "content_mismatch_no_teacher_forced_target_score",
+      "model_id": "qwen-plus",
+      "nll": 0.5344475385317935,
+      "prompt_template_hash": "c726d897167bb3aa8f8ee5834fb87aa6a4c49d77a334d671d1794a196f432597",
+      "prompt_token_count": 235,
+      "target_char_length": 557,
+      "target_format_hash": "2afa7903f50d75b70cda83e864ecd69701df3a0a6106e4f2f8a4bd4cf737949e",
+      "target_row_id": "2b43b8dc1c6018c432f4e0cd95b50d1cc024a01e5e484cb373a1c7b6c104bf33",
+      "target_text_hash": "108a561652a7199633d3580a67f6c7b41307364db5089b80a222c4f8ecdc1e92",
+      "target_token_count": 9,
+      "token_logprob_count": 9
+    },
+    {
+      "content_match": false,
+      "failure_reason_code": "content_mismatch_no_teacher_forced_target_score",
+      "model_id": "qwen-plus",
+      "nll": 3.802713422373927e-05,
+      "prompt_template_hash": "c726d897167bb3aa8f8ee5834fb87aa6a4c49d77a334d671d1794a196f432597",
+      "prompt_token_count": 149,
+      "target_char_length": 394,
+      "target_format_hash": "2afa7903f50d75b70cda83e864ecd69701df3a0a6106e4f2f8a4bd4cf737949e",
+      "target_row_id": "2604b4dd30b9f20aee7bbff4b851c9fba5fdcfa62ea02e0aa49cb1ac5dc204d6",
+      "target_text_hash": "b09658a343fc7de180a40a3652c64baba53fc4c128410af29003fcdf4d2a40b4",
+      "target_token_count": 3,
+      "token_logprob_count": 3
+    }
+  ],
+  "raw_api_responses_stored": false,
+  "schema_version": "evidence_path_live_scoring_probe_v1",
+  "scoring_status": "teacher_forced_target_score_unavailable",
+  "secrets_stored": false
+}

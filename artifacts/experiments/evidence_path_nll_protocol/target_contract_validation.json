@@ -1,0 +1,6 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "errors": [],
+  "passed": true,
+  "schema_version": "evidence_path_nll_target_contract_validation_v1"
+}

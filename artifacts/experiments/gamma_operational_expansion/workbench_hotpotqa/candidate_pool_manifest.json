@@ -1,0 +1,24 @@
+{
+  "candidate_pool_hashes": [
+    "32b35b670d941e827f3fdc148394ed1e0f623bff47044b690d9867870c8522f2",
+    "ad84a8850f2294ba47d2f21ff789937687284c63e80103ac4ff0eac1829a0487",
+    "af86c43eaee171707a552eaef3a27852f37b2c372c3deb472cbda850376a87a1",
+    "ed7ed184e6f007693cd8fd76c4a4febd68a3a243c5970f86b78db549f8ff0768",
+    "f6b4d1d60c6c3b5d9aaf7c55e3af4473797524c5923d5d9143b3d2e6459ac194"
+  ],
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "contract_errors": [],
+  "contract_warnings": [],
+  "dataset": "HotpotQA",
+  "gold_packets": 14,
+  "gold_reachable_by_budget": {
+    "256": 5,
+    "512": 5
+  },
+  "hard_negative_packets": 184,
+  "pool_count": 5,
+  "provenance_complete": true,
+  "schema_valid": true,
+  "schema_version": "workbench_candidate_pool_manifest_v1",
+  "total_packets": 198
+}

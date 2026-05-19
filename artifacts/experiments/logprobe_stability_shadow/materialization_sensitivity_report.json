@@ -1,0 +1,12 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "context_packet_count_max": 0,
+  "context_packet_count_min": 0,
+  "materialization_policies": {
+    "fixed_selector_order_with_source_boundaries": 600
+  },
+  "materialization_policy_count": 1,
+  "new_live_api_calls": false,
+  "position_order_risk": "not_recomputed_existing_rows_only",
+  "schema_version": "logprobe_materialization_sensitivity_report_v1"
+}

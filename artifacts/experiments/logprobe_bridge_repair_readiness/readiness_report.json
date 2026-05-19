@@ -1,0 +1,33 @@
+{
+  "checks": {
+    "alignment_signal_promising": false,
+    "contamination_policy_ready": true,
+    "independent_review_required": true,
+    "label_source_policy_valid": true,
+    "logprobe_stability_passed": false,
+    "route5_locked": true,
+    "route8_locked": true,
+    "row_count_plan_ready": true,
+    "target_contract_passed": true
+  },
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "lp6_bridge_repair_run": false,
+  "new_live_api_calls": false,
+  "readiness_state": "READY_FOR_TARGET_SWITCH",
+  "reason_codes": [
+    "current_answer_nll_alignment_weak",
+    "support_classifier_target_verbalization_risk_present",
+    "fever_target_switch_disabled",
+    "route5_remains_locked",
+    "route8_remains_locked",
+    "lp6_not_run"
+  ],
+  "required_unlocks": [
+    "independent_review_before_lp6",
+    "operator_approval_before_any_future_live_scoring",
+    "new_target_shadow_stability_check",
+    "fresh_measured_delta_logloss_rows_for_new_target"
+  ],
+  "schema_version": "logprobe_bridge_repair_readiness_v1",
+  "target_decision": "SWITCH_TO_EVIDENCE_PATH_NLL"
+}

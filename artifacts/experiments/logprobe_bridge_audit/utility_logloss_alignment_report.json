@@ -1,0 +1,155 @@
+{
+  "audit_live_api_used": false,
+  "claim_gate_summary": {
+    "calibrated_proxy_supported": false,
+    "measurement_validation": false,
+    "metric_bridge_support": false,
+    "paper_evidence": false,
+    "vinfo_proxy_supported": false
+  },
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "judge_label_summary": {
+    "delta": {
+      "claim_status": "operational_utility_only/no_claim_upgrade",
+      "invalid_label_rate": 0.06125,
+      "minority_veto_count": 481,
+      "order_reversal_match_rate": 0.795,
+      "raw_api_responses_stored": false,
+      "status": "FAILED_CLOSED_JUDGE_RELIABILITY"
+    },
+    "route6b": {
+      "accepted_model_adjudicated_count": 300,
+      "counts_as_human_labels": false,
+      "human_annotation_status": "blocked_human_annotation_required",
+      "measurement_validation_candidate_allowed": false,
+      "raw_api_responses_stored": false,
+      "status": "measurement_candidate_ready"
+    }
+  },
+  "new_live_api_calls": false,
+  "routes": {
+    "DeltaRoute4E": {
+      "claim_status": "operational_utility_only/no_claim_upgrade",
+      "computed_alignment": {
+        "low_signal_abs_delta_logloss_count": 713,
+        "low_signal_abs_delta_logloss_rate": 0.89125,
+        "mean_delta_logloss": -0.000461957998,
+        "mean_delta_utility": 0.19375,
+        "negative_delta_logloss_count": 619,
+        "pearson_r": -0.00748005933,
+        "row_pairs_scanned": 800,
+        "sign_agreement": 0.0825,
+        "spearman_rho": 0.236518896622,
+        "zero_delta_logloss_count": 0
+      },
+      "effective_sample_size": 0,
+      "fit_summary_alignment": {
+        "normalized_residual": 0.9954248641225202,
+        "sign_agreement": 0.42038216560509556,
+        "spearman_rho": 0.23651889662171885
+      },
+      "gate_pass_flags": {
+        "normalized_residual_pass": false,
+        "row_count_pass": true,
+        "sign_agreement_pass": false,
+        "spearman_rho_pass": false,
+        "unique_instance_pass": true
+      },
+      "gate_result": "failed_closed_gate_failed",
+      "reason_codes": [
+        "normalized_residual_failed",
+        "sign_agreement_failed",
+        "spearman_rho_failed"
+      ],
+      "route_id": "DeltaRoute4E",
+      "row_count": 800,
+      "underpowered_rows": false,
+      "unique_original_instances": 150,
+      "utility_field": "delta_hybrid_utility",
+      "weak_utility_logloss_alignment": true
+    },
+    "Route4A": {
+      "claim_status": "no_claim_upgrade",
+      "computed_alignment": {
+        "low_signal_abs_delta_logloss_count": 534,
+        "low_signal_abs_delta_logloss_rate": 0.89,
+        "mean_delta_logloss": -0.000433860136,
+        "mean_delta_utility": 0.202466666667,
+        "negative_delta_logloss_count": 460,
+        "pearson_r": 0.018417865436,
+        "row_pairs_scanned": 600,
+        "sign_agreement": 0.175,
+        "spearman_rho": 0.191862834021,
+        "zero_delta_logloss_count": 0
+      },
+      "effective_sample_size": 600,
+      "fit_summary_alignment": {
+        "normalized_residual": 4.94420697228462,
+        "sign_agreement": 0.16111111111111112,
+        "spearman_rho": -0.19331980454683617
+      },
+      "gate_pass_flags": {
+        "effective_sample_size_pass": true,
+        "heldout_fraction_pass": true,
+        "normalized_residual_pass": false,
+        "row_count_pass": true,
+        "sign_agreement_pass": false,
+        "spearman_rho_pass": false,
+        "unique_instance_pass": true
+      },
+      "gate_result": "failed_closed_gate_failed",
+      "reason_codes": [
+        "normalized_residual_failed",
+        "sign_agreement_failed",
+        "spearman_rho_failed"
+      ],
+      "route_id": "Route4A",
+      "row_count": 600,
+      "underpowered_rows": false,
+      "unique_original_instances": 150,
+      "utility_field": "delta_utility",
+      "weak_utility_logloss_alignment": true
+    },
+    "Route4B": {
+      "claim_status": "no_claim_upgrade",
+      "computed_alignment": {
+        "low_signal_abs_delta_logloss_count": 265,
+        "low_signal_abs_delta_logloss_rate": 0.883333333333,
+        "mean_delta_logloss": -0.000427771945,
+        "mean_delta_utility": 0.165,
+        "negative_delta_logloss_count": 243,
+        "pearson_r": -0.022537916672,
+        "row_pairs_scanned": 300,
+        "sign_agreement": 0.063333333333,
+        "spearman_rho": 0.23158375813,
+        "zero_delta_logloss_count": 0
+      },
+      "effective_sample_size": 300,
+      "fit_summary_alignment": {
+        "normalized_residual": 0.9943939943352396,
+        "sign_agreement": 0.38,
+        "spearman_rho": 0.2315837581304158
+      },
+      "gate_pass_flags": {
+        "effective_sample_size_pass": true,
+        "normalized_residual_pass": false,
+        "row_count_pass": false,
+        "sign_agreement_pass": false,
+        "spearman_rho_pass": false,
+        "unique_instance_pass": true
+      },
+      "gate_result": "failed_closed_underpowered",
+      "reason_codes": [
+        "row_count_below_minimum",
+        "model_adjudication_not_human_measurement_validation"
+      ],
+      "route_id": "Route4B",
+      "row_count": 300,
+      "underpowered_rows": true,
+      "unique_original_instances": 150,
+      "utility_field": "delta_external_sufficiency_utility",
+      "weak_utility_logloss_alignment": true
+    }
+  },
+  "schema_version": "utility_logloss_alignment_report_v1"
+}

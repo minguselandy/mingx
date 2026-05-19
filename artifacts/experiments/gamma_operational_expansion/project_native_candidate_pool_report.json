@@ -1,0 +1,20 @@
+{
+  "budgets": [
+    32,
+    34,
+    38
+  ],
+  "candidate_pool_count": 3,
+  "candidate_pools_path": "artifacts/experiments/gamma_operational_expansion/project_native_candidate_pools.jsonl",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "data_source_kind": "fixture",
+  "paper_evidence_eligible": false,
+  "raw_external_mirror_created": false,
+  "schema_version": "gamma_project_native_candidate_pool_report_v1",
+  "source_packets_path": "artifacts/experiments/realistic_task_model_adjudicated_v12/realistic_task_packets.jsonl",
+  "task_families": [
+    "multi_hop_evidence_assembly",
+    "paper_revision_microtask",
+    "repo_change_review_microtask"
+  ]
+}

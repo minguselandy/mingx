@@ -1,0 +1,23 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "extreme_delta_logloss_count": 0,
+  "fixed_target_representation": "hotpotqa_canonical_answer_string",
+  "max_abs_delta_logloss": 0.024009065153,
+  "multi_token_target_risk": {
+    "max_char_length": 91,
+    "max_whitespace_token_length": 14,
+    "multi_token_target_count": 396,
+    "multi_token_target_rate": 0.66,
+    "status": "present",
+    "target_count": 600
+  },
+  "near_zero_delta_logloss_count": 534,
+  "near_zero_delta_logloss_rate": 0.89,
+  "new_live_api_calls": false,
+  "row_count": 600,
+  "schema_version": "logprobe_tokenization_risk_report_v1",
+  "target_verbalization_tokenization": {
+    "status": "present",
+    "target_verbalization_failure_count": 148
+  }
+}

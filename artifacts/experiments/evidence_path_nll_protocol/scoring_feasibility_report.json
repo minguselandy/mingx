@@ -1,0 +1,26 @@
+{
+  "api_call_count": 3,
+  "api_failure_count": 3,
+  "api_success_count": 0,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "evaluator_id": "openai_compatible_chat_logprobs_teacher_forced_v1",
+  "live_api_used": true,
+  "missing_evaluator_config": [],
+  "model_id": "qwen-plus",
+  "normalized_outputs_only": true,
+  "raw_api_responses_stored": false,
+  "row_builder_ready": true,
+  "schema_version": "evidence_path_scoring_feasibility_v1",
+  "scoring_policy": {
+    "api_response_storage": "forbidden",
+    "normalized_outputs_only": true,
+    "scorer_requires_logprobs": true,
+    "store_raw_api_response": false,
+    "teacher_forced": true
+  },
+  "scoring_status": "teacher_forced_target_score_unavailable",
+  "secrets_stored": false,
+  "target_format_hash": "2afa7903f50d75b70cda83e864ecd69701df3a0a6106e4f2f8a4bd4cf737949e",
+  "target_rows_available": 600,
+  "teacher_forced_scoring_required": true
+}

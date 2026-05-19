@@ -1,0 +1,60 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "schema_version": "alignment_by_target_type_v1",
+  "target_types": {
+    "answer_string": {
+      "claim_status": "operational_utility_only/no_claim_upgrade",
+      "gate_result": "",
+      "kendall_tau": 0.172891527804,
+      "logloss_variance": 4.420764e-06,
+      "near_zero_delta_logloss_rate": 0.89,
+      "negative_delta_logloss_count": 460,
+      "normalized_mae": 1.0,
+      "positive_delta_logloss_count": 140,
+      "row_count": 600,
+      "schema_version": "alignment_stratum_summary_v1",
+      "sign_agreement": 0.175,
+      "spearman_rho": 0.191862834021,
+      "target_type": "answer_string",
+      "unique_original_instances": 150,
+      "utility_variance": 0.034112165556,
+      "weak_signal_classification": "weak_signal"
+    },
+    "external_sufficiency": {
+      "claim_status": "operational_utility_only/no_claim_upgrade",
+      "gate_result": "",
+      "kendall_tau": 0.357717746434,
+      "logloss_variance": 3.957191e-06,
+      "near_zero_delta_logloss_rate": 0.883333333333,
+      "negative_delta_logloss_count": 243,
+      "normalized_mae": 1.0,
+      "positive_delta_logloss_count": 57,
+      "row_count": 300,
+      "schema_version": "alignment_stratum_summary_v1",
+      "sign_agreement": 0.063333333333,
+      "spearman_rho": 0.23158375813,
+      "target_type": "external_sufficiency",
+      "unique_original_instances": 150,
+      "utility_variance": 0.136941666667,
+      "weak_signal_classification": "weak_signal"
+    },
+    "hybrid_utility": {
+      "claim_status": "operational_utility_only/no_claim_upgrade",
+      "gate_result": "",
+      "kendall_tau": 0.341919221756,
+      "logloss_variance": 5.043515e-06,
+      "near_zero_delta_logloss_rate": 0.89125,
+      "negative_delta_logloss_count": 619,
+      "normalized_mae": 1.0,
+      "positive_delta_logloss_count": 181,
+      "row_count": 800,
+      "schema_version": "alignment_stratum_summary_v1",
+      "sign_agreement": 0.0825,
+      "spearman_rho": 0.236518896622,
+      "target_type": "hybrid_utility",
+      "unique_original_instances": 150,
+      "utility_variance": 0.1549609375,
+      "weak_signal_classification": "weak_signal"
+    }
+  }
+}
