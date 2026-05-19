@@ -1,0 +1,35 @@
+{
+  "available_backend_types": [],
+  "backend_id": "blocked_no_teacher_forced_backend",
+  "blocked_reason": "blocked_no_teacher_forced_backend",
+  "blocked_reason_details": [
+    "completion_logprobs_api_key_not_configured",
+    "completion_logprobs_endpoint_not_configured",
+    "completion_logprobs_live_probe_not_enabled",
+    "completion_logprobs_mode_not_fixed_target_echo_prompt",
+    "local_causal_lm_dependencies_unavailable"
+  ],
+  "chat_logprob_path_rejected_for_fixed_target_scoring": true,
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "evaluator_id": "teacher_forced_logprobe_backend_inventory_v1",
+  "live_api_used": false,
+  "local_model_scorer_available": false,
+  "local_model_scorer_details": {
+    "local_model_path_configured": false,
+    "local_model_path_exists": false,
+    "torch_available": false,
+    "transformers_available": false
+  },
+  "openai_compatible_completion_logprobs_available": false,
+  "openai_compatible_completion_logprobs_details": {
+    "api_key_present": false,
+    "base_url_configured": false,
+    "live_probe_enabled": false,
+    "mode": "not_configured",
+    "model_configured": false
+  },
+  "raw_responses_stored": false,
+  "schema_version": "teacher_forced_backend_capability_report_v1",
+  "secrets_exposed": false,
+  "teacher_forced_target_scoring_available": false
+}

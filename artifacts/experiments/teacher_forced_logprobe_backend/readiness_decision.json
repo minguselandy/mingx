@@ -1,0 +1,12 @@
+{
+  "blocked_reason": "blocked_no_teacher_forced_backend",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "epn_remains_blocked": true,
+  "future_evidence_path_nll_bridge_pilot_allowed": false,
+  "no_claim_upgrade": true,
+  "raw_responses_stored": false,
+  "route5_locked": true,
+  "route8_locked": true,
+  "schema_version": "teacher_forced_backend_readiness_decision_v1",
+  "terminal_status": "BLOCKED_NO_TEACHER_FORCED_BACKEND"
+}

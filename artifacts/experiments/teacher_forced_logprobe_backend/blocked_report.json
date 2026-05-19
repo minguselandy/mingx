@@ -1,0 +1,15 @@
+{
+  "blocked_reason": "blocked_no_teacher_forced_backend",
+  "blocked_reason_details": [
+    "completion_logprobs_api_key_not_configured",
+    "completion_logprobs_endpoint_not_configured",
+    "completion_logprobs_live_probe_not_enabled",
+    "completion_logprobs_mode_not_fixed_target_echo_prompt",
+    "local_causal_lm_dependencies_unavailable"
+  ],
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "fake_scores_generated": false,
+  "raw_responses_stored": false,
+  "schema_version": "teacher_forced_backend_blocked_report_v1",
+  "teacher_forced_target_score_available": false
+}
