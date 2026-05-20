@@ -1,0 +1,1 @@
+/goal Execute docs/goals/EPF-B-paper-positioning-goal.md until one of its declared terminal states is reached. Follow its stop rules, include/exclude paths, claim boundaries, verification commands, and commit policy exactly. If blocked, stop with a blocker report instead of weakening claim boundaries.

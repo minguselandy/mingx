@@ -44,6 +44,7 @@ preserve claim boundaries.
 | P67R | Route 2 operational evidence package and claim ledger | `docs/experiments/P67R-route2-operational-evidence-package.md`; `artifacts/experiments/route2_operational_evidence_package/` | package over accepted Route 2 artifacts | accepted and pushed at `717796a` | no bridge upgrade | `operational_utility_only`; no claim upgrade | operational-only package | false | false | metric bridge support, calibrated proxy support, V-information support, measurement validation, paper evidence | Section 4.8 / Appendix C package reference | P67R packages operational-only Route 2 evidence and preserves the negative bridge results. |
 | Route 3A | support-grounded bridge protocol | `docs/experiments/Route3A-pre-registration-plan.md`; `docs/experiments/Route3A-support-grounded-bridge.md`; `artifacts/benchmarks/route3a_hotpotqa_support_grounded_generation_report.json` | real HotpotQA candidate pools and approved live logprob evaluator | executed and failed closed before calibration | below minimum validated rows; calibration did not run | `no_claim_upgrade` | none from bridge support | false | false | support_grounded_bridge_candidate achieved, metric bridge support, calibrated proxy support, V-information support, measurement validation, paper evidence, P55 bridge support | Appendix C / repo-only as negative bridge-repair diagnostic | Route 3A tested a support-grounded bridge protocol but validated only 461 / 600 rows, below the predeclared 500-row threshold. |
 | Route 3B | revised support-grounded bridge protocol | `docs/experiments/Route3B-route3a-revision-pre-registration-plan.md`; `docs/experiments/Route3B-support-grounded-bridge-revision.md`; `artifacts/benchmarks/route3b_hotpotqa_support_grounded_generation_report.json`; `artifacts/experiments/route3b_support_grounded_bridge_calibration/` | real HotpotQA candidate pools and approved live logprob evaluator | executed; reached calibration scale; failed closed at gates | failed preregistered sign-agreement, Spearman, and normalized-residual gates | `failed_closed_no_claim_upgrade` | none from bridge support | false | false | support_grounded_bridge_candidate achieved, bridge repaired, repair succeeded, metric bridge support, calibrated proxy support, V-information support, measurement validation, paper evidence, P55 bridge support | Appendix C / repo-only as negative bridge-repair diagnostic | Route 3B fixed row-count attrition and passed non-circularity checks, but calibration failed closed with no claim upgrade. |
+| EPF WS0-WS10 | live-API-only candidate evidence package factory | `artifacts/experiments/epf_candidate_package/`; `docs/experiments/WS0-WS9*`; `docs/reviews/WS10-candidate-evidence-independent-review-template.md`; `docs/paper/WS10-paper-positioning-patch-plan.md` | DashScope-compatible live API; normalized outputs only | reviewable candidate package ready; independent review required for any limited-scope claim | true fixed-target teacher-forced NLL blocked; no continuation-scoring bridge | `operational_utility_only/no_claim_upgrade` | candidate operational diagnostics only | false | false | teacher-forced NLL support, metric bridge support, calibrated proxy support, V-information support, measurement validation, paper evidence, global selector superiority | Appendix/repo-only candidate package factory; paper-positioning note only | EPF packages live-API operational diagnostics, but the backend lacks true fixed-target continuation scoring and WS5 lacks human/external gold labels, so the package remains candidate operational evidence only. |
 
 ## Main-Paper-Safe Evidence Table
 
@@ -57,6 +58,7 @@ These entries can be mentioned in the main paper only with the listed caveats.
 | P52 | Proof repair and evidence-state integration as manuscript integrity work. | P52 is manuscript alignment only and creates no new empirical evidence. |
 | P53 | Diagnostic threshold contract as a predeclared audit protocol. | A contract can govern future diagnostics, but it is not validation or bridge evidence. |
 | P66-Route2 | HotpotQA operational replay/comparison result: v12 improves supporting-fact recall against deployable baselines under matched budgets. | Because Route 2 and Route 3 bridge gates failed closed, this remains `operational_utility_only`; it is not metric bridge support, paper evidence, or a global selector superiority claim. |
+| EPF WS0-WS10 | Backend-constrained candidate package factory that organizes live-API operational diagnostics for independent review. | EPF is not paper evidence and does not support teacher-forced NLL, metric bridge, calibrated proxy, V-information proxy, measurement validation, or global selector superiority claims. |
 
 No fixture, synthetic, no-row, no-trace, or scaffold artifact should be described
 as validation.
@@ -88,6 +90,7 @@ as validation.
 | P63R-FixB | Valid non-circular bridge attempt failed closed. | Preserve as a negative bridge result; downstream P56/P66 use remains operational-only. |
 | Route 3A | Support-grounded bridge attempt failed below the minimum validated-row gate. | Preserve as failed-closed bridge-repair diagnostic; calibration did not run. |
 | Route 3B | Revised support-grounded bridge attempt reached calibration scale but failed gates. | Preserve as failed-closed bridge-repair diagnostic; do not describe this as bridge repair success. |
+| EPF WS1 / WS5 | Fixed-target teacher-forced NLL remains blocked; WS5 measurement validation remains blocked without human/external gold labels. | Do not convert chat-logprob diagnostics, constrained label-generation proxies, or LLM judge labels into metric bridge support or measurement validation. |
 
 ## Future Work / Operator-Gated Table
 
@@ -98,6 +101,7 @@ as validation.
 | Human-sentinel extraction audit | operator approval, actual human annotators, valid agreement calculation, contamination review | Human sentinel evidence is not automatically measurement validation. |
 | Measurement-validation candidate | human-label/kappa/contamination gates plus relevant metric-bridge review | Requires separate review; model adjudication cannot fill missing human labels or missing kappa. |
 | Formal V-information support | log-loss alignment plus fresh fixed-model bridge, reviewed near-optimality argument, or empirical minimization over the declared predictive family | Generic utility/logloss correlation is insufficient. |
+| EPF limited-scope candidate claims | independent review plus live-API backend limitations, human/external gold availability, and storage-policy review | May at most remain a backend-constrained operational candidate package unless a separate review authorizes a narrower claim. |
 
 ## Forbidden Phrase / Denied Claim Table
 
@@ -111,6 +115,8 @@ as validation.
 | fixture evidence as paper-grade evidence | denied | fixture-only engineering/scaffold evidence |
 | synthetic evidence as bridge evidence | denied | synthetic structural stress test |
 | replay usability as metric support | denied | replay auditability/usability only |
+| EPF chat-logprob diagnostics as fixed-target NLL or bridge evidence | denied | backend-constrained operational confidence diagnostics |
+| EPF constrained label generation or LLM judge labels as measurement validation | denied | candidate/weak-source operational diagnostics pending human/external gold |
 | extraction audit as selector validity | denied | extraction-risk evidence |
 | ReprojectionWitness as deployed runtime improvement | denied | operational audit witness |
 | P55 blocked/no-row artifact as `calibrated_proxy_supported` | denied | blocked no-row report |
@@ -180,3 +186,26 @@ and deployed V-information verification remain false.
 P57 remains extraction-risk scaffold only. P58 remains operational diagnostic
 scaffold only. P59 remains operational audit scaffold only. P60 does not convert
 any of these scaffold states into empirical validation.
+
+## EPF Final Claim Booleans
+
+| claim_flag | value |
+|---|---|
+| EPF claim_status | `operational_utility_only/no_claim_upgrade` |
+| teacher_forced_fixed_target_nll_available | false |
+| ws5_measurement_validation | false |
+| calibrated_proxy_supported | false |
+| vinfo_proxy_supported | false |
+| measurement_validation | false |
+| paper_evidence | false |
+| metric_bridge_support | false |
+| global_selector_superiority | false |
+| route5_locked | true |
+| route8_locked | true |
+
+Under the available live-API backend, EPF does not expose true fixed-target
+teacher-forced continuation scoring. Its outputs are reviewable candidate
+operational evidence packages: chat-logprob confidence, constrained
+label-generation proxies, weak-source judge audits, multi-benchmark operational
+robustness summaries, and uncertainty-bounded reports remain operational
+diagnostics or candidate evidence only.

@@ -39,6 +39,12 @@ manuscript patch and creates no empirical evidence.
   `failed_closed_no_claim_upgrade`.
 - Route 3 does not repair the Route 2 bridge and does not authorize any claim
   upgrade.
+- EPF WS0-WS10 is a live-API-only candidate package factory. It organizes
+  operational diagnostics for independent review, but the current backend does
+  not expose true fixed-target teacher-forced continuation scoring.
+- EPF WS5 remains blocked from measurement validation without human/external
+  gold labels.
+- EPF claim status remains `operational_utility_only/no_claim_upgrade`.
 - P57 remains extraction-risk scaffold only.
 - P58 remains operational diagnostic scaffold only.
 - P59 remains operational audit scaffold only.
@@ -63,6 +69,11 @@ manuscript patch and creates no empirical evidence.
   achieved, bridge repaired, repair succeeded, metric bridge support, P55 bridge
   support, P56 metric support, paper evidence, measurement validation, global
   selector superiority, `calibrated_proxy_supported`, or `vinfo_proxy_supported`.
+- Do not describe EPF chat-logprob confidence, constrained label-generation
+  proxies, LLM judge labels, multi-benchmark summaries, or uncertainty-bounded
+  reports as teacher-forced NLL support, metric bridge support, measurement
+  validation, paper evidence, calibrated proxy support, V-information proxy
+  support, or global selector superiority.
 - Do not present `gold_support_oracle_upper_bound` as deployable; it must remain
   marked `non_deployable_upper_bound`.
 
@@ -79,6 +90,10 @@ manuscript patch and creates no empirical evidence.
 - Route 2 manuscript integration may proceed only as operational replay and
   negative-bridge reporting. Any metric-claim upgrade requires a separately
   reviewed bridge result that the current Route 2 package does not provide.
+- EPF limited-scope candidate claims require independent review and must remain
+  backend-constrained unless a future live API exposes true fixed-target
+  continuation scoring and the missing human/external gold-label gate is
+  separately satisfied.
 
 ## Route 2 Safe Integration Rule
 
@@ -110,6 +125,25 @@ do not repair the Route 2 bridge.
 Route 3A and Route 3B may be listed in Appendix C or the evidence ledger as
 failed-closed bridge-repair diagnostics. They should not be used to upgrade the
 Route 2 operational claim.
+
+## EPF Backend-Constrained Candidate Package Rule
+
+Allowed EPF wording:
+
+```text
+Under the available live-API backend, EPF does not expose true fixed-target
+teacher-forced continuation scoring. EPF outputs are backend-constrained,
+reviewable candidate operational evidence packages. Chat-logprob confidence,
+constrained label-generation proxies, weak-source judge audits,
+multi-benchmark operational robustness summaries, and uncertainty-bounded
+reports are operational diagnostics or candidate evidence only.
+```
+
+EPF may be referenced as an appendix/repo-only candidate package factory and as
+paper-positioning context for live-API backend limitations. It must not be used
+as teacher-forced NLL support, metric bridge support, calibrated proxy support,
+V-information proxy support, measurement validation, paper evidence, or global
+selector superiority.
 
 ## Safe Integration Rule
 

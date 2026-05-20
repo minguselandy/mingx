@@ -1,0 +1,24 @@
+{
+  "allowed_terminal_states": [
+    "EPF_PAPER_POSITIONING_PATCH_REVIEWABLE",
+    "EPF_PAPER_POSITIONING_PATCH_COMMITTED_LOCAL_ONLY",
+    "EPF_PAPER_POSITIONING_BLOCKED"
+  ],
+  "branch": "codex/integrated-validation-workbench",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "commit_allowed_without_user_review": false,
+  "goal_id": "EPF-B-paper-positioning",
+  "implementation_started": true,
+  "known_local_only_exclusions": [
+    "artifacts/experiments/epf_ws6_multibench_operational/workbench_hotpotqa/claim_ledger.json",
+    "artifacts/experiments/epf_ws6_multibench_operational/workbench_project_native/claim_ledger.json"
+  ],
+  "paper_patch_started": true,
+  "push_allowed": false,
+  "route5_locked": true,
+  "route8_locked": true,
+  "starting_commit": "0f430e61eb3e8fe92cf3a0a0dd7079f13d43364a",
+  "teacher_forced_nll_status": "blocked",
+  "terminal_state": "EPF_PAPER_POSITIONING_PATCH_REVIEWABLE",
+  "ws5_measurement_validation_status": "blocked_without_human_or_external_gold"
+}
