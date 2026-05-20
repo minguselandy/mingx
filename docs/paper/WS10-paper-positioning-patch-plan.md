@@ -17,11 +17,13 @@ EPF paper-positioning patch: under the available live-API backend, the EPF does
 not expose true fixed-target teacher-forced continuation scoring. Therefore,
 EPF outputs are reported as backend-constrained, reviewable candidate
 operational evidence packages. Chat-logprob confidence, constrained
-label-generation proxies, weak-source judge audits, multi-benchmark operational
-robustness summaries, and uncertainty-bounded reports are operational
+label-generation proxies, LLM-generated silver labels, weak-source judge
+audits, multi-benchmark operational robustness summaries, and
+uncertainty-bounded reports are operational
 diagnostics or candidate evidence only. They do not establish metric bridge
 support, calibrated proxy support, V-information proxy support, measurement
-validation, paper evidence, or global selector superiority.
+validation, human/external gold validation, paper evidence, or global selector
+superiority.
 
 | Evidence component | Status | Claim ceiling |
 | --- | --- | --- |

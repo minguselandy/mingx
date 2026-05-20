@@ -117,10 +117,52 @@ def test_factory_builds_reviewable_package_with_injected_dashscope_client(worksp
             encoding="utf-8"
         )
     )
+    silver_manifest = json.loads(
+        (workspace_tmp_dir / "artifacts/epf_c_silver_labels/silver_label_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    silver_rows = [
+        json.loads(line)
+        for line in (workspace_tmp_dir / "artifacts/epf_c_silver_labels/silver_labels.jsonl").read_text(
+            encoding="utf-8"
+        ).splitlines()
+        if line.strip()
+    ]
+    final_claim_request = json.loads(
+        (workspace_tmp_dir / "artifacts/epf_final/final_claim_request.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    final_manifest = json.loads(
+        (workspace_tmp_dir / "artifacts/epf_final/final_epf_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
     assert result["terminal_status"] == "REVIEWABLE_CANDIDATE_PACKAGE_READY"
+    assert result["epf_final_terminal_state"] == "EPF_FINAL_REVIEWABLE"
     assert result["claim_status"] == "operational_utility_only/no_claim_upgrade"
     assert claim_request["development_claim_upgrade_performed"] is False
     assert "operational_confidence_diagnostic" in claim_request["requested_candidate_claims"]
+    assert silver_manifest["evidence_class"] == "llm_generated_silver_label_candidate"
+    assert silver_manifest["claim_ceiling"] == "operational_utility_only/no_claim_upgrade"
+    assert silver_manifest["review_status"] == "candidate_pending_independent_review"
+    assert silver_manifest["provenance"]["raw_api_responses_stored"] is False
+    assert silver_rows
+    assert silver_rows[0]["llm_generated_silver_label"] is True
+    assert silver_rows[0]["human_external_gold_label"] is False
+    assert silver_rows[0]["selector_policy_used_to_generate_label"] is False
+    assert silver_rows[0]["raw_response_stored"] is False
+    assert "disagreement_bucket" in silver_rows[0]
+    assert "input_hash" in silver_rows[0]
+    assert "evidence_hash" in silver_rows[0]
+    assert final_claim_request["claim_status"] == "operational_utility_only/no_claim_upgrade"
+    assert final_claim_request["route5_unlock_requested"] is False
+    assert final_claim_request["route8_unlock_requested"] is False
+    assert final_claim_request["measurement_validation_claim"] is False
+    assert final_claim_request["human_external_gold_validation"] is False
+    assert "metric bridge support" in final_claim_request["denied_claims"]
+    assert final_manifest["terminal_state"] == "EPF_FINAL_REVIEWABLE"
 
 
 def test_live_api_client_config_accepts_only_dashscope_or_qwen_keys() -> None:

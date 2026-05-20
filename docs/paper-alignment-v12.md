@@ -69,7 +69,7 @@ explicitly mark legacy vocabulary as compatibility or archive state.
 | Phase B replay | `cps/experiments/phase_b_replay.py`, `cps/experiments/replay_evidence_package.py`, `docs/protocols/phase-b-replay-protocol.md` | P48 hardened replay status vs metric-claim separation, dispatch identity checks, v12 report outputs, and fail-closed fixture/synthetic boundaries |
 | Route 2 HotpotQA operational replay/comparison | `docs/experiments/P67R-route2-operational-evidence-package.md`, `artifacts/experiments/route2_operational_evidence_package/`, `artifacts/operator_inputs/p56_realistic_dispatch_traces.jsonl`, `artifacts/experiments/p56_hotpotqa_operational_comparison/` | P63R bridge attempts failed closed or were positive-control only; P56/P66 were accepted as HotpotQA operational replay/comparison evidence under `operational_utility_only`; no metric bridge support claim is allowed |
 | Route 3 HotpotQA support-grounded bridge diagnostics | `docs/experiments/Route3A-support-grounded-bridge.md`, `docs/experiments/Route3B-support-grounded-bridge-revision.md`, `artifacts/benchmarks/route3a_hotpotqa_support_grounded_generation_report.json`, `artifacts/benchmarks/route3b_hotpotqa_support_grounded_generation_report.json`, `artifacts/experiments/route3b_support_grounded_bridge_calibration/` | Route 3A failed closed below the minimum validated-row gate; Route 3B reached calibration scale but failed preregistered gates; no claim upgrade |
-| live-API-only EPF candidate package factory | `cps/experiments/live_api_evidence_package_factory.py`, `artifacts/experiments/epf_candidate_package/`, `docs/experiments/WS0-WS9*`, `docs/reviews/WS10-candidate-evidence-independent-review-template.md` | WS0-WS10 produced a reviewable candidate operational package under DashScope-compatible live-API constraints; true fixed-target teacher-forced NLL and WS5 measurement validation remain blocked, so no metric bridge, calibrated proxy, V-information proxy, paper evidence, or global selector superiority claim is allowed |
+| live-API-only EPF candidate package factory | `cps/experiments/live_api_evidence_package_factory.py`, `artifacts/experiments/epf_candidate_package/`, `artifacts/experiments/epf_c_silver_labels/`, `artifacts/experiments/epf_final/`, `docs/experiments/WS0-WS9*`, `docs/experiments/EPF-final-live-api-silver-label-candidate-package.md`, `docs/reviews/WS10-candidate-evidence-independent-review-template.md` | WS0-WS10 plus EPF-FINAL produced a reviewable candidate operational package under DashScope-compatible live-API constraints with LLM-generated silver-label candidate evidence; true fixed-target teacher-forced NLL, WS5 measurement validation, and human/external gold validation remain blocked, so no metric bridge, calibrated proxy, V-information proxy, paper evidence, or global selector superiority claim is allowed |
 | model-adjudicated evidence | `cps/experiments/route_b_evidence_package.py`, `cps/experiments/model_adjudicated_labels.py`, `cps/experiments/realistic_tasks.py`, `docs/experiments/realistic-task-model-adjudicated-v12.md`, `artifacts/experiments/realistic_task_model_adjudicated_v12/` | P47 added an offline fixture realistic-task benchmark; model-adjudicated proxy evidence only, not human labels or kappa |
 | extraction audit | `cps/experiments/extraction_audit.py`, `docs/experiments/extraction-audit-pilot-v12.md`, `artifacts/experiments/extraction_audit_pilot_v12/` | P49 added a deterministic fixture extraction audit pilot for the M-star to M boundary; fixture audit only, not paper evidence |
 | optional re-projection witness | `cps/experiments/reprojection_witness.py`, `docs/experiments/reprojection-witness-pilot-v12.md`, `artifacts/experiments/reprojection_witness_pilot_v12/` | P50 added a deterministic fixture ReprojectionWitness scaffold; operational audit only, not paper evidence |
@@ -163,13 +163,16 @@ support or a metric bridge.
 
 EPF outputs are backend-constrained operational diagnostics and candidate
 evidence packages only. Chat-logprob confidence rows, constrained
-label-generation proxies, weak-source judge audits, multi-benchmark operational
-robustness summaries, and uncertainty-bounded reports can support review of
-operational behavior, but they do not establish `calibrated_proxy_supported`,
-`vinfo_proxy_supported`, measurement validation, paper evidence, metric bridge
-support, or global selector superiority. WS5 remains blocked without
-human/external gold labels. Route 5 and Route 8 remain locked, and generated
-WS6 nested `claim_ledger.json` artifacts remain local-only shadow artifacts.
+label-generation proxies, LLM-generated silver labels, weak-source judge audits,
+multi-benchmark operational robustness summaries, and uncertainty-bounded
+reports can support review of operational behavior, but they do not establish
+`calibrated_proxy_supported`, `vinfo_proxy_supported`, measurement validation,
+paper evidence, metric bridge support, or global selector superiority. The
+silver-label layer stores normalized enum labels, confidence,
+uncertainty/disagreement buckets, hashes, and compact provenance only. WS5
+remains blocked without human/external gold labels. Route 5 and Route 8 remain
+locked, and generated WS6 nested `claim_ledger.json` artifacts remain
+local-only shadow artifacts.
 
 | Evidence component | Status | Claim ceiling |
 | --- | --- | --- |

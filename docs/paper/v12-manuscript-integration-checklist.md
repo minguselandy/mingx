@@ -39,9 +39,10 @@ manuscript patch and creates no empirical evidence.
   `failed_closed_no_claim_upgrade`.
 - Route 3 does not repair the Route 2 bridge and does not authorize any claim
   upgrade.
-- EPF WS0-WS10 is a live-API-only candidate package factory. It organizes
-  operational diagnostics for independent review, but the current backend does
-  not expose true fixed-target teacher-forced continuation scoring.
+- EPF WS0-WS10 / EPF-FINAL is a live-API-only candidate package factory. It
+  organizes operational diagnostics and LLM-generated silver-label candidate
+  evidence for independent review, but the current backend does not expose true
+  fixed-target teacher-forced continuation scoring.
 - EPF WS5 remains blocked from measurement validation without human/external
   gold labels.
 - EPF claim status remains `operational_utility_only/no_claim_upgrade`.
@@ -70,8 +71,9 @@ manuscript patch and creates no empirical evidence.
   support, P56 metric support, paper evidence, measurement validation, global
   selector superiority, `calibrated_proxy_supported`, or `vinfo_proxy_supported`.
 - Do not describe EPF chat-logprob confidence, constrained label-generation
-  proxies, LLM judge labels, multi-benchmark summaries, or uncertainty-bounded
-  reports as teacher-forced NLL support, metric bridge support, measurement
+  proxies, LLM-generated silver labels, LLM judge labels, multi-benchmark
+  summaries, or uncertainty-bounded reports as teacher-forced NLL support,
+  metric bridge support, measurement validation, human/external gold
   validation, paper evidence, calibrated proxy support, V-information proxy
   support, or global selector superiority.
 - Do not present `gold_support_oracle_upper_bound` as deployable; it must remain
@@ -134,16 +136,17 @@ Allowed EPF wording:
 Under the available live-API backend, EPF does not expose true fixed-target
 teacher-forced continuation scoring. EPF outputs are backend-constrained,
 reviewable candidate operational evidence packages. Chat-logprob confidence,
-constrained label-generation proxies, weak-source judge audits,
-multi-benchmark operational robustness summaries, and uncertainty-bounded
-reports are operational diagnostics or candidate evidence only.
+constrained label-generation proxies, LLM-generated silver labels, weak-source
+judge audits, multi-benchmark operational robustness summaries, and
+uncertainty-bounded reports are operational diagnostics or candidate evidence
+only.
 ```
 
 EPF may be referenced as an appendix/repo-only candidate package factory and as
 paper-positioning context for live-API backend limitations. It must not be used
 as teacher-forced NLL support, metric bridge support, calibrated proxy support,
-V-information proxy support, measurement validation, paper evidence, or global
-selector superiority.
+V-information proxy support, measurement validation, human/external gold
+validation, paper evidence, or global selector superiority.
 
 ## Safe Integration Rule
 
