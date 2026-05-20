@@ -6,6 +6,7 @@ from pathlib import Path
 from cps.benchmarks.common import write_jsonl
 from cps.benchmarks.schemas import make_candidate_pool
 from cps.benchmarks.schemas import make_evidence_packet
+from cps.experiments.live_api_evidence_package_factory import _select_live_api_client_config
 from cps.experiments.live_api_evidence_package_factory import run_live_api_evidence_package_factory
 
 
@@ -120,3 +121,49 @@ def test_factory_builds_reviewable_package_with_injected_dashscope_client(worksp
     assert result["claim_status"] == "operational_utility_only/no_claim_upgrade"
     assert claim_request["development_claim_upgrade_performed"] is False
     assert "operational_confidence_diagnostic" in claim_request["requested_candidate_claims"]
+
+
+def test_live_api_client_config_accepts_only_dashscope_or_qwen_keys() -> None:
+    dashscope = _select_live_api_client_config({"DASHSCOPE_API_KEY": "dashscope-secret"})
+    assert dashscope["available"] is True
+    assert dashscope["api_key_source"] == "DASHSCOPE_API_KEY"
+    assert dashscope["base_url"] == "https://dashscope.aliyuncs.com/compatible-mode/v1"
+
+    qwen = _select_live_api_client_config({"QWEN_API_KEY": "qwen-secret"})
+    assert qwen["available"] is True
+    assert qwen["api_key_source"] == "QWEN_API_KEY"
+
+    generic = _select_live_api_client_config({"API_KEY": "generic-secret"})
+    assert generic["available"] is False
+    assert generic["blocked_reason"] == "missing_dashscope_or_qwen_api_key"
+
+
+def test_live_api_client_config_rejects_unapproved_base_url() -> None:
+    result = _select_live_api_client_config(
+        {
+            "DASHSCOPE_API_KEY": "dashscope-secret",
+            "DASHSCOPE_BASE_URL": "https://model-hosted.example.invalid/v1",
+        }
+    )
+    assert result["available"] is False
+    assert result["blocked_reason"] == "unapproved_dashscope_base_url"
+
+    generic_with_bad_url = _select_live_api_client_config(
+        {"API_KEY": "generic-secret", "DASHSCOPE_BASE_URL": "https://model-hosted.example.invalid/v1"}
+    )
+    assert generic_with_bad_url["available"] is False
+
+
+def test_live_api_client_config_does_not_fallback_to_local_or_other_api_backends() -> None:
+    result = _select_live_api_client_config(
+        {
+            "API_KEY": "generic-secret",
+            "OPENAI_API_KEY": "other-api-secret",
+            "LOCAL_HF_MODEL_PATH": "models/local-hf",
+            "VLLM_BASE_URL": "http://localhost:8000/v1",
+            "WS1_LOCAL_HF_MODEL_PATH": "models/ws1",
+        }
+    )
+    assert result["available"] is False
+    assert result["blocked_reason"] == "missing_dashscope_or_qwen_api_key"
+    assert "api_key" not in result
