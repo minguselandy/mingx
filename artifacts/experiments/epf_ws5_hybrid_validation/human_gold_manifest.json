@@ -1,0 +1,7 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "gold_row_count": 0,
+  "human_external_gold_available": false,
+  "raw_response_stored": false,
+  "schema_version": "epf_human_gold_manifest_v1"
+}

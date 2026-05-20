@@ -1,0 +1,11 @@
+{
+  "allowed_claim": "uncertainty_bounded_operational_reporting_candidate",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_allowed": false,
+  "evidence_count": 3,
+  "lower_confidence_bound": 0.381397,
+  "mean_confidence": 0.623545,
+  "raw_response_stored": false,
+  "schema_version": "epf_uncertainty_report_v1",
+  "upper_confidence_bound": 0.865693
+}

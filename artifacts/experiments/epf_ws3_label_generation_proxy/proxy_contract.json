@@ -1,0 +1,31 @@
+{
+  "allowed_claims": [
+    "constrained_label_generation_proxy",
+    "operational_label_confidence_proxy"
+  ],
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": {
+    "fixed_target_nll": true,
+    "teacher_forced_label_nll": true,
+    "v_information_proxy": true
+  },
+  "raw_response_stored": false,
+  "response_contract": {
+    "label": [
+      "not_supporting",
+      "supporting",
+      "uncertain"
+    ],
+    "rationale_quality": [
+      "adequate",
+      "thin",
+      "invalid"
+    ],
+    "uncertainty": [
+      "high",
+      "low",
+      "medium"
+    ]
+  },
+  "schema_version": "epf_live_api_label_generation_proxy_contract_v1"
+}

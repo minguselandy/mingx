@@ -1,0 +1,23 @@
+{
+  "candidate_pool_hashes": [
+    "7afe7996ca6c8acfe2520ee11985eac56c8485b33f44841e73c9b05b81bd6e65",
+    "cd02f237e4286bdf246f46575ff7be9df0d300bfabd3e87c83400d2d79cb8776",
+    "ef2a247df8f5aa794e93613d34b86aab52dca07101d0f47d6a740612869f784a"
+  ],
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "contract_errors": [],
+  "contract_warnings": [],
+  "dataset": "ProjectNativeRealisticTasks",
+  "gold_packets": 8,
+  "gold_reachable_by_budget": {
+    "32": 2,
+    "34": 3,
+    "38": 3
+  },
+  "hard_negative_packets": 7,
+  "pool_count": 3,
+  "provenance_complete": true,
+  "schema_valid": true,
+  "schema_version": "workbench_candidate_pool_manifest_v1",
+  "total_packets": 15
+}

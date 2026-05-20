@@ -1,0 +1,7 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "measurement_validation_allowed": false,
+  "reason": "human_external_gold_unavailable",
+  "schema_version": "epf_human_gold_agreement_report_v1",
+  "status": "blocked_no_human_external_gold"
+}

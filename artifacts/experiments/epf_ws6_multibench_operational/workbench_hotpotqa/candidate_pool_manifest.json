@@ -1,0 +1,21 @@
+{
+  "candidate_pool_hashes": [
+    "ad84a8850f2294ba47d2f21ff789937687284c63e80103ac4ff0eac1829a0487",
+    "ed7ed184e6f007693cd8fd76c4a4febd68a3a243c5970f86b78db549f8ff0768"
+  ],
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "contract_errors": [],
+  "contract_warnings": [],
+  "dataset": "HotpotQA",
+  "gold_packets": 5,
+  "gold_reachable_by_budget": {
+    "256": 2,
+    "512": 2
+  },
+  "hard_negative_packets": 69,
+  "pool_count": 2,
+  "provenance_complete": true,
+  "schema_valid": true,
+  "schema_version": "workbench_candidate_pool_manifest_v1",
+  "total_packets": 74
+}

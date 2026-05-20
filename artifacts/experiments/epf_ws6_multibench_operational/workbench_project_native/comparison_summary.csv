@@ -1,0 +1,13 @@
+budget,mean_selected_tokens,mean_supporting_fact_recall,quality_per_1k_tokens,selector_name,trace_count
+32,29.666667,0.611111,20.599247,bm25_topk,3
+32,29.666667,0.611111,20.599247,mmr_density_greedy,3
+32,28.666667,0.333333,11.627895,random_budget,3
+32,29.666667,0.611111,20.599247,v12_diagnostic_policy,3
+34,29.666667,0.611111,20.599247,bm25_topk,3
+34,29.666667,0.611111,20.599247,mmr_density_greedy,3
+34,30.0,0.555555,18.5185,random_budget,3
+34,32.0,0.888889,27.777781,v12_diagnostic_policy,3
+38,35.333333,0.611111,17.295595,bm25_topk,3
+38,35.333333,0.611111,17.295595,mmr_density_greedy,3
+38,36.666667,0.777778,21.212127,random_budget,3
+38,35.0,0.888889,25.396829,v12_diagnostic_policy,3

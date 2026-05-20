@@ -1,0 +1,24 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_allowed": false,
+  "dataset_count": 2,
+  "datasets": [
+    {
+      "dataset": "HotpotQA",
+      "dynamic_holdout_available": false,
+      "risk": "fixture_or_public_benchmark_needs_review",
+      "source_kind": "public_benchmark",
+      "split": "dev_distractor"
+    },
+    {
+      "dataset": "ProjectNativeRealisticTasks",
+      "dynamic_holdout_available": false,
+      "risk": "fixture_or_public_benchmark_needs_review",
+      "source_kind": "fixture",
+      "split": "fixture_v12"
+    }
+  ],
+  "raw_dataset_mirrors_created": false,
+  "schema_version": "epf_contamination_report_v1",
+  "status": "contamination_review_required"
+}

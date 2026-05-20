@@ -1,0 +1,8 @@
+{
+  "bridge_status": "failed_closed_no_rows",
+  "calibrated_proxy_supported": false,
+  "claim_mode": "shadow",
+  "metric_claim_level": "operational_utility_only",
+  "shadow_metric_bridge": true,
+  "vinfo_proxy_supported": false
+}

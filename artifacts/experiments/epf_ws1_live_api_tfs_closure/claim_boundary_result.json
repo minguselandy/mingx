@@ -1,0 +1,8 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "fixed_target_nll_bridge_blocked": true,
+  "generated_chat_logprobs_not_metric_bridge": true,
+  "route5_locked": true,
+  "route8_locked": true,
+  "schema_version": "epf_ws1_claim_boundary_result_v1"
+}

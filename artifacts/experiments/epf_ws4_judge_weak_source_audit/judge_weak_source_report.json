@@ -1,0 +1,49 @@
+{
+  "bias_risk_notes": [
+    "single_provider_single_model_weak_supervision",
+    "public_benchmark_gold_used_for_diagnostic_match_only_not_measurement_validation"
+  ],
+  "claim_ceiling": "model_adjudicated_measurement_candidate",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "counts_as_human_or_external_gold": false,
+  "disagreement_clusters": [
+    {
+      "labels": {
+        "not_supporting": 2,
+        "uncertain": 2
+      },
+      "parent_sample_id": "7b1b6a53a8530f4a"
+    }
+  ],
+  "duplicate_consistency": {
+    "consistent": 1,
+    "rate": 0.5,
+    "total": 2
+  },
+  "json_validity": {
+    "parse_failure_count": 4,
+    "parse_success_rate": 0.5
+  },
+  "label_counts": {
+    "not_supporting": 2,
+    "parse_failed": 4,
+    "uncertain": 2
+  },
+  "order_swap_consistency": {
+    "consistent": 2,
+    "rate": 1.0,
+    "total": 2
+  },
+  "prompt_swap_consistency": {
+    "consistent": 1,
+    "rate": 0.5,
+    "total": 2
+  },
+  "raw_response_stored": false,
+  "rubric_adherence": {
+    "allowed_label_rate": 0.5,
+    "rubric_version": "epf_live_api_weak_source_rubric_v1"
+  },
+  "schema_version": "epf_judge_weak_source_audit_v1",
+  "status": "weak_source_audit_completed"
+}

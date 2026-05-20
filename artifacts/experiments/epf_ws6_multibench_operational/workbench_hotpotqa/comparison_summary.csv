@@ -1,0 +1,9 @@
+budget,mean_selected_tokens,mean_supporting_fact_recall,quality_per_1k_tokens,selector_name,trace_count
+256,255.0,0.416666,1.633984,bm25_topk,2
+256,253.5,0.416666,1.643653,mmr_density_greedy,2
+256,253.5,0.583333,2.301116,random_budget,2
+256,253.5,0.833333,3.28731,v12_diagnostic_policy,2
+512,509.5,1.0,1.962709,bm25_topk,2
+512,511.0,0.833333,1.630789,mmr_density_greedy,2
+512,508.0,0.416666,0.820209,random_budget,2
+512,510.0,1.0,1.960784,v12_diagnostic_policy,2

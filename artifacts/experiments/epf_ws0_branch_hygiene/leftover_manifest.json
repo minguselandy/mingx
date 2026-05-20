@@ -1,0 +1,153 @@
+{
+  "branch": "codex/integrated-validation-workbench",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "head": "fe00b3a25b9d6bc1d400b5c38db9dced6f5a7d01",
+  "leftovers": [
+    {
+      "path": "artifacts/experiments/beta_hybrid_label_model/hybrid_label_model/hybrid_label_model_report.json",
+      "size_bytes": 360,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/beta_hybrid_label_model/hybrid_label_model/hybrid_utility_labels.jsonl",
+      "size_bytes": 438215,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/beta_hybrid_label_model/portfolio_update.json",
+      "size_bytes": 777,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/bridge_fit_summary.json",
+      "size_bytes": 1015,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/bridge_rows.jsonl",
+      "size_bytes": 407568,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/claim_gate_result.json",
+      "size_bytes": 399,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/control_results.json",
+      "size_bytes": 511,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/metric_bridge_witness.json",
+      "size_bytes": 377,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/route4d_hybrid_utility_bridge/readiness_report.json",
+      "size_bytes": 221,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/route6c_model_adjudication_scaleup/adjudication_report.json",
+      "size_bytes": 1364,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/route6c_model_adjudication_scaleup/model_adjudicated_labels.jsonl",
+      "size_bytes": 1064854,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/route6c_model_adjudication_scaleup/readiness_report.json",
+      "size_bytes": 944,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/ws0_hygiene/commit_exclusion_report.json",
+      "size_bytes": 1336,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/ws0_hygiene/leftover_manifest.json",
+      "size_bytes": 2339,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/ws1_teacher_forced_backend/backend_blocked_report.json",
+      "size_bytes": 1017,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/ws1_teacher_forced_backend/backend_registry_report.json",
+      "size_bytes": 2713,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/ws1_teacher_forced_backend/scorer_provenance.json",
+      "size_bytes": 709,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "artifacts/experiments/ws1_teacher_forced_backend/scoring_probe_rows.jsonl",
+      "size_bytes": 0,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "cps/experiments/beta_label_source_contract.py",
+      "size_bytes": 2528,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "cps/experiments/beta_portfolio_report.py",
+      "size_bytes": 5136,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "cps/experiments/route4d_hybrid_utility_bridge.py",
+      "size_bytes": 12332,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "cps/experiments/route6c_model_adjudication_scaleup.py",
+      "size_bytes": 15409,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "docs/experiments/Beta-hybrid-label-model-final-report.md",
+      "size_bytes": 641,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    },
+    {
+      "path": "tests/experiments/test_beta_hybrid_label_model.py",
+      "size_bytes": 13771,
+      "staging_policy": "do_not_stage_for_epf_goal",
+      "status": "untracked_leftover"
+    }
+  ],
+  "schema_version": "epf_ws0_leftover_manifest_v1",
+  "total_leftovers": 24
+}

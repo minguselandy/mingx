@@ -1,0 +1,9 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "dynamic_holdout_ready": false,
+  "reason": "no_fresh_dynamic_holdout_layer_reviewed",
+  "route5_unlocked": false,
+  "route8_unlocked": false,
+  "schema_version": "epf_dynamic_holdout_readiness_v1",
+  "source_contamination_status": "contamination_review_required"
+}

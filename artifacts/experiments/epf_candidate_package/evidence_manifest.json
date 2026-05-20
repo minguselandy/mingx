@@ -1,0 +1,27 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "evidence_reports": [
+    {
+      "artifact": "artifacts\\experiments\\epf_ws2_chat_logprob_confidence\\confidence_summary.json",
+      "candidate_claim": "operational_confidence_diagnostic"
+    },
+    {
+      "artifact": "artifacts\\experiments\\epf_ws3_label_generation_proxy\\label_proxy_summary.json",
+      "candidate_claim": "constrained_label_generation_proxy"
+    },
+    {
+      "artifact": "artifacts\\experiments\\epf_ws4_judge_weak_source_audit\\judge_weak_source_report.json",
+      "candidate_claim": "model_adjudicated_measurement_candidate"
+    },
+    {
+      "artifact": "artifacts\\experiments\\epf_ws6_multibench_operational\\comparison_summary.csv",
+      "candidate_claim": "scoped_operational_improvement_candidate"
+    },
+    {
+      "artifact": "artifacts\\experiments\\epf_ws8_uncertainty\\uncertainty_report.json",
+      "candidate_claim": "uncertainty_bounded_operational_reporting_candidate"
+    }
+  ],
+  "schema_version": "epf_candidate_evidence_manifest_v1",
+  "status": "reviewable_candidate_package_ready"
+}

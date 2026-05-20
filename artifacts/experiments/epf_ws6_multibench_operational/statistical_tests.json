@@ -1,0 +1,7 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "matched_budget": true,
+  "schema_version": "epf_ws6_statistical_tests_v1",
+  "statistical_test_status": "descriptive_underpowered_candidate",
+  "trace_count": 52
+}

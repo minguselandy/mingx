@@ -1,0 +1,11 @@
+{
+  "calibrated_proxy_supported": false,
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "global_selector_superiority": false,
+  "measurement_validated": false,
+  "metric_bridge_support": false,
+  "metric_claim_level": "operational_utility_only",
+  "selector_superiority_claimed": false,
+  "traces_compared": 16,
+  "vinfo_proxy_supported": false
+}

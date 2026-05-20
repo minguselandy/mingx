@@ -1,0 +1,17 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "accepted_bridge_candidate",
+    "calibrated_proxy_supported",
+    "deployed V-information verification",
+    "fixed-target NLL bridge support",
+    "global selector superiority",
+    "human measurement validation",
+    "measurement validation",
+    "metric bridge support",
+    "paper evidence",
+    "selector superiority",
+    "vinfo_proxy_supported"
+  ],
+  "schema_version": "epf_denied_claims_v1"
+}

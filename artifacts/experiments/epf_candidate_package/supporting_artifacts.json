@@ -1,0 +1,11 @@
+{
+  "artifact_count": 5,
+  "artifacts": [
+    "artifacts\\experiments\\epf_ws2_chat_logprob_confidence\\confidence_summary.json",
+    "artifacts\\experiments\\epf_ws3_label_generation_proxy\\label_proxy_summary.json",
+    "artifacts\\experiments\\epf_ws4_judge_weak_source_audit\\judge_weak_source_report.json",
+    "artifacts\\experiments\\epf_ws6_multibench_operational\\comparison_summary.csv",
+    "artifacts\\experiments\\epf_ws8_uncertainty\\uncertainty_report.json"
+  ],
+  "schema_version": "epf_supporting_artifacts_v1"
+}
