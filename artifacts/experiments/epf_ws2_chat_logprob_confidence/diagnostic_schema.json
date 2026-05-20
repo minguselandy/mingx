@@ -1,0 +1,13 @@
+{
+  "allowed_claim": "operational_confidence_diagnostic",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "calibrated_proxy",
+    "fixed_target_nll",
+    "metric_bridge",
+    "v_information_proxy"
+  ],
+  "generated_token_logprobs_are_fixed_target_nll": false,
+  "raw_response_stored": false,
+  "schema_version": "epf_live_api_chat_logprob_confidence_schema_v1"
+}

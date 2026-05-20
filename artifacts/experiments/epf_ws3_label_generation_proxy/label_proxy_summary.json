@@ -1,0 +1,13 @@
+{
+  "allowed_claims": [
+    "constrained_label_generation_proxy",
+    "operational_label_confidence_proxy"
+  ],
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "label_count": 8,
+  "parse_success_rate": 0.5,
+  "public_benchmark_label_match_rate": 0.0,
+  "raw_response_stored": false,
+  "schema_version": "epf_live_api_label_generation_proxy_summary_v1",
+  "teacher_forced_label_nll_available": false
+}

@@ -1,0 +1,17 @@
+{
+  "accepted_metric_claim": "operational_utility_only",
+  "calibrated_proxy_supported": false,
+  "claim_mode": "shadow",
+  "control_status": "shadow_mode_no_claim_upgrade",
+  "non_circularity_review_required_before_acceptance": true,
+  "reason_codes": [
+    "failed_closed_no_rows",
+    "bridge_shadow_mode",
+    "no_claim_upgrade"
+  ],
+  "shadow_labels": [
+    "shadow_metric_bridge",
+    "shadow_vinfo_proxy"
+  ],
+  "vinfo_proxy_supported": false
+}

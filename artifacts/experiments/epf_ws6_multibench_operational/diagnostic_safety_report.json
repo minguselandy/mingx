@@ -1,0 +1,7 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "diagnostic_safety_status": "operational_only_no_claim_upgrade",
+  "metric_bridge_support": false,
+  "schema_version": "epf_ws6_diagnostic_safety_report_v1",
+  "selector_superiority_claimed": false
+}

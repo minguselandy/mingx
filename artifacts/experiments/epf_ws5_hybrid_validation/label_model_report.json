@@ -1,0 +1,11 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "judge_audit_status": "weak_source_audit_completed",
+  "label_count": 8,
+  "measurement_candidate_review_packet": false,
+  "measurement_validation_candidate": false,
+  "raw_response_stored": false,
+  "reason": "human_external_gold_unavailable",
+  "schema_version": "epf_hybrid_validation_candidate_v1",
+  "status": "blocked_no_human_external_gold"
+}

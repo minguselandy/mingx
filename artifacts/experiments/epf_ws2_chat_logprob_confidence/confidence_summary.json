@@ -1,0 +1,10 @@
+{
+  "allowed_claim": "operational_confidence_diagnostic",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "diagnostic_count": 8,
+  "generated_token_logprobs_available": true,
+  "mean_confidence": 0.870635,
+  "raw_response_stored": false,
+  "schema_version": "epf_live_api_chat_logprob_confidence_summary_v1",
+  "teacher_forced_fixed_target_nll_available": false
+}

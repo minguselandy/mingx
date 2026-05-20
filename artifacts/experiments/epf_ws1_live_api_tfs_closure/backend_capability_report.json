@@ -1,0 +1,11 @@
+{
+  "allowed_model_backend": "dashscope_openai_compatible_live_api_only",
+  "chat_generated_token_logprobs_available": "tested_in_ws2",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "completion_echo_logprobs_fixed_target_scoring_unavailable": true,
+  "raw_response_stored": false,
+  "route5_locked": true,
+  "route8_locked": true,
+  "schema_version": "epf_ws1_live_api_tfs_capability_v1",
+  "teacher_forced_fixed_target_nll_available": false
+}

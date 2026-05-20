@@ -1,0 +1,71 @@
+{
+  "artifact_paths": {
+    "blocked_claims": "blocked_claims.md",
+    "blocked_report": "blocked_report.json",
+    "bridge_fit_summary": "bridge_fit_summary.json",
+    "candidate_pool_manifest": "candidate_pool_manifest.json",
+    "claim_gate_result": "claim_gate_result.json",
+    "claim_ledger": "claim_ledger.json",
+    "comparison_summary": "comparison_summary.csv",
+    "control_results": "control_results.json",
+    "diagnostic_safety_report": "diagnostic_safety_report.json",
+    "manifest": "manifest.json",
+    "metric_bridge_witness": "metric_bridge_witness.json",
+    "next_repairs": "next_repairs.md",
+    "paper_tables": "paper_tables.md",
+    "statistical_tests": "statistical_tests.json",
+    "superiority_claim_gate": "superiority_claim_gate.json",
+    "traces": "workbench_traces.jsonl"
+  },
+  "candidate_pools_used": 3,
+  "claim_mode": "shadow",
+  "claim_status": "operational_utility_only; no_claim_upgrade",
+  "config": {
+    "accepted_evidence_requires_independent_review": true,
+    "budgets": [
+      32,
+      34,
+      38
+    ],
+    "candidate_pools_path": "artifacts\\experiments\\epf_ws6_multibench_operational\\project_native_candidate_pools.jsonl",
+    "claim_mode": "shadow",
+    "claim_status": "operational_utility_only; no_claim_upgrade",
+    "contamination_policy": "fail_closed_on_contamination_or_unreviewed_source_risk",
+    "dataset": "ProjectNativeRealisticTasks",
+    "evaluators": [
+      "operational",
+      "diagnostic_safety",
+      "claim_ledger"
+    ],
+    "label_source_policy": "model_adjudicated_or_operational_only_no_measurement_validation",
+    "limit": 3,
+    "output_dir": "artifacts\\experiments\\epf_ws6_multibench_operational\\workbench_project_native",
+    "portfolio": "integrated_validation_workbench",
+    "route5_unlock_requires": [
+      "accepted_bridge_candidate",
+      "independent_review"
+    ],
+    "route8_claim_upgrade_requires": [
+      "accepted_evidence_packages_nonempty",
+      "independent_review"
+    ],
+    "run_id": "epf_ws6_project_native_operational",
+    "selectors": [
+      "random_budget",
+      "bm25_topk",
+      "mmr_density_greedy",
+      "v12_diagnostic_policy"
+    ],
+    "shadow_labels": [
+      "shadow_metric_bridge",
+      "shadow_vinfo_proxy",
+      "shadow_measurement_candidate",
+      "shadow_selector_superiority"
+    ],
+    "uncertainty_policy": "missing_or_underpowered_evidence_blocks_claim_upgrade"
+  },
+  "run_id": "epf_ws6_project_native_operational",
+  "schema_version": "workbench_manifest_v1",
+  "status": "completed_claim_safe_smoke",
+  "traces_generated": 36
+}

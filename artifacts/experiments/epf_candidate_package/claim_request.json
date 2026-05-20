@@ -1,0 +1,28 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "accepted_bridge_candidate",
+    "calibrated_proxy_supported",
+    "deployed V-information verification",
+    "fixed-target NLL bridge support",
+    "global selector superiority",
+    "human measurement validation",
+    "measurement validation",
+    "metric bridge support",
+    "paper evidence",
+    "selector superiority",
+    "vinfo_proxy_supported"
+  ],
+  "development_claim_upgrade_performed": false,
+  "independent_review_required": true,
+  "requested_candidate_claims": [
+    "constrained_label_generation_proxy",
+    "model_adjudicated_measurement_candidate",
+    "operational_confidence_diagnostic",
+    "scoped_operational_improvement_candidate",
+    "uncertainty_bounded_operational_reporting_candidate"
+  ],
+  "route5_unlock_requested": false,
+  "route8_unlock_requested": false,
+  "schema_version": "epf_claim_request_v1"
+}

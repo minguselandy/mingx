@@ -1,0 +1,11 @@
+{
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "development_claim_upgrade_performed": false,
+  "live_api_used": true,
+  "raw_api_responses_stored": false,
+  "review_package_status": "reviewable_candidate_package_ready",
+  "route5_unlocked": false,
+  "route8_unlocked": false,
+  "schema_version": "epf_final_status_v1",
+  "terminal_status": "REVIEWABLE_CANDIDATE_PACKAGE_READY"
+}

@@ -1,0 +1,15 @@
+{
+  "bias_risk_notes": [
+    "single_model_provider_bias_risk"
+  ],
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "dominant_label_rate": 0.5,
+  "label_counts": {
+    "not_supporting": 2,
+    "parse_failed": 4,
+    "uncertain": 2
+  },
+  "raw_response_stored": false,
+  "schema_version": "epf_judge_bias_audit_v1",
+  "status": "judge_bias_audit_completed"
+}
