@@ -1,11 +1,13 @@
 # V12 Manuscript Integration Checklist
 
-Status: P60 packaging checklist plus Route 2 operational-only integration
-Claim ceiling: manuscript integration guidance only
+Status: PAPER-RS live-API operational restructuring checklist
+Claim ceiling: `operational_utility_only/no_claim_upgrade`
 
 Use this checklist when revising the v12 manuscript from the P51-P60 evidence
-state and the accepted Route 2 operational package. This checklist is not a
-manuscript patch and creates no empirical evidence.
+state, accepted Route 2 operational package, fail-closed Route 3/4 bridge
+attempts, Route 6B model-adjudicated measurement candidate, Delta/Gamma
+operational packages, LogProbe/EPN/TFS blocked diagnostic chain, and EPF-FINAL
+candidate package. This checklist creates no empirical evidence.
 
 ## Required Framing
 
@@ -39,10 +41,23 @@ manuscript patch and creates no empirical evidence.
   `failed_closed_no_claim_upgrade`.
 - Route 3 does not repair the Route 2 bridge and does not authorize any claim
   upgrade.
+- Route 4A/4B/4C are fail-closed or blocked bridge-redesign diagnostics only;
+  they do not produce an accepted bridge candidate or unlock Route 5.
+- Route 6B is a model-adjudicated measurement candidate. It uses accepted
+  model-adjudicated labels, not human labels, external gold labels, or kappa.
+- Delta failed closed on judge reliability and bridge gates. Its model-only
+  labels remain operational audit evidence only.
+- Gamma completed operational expansion smokes under matched budgets and shadow
+  claim mode. It does not establish selector superiority or metric support.
+- LogProbe / EPN / TFS documents form a blocked diagnostic chain: generated-token
+  chat logprobs are rejected for fixed-target evidence-path NLL, the
+  teacher-forced backend is unavailable, EPN remains blocked, and Route 5/Route
+  8 remain locked.
 - EPF WS0-WS10 / EPF-FINAL is a live-API-only candidate package factory. It
-  organizes operational diagnostics and LLM-generated silver-label candidate
-  evidence for independent review, but the current backend does not expose true
-  fixed-target teacher-forced continuation scoring.
+  was accepted with notes as candidate operational evidence and organizes
+  operational diagnostics plus 8 LLM-generated silver-label rows over 2 parent
+  samples, but the current backend does not expose true fixed-target
+  teacher-forced continuation scoring.
 - EPF WS5 remains blocked from measurement validation without human/external
   gold labels.
 - EPF claim status remains `operational_utility_only/no_claim_upgrade`.
@@ -70,6 +85,22 @@ manuscript patch and creates no empirical evidence.
   achieved, bridge repaired, repair succeeded, metric bridge support, P55 bridge
   support, P56 metric support, paper evidence, measurement validation, global
   selector superiority, `calibrated_proxy_supported`, or `vinfo_proxy_supported`.
+- Do not describe Route 4A/4B/4C as accepted bridge candidates, bridge repair
+  success, final bridge support, calibrated proxy support, V-information proxy
+  support, measurement validation, paper evidence, or Route 5 unlock.
+- Do not describe Route 6B model-adjudicated labels as human labels, external
+  gold labels, kappa evidence, measurement validation, paper evidence, or
+  human/external gold validation.
+- Do not describe Delta as judge-reliability validation, human measurement
+  validation, metric bridge support, calibrated proxy support, V-information
+  support, selector superiority, or global selector superiority.
+- Do not describe Gamma as selector superiority, global selector superiority,
+  metric bridge support, calibrated proxy support, V-information support,
+  measurement validation, or paper evidence.
+- Do not describe LogProbe / EPN / TFS readiness or blocked reports as
+  fixed-target teacher-forced NLL support, fixed-target continuation scoring
+  support, bridge calibration, metric bridge support, Route 5 unlock, or Route 8
+  unlock.
 - Do not describe EPF chat-logprob confidence, constrained label-generation
   proxies, LLM-generated silver labels, LLM judge labels, multi-benchmark
   summaries, or uncertainty-bounded reports as teacher-forced NLL support,
@@ -95,7 +126,8 @@ manuscript patch and creates no empirical evidence.
 - EPF limited-scope candidate claims require independent review and must remain
   backend-constrained unless a future live API exposes true fixed-target
   continuation scoring and the missing human/external gold-label gate is
-  separately satisfied.
+  separately satisfied. The current accepted-with-notes EPF-FINAL state does not
+  satisfy those stronger gates.
 
 ## Route 2 Safe Integration Rule
 
@@ -128,6 +160,56 @@ Route 3A and Route 3B may be listed in Appendix C or the evidence ledger as
 failed-closed bridge-repair diagnostics. They should not be used to upgrade the
 Route 2 operational claim.
 
+## Route 4 Fail-Closed Bridge Integration Rule
+
+Allowed Route 4 wording:
+
+```text
+Route 4 bridge-redesign attempts are retained as fail-closed or blocked
+diagnostics. Route 4A and Route 4B did not pass their gates, and Route 4C was
+blocked by missing FEVER source/evidence provenance. These records do not
+produce an accepted bridge candidate and do not unlock Route 5.
+```
+
+Route 4 may be listed as bridge-redesign due diligence and negative diagnostic
+evidence only. It must not be used as metric bridge support, calibrated proxy
+support, V-information support, measurement validation, paper evidence, or Route
+5 unlock evidence.
+
+## Route 6B / Delta / Gamma Integration Rule
+
+Allowed wording:
+
+```text
+Route 6B is a model-adjudicated measurement candidate, not measurement
+validation. Delta failed closed on judge reliability and bridge gates. Gamma
+adds operational expansion smokes under matched budgets and shadow claim mode.
+Together these packages remain operational or candidate evidence under
+operational_utility_only/no_claim_upgrade.
+```
+
+Route 6B, Delta, and Gamma may support the paper's audit narrative: model-only
+labels can scale candidate review, judge reliability can fail closed, and
+operational workbenches can be run without claim upgrade. They must not be used
+as human validation, kappa evidence, metric bridge support, selector
+superiority, global selector superiority, paper evidence, or deployed
+V-information verification.
+
+## LogProbe / EPN / TFS Blocked Diagnostic Rule
+
+Allowed wording:
+
+```text
+The LogProbe / EPN / TFS chain records a backend limitation: generated-token
+chat logprobs are not fixed-target teacher-forced continuation scoring, the
+teacher-forced backend is unavailable, and evidence-path NLL remains blocked.
+```
+
+This chain may be used to explain why live-API logprob outputs are operational
+confidence diagnostics only. It must not be used as teacher-forced NLL support,
+fixed-target continuation scoring support, bridge calibration, Route 5 unlock,
+or Route 8 unlock.
+
 ## EPF Backend-Constrained Candidate Package Rule
 
 Allowed EPF wording:
@@ -135,11 +217,12 @@ Allowed EPF wording:
 ```text
 Under the available live-API backend, EPF does not expose true fixed-target
 teacher-forced continuation scoring. EPF outputs are backend-constrained,
-reviewable candidate operational evidence packages. Chat-logprob confidence,
-constrained label-generation proxies, LLM-generated silver labels, weak-source
-judge audits, multi-benchmark operational robustness summaries, and
-uncertainty-bounded reports are operational diagnostics or candidate evidence
-only.
+reviewable candidate operational evidence packages. EPF-FINAL was accepted with
+notes as candidate operational evidence and contains 8 LLM-generated silver-label
+rows over 2 parent samples. Chat-logprob confidence, constrained
+label-generation proxies, LLM-generated silver labels, weak-source judge audits,
+multi-benchmark operational robustness summaries, and uncertainty-bounded
+reports are operational diagnostics or candidate evidence only.
 ```
 
 EPF may be referenced as an appendix/repo-only candidate package factory and as

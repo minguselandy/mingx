@@ -5,7 +5,7 @@
 - terminal_state: `EPF_FINAL_REVIEWABLE`
 - claim_ceiling: `operational_utility_only/no_claim_upgrade`
 - evidence_class: `backend_constrained_operational_candidate_package`
-- review_status: `candidate_pending_independent_review`
+- review_status: `ACCEPT_WITH_NOTES`
 
 ## Package
 
@@ -15,6 +15,11 @@ model-adjudicated candidate labels. They are not human labels, external gold
 labels, measurement validation, metric bridge evidence, calibrated proxy
 support, V-information proxy support, teacher-forced NLL support, paper
 evidence, or global selector superiority evidence.
+
+The paper-facing review outcome is `ACCEPT_WITH_NOTES` for candidate operational
+use only. The final package contains 8 silver-label rows over 2 parent samples.
+That accepted-with-notes outcome does not unlock Route 5 or Route 8 and does not
+raise the claim ceiling above `operational_utility_only/no_claim_upgrade`.
 
 Generated artifacts:
 
