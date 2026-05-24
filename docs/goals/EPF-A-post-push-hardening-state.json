@@ -1,0 +1,21 @@
+{
+  "allowed_terminal_states": [
+    "EPF_POST_PUSH_HARDENING_REVIEWABLE",
+    "EPF_POST_PUSH_HARDENING_COMMITTED_LOCAL_ONLY",
+    "EPF_POST_PUSH_HARDENING_BLOCKED"
+  ],
+  "branch": "codex/integrated-validation-workbench",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "commit_allowed_without_user_review": false,
+  "goal_id": "EPF-A-post-push-hardening",
+  "implementation_started": true,
+  "known_local_only_exclusions": [
+    "artifacts/experiments/epf_ws6_multibench_operational/workbench_hotpotqa/claim_ledger.json",
+    "artifacts/experiments/epf_ws6_multibench_operational/workbench_project_native/claim_ledger.json"
+  ],
+  "push_allowed": false,
+  "route5_locked": true,
+  "route8_locked": true,
+  "starting_commit": "426d4b13c20e5bf3a5cedb75f6edb5a12027febd",
+  "terminal_state": "EPF_POST_PUSH_HARDENING_COMMITTED_LOCAL_ONLY"
+}

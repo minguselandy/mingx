@@ -1,0 +1,55 @@
+{
+  "claim_ceiling": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "fixed-target teacher-forced NLL support",
+    "global selector superiority",
+    "human/external gold validation",
+    "measurement_validation",
+    "metric bridge support",
+    "paper evidence",
+    "teacher-forced NLL support",
+    "vinfo_proxy_supported"
+  ],
+  "evidence_class": "backend_constrained_operational_candidate_package",
+  "human_external_gold_labels_used": false,
+  "label_count": 8,
+  "measurement_validation_claim": false,
+  "provenance": {
+    "silver_label_package": {
+      "label_generation_report": "artifacts\\experiments\\epf_c_silver_labels\\label_generation_report.json",
+      "label_schema": "artifacts\\experiments\\epf_c_silver_labels\\label_schema.json",
+      "silver_label_manifest": "artifacts\\experiments\\epf_c_silver_labels\\silver_label_manifest.json",
+      "silver_labels": "artifacts\\experiments\\epf_c_silver_labels\\silver_labels.jsonl",
+      "uncertainty_disagreement_report": "artifacts\\experiments\\epf_c_silver_labels\\uncertainty_disagreement_report.json"
+    },
+    "source": "epf_live_api_finalizer"
+  },
+  "review_status": "candidate_pending_independent_review",
+  "schema_version": "epf_final_scoped_operational_evaluation_summary_v1",
+  "scoped_operational_inputs": {
+    "chat_logprob_confidence": {
+      "diagnostic_count": 8,
+      "generated_token_logprobs_available": true,
+      "raw_response_stored": false,
+      "teacher_forced_fixed_target_nll_available": false
+    },
+    "constrained_label_generation": {
+      "label_count": 8,
+      "raw_response_stored": false,
+      "teacher_forced_label_nll_available": false
+    },
+    "measurement_validation": {
+      "human_external_gold_labels_available": false,
+      "ws5_blocked": true
+    },
+    "multi_benchmark_operational": {
+      "diagnostic_safety_path": "artifacts\\experiments\\epf_ws6_multibench_operational\\diagnostic_safety_report.json",
+      "overall_claim_ceiling": null,
+      "statistical_tests_path": "artifacts\\experiments\\epf_ws6_multibench_operational\\statistical_tests.json",
+      "test_count": 0
+    }
+  },
+  "silver_labels_are_model_adjudicated": true,
+  "teacher_forced_fixed_target_nll_available": false
+}

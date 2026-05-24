@@ -6,6 +6,7 @@ from pathlib import Path
 from cps.benchmarks.common import write_jsonl
 from cps.benchmarks.schemas import make_candidate_pool
 from cps.benchmarks.schemas import make_evidence_packet
+from cps.experiments.live_api_evidence_package_factory import _select_live_api_client_config
 from cps.experiments.live_api_evidence_package_factory import run_live_api_evidence_package_factory
 
 
@@ -116,7 +117,95 @@ def test_factory_builds_reviewable_package_with_injected_dashscope_client(worksp
             encoding="utf-8"
         )
     )
+    silver_manifest = json.loads(
+        (workspace_tmp_dir / "artifacts/epf_c_silver_labels/silver_label_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    silver_rows = [
+        json.loads(line)
+        for line in (workspace_tmp_dir / "artifacts/epf_c_silver_labels/silver_labels.jsonl").read_text(
+            encoding="utf-8"
+        ).splitlines()
+        if line.strip()
+    ]
+    final_claim_request = json.loads(
+        (workspace_tmp_dir / "artifacts/epf_final/final_claim_request.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    final_manifest = json.loads(
+        (workspace_tmp_dir / "artifacts/epf_final/final_epf_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
     assert result["terminal_status"] == "REVIEWABLE_CANDIDATE_PACKAGE_READY"
+    assert result["epf_final_terminal_state"] == "EPF_FINAL_REVIEWABLE"
     assert result["claim_status"] == "operational_utility_only/no_claim_upgrade"
     assert claim_request["development_claim_upgrade_performed"] is False
     assert "operational_confidence_diagnostic" in claim_request["requested_candidate_claims"]
+    assert silver_manifest["evidence_class"] == "llm_generated_silver_label_candidate"
+    assert silver_manifest["claim_ceiling"] == "operational_utility_only/no_claim_upgrade"
+    assert silver_manifest["review_status"] == "candidate_pending_independent_review"
+    assert silver_manifest["provenance"]["raw_api_responses_stored"] is False
+    assert silver_rows
+    assert silver_rows[0]["llm_generated_silver_label"] is True
+    assert silver_rows[0]["human_external_gold_label"] is False
+    assert silver_rows[0]["selector_policy_used_to_generate_label"] is False
+    assert silver_rows[0]["raw_response_stored"] is False
+    assert "disagreement_bucket" in silver_rows[0]
+    assert "input_hash" in silver_rows[0]
+    assert "evidence_hash" in silver_rows[0]
+    assert final_claim_request["claim_status"] == "operational_utility_only/no_claim_upgrade"
+    assert final_claim_request["route5_unlock_requested"] is False
+    assert final_claim_request["route8_unlock_requested"] is False
+    assert final_claim_request["measurement_validation_claim"] is False
+    assert final_claim_request["human_external_gold_validation"] is False
+    assert "metric bridge support" in final_claim_request["denied_claims"]
+    assert final_manifest["terminal_state"] == "EPF_FINAL_REVIEWABLE"
+
+
+def test_live_api_client_config_accepts_only_dashscope_or_qwen_keys() -> None:
+    dashscope = _select_live_api_client_config({"DASHSCOPE_API_KEY": "dashscope-secret"})
+    assert dashscope["available"] is True
+    assert dashscope["api_key_source"] == "DASHSCOPE_API_KEY"
+    assert dashscope["base_url"] == "https://dashscope.aliyuncs.com/compatible-mode/v1"
+
+    qwen = _select_live_api_client_config({"QWEN_API_KEY": "qwen-secret"})
+    assert qwen["available"] is True
+    assert qwen["api_key_source"] == "QWEN_API_KEY"
+
+    generic = _select_live_api_client_config({"API_KEY": "generic-secret"})
+    assert generic["available"] is False
+    assert generic["blocked_reason"] == "missing_dashscope_or_qwen_api_key"
+
+
+def test_live_api_client_config_rejects_unapproved_base_url() -> None:
+    result = _select_live_api_client_config(
+        {
+            "DASHSCOPE_API_KEY": "dashscope-secret",
+            "DASHSCOPE_BASE_URL": "https://model-hosted.example.invalid/v1",
+        }
+    )
+    assert result["available"] is False
+    assert result["blocked_reason"] == "unapproved_dashscope_base_url"
+
+    generic_with_bad_url = _select_live_api_client_config(
+        {"API_KEY": "generic-secret", "DASHSCOPE_BASE_URL": "https://model-hosted.example.invalid/v1"}
+    )
+    assert generic_with_bad_url["available"] is False
+
+
+def test_live_api_client_config_does_not_fallback_to_local_or_other_api_backends() -> None:
+    result = _select_live_api_client_config(
+        {
+            "API_KEY": "generic-secret",
+            "OPENAI_API_KEY": "other-api-secret",
+            "LOCAL_HF_MODEL_PATH": "models/local-hf",
+            "VLLM_BASE_URL": "http://localhost:8000/v1",
+            "WS1_LOCAL_HF_MODEL_PATH": "models/ws1",
+        }
+    )
+    assert result["available"] is False
+    assert result["blocked_reason"] == "missing_dashscope_or_qwen_api_key"
+    assert "api_key" not in result

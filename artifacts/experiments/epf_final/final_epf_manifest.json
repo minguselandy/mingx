@@ -1,0 +1,34 @@
+{
+  "artifacts": {
+    "final_claim_request": "artifacts\\experiments\\epf_final\\final_claim_request.json",
+    "independent_review_checklist": "artifacts\\experiments\\epf_final\\independent_review_checklist.md",
+    "scoped_operational_evaluation_summary": "artifacts\\experiments\\epf_final\\scoped_operational_evaluation_summary.json"
+  },
+  "claim_ceiling": "operational_utility_only/no_claim_upgrade",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "fixed-target teacher-forced NLL support",
+    "global selector superiority",
+    "human/external gold validation",
+    "measurement_validation",
+    "metric bridge support",
+    "paper evidence",
+    "teacher-forced NLL support",
+    "vinfo_proxy_supported"
+  ],
+  "evidence_class": "backend_constrained_operational_candidate_package",
+  "provenance": {
+    "silver_label_package": {
+      "label_generation_report": "artifacts\\experiments\\epf_c_silver_labels\\label_generation_report.json",
+      "label_schema": "artifacts\\experiments\\epf_c_silver_labels\\label_schema.json",
+      "silver_label_manifest": "artifacts\\experiments\\epf_c_silver_labels\\silver_label_manifest.json",
+      "silver_labels": "artifacts\\experiments\\epf_c_silver_labels\\silver_labels.jsonl",
+      "uncertainty_disagreement_report": "artifacts\\experiments\\epf_c_silver_labels\\uncertainty_disagreement_report.json"
+    },
+    "source": "epf_live_api_finalizer"
+  },
+  "review_status": "candidate_pending_independent_review",
+  "schema_version": "epf_final_manifest_v1",
+  "terminal_state": "EPF_FINAL_REVIEWABLE"
+}

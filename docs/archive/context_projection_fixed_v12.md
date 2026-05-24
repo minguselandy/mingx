@@ -8,9 +8,9 @@ We study dispatch-time context projection in multi-agent LLM systems: given a ca
 
 The theoretical contribution is conditional. Under an explicit weak-submodularity regime hypothesis and a pairwise-additive absolute-complementarity assumption, we prove structural results for the formal objective: independence of the submodularity ratio $\gamma$ and the supermodular degree $d$, and a local block-ratio lower bound controlled by singleton mass and bounded pairwise interaction. The familiar fractional form is recovered only inside round-local active contexts where singleton marginals are observably bounded away from zero.
 
-The deployment contribution is not V-information verification. We separate four layers that are often conflated: the formal V-information value, fixed-model or utility proxy measurements, heuristic retrieval/reranking/MMR pipelines, and metric-claim levels. This yields a conservative proxy-regime diagnostic policy that labels a dispatch stratum as `greedy_supported`, `pairwise_escalate`, `higher_order_risk`, or `ambiguous`, while separately reporting whether the metric evidence is V-information-proxy, bridge-calibrated, operational-only, or ambiguous.
+The deployment contribution is not V-information verification. We separate four layers that are often conflated: the formal V-information value, fixed-target teacher-forced or other fixed-model proxy measurements, heuristic retrieval/reranking/MMR pipelines, and metric-claim levels. In the current live-agent evidence package, the empirical support is operational-only: bridge and validation routes either fail closed or remain blocked, and generated-token chat logprobs are treated only as operational confidence diagnostics. The resulting protocol labels dispatch strata as `greedy_supported`, `pairwise_escalate`, `higher_order_risk`, or `ambiguous`, while separately reporting whether the metric evidence is V-information-proxy, bridge-calibrated, operational-only, or ambiguous.
 
-As a minimal structural check, we include an oracle synthetic benchmark over redundancy, pairwise-synergy, higher-order-prerequisite, and adversarial-redundancy regimes. The benchmark supports diagnostic signature separation, but it does not establish deployed measurement validation. We also isolate extraction quality as an $M^*\to M$ bridge risk and specify model-adjudicated and human-sentinel audit paths for measuring value-dependent extraction loss.
+As a minimal structural check, we include an oracle synthetic benchmark over redundancy, pairwise-synergy, higher-order-prerequisite, and adversarial-redundancy regimes. We also report HotpotQA operational replay and expansion evidence, fail-closed bridge attempts, model-adjudicated labels, live-API logprob limitations, and an EPF-FINAL silver-label candidate package. These are evidence packages for operational diagnosis and review, not deployed V-information verification, measurement validation, or metric bridge support. We also isolate extraction quality as an $M^*\to M$ bridge risk and specify model-adjudicated and human-sentinel audit paths for measuring value-dependent extraction loss.
 
 ## 1. Introduction
 
@@ -28,11 +28,11 @@ The decision variable is the **content-item subset** projected into each worker'
 
 The paper makes five contributions.
 
-1. **Formal object.** We formalize per-round, per-agent, token-budgeted content selection under a predictive V-information value function.
-2. **Conditional theory.** We prove that the submodularity ratio $\gamma$ and supermodular degree $d$ are independent for general monotone set functions, and derive an absolute-increase pairwise-regime lower bound for local block ratios.
-3. **Bridge statement.** We separate the formal V-information objective from fixed-model log-loss, operational utility, heuristic selector pipelines, and metric-claim levels.
-4. **Proxy-regime diagnostics.** We define a conservative staged diagnostic policy that decides when greedy-style projection is supported, when pairwise or higher-order escalation is warranted, and when evidence is insufficient.
-5. **Audit interface and extraction-risk model.** We specify runtime artifacts for replayable projection decisions and isolate extraction quality as a separate $M^*\to M$ bottleneck.
+1. **Dispatch-time V-information objective.** We formalize per-round, per-agent, token-budgeted content selection under a predictive V-information value function.
+2. **Conditional pairwise-regime theory.** We prove that the submodularity ratio $\gamma$ and supermodular degree $d$ are independent for general monotone set functions, and derive an absolute-increase pairwise-regime lower bound for local block ratios.
+3. **Claim-gated proxy-regime diagnostic protocol.** We separate the formal V-information objective from fixed-model log-loss, operational utility, heuristic selector pipelines, and metric-claim levels, then define conservative labels for supported greedy use, pairwise escalation, higher-order risk, and ambiguity.
+4. **Live-agent operational replay and fail-closed bridge audit.** We report operational replay, bridge-calibration failures, model-adjudicated labels, and live-API logprob limitations as operational diagnostics under `operational_utility_only/no_claim_upgrade`.
+5. **Integrated audit surface / Evidence Package Factory.** We specify runtime artifacts for replayable projection decisions, isolate extraction quality as a separate $M^*\to M$ bottleneck, and package EPF-FINAL as a candidate operational evidence factory rather than paper-grade validation.
 
 The claim boundary is deliberately narrow. The theory applies to the formal V-information objective under stated structural assumptions. The diagnostics estimate proxy or operational quantities under fixed calibration conditions. The runtime artifacts support observability and replay. None of these layers alone establishes deployed V-information verification or human-validated measurement evidence.
 
@@ -257,6 +257,7 @@ This subsection is the paper's bridge statement and a second core contribution. 
 | Formal | V-information set function $f_i^{\mathcal V}(S)$ | Conditional theory |
 | Fixed-model proxy | $f_i^{\theta,\ell}(S)$, CI/replay log-loss marginal estimates | Diagnostic signal under predictor-optimality and materialization conditions |
 | Utility proxy | $f_i^U(S)$, model-judged or task-utility finite differences | Operational signal unless bridge-calibrated |
+| Live-API candidate evidence | generated-token logprobs, constrained label-generation proxies, model-adjudicated silver labels | Operational confidence and candidate evidence only |
 | Pipeline | retrieval / reranking / MMR / packing | Heuristic only |
 | Runtime | artifacts, memory, verification, state summaries | Observability and escalation interface |
 | Metric bridge | log-loss or calibrated utility-to-log-loss relation | Claim-level gate |
@@ -275,6 +276,9 @@ The claim gate is conservative by construction. Missing evidence lowers the allo
 | replay package completeness | `replayable_artifact_evidence` | scientific validation |
 | paper-facing summary | no claim upgrade | measurement validation |
 | live API success alone | operational evidence only | measurement validation |
+| generated-token chat logprobs | operational confidence diagnostic only | fixed-target teacher-forced NLL support |
+| constrained label-generation proxy | candidate proxy only | metric bridge support |
+| model-adjudicated silver labels | candidate operational evidence only | human/external gold validation |
 | external runtime success alone | operational evidence only | measurement validation |
 
 **Formal layer.** The object analyzed in Section 3 is the V-information value function $f_i^{\mathcal V}(S)$. All approximation statements, including Theorem 1 and its corollaries, apply to this formal object. They do not directly apply to fixed-model loss, model-judged utility, or an implementation that scores items with heuristics.
@@ -282,6 +286,8 @@ The claim gate is conservative by construction. Missing evidence lowers the allo
 The formal-to-theorem transfer via a structural condition is an established template rather than a claim of novelty here. Das and Kempe (2018) use the submodularity ratio $\gamma$, Elenberg, Khanna, Dimakis, and Negahban (2018) use restricted strong convexity parameters to establish weak-submodularity consequences, and Bian, Buhmann, Krause, and Tschiatschek (2017) combine $\gamma$ with generalized curvature. What the bridge statement below adds on top of this established template is an explicit **proxy layer**, an explicit **pipeline layer**, a metric-scope gate, a conditional-equivalence analysis with enumerated failure modes, and the stratified diagnostic decomposition used in Section 4.
 
 **Proxy layer.** The diagnostics in Section 4 require marginal value gains. In practice these are estimated as fixed-model log-loss deltas $\Delta f_i^{\theta,\ell}$ or operational utility deltas $\Delta f_i^U$, for example through CI Value or counterfactual replay. These measurements become evidence about $f_i^{\mathcal V}$ only under a predictor-optimality bridge, log-loss alignment plus a fresh fixed-model-to-$\mathcal V_i$ bridge, a near-optimality argument, actual empirical minimization over the declared predictive family, or a measured utility-to-log-loss bridge.
+
+The current live-API backend requires a further distinction. **Fixed-target teacher-forced NLL** would score a predetermined continuation under a fixed materialization policy and is the relevant log-loss-facing signal for a bridge. **Generated-token chat logprobs** score the model's own sampled or generated output tokens; they are useful confidence diagnostics, but they are not fixed-target continuation scoring and do not supply teacher-forced NLL support. **Constrained label-generation proxies** ask the model to choose among a controlled label schema; they can normalize operational judgments but remain model-generated proxy labels. **Model-adjudicated silver labels** and their assembled **candidate evidence packages** are reviewable operational evidence, not human/external gold labels, measurement validation, or metric bridge support.
 
 **Metric-bridge regimes.** Full V-information-calibrated diagnostics apply only under log-loss evaluation or a validated utility-to-log-loss bridge; otherwise, the diagnostics are operational-utility-only signals and must not be reported as evidence about the formal V-information regime. We distinguish three metric regimes.
 
@@ -437,6 +443,20 @@ The benchmark pipeline separates four roles:
 
 Prompt development is performed on a development split and frozen before final evaluation. The benchmark records model version, prompt hash, decoding policy, date, and all generated labels. Quality controls include order reversal, duplicate judging, paraphrase robustness, counterfactual deletion, redundancy swap, prerequisite ablation, cross-judge comparison, and unstable-label downgrade to `ambiguous`.
 
+### 4.5.1 Evidence organization for the operational diagnostic paper
+
+The empirical record is organized as a claim-gated operational diagnostic package rather than as validation-grade V-information evidence:
+
+1. synthetic structural smoke test;
+2. HotpotQA operational replay and Gamma expansion;
+3. fail-closed bridge attempts;
+4. model-adjudicated labels and weak-source judge audit;
+5. live-API logprob limitation;
+6. EPF-FINAL silver-label candidate package;
+7. evidence ledger summary.
+
+The first item tests structural signature behavior under an oracle value function. Items 2-6 report operational replay, candidate evidence, or negative bridge outcomes from the companion audit scaffold. The ledger in `docs/paper/v12-evidence-ledger.md` records allowed and denied claims for each package. Across this section the current claim status is `operational_utility_only/no_claim_upgrade`: no deployed V-information verification, measurement validation, metric bridge support, selector superiority, Route 5 unlock, or Route 8 unlock is claimed.
+
 ### 4.6 Minimal oracle synthetic benchmark
 
 As a structural smoke test, we executed a small oracle benchmark with four synthetic families: redundancy-dominated, pairwise synergy, higher-order prerequisite, and adversarial redundancy. Each family contains 40 instances with $n=14$ items and budget $B=14$ under heterogeneous token costs. The oracle value function is known, so greedy, seeded augmented greedy with seeds of size at most two, pair-aware local search, and optimal brute-force selection can be compared directly. The random seed is `20260319`; the result files are included as companion CSV artifacts.
@@ -493,6 +513,14 @@ After Route 2, Route 3 tested whether a new support-grounded bridge protocol cou
 | `mmr_density_greedy` | 1024 | 0.980417 | 2.375 | 845.610 | 1.159420 | deployable baseline |
 | `v12_cost_aware_diagnostic_policy_operational_only` | 1024 | 0.995833 | 2.415 | 846.085 | 1.176989 | deployable operational policy |
 | `gold_support_oracle_upper_bound` | 1024 | 1.000000 | 2.425 | 845.770 | 1.182355 | `non_deployable_upper_bound` |
+
+### 4.9 EPF-FINAL live-API candidate evidence package
+
+The Evidence Package Factory (EPF) packages backend-constrained live-agent diagnostics into reviewable candidate evidence bundles. EPF-FINAL was accepted with notes as a candidate operational package. Its final silver-label layer contains 8 model-adjudicated rows over 2 parent samples. The package stores normalized enum labels, confidence buckets, uncertainty and disagreement buckets, hashes, and compact provenance; it stores no raw API responses.
+
+EPF-FINAL is included to make the live-API limitation visible. The available chat API exposes generated-token logprobs and constrained label generation, but it does not expose true fixed-target teacher-forced continuation scoring. Therefore EPF-FINAL does not provide teacher-forced NLL support, fixed-target continuation scoring support, metric bridge support, calibrated proxy support, V-information proxy support, measurement validation, human/external gold validation, paper evidence, or global selector superiority. Route 5 and Route 8 remain locked.
+
+The paper-facing interpretation is narrow: EPF-FINAL is a backend-constrained candidate operational evidence factory that helps reviewers inspect operational behavior, uncertainty, and weak-source disagreements under the current live-API surface. It preserves `operational_utility_only/no_claim_upgrade`.
 
 ## 5. Extraction Quality as a Testable End-to-End Bottleneck
 
@@ -666,7 +694,7 @@ The dispatch cycle in a verifiable runtime follows an eight-step flow:
 
 ## 7. Related Work
 
-The closest prior art differs from our setting along three axes. First, many systems optimize the wrong **granularity**: agents, links, or memory-routing decisions rather than per-agent context units. Second, many works use the wrong **budget object**: cardinality, dropout rates, compression ratios, or whole-system cost caps rather than per-agent token budgets at per-round dispatch time. Third, many works lack the relevant **guarantee structure**: they provide heuristics, learned policies, or empirical improvements without a formal value function over context subsets and without a bridge statement separating theorem, proxy, and runtime layers. We organize the discussion below around these axes.
+The closest prior art differs from our setting along three axes. First, many systems optimize a different **granularity**: agents, links, memory-routing decisions, compressed summaries, retrieved passages, or judge-selected context blocks rather than per-agent context units. Second, many works use a different **budget object**: cardinality, dropout rates, compression ratios, or whole-system cost caps rather than per-agent token budgets at per-round dispatch time. Third, many works lack the relevant **claim-gate structure**: they provide heuristics, learned policies, weak-supervision pipelines, or empirical improvements without a formal value function over context subsets and without a bridge statement separating theorem, proxy, and runtime layers. We do not claim to be the first context compressor, router, pruning method, sufficiency evaluator, judge pipeline, or weak-supervision system. We organize the discussion below around the narrower contribution: audit-first dispatch-time evidence selection with claim-gated validation.
 
 ### 7.1 Single-agent budgeted context selection
 
@@ -718,15 +746,15 @@ A further adjacency comes from recent LLM diagnostic frameworks. Yuan, Su, and Y
 
 Finally, PID- and interaction-information-based feature-selection work provides methodological context for our pairwise interaction diagnostic. Wollstadt, Schmitt, and Wibral (2023) use a PID-informed information-theoretic framework to distinguish redundancy and synergy in feature selection. This is a useful antecedent for the instrument level of Diagnostic 2, but not a deployment-facing bridge statement or escalation framework for token-budgeted context selection. In adjacent Shannon information-gain settings, the connection can be taken one step further: Hübotter, Sukhija, Treven, As, and Krause (2024) relate redundancy-versus-synergy structure to a weak-submodularity parameter for active-learning objectives and thereby provide the closest formal antecedent to the present discussion. We nevertheless treat that result as adjacent rather than directly transferable, because our formal object is predictive V-information and our deployed diagnostics are defined at the proxy and pipeline layers rather than as direct evaluations of the Shannon-information objective.
 
-Taken together, the prior literature covers proxy-valued context scoring, formal objective plus calibration, routing and memory systems, learned policies, and adjacent diagnostic frameworks. We are not aware of prior work in LLM context selection or routing that simultaneously **(i)** makes an explicit three-layer separation between formal objective, proxy measurement, and heuristic pipeline, **(ii)** states the conditions under which the theorem-level story does or does not transfer across those layers, and **(iii)** treats the pipeline-versus-proxy gap as a first-class object of verification and escalation.
+Taken together, the prior literature covers compression, pruning, routing, sufficiency-style context selection, proxy-valued context scoring, formal objective plus calibration, learned memory policies, judge pipelines, weak supervision, and adjacent diagnostic frameworks. The contribution here is positioned more narrowly: audit-first dispatch-time evidence selection with an explicit three-layer separation between formal objective, proxy measurement, and heuristic pipeline; conditions under which theorem-level reasoning does or does not transfer across those layers; and a pipeline-versus-proxy gap treated as a first-class object of verification and escalation.
 
 ### 7.4 Structured extraction and faithfulness
 
 The most relevant adjacent literature falls into three groups. First, orthogonal structured-action benchmarks such as BFCL (Patil et al., 2025) and ToolBench (Qin et al., 2023) evaluate function-call correctness and API-chain execution rather than free-form-to-structured extraction completeness. Second, structured-output benchmarks such as SLOT (Shen et al., 2025) and KIEval (Khang et al., 2025) improve schema-accuracy evaluation, content-fidelity evaluation, and application-centric correction-oriented evaluation, but they do not report separate completeness rates for simple versus complex findings as a diagnostic test of uniformity. Third, adjacent faithfulness work — including Peters and Chin-Yee (2025) on overgeneralization, CRANE (Banerjee et al., ICML 2025) on constrained-generation limits, FABLES (Kim et al., COLM 2024) on long-form faithfulness failures, and FActScore (Min et al., EMNLP 2023) on atomic-fact factuality — supports the broader concern that qualification-heavy, reasoning-intensive, or indirectly supported content is especially vulnerable during reformulation.
 
-Taken together, these literatures establish value-weighted evaluation, fine-grained factuality analysis, and structured-output benchmarking as important adjacent traditions. To our knowledge, however, prior work does not audit **free-form-to-structured extraction** by reporting separate per-stratum completeness rates in order to test whether high-value or complex findings are disproportionately lost during reformulation — the gap our evaluation protocol addresses.
+Taken together, these literatures establish value-weighted evaluation, fine-grained factuality analysis, and structured-output benchmarking as important adjacent traditions. Our extraction protocol adapts those traditions to the narrower free-form-to-structured boundary by reporting separate per-stratum completeness rates in order to test whether high-value or complex findings are disproportionately lost during reformulation.
 
-Across the adjacent literatures surveyed in this section — single-agent budgeted selection, multi-agent optimization over agents or links, learned proxy-level routing or memory systems, and adjacent diagnostic and extraction-evaluation frameworks — the same pattern emerges. Our contribution lies at their intersection: a formal value function for **per-agent content selection** under heterogeneous token budgets, conditional structural theory for that formal object, an explicit bridge statement separating theorem, proxy, and runtime layers, and a measurable proxy-regime labeling protocol for deciding when monitored greedy-style selection is credible.
+Across the adjacent literatures surveyed in this section - single-agent budgeted selection, multi-agent optimization over agents or links, learned proxy-level routing or memory systems, judge and weak-supervision pipelines, and adjacent diagnostic and extraction-evaluation frameworks - the same pattern emerges. Our contribution lies at their intersection: a formal value function for **per-agent content selection** under heterogeneous token budgets, conditional structural theory for that formal object, an explicit bridge statement separating theorem, proxy, and runtime layers, and a measurable proxy-regime labeling protocol for deciding when monitored greedy-style selection is credible.
 
 The gap is therefore not the absence of multi-agent scheduling mechanisms, but the absence of a formal context-allocation object inside those mechanisms. The reviewer-facing contribution is this narrower measurement protocol: a formal per-agent content-selection object, explicit bridge conditions, and auditable claim boundaries for proxy-regime diagnostics.
 
@@ -766,11 +794,19 @@ Eighth, the runtime artifacts presume observability that some hosted systems may
 
 Ninth, companion implementation runs are not automatically evidence upgrades. A reduced-scope run that completes engineering execution but lacks contamination closure, fresh bridge evidence, or human-label agreement must remain `pilot_only` or `engineering_smoke_only`. This is intended claim-gate behavior rather than a failure of the framework: runtime success alone is insufficient for measurement validation.
 
-Tenth, the paper does not claim multi-agent superiority over single-agent systems. It studies the context-allocation sub-layer that arises when an orchestrator-worker runtime is already being used.
+Tenth, the live-API evidence path lacks true fixed-target teacher-forced NLL. Generated-token chat logprobs, constrained label-generation proxies, and weak-source judge outputs are operational diagnostics only. They do not provide fixed-target continuation scoring support or a metric bridge.
+
+Eleventh, no accepted bridge candidate is currently available for the live-agent operational packages. Route 2 and Route 3 bridge attempts failed closed, and EPF-FINAL remains backend constrained.
+
+Twelfth, the current package has no measurement validation. Human/external gold labels and human-human kappa are absent, so model-adjudicated labels and silver labels remain candidate-only.
+
+Thirteenth, operational replay results are scoped to the named dataset, budget, baselines, metric, and evaluator/materialization regime. They should not be reported as selector superiority, global selector superiority, paper-grade validation evidence, or deployed V-information verification.
+
+Fourteenth, the paper does not claim multi-agent superiority over single-agent systems. It studies the context-allocation sub-layer that arises when an orchestrator-worker runtime is already being used.
 
 ## 10. Broader Impact
 
-Improved context assembly can reduce computational waste from redundant or irrelevant context in multi-agent LLM systems — the 53–86% token duplication measured by AgentTaxo represents significant wasted inference cost. The revised protocol is intentionally conservative: it distinguishes V-information proxy labels from operational-utility-only labels, records metric-bridge status, and requires ambiguity when bridge, cascade, or sample evidence is insufficient.
+Improved context assembly can reduce computational waste from redundant or irrelevant context in multi-agent LLM systems - the 53-86% token duplication measured by AgentTaxo represents significant wasted inference cost. The revised protocol is intentionally conservative: it distinguishes V-information proxy labels from operational-utility-only labels, records metric-bridge status, and requires ambiguity when bridge, cascade, or sample evidence is insufficient.
 
 The main risk is false confidence. Formal guarantees over the V-information objective do not automatically transfer to heuristic pipelines, production metrics, or biased candidate pools. The MetricBridgeWitness, block-ratio LCB, extraction audit, and pre-registered synthetic benchmark validity gate are designed to make such gaps visible rather than to eliminate them. Practitioners should verify proxy alignment before relying on any diagnostic for operational decisions.
 
@@ -782,7 +818,7 @@ We formalized dispatch-time context projection as per-agent, token-budgeted cont
 
 The deployment contribution is a claim-gated diagnostic framework, not deployed V-information verification. The paper separates formal V-information value, fixed-model log-loss, operational utility, heuristic selector pipelines, metric-claim levels, runtime artifacts, and extraction risk. The resulting protocol conservatively labels selector regimes as `greedy_supported`, `pairwise_escalate`, `higher_order_risk`, or `ambiguous`.
 
-A small oracle synthetic benchmark provides initial structural evidence that the diagnostic policy separates redundancy, pairwise synergy, and higher-order prerequisite regimes without issuing false `greedy_supported` labels on higher-order cases. The P45 bridge lane has also produced a fail-closed negative result for the current non-calibrated `bio_attribute` stratum. The remaining bridge work is empirical but no longer entirely unexecuted: it requires a materially new stratum or materially new fixed-logloss/utility design, alongside model-adjudicated realistic-task benchmarks, offline replay on real dispatch traces, human sentinel audits, and value-stratified extraction measurement.
+A small oracle synthetic benchmark provides initial structural evidence that the diagnostic policy separates redundancy, pairwise synergy, and higher-order prerequisite regimes without issuing false `greedy_supported` labels on higher-order cases. Route 2 HotpotQA replay and Gamma expansion supply scoped operational evidence, while Route 2/3 bridge attempts and EPF-FINAL record the current live-agent limitations. The conclusion is therefore `operational_utility_only/no_claim_upgrade`: no calibrated proxy support, V-information proxy support, measurement validation, metric bridge support, selector superiority, Route 5 unlock, or Route 8 unlock follows from the current evidence package. Future bridge work requires a materially new stratum or materially new fixed-logloss/utility design, alongside human-sentinel audits and value-stratified extraction measurement.
 
 ## References
 

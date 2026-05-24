@@ -9,6 +9,7 @@ from typing import Any
 from typing import Mapping
 from typing import Sequence
 from urllib import error
+from urllib.parse import urlparse
 from urllib import request
 
 from cps.analysis.candidate_evidence_package import build_candidate_evidence_package
@@ -18,6 +19,8 @@ from cps.analysis.human_gold_agreement import compute_agreement_report
 from cps.analysis.hybrid_label_model import build_hybrid_validation_candidate
 from cps.analysis.judge_bias_audit import build_judge_bias_audit
 from cps.analysis.judge_weak_source_audit import audit_judge_weak_source
+from cps.analysis.live_api_silver_label_package import build_final_epf_package
+from cps.analysis.live_api_silver_label_package import build_live_api_silver_label_package
 from cps.analysis.uncertainty_bounded_reporting import build_uncertainty_report
 from cps.benchmarks.common import read_jsonl
 from cps.benchmarks.common import write_json
@@ -47,6 +50,8 @@ DEFAULT_PROJECT_NATIVE_PACKETS = Path(
 )
 DEFAULT_MODEL_ID = "qwen3.6-flash"
 DEFAULT_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+APPROVED_DASHSCOPE_HOSTS = frozenset({"dashscope.aliyuncs.com"})
+APPROVED_DASHSCOPE_PATH = "/compatible-mode/v1"
 
 
 def _write_doc(path: Path, title: str, lines: Sequence[str]) -> Path:
@@ -80,12 +85,67 @@ def _env_values(root: Path) -> dict[str, str]:
     return values
 
 
+def _normalize_base_url(base_url: str) -> str:
+    return base_url.strip().rstrip("/")
+
+
+def _is_approved_dashscope_base_url(base_url: str) -> bool:
+    normalized = _normalize_base_url(base_url)
+    parsed = urlparse(normalized)
+    path = parsed.path.rstrip("/")
+    return (
+        parsed.scheme == "https"
+        and (parsed.hostname or "").lower() in APPROVED_DASHSCOPE_HOSTS
+        and path == APPROVED_DASHSCOPE_PATH
+        and not parsed.params
+        and not parsed.query
+        and not parsed.fragment
+    )
+
+
+def _select_live_api_client_config(env: Mapping[str, str]) -> dict[str, Any]:
+    base_url = _normalize_base_url(env.get("DASHSCOPE_BASE_URL") or DEFAULT_BASE_URL)
+    if not _is_approved_dashscope_base_url(base_url):
+        return {
+            "available": False,
+            "base_url": base_url,
+            "blocked_reason": "unapproved_dashscope_base_url",
+        }
+
+    api_key_source = ""
+    api_key = ""
+    dashscope_key = (env.get("DASHSCOPE_API_KEY") or "").strip()
+    qwen_key = (env.get("QWEN_API_KEY") or "").strip()
+    if dashscope_key:
+        api_key_source = "DASHSCOPE_API_KEY"
+        api_key = dashscope_key
+    elif qwen_key:
+        api_key_source = "QWEN_API_KEY"
+        api_key = qwen_key
+    if not api_key_source:
+        return {
+            "available": False,
+            "base_url": base_url,
+            "blocked_reason": "missing_dashscope_or_qwen_api_key",
+        }
+
+    return {
+        "api_key": api_key,
+        "api_key_source": api_key_source,
+        "available": True,
+        "base_url": base_url,
+        "model_id": env.get("DASHSCOPE_MODEL") or env.get("QWEN_MODEL") or DEFAULT_MODEL_ID,
+    }
+
+
 class DashScopeEvidenceClient:
     def __init__(self, *, api_key: str, base_url: str = DEFAULT_BASE_URL, model_id: str = DEFAULT_MODEL_ID) -> None:
         if not api_key:
             raise RuntimeError("missing_allowed_dashscope_api_key")
+        if not _is_approved_dashscope_base_url(base_url):
+            raise RuntimeError("unapproved_dashscope_base_url")
         self.api_key = api_key
-        self.base_url = base_url.rstrip("/")
+        self.base_url = _normalize_base_url(base_url)
         self.model_id = model_id
 
     def chat_completion(self, *, messages: Sequence[Mapping[str, str]], logprobs: bool = True, **kwargs: Any) -> dict[str, Any]:
@@ -433,13 +493,13 @@ def run_live_api_evidence_package_factory(
 
     if run_live and client is None:
         env = _env_values(root)
-        api_key = env.get("DASHSCOPE_API_KEY") or env.get("QWEN_API_KEY") or env.get("API_KEY")
-        if not api_key:
-            return _blocker(out, "missing_dashscope_api_key")
+        client_config = _select_live_api_client_config(env)
+        if not client_config["available"]:
+            return _blocker(out, str(client_config["blocked_reason"]))
         client = DashScopeEvidenceClient(
-            api_key=api_key,
-            base_url=env.get("DASHSCOPE_BASE_URL") or DEFAULT_BASE_URL,
-            model_id=env.get("DASHSCOPE_MODEL") or env.get("API_SMALL_MODEL") or DEFAULT_MODEL_ID,
+            api_key=str(client_config["api_key"]),
+            base_url=str(client_config["base_url"]),
+            model_id=str(client_config["model_id"]),
         )
 
     samples = _build_samples(hotpotqa_path, sample_limit)
@@ -581,6 +641,38 @@ def run_live_api_evidence_package_factory(
             "LLM judges are weak supervision unless human/hybrid calibrated.",
             "The strongest paper position is audit-first dispatch-time evidence selection.",
             "Do not edit manuscript claims in this goal.",
+            "EPF final silver-label outputs remain backend-constrained candidate operational evidence only.",
+        ],
+    )
+
+    silver_dir = out / "epf_c_silver_labels"
+    silver_package = build_live_api_silver_label_package(
+        output_dir=silver_dir,
+        label_rows=label_rows,
+        source_artifacts=[str(ws3_dir / "label_proxy_rows.jsonl")],
+    )
+    final_dir = out / "epf_final"
+    final_package = build_final_epf_package(
+        output_dir=final_dir,
+        silver_label_package=silver_package,
+        scoped_operational_inputs={
+            "claim_status": CLAIM_STATUS,
+            "confidence_summary": confidence_summary,
+            "label_summary": label_summary,
+            "ws5_measurement_validation_blocked": True,
+            "ws6_diagnostic_safety": safety,
+            "ws6_statistical_tests": stats,
+        },
+    )
+    _write_doc(
+        root / "docs/experiments/EPF-final-live-api-silver-label-candidate-package.md",
+        "EPF Final Live API Silver Label Candidate Package",
+        [
+            "Claim status: `operational_utility_only/no_claim_upgrade`.",
+            "LLM-generated labels are silver/model-adjudicated candidate evidence only, not human or external gold labels.",
+            "Operational diagnostics are not measurement validation, metric bridge support, calibrated proxy support, V-information proxy support, paper evidence, or global selector superiority.",
+            "True fixed-target teacher-forced NLL remains blocked under the current live API backend.",
+            "Route 5 and Route 8 remain locked.",
         ],
     )
 
@@ -588,6 +680,7 @@ def run_live_api_evidence_package_factory(
     final_status = {
         "claim_status": CLAIM_STATUS,
         "development_claim_upgrade_performed": False,
+        "epf_final_terminal_state": final_package["terminal_state"],
         "live_api_used": bool(label_rows),
         "raw_api_responses_stored": False,
         "review_package_status": package["status"],

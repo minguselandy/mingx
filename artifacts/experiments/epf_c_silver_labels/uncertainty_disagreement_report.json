@@ -1,0 +1,34 @@
+{
+  "claim_ceiling": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "calibrated_proxy_supported",
+    "fixed-target teacher-forced NLL support",
+    "global selector superiority",
+    "human/external gold validation",
+    "measurement_validation",
+    "metric bridge support",
+    "paper evidence",
+    "teacher-forced NLL support",
+    "vinfo_proxy_supported"
+  ],
+  "disagreement_bucket_counts": {
+    "no_valid_label": 4,
+    "uncertainty_disagreement": 4
+  },
+  "evidence_class": "llm_generated_silver_label_candidate",
+  "label_count": 8,
+  "provenance": {
+    "input_artifacts": [
+      "artifacts\\experiments\\epf_ws3_label_generation_proxy\\label_proxy_rows.jsonl"
+    ],
+    "live_api_surface": "dashscope_openai_compatible_chat_api",
+    "normalized_outputs_only": true,
+    "raw_api_responses_stored": false
+  },
+  "review_status": "candidate_pending_independent_review",
+  "schema_version": "epf_live_api_silver_label_uncertainty_disagreement_v1",
+  "uncertainty_bucket_counts": {
+    "high_uncertainty": 4,
+    "parse_failed": 4
+  }
+}
