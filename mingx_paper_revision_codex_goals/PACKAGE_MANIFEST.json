@@ -1,0 +1,132 @@
+{
+  "package": "mingx_paper_revision_codex_goals",
+  "created": "2026-05-24",
+  "file_count": 25,
+  "files": [
+    {
+      "path": "CODEX_COMMANDS.md",
+      "sha256": "0eeef5771c72165416a6e228ec2fc857c23724a3a60d651c383b89681dda7da1",
+      "bytes": 2081
+    },
+    {
+      "path": "GLOBAL_CONSTRAINTS.md",
+      "sha256": "01964f3e2f9b24234c4df3fca6346acb607598298266a9bcb36a838e3b209be9",
+      "bytes": 2440
+    },
+    {
+      "path": "README.md",
+      "sha256": "45e83af2ca646c1cfa922dba419e98a9c75ccbdb68a66f4686a889b214815c45",
+      "bytes": 1801
+    },
+    {
+      "path": "codex-goals/PAPER-REV-0-baseline-and-scope-lock.goal.md",
+      "sha256": "65335f77c7fe5edcbfad9b8cf0bfbb9e7fc0aa6b97c0fbf53bb864b3ee046602",
+      "bytes": 2762
+    },
+    {
+      "path": "codex-goals/PAPER-REV-1-title-abstract-intro-contributions.goal.md",
+      "sha256": "61a9697d86b597ba1c83345467f24ad2575197dfadd3af40a533c776de3283ca",
+      "bytes": 3242
+    },
+    {
+      "path": "codex-goals/PAPER-REV-2-related-work-reframe.goal.md",
+      "sha256": "08f562a2315f79551d49ea672ca3a294e2fa4ffe05c249fdee5dad2d601690ac",
+      "bytes": 3336
+    },
+    {
+      "path": "codex-goals/PAPER-REV-3-methods-backend-artifact-claim-ledger.goal.md",
+      "sha256": "b86cb7aeea472fea636849eba256cc0aca0da728b2495a517b91ca407f85dd67",
+      "bytes": 3218
+    },
+    {
+      "path": "codex-goals/PAPER-REV-4-evaluation-results-tables-captions.goal.md",
+      "sha256": "847ff267607401b1683673e9e5b1f7c8743adc95e89ab9da4ae2e0ddee181978",
+      "bytes": 3744
+    },
+    {
+      "path": "codex-goals/PAPER-REV-5-limitations-conclusion-nonclaims.goal.md",
+      "sha256": "2a6928ae12c055b35520b57b0ebcd7b8a9abb891455096995dcf90a03c689b37",
+      "bytes": 2992
+    },
+    {
+      "path": "codex-goals/PAPER-REV-6-appendix-artifact-index-reproducibility.goal.md",
+      "sha256": "6253596d0c984acb008fdc7aed178e94be3978bd487074719811097323fe799e",
+      "bytes": 3062
+    },
+    {
+      "path": "codex-goals/PAPER-REV-7-reviewer-defense-response-bank.goal.md",
+      "sha256": "f2a369373eed66d5375036fad3f764e62890bb43ceddc652603d7d69009c1f3f",
+      "bytes": 3028
+    },
+    {
+      "path": "codex-goals/PAPER-REV-8-independent-final-claim-audit.goal.md",
+      "sha256": "2dbd086f73cb2f15a99cc23de0b0f2e6ccb0f951905b85bd7a5481fe5bfc9428",
+      "bytes": 3516
+    },
+    {
+      "path": "codex-goals/PAPER-REV-9-final-paper-readiness-summary.goal.md",
+      "sha256": "3ab752f6477b057d07866404a7b3aad219b95797abe711bd0ba1933715b45abe",
+      "bytes": 2970
+    },
+    {
+      "path": "codex-goals/PAPER-REV-OPTIONAL-venue-formatting-no-claim-change.goal.md",
+      "sha256": "cba77dc2d04ea03172f55302edadc32b7c43699254c89543c1fb82428f218197",
+      "bytes": 2294
+    },
+    {
+      "path": "configs/final_tables_manifest.yaml",
+      "sha256": "0cbfc4f48067a615572b6f065e652c08174678ba10ba47a535095077373c465a",
+      "bytes": 1729
+    },
+    {
+      "path": "configs/manuscript_section_map.yaml",
+      "sha256": "fc475a05288ddf2037ad8f31c7e25b17af125cd5770b61b34e4820f20acd5a48",
+      "bytes": 2323
+    },
+    {
+      "path": "configs/paper_revision_claim_contract.yaml",
+      "sha256": "741cfd8eabf24e53f37ac8456f70a65a4b4492919f52afe8410131a2b11487e1",
+      "bytes": 1588
+    },
+    {
+      "path": "configs/reviewer_response_matrix.yaml",
+      "sha256": "2c6475a1c7507ca5ae170bb4ea2d61a86b2520949583698cd1673558c4843b56",
+      "bytes": 1249
+    },
+    {
+      "path": "goal-index.yaml",
+      "sha256": "be9f39aadbdfff6c6128288a18534bd8aacd2496a2e6789e2464f2bbfc5e6b80",
+      "bytes": 975
+    },
+    {
+      "path": "manifests/paper_revision_baseline.json",
+      "sha256": "c7d190155ca29a83118475e200bad7cae9ae978966c445bf3057d3a04314bf9c",
+      "bytes": 1170
+    },
+    {
+      "path": "templates/abstract_intro_template.md",
+      "sha256": "72167e1006e6de9b94124d44957889270a5e68253f8689a6a6213a2fbfcd67ce",
+      "bytes": 906
+    },
+    {
+      "path": "templates/evaluation_section_template.md",
+      "sha256": "f866eb8fc960e08d05f2680cf66bb74fa1af87f7a11805948244346ea3f06a31",
+      "bytes": 724
+    },
+    {
+      "path": "templates/limitations_conclusion_template.md",
+      "sha256": "06b02238af5f1aa5037d6a6bdf19a89121efed27db4c54284199e89736e73e06",
+      "bytes": 627
+    },
+    {
+      "path": "templates/related_work_template.md",
+      "sha256": "61e09a65409629c8ab84276240ccd86dcdd2e7e92831e43b7d74dfb587576b53",
+      "bytes": 726
+    },
+    {
+      "path": "templates/reviewer_response_template.md",
+      "sha256": "a34720f35ffbae871258175df5f25b7513b81a3183aa279d12473437cc78b7df",
+      "bytes": 883
+    }
+  ]
+}

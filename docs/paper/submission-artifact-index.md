@@ -18,6 +18,19 @@ does not create new evidence.
 | `docs/paper/post-lapi-main-results-tables.md` | Paper-ready main results tables | operational and weak-evidence diagnostics only |
 | `docs/paper/post-lapi-claim-boundary-summary.md` | Denied-claim and route-lock summary | Route 5 / Route 8 locked |
 
+## Methods Artifact Chain
+
+| component | purpose | boundary |
+|---|---|---|
+| `ProjectionPlan` | selected, excluded, and considered evidence for a dispatch | audit interface only |
+| `BudgetWitness` | estimated and realized token budget, trims, and overflow handling | audit interface only |
+| `MaterializedContext` | realized ordering, section boundaries, and content inventory | replay interface only |
+| `MetricBridgeWitness` | metric class, active stratum, freshness, and bridge status | claim-level gate, not validation by itself |
+| `CounterfactualReplayWitness` | frozen replay state, intervention, evaluator, and replicates | scoped operational replay only |
+| `ReprojectionWitness` | uncertainty trigger, restored evidence, context diff, budget delta, selector before/after, and before/after outputs | operational omitted-evidence diagnostic only |
+| `ClaimLedger` | allowed/denied claims, Route 5 / Route 8 locks, raw-response state, human/external gold-label state, and claim-upgrade flag | fail-closed boundary control |
+| `ProjectionBundleV1` | canonical bundle tying plan, budget, context, witnesses, claim ledger, hashes, and diagnostics | replayable artifact evidence only |
+
 ## POST-3 Judge Stability Artifacts
 
 | artifact | purpose | boundary |

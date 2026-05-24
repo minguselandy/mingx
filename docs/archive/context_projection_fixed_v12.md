@@ -1,16 +1,16 @@
-# Context Projection Selection in Multi-Agent Systems: Conditional Theory, Metric Bridge, and Proxy-Regime Diagnosis
+# Context Projection Selection in Multi-Agent Systems: Conditional Theory and Operational Evidence Audits
 
 ---
 
 ## Abstract
 
-We study dispatch-time context projection in multi-agent LLM systems: given a candidate pool of extracted findings and a per-agent token budget, which content items should be projected into a dispatched worker's context? We formalize this as per-round, per-agent subset selection under a predictive V-information objective: the reduction in minimum achievable log-loss about a task target under a fixed predictive family.
+We study dispatch-time evidence selection for context projection in live-agent LLM systems: given a candidate pool of extracted findings and a per-agent token budget, which content items should be projected into a dispatched worker's context? We formalize this as per-round, per-agent subset selection under a predictive V-information objective: the reduction in minimum achievable log-loss about a task target under a fixed predictive family.
 
 The theoretical contribution is conditional. Under an explicit weak-submodularity regime hypothesis and a pairwise-additive absolute-complementarity assumption, we prove structural results for the formal objective: independence of the submodularity ratio $\gamma$ and the supermodular degree $d$, and a local block-ratio lower bound controlled by singleton mass and bounded pairwise interaction. The familiar fractional form is recovered only inside round-local active contexts where singleton marginals are observably bounded away from zero.
 
-The deployment contribution is not V-information verification. We separate four layers that are often conflated: the formal V-information value, fixed-target teacher-forced or other fixed-model proxy measurements, heuristic retrieval/reranking/MMR pipelines, and metric-claim levels. In the current live-agent evidence package, the empirical support is operational-only: bridge and validation routes either fail closed or remain blocked, and generated-token chat logprobs are treated only as operational confidence diagnostics. The resulting protocol labels dispatch strata as `greedy_supported`, `pairwise_escalate`, `higher_order_risk`, or `ambiguous`, while separately reporting whether the metric evidence is V-information-proxy, bridge-calibrated, operational-only, or ambiguous.
+The deployment contribution is operational and claim-gated. We separate four layers that are often conflated: the formal V-information value, backend-scored fixed-model measurements, heuristic retrieval/reranking/MMR pipelines, and claim levels. The supported live API does not establish fixed-target teacher-forced NLL or fixed-target continuation scoring. Generated-token chat logprobs, constrained label generation, and model-adjudicated labels are therefore operational diagnostics or weak candidate evidence only. The current live-agent evidence package remains operational-only under fail-closed claim gates.
 
-As a minimal structural check, we include an oracle synthetic benchmark over redundancy, pairwise-synergy, higher-order-prerequisite, and adversarial-redundancy regimes. We also report HotpotQA operational replay and expansion evidence, fail-closed bridge attempts, model-adjudicated labels, live-API logprob limitations, and an EPF-FINAL silver-label candidate package. These are evidence packages for operational diagnosis and review, not deployed V-information verification, measurement validation, or metric bridge support. We also isolate extraction quality as an $M^*\to M$ bridge risk and specify model-adjudicated and human-sentinel audit paths for measuring value-dependent extraction loss.
+As a minimal structural check, we include an oracle synthetic benchmark over redundancy, pairwise-synergy, higher-order-prerequisite, and adversarial-redundancy regimes. We also report HotpotQA operational replay and expansion evidence, fail-closed backend-capability audits, model-adjudicated labels, live-API logprob limitations, and an EPF-FINAL silver-label candidate package. These materials support operational diagnosis and review under the current claim ceiling. We also isolate extraction quality as an $M^*\to M$ bridge risk and specify model-adjudicated and human-sentinel audit paths for measuring value-dependent extraction loss.
 
 ## 1. Introduction
 
@@ -28,13 +28,13 @@ The decision variable is the **content-item subset** projected into each worker'
 
 The paper makes five contributions.
 
-1. **Dispatch-time V-information objective.** We formalize per-round, per-agent, token-budgeted content selection under a predictive V-information value function.
+1. **Dispatch-time evidence-selection objective.** We formalize per-round, per-agent, token-budgeted context projection under a predictive V-information value function.
 2. **Conditional pairwise-regime theory.** We prove that the submodularity ratio $\gamma$ and supermodular degree $d$ are independent for general monotone set functions, and derive an absolute-increase pairwise-regime lower bound for local block ratios.
-3. **Claim-gated proxy-regime diagnostic protocol.** We separate the formal V-information objective from fixed-model log-loss, operational utility, heuristic selector pipelines, and metric-claim levels, then define conservative labels for supported greedy use, pairwise escalation, higher-order risk, and ambiguity.
-4. **Live-agent operational replay and fail-closed bridge audit.** We report operational replay, bridge-calibration failures, model-adjudicated labels, and live-API logprob limitations as operational diagnostics under `operational_utility_only/no_claim_upgrade`.
-5. **Integrated audit surface / Evidence Package Factory.** We specify runtime artifacts for replayable projection decisions, isolate extraction quality as a separate $M^*\to M$ bottleneck, and package EPF-FINAL as a candidate operational evidence factory rather than paper-grade validation.
+3. **Live-API boundary and fail-closed claim gate.** We make the backend limitation explicit: generated-token chat logprobs are not fixed-target teacher-forced NLL or fixed-target continuation scoring, and constrained label generation plus model-adjudicated labels remain operational diagnostics or weak candidate evidence only.
+4. **Replayable audit artifacts.** We specify claim ledgers and projection artifacts for replayable dispatch decisions, with fail-closed gates that keep the empirical package at `operational_utility_only/no_claim_upgrade`.
+5. **POST-LAPI operational evidence package.** We organize audit-first operational diagnostics across model-adjudicated weak evidence, sufficiency / abstention, reprojection witnesses, matched-budget operational replay, extraction-risk audit, and EPF-FINAL candidate evidence.
 
-The claim boundary is deliberately narrow. The theory applies to the formal V-information objective under stated structural assumptions. The diagnostics estimate proxy or operational quantities under fixed calibration conditions. The runtime artifacts support observability and replay. None of these layers alone establishes deployed V-information verification or human-validated measurement evidence.
+The claim boundary is deliberately narrow. The theory applies to the formal V-information objective under stated structural assumptions. The diagnostics report operational quantities under named conditions. The runtime artifacts support observability and replay. None of these layers alone establishes stronger route unlocks, human/external measurement evidence, or deployed V-information claims.
 
 ## 2. Problem Formulation
 
@@ -351,6 +351,25 @@ Accordingly, deployment receives **proxy-regime labeling + monitoring + escalati
 
 This section defines the operational diagnostic policy. Its purpose is not to estimate the global worst-case submodularity ratio and not to verify Condition C' uniformly. It answers a narrower deployment question: **is greedy-style context projection supported in the current calibrated stratum, should the selector escalate, or is the evidence insufficient?**
 
+Methods boundary. The dispatch-time projector is the per-round map that consumes a scheduler event, an admissible candidate pool, and a worker budget, then emits the content subset actually projected to the worker:
+\[
+\Pi_t(i,q_i,R_i,\mathcal V_i,B_i,M_t)\mapsto S_i\subseteq M_t .
+\]
+The regime is the active stratum for that dispatch: task family, model tier, metric surface, candidate slice, materialization policy, decoding policy, and budget. The methods below audit this map and its evidence chain; they do not turn the artifacts or weak labels into measurement validation.
+
+The current backend capability table is part of the Methods, not only an appendix:
+
+| Capability | Methods use | Claim ledger rule |
+|---|---|---|
+| Generated output-token logprobs | output-side confidence diagnostics only | not fixed-target teacher-forced NLL; not fixed-target continuation scoring |
+| Constrained label generation | normalized operational label candidate | not metric bridge support |
+| Model-adjudicated labels | weak candidate evidence and disagreement diagnostics | not human/external gold labels |
+| Replayable artifacts | auditability, trace comparison, and claim-gate review | not validation by themselves |
+| Fixed-target teacher-forced NLL | unsupported in the current live API | fail closed; no Route 5/8 unlock |
+| Fixed-target continuation scoring | unsupported in the current live API | fail closed; no bridge or continuation-scoring claim |
+| Human/external gold labels | absent from the current package | no measurement validation |
+| Raw API responses | not stored | normalized records and hashes only |
+
 The protocol returns two labels:
 \[
 (\texttt{metric\_claim\_level},\texttt{selector\_regime\_label}).
@@ -428,9 +447,13 @@ A positive lower-confidence bound on $\omega_{ijk}$ triggers `higher_order_risk`
 
 The runtime may also use post-dispatch uncertainty as an escalation trigger. Inspired by uncertainty-triggered adaptive context allocation, the worker output can be labeled as `grounded`, `unknown_due_to_missing_context`, `hallucination_risk`, `wrong_despite_context`, or `ambiguous`. Missing-context or hallucination-risk labels trigger re-projection: restore the dispatch state, expand the budget or switch selector, regenerate, and record a `ReprojectionWitness`.
 
+For the POST-LAPI sufficiency / abstention lane, the method records regime labels such as `sufficient_kept`, `sufficient_dropped`, `insufficient_and_answered`, and `insufficient_and_abstained`. Per-row labels record whether the projected evidence supports the answer, contradicts it, remains insufficient or uncertain, or fails parsing, and whether abstention was recommended or emitted. These labels are diagnostic states for claim-gated review, not truth labels.
+
+For reprojection, the method records a before/after controlled replay surface: witness id, candidate-pool hash, trigger label, selected evidence before, restored evidence, context diff hash, before/after packet references, before/after output hashes, budget delta, selector before/after, held-fixed prompt/model/endpoint/decoding fields, and the embedded claim-ledger entry. A label change or repair candidate remains operational omitted-evidence evidence only unless a separate accepted bridge and measurement route exists.
+
 ### 4.5 Model-adjudicated benchmark construction
 
-Manual annotation is not required for scalable dataset construction. The experimental lane used here is model-adjudicated: a strong evaluator model generates and labels benchmark instances under frozen prompts. These labels support structural and operational proxy evidence; they do not by themselves establish human-validated measurement claims.
+Manual annotation is not required for scalable dataset construction. The experimental lane used here is model-adjudicated: a strong evaluator model generates and labels benchmark instances under frozen prompts. These labels support weak candidate evidence and operational diagnostics; they do not by themselves establish human/external gold labels or measurement claims.
 
 The benchmark pipeline separates four roles:
 
@@ -441,7 +464,7 @@ The benchmark pipeline separates four roles:
 | Verifier | finds contradictions, unstable labels, and prompt failures | verification report |
 | Adjudicator | resolves disagreements under frozen prompts | final labels |
 
-Prompt development is performed on a development split and frozen before final evaluation. The benchmark records model version, prompt hash, decoding policy, date, and all generated labels. Quality controls include order reversal, duplicate judging, paraphrase robustness, counterfactual deletion, redundancy swap, prerequisite ablation, cross-judge comparison, and unstable-label downgrade to `ambiguous`.
+Prompt development is performed on a development split and frozen before final evaluation. The benchmark records model version, prompt hash, decoding policy, date, and all generated labels. Bias controls include order reversal, duplicate judging, rubric paraphrase robustness, counterfactual deletion, redundancy swap, prerequisite ablation, cross-judge comparison, parse-failure tracking, and unstable-label downgrade to `ambiguous`.
 
 ### 4.5.1 Evidence organization for the operational diagnostic paper
 
@@ -463,14 +486,17 @@ The frozen POST-LAPI package extends the paper-facing empirical record with weak
 
 Generated-token chat logprobs are operational confidence diagnostics only. Model-adjudicated labels are weak evidence only. Operational replay is scoped to the named datasets, budgets, baselines, metrics, and materialization regime. The extraction audit is model-adjudicated extraction-risk evidence only. The reprojection witness is operational omitted-evidence evidence only.
 
+Caption: Evidence tier: backend capability boundary, model-adjudicated weak evidence, sufficiency-abstention diagnostic, candidate operational evidence, matched-budget operational replay only, extraction-risk diagnostics, and replayable artifact evidence. Allowed claim: operational diagnostics under `operational_utility_only/no_claim_upgrade` only. Denied claim: fixed-target teacher-forced NLL support, fixed-target continuation scoring support, metric bridge support, measurement validation, human/external gold validation, paper-grade evidence, selector superiority, global selector superiority, Route 5 unlock, and Route 8 unlock. Human labels present: false. Metric bridge present: false. Route 5 / Route 8: locked / locked.
+
 | Result | Allowed claim | Denied claim | Evidence tier | Live API calls | Human label status | Metric bridge status | Route 5 / Route 8 status | raw_response_stored |
 |---|---|---|---|---:|---|---|---|---|
-| POST-3 judge stability | model-adjudicated weak evidence candidate only | measurement validation; human/external gold validation; calibrated judge; paper-grade evidence | weak/model-adjudicated candidate evidence | 240 | absent | absent | locked / locked | false |
-| POST-4 sufficiency / abstention | sufficiency_abstention_diagnostic_only | truth validation; human-calibrated abstention; measurement validation; paper-grade evidence | operational diagnostic candidate evidence | 50 final artifact calls / 100 total turn calls | absent | absent | locked / locked | false |
-| POST-5 reprojection witness | operational reprojection witness and omitted-evidence diagnostic | validated repair; truth correction guarantee; selector superiority; metric bridge support | operational omitted-evidence evidence only | 26 | absent | absent | locked / locked | false |
-| POST-6 matched-budget operational replay | scoped operational comparison under matched budgets only | selector superiority; global selector superiority; metric bridge support; paper-grade evidence | scoped operational replay evidence only | 0 | absent | absent | locked / locked | false |
-| POST-7 extraction quality audit | model-adjudicated extraction-risk evidence and operational extraction audit only | human-validated extraction measurement; measurement validation; theorem transfer to M-star | model-adjudicated extraction-risk evidence only | 100 | absent | absent | locked / locked | false |
-| Artifact hygiene and raw-response policy | artifact hygiene evidence for the frozen candidate package | new experiment; new live API evidence; raw response storage | reproducibility and storage-policy evidence only | 0 during SUB-0/SUB-1 synthesis | absent | absent | locked / locked | false |
+| Backend capability and claim boundary | backend-constrained operational diagnostics only | teacher-forced NLL support; fixed-target continuation scoring support; metric bridge support | backend capability boundary only | 0 during SUB-0/SUB-1 synthesis | absent | absent | locked / locked | false |
+| POST-3 judge stability | model-adjudicated weak diagnostics only | measurement validation; human/external gold validation; calibrated judge; paper-grade evidence | weak/model-adjudicated candidate evidence | 240 | absent | absent | locked / locked | false |
+| POST-4 sufficiency / abstention | sufficiency-abstention diagnostics only | truth validation; human-calibrated abstention; measurement validation; paper-grade evidence | sufficiency-abstention diagnostic | 50 final artifact calls / 100 total turn calls | absent | absent | locked / locked | false |
+| POST-5 reprojection witness | candidate operational evidence only | validated repair; truth correction guarantee; selector superiority; metric bridge support | candidate operational evidence | 26 | absent | absent | locked / locked | false |
+| POST-6 matched-budget operational replay | scoped operational replay only | selector superiority; global selector superiority; metric bridge support; paper-grade evidence | matched-budget operational replay only | 0 | absent | absent | locked / locked | false |
+| POST-7 extraction quality audit | extraction-risk diagnostics only | human-validated extraction measurement; measurement validation; theorem transfer to M-star | extraction-risk diagnostics | 100 | absent | absent | locked / locked | false |
+| Artifact hygiene and evidence freeze | artifact hygiene and evidence-freeze evidence only | new experiment; new live API evidence; raw response storage | replayable artifact evidence | 0 during SUB-0/SUB-1 synthesis | absent | absent | locked / locked | false |
 
 The same boundary denies fixed-target NLL support, teacher-forced scoring support, metric bridge support, `calibrated_proxy_supported`, `vinfo_proxy_supported`, measurement validation, human/external gold validation, paper-grade evidence, selector superiority, global selector superiority, Route 5 unlock, and Route 8 unlock.
 
@@ -584,7 +610,7 @@ This section specifies the **minimum runtime observability requirements** needed
 
 In realistic deployments, the surrounding runtime manages higher-level concerns such as session state, task decomposition, tool execution, memory access, evaluation, correction, and long-term evolution. Existing runtimes already expose partial surfaces for context construction, but they do so heuristically and without a unified formal object. The contribution of the present paper is narrower and more formal: it specifies the context-projection layer that sits immediately before worker dispatch, together with the artifacts and state summaries needed to monitor that layer across rounds.
 
-The ProjectionPlan / BudgetWitness / MaterializedContext / MetricBridgeWitness chain is the minimal auditable interface for one-shot projection. Two optional witnesses extend it for experiments and adaptive runtime control: CounterfactualReplayWitness records replay evaluations, and ReprojectionWitness records uncertainty-triggered context expansion or selector escalation.
+The ProjectionPlan / BudgetWitness / MaterializedContext / MetricBridgeWitness / ClaimLedger chain is the minimal auditable interface for one-shot projection. Two optional witnesses extend it for experiments and adaptive runtime control: CounterfactualReplayWitness records replay evaluations, and ReprojectionWitness records uncertainty-triggered context expansion or selector escalation.
 
 ### 6.1.1 Layering assumption
 
@@ -613,6 +639,7 @@ The selector is not an autonomous scheduler; it consumes a dispatch event and re
 | Selector → Scheduler | MetricBridgeWitness | calibration epoch, active stratum, bridge residual, drift status, claim level |
 | Selector → Scheduler | CounterfactualReplayWitness | frozen replay state, intervention, evaluator, replicates, effective sample size |
 | Selector → Scheduler | ReprojectionWitness | uncertainty trigger, budget delta, context diff, selector change, before/after output |
+| Selector → Scheduler | ClaimLedger | allowed claims, denied claims, route locks, raw-response status, claim-upgrade flag |
 | Selector → Scheduler | $\widehat{\gamma}^{op,LCB}_{b,q}$, TraceDecay, pairwise excess, SAG gap | selector diagnostics |
 | Selector → Scheduler | $(\texttt{metric\_claim\_level},\texttt{selector\_regime\_label})$ | two-axis decision label |
 
@@ -646,6 +673,14 @@ A runtime that supports verification should reify context projection into machin
 
 A calibration epoch can contain multiple strata with different $\zeta_s$ values. The active-stratum field is therefore mandatory: without it, the witness records that some bridge calibration exists, but not that the current dispatch inherits the correct one.
 
+**CounterfactualReplayWitness.** This is the replay-side interface. It records the frozen dispatch snapshot, item added or removed, continuation or evaluation policy, evaluator model, replicate count, effective sample size, metric-bridge status, and claim level. The witness supports scoped operational replay; it is not evidence of selector superiority by itself.
+
+**ReprojectionWitness.** This is the adaptive-control interface. It records the uncertainty trigger, selected evidence before reprojection, restored or added evidence, context diff, budget delta, selector before/after, controlled replay fields held fixed, before/after output hashes, and before/after sufficiency labels. The witness is operational omitted-evidence evidence unless separately calibrated.
+
+**ClaimLedger.** This is the fail-closed claim interface. It records the claim ceiling, allowed claims, denied claims, Route 5 / Route 8 lock state, raw-response storage state, human/external gold-label state, metric-bridge state, and claim-upgrade flag. If a capability is unsupported, stale, absent, underpowered, or not matched to the active stratum, the ledger records the stronger claim as denied.
+
+**ProjectionBundleV1.** This is the canonical audit bundle. It binds ProjectionPlan, BudgetWitness, MaterializedContext, MetricBridgeWitness, optional CounterfactualReplayWitness, optional ReprojectionWitness, ClaimLedger, stable hashes, and diagnostic summaries into one replayable artifact chain.
+
 The offline audit scaffold extends this artifact chain into a compact evidence surface. These artifacts make replay and manuscript review possible, but they remain audit interfaces rather than scientific validation.
 
 | Artifact | Role | Audit / replay relevance | Claim boundary |
@@ -654,11 +689,12 @@ The offline audit scaffold extends this artifact chain into a compact evidence s
 | `BudgetWitness` | token-budget witness | fixes estimated and realized context costs | audit interface only |
 | `MaterializedContext` | realized context payload | fixes ordering and context inventory for replay | audit interface only |
 | `MetricBridgeWitness` | measurement-claim witness | records metric class, freshness, and diagnostic scope | claim-level gate, not validation by itself |
-| `CounterfactualReplayWitness` | replay witness | records frozen state, intervention, evaluator, and replicates | proxy evidence only |
+| `CounterfactualReplayWitness` | replay witness | records frozen state, intervention, evaluator, and replicates | scoped operational replay only |
 | `ReprojectionWitness` | adaptive runtime witness | records uncertainty trigger, context expansion, selector change, and before/after output | operational evidence only unless separately calibrated |
-| `ProjectionBundleV1` | canonical bundle | ties plan, budget, context, bridge witness, replay witness, and diagnostics with stable hashes | replay evidence only |
+| `ClaimLedger` | claim-boundary witness | records allowed/denied claims, route locks, raw-response status, and claim-upgrade flag | fail-closed boundary control |
+| `ProjectionBundleV1` | canonical bundle | ties plan, budget, context, bridge witness, replay/reprojection witnesses, claim ledger, and diagnostics with stable hashes | replay evidence only |
 
-**Companion implementation.** The `mingx` companion implementation instantiates this interface as an evidence-production scaffold. It emits append-only event traces, candidate pools, ProjectionPlans, BudgetWitnesses, MaterializedContexts, MetricBridgeWitnesses, diagnostics, summaries, and paper-facing reports, and it includes claim-gate logic that prevents engineering runs, synthetic-only runs, or stale-bridge runs from being reported as measurement validation. The implementation is used as executable support for replay and artifact inspection, not as a source of scientific validation by itself. In particular, implementation completeness may support `replayable_artifact_evidence` or `engineering_smoke_only`, but it does not upgrade a result to `measurement_validated` without the required metric bridge, contamination closure, and human-label evidence.
+**Companion implementation.** The `mingx` companion implementation instantiates this interface as an evidence-production scaffold. It emits append-only event traces, candidate pools, ProjectionPlans, BudgetWitnesses, MaterializedContexts, MetricBridgeWitnesses, ClaimLedgers, diagnostics, summaries, and paper-facing reports, and it includes claim-gate logic that prevents engineering runs, synthetic-only runs, or stale-bridge runs from being reported as measurement validation. The implementation is used as executable support for replay and artifact inspection, not as a source of scientific validation by itself. In particular, implementation completeness may support `replayable_artifact_evidence` or `engineering_smoke_only`, but it does not upgrade a result to `measurement_validated` without the required metric bridge, contamination closure, and human-label evidence.
 
 ### 6.3 Three-stage scoring pipeline
 
@@ -704,22 +740,30 @@ The dispatch cycle in a verifiable runtime follows an eight-step flow:
 2. **Extraction gate filters into structured findings.** Free-form upstream outputs are converted into machine-auditable findings and screened by the dual-gate admission policy.
 3. **Candidate pool $M$ is assembled.** The dispatch snapshot is formed from the currently admissible findings.
 4. **Selector pipeline ranks and packs findings.** Retrieval fusion, reranking, diversity control, and budgeted packing produce a proposed selection.
-5. **Artifacts are reified.** The runtime records a ProjectionPlan, BudgetWitness, MaterializedContext, and MetricBridgeWitness for the dispatch, and records CounterfactualReplayWitness or ReprojectionWitness artifacts when replay or adaptive re-projection occurs.
+5. **Artifacts are reified.** The runtime records a ProjectionPlan, BudgetWitness, MaterializedContext, MetricBridgeWitness, and ClaimLedger for the dispatch, and records CounterfactualReplayWitness or ReprojectionWitness artifacts when replay or adaptive re-projection occurs.
 6. **Worker executes the task.** The selected context is sent to the worker agent together with its task instructions and tool interface.
 7. **Evaluator computes diagnostics.** Post-dispatch replay and proxy measurements estimate block-ratio health, interaction mass, pipeline-versus-proxy mismatch, metric-bridge status, and extraction risk.
 8. **Planner updates state summaries for the next round.** The resulting signals are written back into the runtime state shell, where they influence subsequent dispatch decisions.
 
 ## 7. Related Work
 
-The closest prior art differs from our setting along three axes. First, many systems optimize a different **granularity**: agents, links, memory-routing decisions, compressed summaries, retrieved passages, or judge-selected context blocks rather than per-agent context units. Second, many works use a different **budget object**: cardinality, dropout rates, compression ratios, or whole-system cost caps rather than per-agent token budgets at per-round dispatch time. Third, many works lack the relevant **claim-gate structure**: they provide heuristics, learned policies, weak-supervision pipelines, or empirical improvements without a formal value function over context subsets and without a bridge statement separating theorem, proxy, and runtime layers. We do not claim to be the first context compressor, router, pruning method, sufficiency evaluator, judge pipeline, or weak-supervision system. We organize the discussion below around the narrower contribution: audit-first dispatch-time evidence selection with claim-gated validation.
+The closest prior art spans compression, pruning, adaptive retrieval, context routing, sufficiency diagnostics, information-theoretic subset selection, judge pipelines, weak supervision, and runtime observability. We do not claim to be the first context compressor, adaptive RAG router, sufficiency evaluator, automated judge pipeline, or weak-supervision system. Our contribution is a claim-gated operational audit framework for dispatch-time evidence projection under live-API constraints.
 
-### 7.1 Single-agent budgeted context selection
+### 7.1 Context compression and adaptive retrieval comparators
 
-Recent work on context selection has begun to treat prompt assembly as an explicit optimization problem, but almost always for a **single predictive target under a single global budget**. Peng et al. (2025) provide a (1 − 1/e − ε') greedy approximation under ε-approximate submodularity for RAG context selection, using a modular-minus-supermodular objective to model redundancy. InSQuaD (Nanda et al., 2025) applies Submodular Mutual Information to exemplar selection for in-context learning, showing that submodular information objectives can improve retrieval quality for a single downstream model. Sub-CP (Zheng et al., 2025) studies budgeted context partitioning for block-wise in-context learning, again with a single target model and a single total context budget. These papers are the closest single-agent antecedents to our setting, but they do not address heterogeneous per-agent routing of content items across multiple downstream agents.
+Compression, pruning, routing, and adaptive retrieval are crowded literatures, and this paper does not claim novelty by beating them as a compressor or router. Recent work on context selection has begun to treat prompt assembly as an explicit optimization problem, but almost always for a **single predictive target under a single global budget**. Peng et al. (2025) provide a greedy approximation under approximate submodularity for RAG context selection, using a modular-minus-supermodular objective to model redundancy. InSQuaD (Nanda et al., 2025) applies Submodular Mutual Information to exemplar selection for in-context learning, showing that submodular information objectives can improve retrieval quality for a single downstream model. Sub-CP (Zheng et al., 2025) studies budgeted context partitioning for block-wise in-context learning, again with a single target model and a single total context budget. These papers are the closest single-agent antecedents to our setting, but they do not address claim-gated operational audit of dispatch-time evidence projection under live-API constraints.
 
 Wang et al. (2026) provide a complementary mechanistic account of when context helps in single-context Transformers. Their framework operates in output-vector space rather than information-theoretic quantities, and their selection strategy scores items independently rather than reasoning over set composition. We use their results as mechanistic support for pairwise interaction structure, not as a formal solution to the multi-agent content-selection problem.
 
-### 7.2 Multi-agent submodular optimization with different selection variables
+### 7.2 Sufficiency, abstention, and long-context diagnostics
+
+Sufficiency and abstention are the closest positive experimental lane for this paper because they ask whether the projected evidence is enough for a bounded decision and when the system should decline a stronger interpretation. Long-context diagnostics similarly motivate the problem: practical systems can fail by attending to the wrong evidence, omitting a prerequisite fact, or carrying irrelevant material through a large context window. Yuan, Su, and Yao (2026) diagnose retrieval relevance, utilization, and failure modes in memory-augmented agents; Gupta et al. (2025) discuss information-gain and token-waste diagnostics for multi-turn LLM conversations.
+
+Our use of sufficiency / abstention remains operational. The POST-4 lane reports support, contradiction, insufficiency, abstention, and parse-failure behavior as a bounded diagnostic. It is not truth proof, human-calibrated abstention, or a stronger metric claim. This positions sufficiency and abstention as the experimental neighbor most aligned with the paper, while keeping the evidence tier weak and fail-closed.
+
+### 7.3 V-information and budgeted subset-selection theory
+
+Predictive V-information is the formal anchor: it defines usable information under a declared predictive family. The paper uses that object to motivate dispatch-time subset selection, but the current experiments do not estimate deployed V-information. The live API does not provide the fixed-target scoring surface needed for fixed-target teacher-forced NLL or fixed-target continuation scoring, so the empirical package remains operational-only.
 
 The closest multi-agent formal work optimizes **different decision variables** from the one studied here. IMAS² (Shi et al., 2025) selects subsets of sensing agents by maximizing mutual information under conditional independence; it is the nearest true submodular multi-agent guarantee we found, but its objects are agents and trajectories in a Dec-POMDP, not LLM context units. Anaconda (Xu & Tzoumas, 2024) selects communication neighborhoods or links under per-agent resource constraints to preserve decentralized coordination quality. More broadly, multi-agent submodular optimization has studied exclusive allocation or coordination constraints over agents, tasks, or channels (for example Santiago & Shepherd, 2018), whereas our non-exclusive architecture allows the same finding to be projected to multiple agents and therefore reduces the per-round problem to independent per-agent content selection. The mismatch is therefore one of both **granularity** and **budget**: prior multi-agent work typically optimizes agents, links, or channels under coordination or cardinality-style constraints, whereas we optimize content units under explicit per-agent token budgets.
 
@@ -747,7 +791,15 @@ A unique-item global-budget formulation with total budget 2 can select $\{s,t\}$
 
 More distantly, the economic literature on combinatorial auctions had already studied valuation classes with decreasing marginal utilities and limited complementarity well before the current weak-submodularity vocabulary; see, for example, Lehmann, Lehmann, and Nisan (2006) for a greedy approximation perspective under decreasing-marginal-utility valuations. We use this lineage only as historical positioning for bounded-complementarity structure, not as a diagnostic precedent.
 
-### 7.3 Proxy-valued, calibrated, and learned routing or memory systems
+### 7.4 LLM-as-judge and weak supervision
+
+LLM-as-judge and weak-supervision pipelines are useful but noisy sources for operational diagnostics. They can expose disagreement, order sensitivity, rubric sensitivity, sufficiency failures, omitted-evidence behavior, and extraction risks at a scale that would be expensive to audit manually. They do not provide human/external gold labels, human-human agreement, or a fixed scoring surface.
+
+The POST-LAPI package uses judges in that weak-evidence posture. POST-3 records model-adjudicated stability diagnostics; POST-7 records model-adjudicated extraction-risk diagnostics; EPF-FINAL records silver-label candidate evidence. These materials are reviewable operational evidence and are explicitly denied as stronger measurement evidence. This is why the related-work comparison to judge pipelines and weak supervision is an adjacency claim, not a benchmark claim.
+
+### 7.5 Runtime audit artifacts and claim gates
+
+Runtime audit artifacts are the layer where this paper departs most clearly from compressor/router framing. The paper treats selected evidence, excluded evidence, materialization order, claim ledger entries, replay witnesses, and reprojection witnesses as first-class review objects. These artifacts record what a dispatch-time system exposed, what it withheld, how the context was materialized, and which stronger claims remain denied under the live-API constraint.
 
 A second adjacent line of work studies practical context routing, memory selection, or proxy-valued context evaluation without turning these ingredients into an explicit bridge statement between theorem, proxy, and deployment. Contextual Influence (CI) Value (Deng et al., 2025) is the closest antecedent on the proxy side: it reframes context assessment as inference-time data valuation and uses leave-one-out utility change as a practical marginal-value signal. But CI Value does not itself specify a formal value object with provable set-function properties, does not state equivalence conditions under which the proxy matches that formal object, and does not characterize how a deployed scoring pipeline may diverge from the proxy.
 
@@ -763,17 +815,17 @@ A further adjacency comes from recent LLM diagnostic frameworks. Yuan, Su, and Y
 
 Finally, PID- and interaction-information-based feature-selection work provides methodological context for our pairwise interaction diagnostic. Wollstadt, Schmitt, and Wibral (2023) use a PID-informed information-theoretic framework to distinguish redundancy and synergy in feature selection. This is a useful antecedent for the instrument level of Diagnostic 2, but not a deployment-facing bridge statement or escalation framework for token-budgeted context selection. In adjacent Shannon information-gain settings, the connection can be taken one step further: Hübotter, Sukhija, Treven, As, and Krause (2024) relate redundancy-versus-synergy structure to a weak-submodularity parameter for active-learning objectives and thereby provide the closest formal antecedent to the present discussion. We nevertheless treat that result as adjacent rather than directly transferable, because our formal object is predictive V-information and our deployed diagnostics are defined at the proxy and pipeline layers rather than as direct evaluations of the Shannon-information objective.
 
-Taken together, the prior literature covers compression, pruning, routing, sufficiency-style context selection, proxy-valued context scoring, formal objective plus calibration, learned memory policies, judge pipelines, weak supervision, and adjacent diagnostic frameworks. The contribution here is positioned more narrowly: audit-first dispatch-time evidence selection with an explicit three-layer separation between formal objective, proxy measurement, and heuristic pipeline; conditions under which theorem-level reasoning does or does not transfer across those layers; and a pipeline-versus-proxy gap treated as a first-class object of verification and escalation.
+Taken together, the prior literature covers compression, pruning, routing, sufficiency-style context selection, proxy-valued context scoring, formal objective plus calibration, learned memory policies, judge pipelines, weak supervision, and adjacent diagnostic frameworks. The contribution here is positioned more narrowly: audit-first dispatch-time evidence selection with an explicit separation between formal objective, backend-constrained operational evidence, and heuristic pipeline; conditions under which theorem-level reasoning does or does not transfer across those layers; and a pipeline-versus-evidence gap treated as a first-class object of claim-gated review.
 
-### 7.4 Structured extraction and faithfulness
+**Structured extraction and faithfulness.**
 
 The most relevant adjacent literature falls into three groups. First, orthogonal structured-action benchmarks such as BFCL (Patil et al., 2025) and ToolBench (Qin et al., 2023) evaluate function-call correctness and API-chain execution rather than free-form-to-structured extraction completeness. Second, structured-output benchmarks such as SLOT (Shen et al., 2025) and KIEval (Khang et al., 2025) improve schema-accuracy evaluation, content-fidelity evaluation, and application-centric correction-oriented evaluation, but they do not report separate completeness rates for simple versus complex findings as a diagnostic test of uniformity. Third, adjacent faithfulness work — including Peters and Chin-Yee (2025) on overgeneralization, CRANE (Banerjee et al., ICML 2025) on constrained-generation limits, FABLES (Kim et al., COLM 2024) on long-form faithfulness failures, and FActScore (Min et al., EMNLP 2023) on atomic-fact factuality — supports the broader concern that qualification-heavy, reasoning-intensive, or indirectly supported content is especially vulnerable during reformulation.
 
 Taken together, these literatures establish value-weighted evaluation, fine-grained factuality analysis, and structured-output benchmarking as important adjacent traditions. Our extraction protocol adapts those traditions to the narrower free-form-to-structured boundary by reporting separate per-stratum completeness rates in order to test whether high-value or complex findings are disproportionately lost during reformulation.
 
-Across the adjacent literatures surveyed in this section - single-agent budgeted selection, multi-agent optimization over agents or links, learned proxy-level routing or memory systems, judge and weak-supervision pipelines, and adjacent diagnostic and extraction-evaluation frameworks - the same pattern emerges. Our contribution lies at their intersection: a formal value function for **per-agent content selection** under heterogeneous token budgets, conditional structural theory for that formal object, an explicit bridge statement separating theorem, proxy, and runtime layers, and a measurable proxy-regime labeling protocol for deciding when monitored greedy-style selection is credible.
+Across the adjacent literatures surveyed in this section, the paper's claim is deliberately narrow: it provides an audit-first operational diagnostic framework for dispatch-time evidence projection under live-API constraints. The framework records what was selected, what was excluded, what order was materialized, which claim level is allowed, and which stronger claims remain denied.
 
-The gap is therefore not the absence of multi-agent scheduling mechanisms, but the absence of a formal context-allocation object inside those mechanisms. The reviewer-facing contribution is this narrower measurement protocol: a formal per-agent content-selection object, explicit bridge conditions, and auditable claim boundaries for proxy-regime diagnostics.
+The gap is therefore not the absence of context compressors, adaptive routers, sufficiency evaluators, judge pipelines, weak-supervision systems, or multi-agent schedulers. The gap is the absence of a claim-gated operational audit layer for per-agent content projection under backend-constrained evidence. That boundary prevents the related work from being read as a claim of compressor dominance, selector dominance, deployed V-information measurement, or a stronger metric bridge.
 
 ---
 
@@ -813,13 +865,15 @@ Ninth, companion implementation runs are not automatically evidence upgrades. A 
 
 Tenth, the live-API evidence path lacks true fixed-target teacher-forced NLL. Generated-token chat logprobs, constrained label-generation proxies, and weak-source judge outputs are operational diagnostics only. They do not provide fixed-target continuation scoring support or a metric bridge.
 
-Eleventh, no accepted bridge candidate is currently available for the live-agent operational packages. Route 2 and Route 3 bridge attempts failed closed, and EPF-FINAL remains backend constrained.
+Eleventh, no accepted bridge candidate is currently available for the live-agent operational packages. Route 2 and Route 3 bridge attempts failed closed, and EPF-FINAL remains backend constrained. The paper therefore does not claim metric bridge support, calibrated proxy support, or V-information proxy support.
 
 Twelfth, the current package has no measurement validation. Human/external gold labels and human-human kappa are absent, so model-adjudicated labels and silver labels remain candidate-only.
 
-Thirteenth, operational replay results are scoped to the named dataset, budget, baselines, metric, and evaluator/materialization regime. They should not be reported as selector superiority, global selector superiority, paper-grade validation evidence, or deployed V-information verification.
+Thirteenth, operational replay results are scoped to the named dataset, budgets, baselines, metrics, and materialization/evaluator regime. They should not be reported as selector superiority, global selector superiority, paper-grade validation evidence, or deployed V-information verification.
 
-Fourteenth, the paper does not claim multi-agent superiority over single-agent systems. It studies the context-allocation sub-layer that arises when an orchestrator-worker runtime is already being used.
+Fourteenth, extraction audit evidence is model-adjudicated extraction-risk evidence only. It does not establish human/external gold validation, measurement validation, selector validity, or theorem transfer from $M^*$ to the extracted pool $M$.
+
+Fifteenth, the paper does not claim multi-agent superiority over single-agent systems. It studies the context-allocation sub-layer that arises when an orchestrator-worker runtime is already being used.
 
 ## 10. Broader Impact
 
@@ -834,6 +888,8 @@ The main risk is false confidence. Formal guarantees over the V-information obje
 We formalized dispatch-time context projection as per-agent, token-budgeted content selection under a predictive V-information objective. The theoretical contribution is conditional: $\gamma$ and $d$ are independent for general monotone set functions, and under pairwise-additive absolute complementarity a local block-ratio lower bound follows from singleton mass, degree, and interaction strength. The fractional $1/(1+d\delta)$ form is valid only in active contexts.
 
 The deployment contribution is a claim-gated diagnostic framework, not deployed V-information verification. The paper separates formal V-information value, fixed-model log-loss, operational utility, heuristic selector pipelines, metric-claim levels, runtime artifacts, and extraction risk. The resulting protocol conservatively labels selector regimes as `greedy_supported`, `pairwise_escalate`, `higher_order_risk`, or `ambiguous`.
+
+The present evidence is operational rather than validating. The contribution is a replayable, claim-gated operational audit framework for dispatch-time evidence projection under live-API constraints.
 
 A small oracle synthetic benchmark provides initial structural evidence that the diagnostic policy separates redundancy, pairwise synergy, and higher-order prerequisite regimes without issuing false `greedy_supported` labels on higher-order cases. Route 2 HotpotQA replay and Gamma expansion supply scoped operational evidence, while Route 2/3 bridge attempts and EPF-FINAL record the current live-agent limitations. POST-LAPI adds judge-stability, sufficiency/abstention, reprojection-witness, matched-budget operational replay, extraction-risk, and artifact-hygiene summaries as weak candidate evidence only. The conclusion is therefore `operational_utility_only/no_claim_upgrade`: no calibrated proxy support, V-information proxy support, measurement validation, metric bridge support, selector superiority, Route 5 unlock, or Route 8 unlock follows from the current evidence package. Future bridge work requires a materially new stratum or materially new fixed-logloss/utility design, alongside human-sentinel audits and value-stratified extraction measurement.
 

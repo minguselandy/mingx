@@ -14,6 +14,16 @@ diagnostic and candidate evidence factory. It can organize generated
 output-token logprobs, constrained label-generation outputs, LLM-generated
 silver labels, uncertainty buckets, and replayable artifacts for review.
 
+Methods-facing capability boundary:
+
+| component | methods role | denied interpretation |
+|---|---|---|
+| generated output-token logprobs | output-side confidence diagnostics | fixed-target teacher-forced NLL or fixed-target continuation scoring |
+| constrained label generation | normalized operational candidate labels | metric bridge support |
+| model-adjudicated weak labels | weak judge protocol and bias-control surface | human/external gold labels |
+| ProjectionBundleV1 | replayable artifact chain tying plan, budget, context, witnesses, and ClaimLedger | validation by itself |
+| ClaimLedger | fail-closed allowed/denied claim record | route unlock or claim upgrade |
+
 Generated output-token logprobs are answer-side confidence diagnostics only.
 They are not fixed-target teacher-forced NLL and not fixed-target continuation
 scoring. They must not be interpreted as a bridge from operational utility to

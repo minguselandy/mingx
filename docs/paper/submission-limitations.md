@@ -9,7 +9,7 @@ The supported live API does not provide true fixed-target teacher-forced NLL or 
 
 ## Operational-Only Evidence
 
-Operational replay and artifact checks show auditability and scoped operational behavior under named datasets, budgets, baselines, metrics, and materialization regime. They do not establish measurement validation, paper-grade evidence, selector superiority, global selector superiority, or theorem transfer to deployed extraction behavior.
+Operational replay and artifact checks show auditability and scoped operational behavior under named datasets, budgets, baselines, metrics, and materialization/evaluator regime. They do not establish measurement validation, paper-grade evidence, selector superiority, global selector superiority, or theorem transfer to deployed extraction behavior.
 
 ## Weak-Source Diagnostics
 
@@ -46,6 +46,23 @@ This submission does not claim:
 - global selector superiority
 - Route 5 unlock
 - Route 8 unlock
+
+## Reviewer-Facing Limitation Checklist
+
+| limitation | conservative reading |
+|---|---|
+| No fixed-target teacher-forced NLL | The supported live API does not provide the required fixed-target scoring surface. |
+| No fixed-target continuation scoring | Generated-token chat logprobs are not scores for arbitrary target continuations. |
+| Generated-token logprobs | Output-side diagnostics only; not metric-bridge evidence. |
+| No metric bridge support | Bridge attempts failed closed or are absent for the live-agent package. |
+| No calibrated proxy support | The submission does not claim `calibrated_proxy_supported`. |
+| No V-information proxy support | The submission does not claim `vinfo_proxy_supported` or V-information proxy validation. |
+| No human/external gold validation | Human/external gold labels and human-human kappa are absent. |
+| No measurement validation | Weak model-adjudicated labels and artifacts remain operational diagnostics. |
+| No selector superiority | POST-6 is scoped operational replay only, not selector superiority or global selector superiority. |
+| Operational replay scope | POST-6 is scoped by dataset, budgets, baselines, metrics, and materialization/evaluator regime. |
+| Extraction audit scope | POST-7 is model-adjudicated extraction-risk evidence only. |
+| Judge outputs | POST-3 judge outputs are weak evidence only. |
 
 ## Locks
 

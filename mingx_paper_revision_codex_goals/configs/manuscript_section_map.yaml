@@ -1,0 +1,63 @@
+sections:
+  abstract:
+    target_files:
+      - docs/archive/context_projection_fixed_v12.md
+      - docs/paper/final-abstract-claim-safe.md
+    required_moves:
+      - state live-API-only constraint
+      - state audit-first operational diagnostic framing
+      - mention V-information as formal anchor only
+      - mention no fixed-target teacher-forced NLL bridge
+      - state operational_utility_only/no_claim_upgrade
+  introduction:
+    target_files:
+      - docs/archive/context_projection_fixed_v12.md
+    contribution_bullets:
+      - dispatch-time context projection objective
+      - conditional pairwise-regime theory
+      - fail-closed claim-gated operational protocol
+      - replayable artifact bundle / ProjectionBundleV1
+      - POST-LAPI operational evidence package
+  related_work:
+    target_files:
+      - docs/archive/context_projection_fixed_v12.md
+      - docs/paper/related-work-live-api-operational-reframe.md
+    subsections:
+      - compression and adaptive retrieval comparators
+      - sufficiency and abstention diagnostics
+      - V-information and budgeted subset-selection theory
+      - LLM-as-judge and weak supervision
+      - runtime audit artifacts and claim gates
+  methods:
+    target_files:
+      - docs/archive/context_projection_fixed_v12.md
+    must_include:
+      - backend capability table
+      - regime definition
+      - artifact bundle definition
+      - claim ledger definition
+      - weak judge protocol
+      - sufficiency / abstention / reprojection protocol
+  evaluation:
+    target_files:
+      - docs/archive/context_projection_fixed_v12.md
+      - docs/paper/post-lapi-main-results-tables.md
+    title: Operational evaluation and weak-evidence diagnostics
+    tables:
+      - backend capability / claim boundary
+      - judge stability
+      - sufficiency / abstention
+      - reprojection witness
+      - matched-budget operational replay
+      - extraction quality audit
+      - artifact hygiene and scans
+  limitations:
+    target_files:
+      - docs/archive/context_projection_fixed_v12.md
+      - docs/paper/submission-limitations.md
+    must_state_denials: true
+  conclusion:
+    target_files:
+      - docs/archive/context_projection_fixed_v12.md
+      - docs/paper/final-conclusion-claim-safe.md
+    final_claim: operational_utility_only/no_claim_upgrade

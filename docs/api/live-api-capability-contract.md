@@ -32,6 +32,19 @@ The allowed live API surface is narrow:
 The allowed surface does not include raw response storage, local backend
 fallbacks, or fixed-target scoring claims.
 
+## Methods Capability Table
+
+| Capability | Methods use | ClaimLedger status |
+|---|---|---|
+| Generated output-token logprobs | answer-side confidence diagnostics only | denied as fixed-target teacher-forced NLL and fixed-target continuation scoring |
+| Constrained label generation | normalized candidate labels for operational review | denied as metric bridge support |
+| Model-adjudicated weak labels | disagreement, stability, sufficiency, and extraction-risk diagnostics | denied as human/external gold labels |
+| ProjectionBundleV1 artifacts | replayable audit chain for dispatch-time projection | denied as validation by themselves |
+| Fixed-target teacher-forced NLL | unsupported | fail closed |
+| Fixed-target continuation scoring | unsupported | fail closed |
+| Human/external gold labels | unavailable in the current package | no measurement validation |
+| Raw API responses | not stored | normalized records and hashes only |
+
 ## Denied Capability Surface
 
 The current live-API-only package denies the following as active capabilities or
@@ -114,3 +127,9 @@ Future code, docs, and artifacts must fail closed if they imply any denied
 claim. The safe replacement is to describe the package as live-API-only,
 backend-constrained, operational, candidate, or diagnostic, and to keep the
 claim status at `operational_utility_only/no_claim_upgrade`.
+
+The ClaimLedger for any methods-facing package must record allowed claims,
+denied claims, Route 5 / Route 8 lock state, raw-response storage state,
+human/external gold-label state, metric-bridge state, and the claim-upgrade
+flag. Unsupported, stale, absent, underpowered, or stratum-mismatched evidence
+must be recorded as a denied stronger claim.

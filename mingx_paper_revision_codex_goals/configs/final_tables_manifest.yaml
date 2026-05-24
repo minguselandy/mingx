@@ -1,0 +1,54 @@
+main_tables:
+  - id: T1
+    title: Backend capability and claim boundary
+    evidence_tier: fail-closed bridge audit
+    must_deny: [fixed-target NLL support, metric bridge support, vinfo_proxy_supported]
+  - id: T2
+    title: POST-3 judge stability
+    evidence_tier: model-adjudicated weak evidence
+    metrics:
+      live_api_calls: 240
+      examples: 30
+      normalized_rows: 240
+      duplicate_agreement: 0.9833
+      order_swap_agreement: 0.9833
+      rubric_paraphrase_agreement: 0.9667
+  - id: T3
+    title: POST-4 sufficiency / abstention
+    evidence_tier: sufficiency-abstention diagnostic
+    metrics:
+      final_normalized_rows: 50
+  - id: T4
+    title: POST-5 reprojection witness
+    evidence_tier: candidate operational evidence
+    metrics:
+      rows: 26
+      repair_candidate_rate: 0.576923
+      label_change_rate: 0.576923
+      unsupported_to_supported_rate: 0.576923
+      parse_failed_rate: 0.0
+  - id: T5
+    title: POST-6 matched-budget operational replay
+    evidence_tier: matched-budget operational replay only
+    metrics:
+      replay_records: 2000
+      hotpotqa_candidate_pools: 200
+      budgets: [512, 1024]
+      live_api_calls: 0
+      oracle: non_deployable_upper_bound
+  - id: T6
+    title: POST-7 extraction quality audit
+    evidence_tier: extraction-risk diagnostics
+    metrics:
+      records: 100
+      records_per_stratum: 10
+      value_weighted_loss_proxy: 0.197403
+  - id: T7
+    title: Artifact hygiene and evidence freeze
+    evidence_tier: replayable artifact evidence
+    metrics:
+      json_files: 27
+      jsonl_files: 5
+      jsonl_rows: 2416
+      raw_api_responses_stored: false
+caption_rule: Every table caption must include evidence tier and denied claim boundary.

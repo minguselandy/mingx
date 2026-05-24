@@ -1,0 +1,27 @@
+reviewer_questions:
+  no_nll_bridge:
+    answer_points:
+      - supported live chat route exposes generated output-token logprobs, not documented fixed-target scoring
+      - relabeling sampled chat logprobs as teacher-forced NLL would be a category error
+      - paper reports fail-closed backend capability audit instead
+  why_vinformation:
+    answer_points:
+      - V-information is the formal organizing lens for usable information
+      - present experiments do not estimate deployed V-information
+      - operational evidence remains no_claim_upgrade
+  why_llm_judges:
+    answer_points:
+      - LLM judges are used as weak supervisory signals
+      - order-swap, duplicate, and rubric-paraphrase controls bound the paper claim
+      - no human-equivalent validation is claimed
+  why_not_selector_superiority:
+    answer_points:
+      - evidence is regime-conditional and matched-budget only
+      - operational replay supports scoped improvement, not global superiority
+  what_is_the_contribution:
+    answer_points:
+      - live-API operational audit framework
+      - replayable ProjectionBundleV1 and claim ledger
+      - sufficiency / abstention and reprojection diagnostics
+      - extraction-risk audit
+      - fail-closed claim gates

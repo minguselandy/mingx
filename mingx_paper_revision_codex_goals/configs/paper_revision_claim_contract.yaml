@@ -1,0 +1,46 @@
+current_phase: final_manuscript_revision
+claim_ceiling: operational_utility_only/no_claim_upgrade
+routes:
+  route_5: locked
+  route_8: locked
+backend:
+  live_api_only: true
+  dashscope_compatible_only: true
+  generated_token_logprobs: output_side_confidence_diagnostic_only
+  fixed_target_teacher_forced_nll: unsupported
+  fixed_target_continuation_scoring: unsupported
+raw_api_responses:
+  stored: false
+allowed_claims:
+  - operational replay evidence
+  - candidate operational evidence
+  - model-adjudicated weak evidence
+  - sufficiency / abstention diagnostic
+  - operational reprojection witness
+  - extraction-risk diagnostic
+  - replayable artifact evidence
+  - fail-closed bridge audit
+  - scoped operational improvement under matched budgets
+denied_claims:
+  - measurement validation
+  - human/external gold validation
+  - fixed-target teacher-forced NLL support
+  - fixed-target continuation scoring support
+  - teacher-forced scoring support
+  - metric bridge support
+  - calibrated_proxy_supported
+  - vinfo_proxy_supported
+  - paper-grade evidence
+  - paper evidence
+  - deployed V-information verification
+  - selector superiority
+  - global selector superiority
+  - Route 5 unlock
+  - Route 8 unlock
+required_section_labels:
+  evaluation_section_title: Operational evaluation and weak-evidence diagnostics
+  evidence_tier_label: candidate operational evidence
+  judge_label: model-adjudicated weak evidence
+  replay_label: scoped operational replay under matched budgets
+  extraction_label: extraction-risk diagnostics
+  backend_label: fail-closed backend capability audit

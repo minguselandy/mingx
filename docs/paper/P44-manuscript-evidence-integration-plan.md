@@ -49,7 +49,7 @@ Conservative claim rules:
 - missing human labels => not `measurement_validated`
 - missing human-human kappa => not `measurement_validated`
 - stale or missing metric bridge => `operational_utility_only` or `ambiguous`
-- synthetic-only evidence => `vinfo_proxy_supported`, not deployed V-information certification
+- synthetic-only evidence => `operational_utility_only`, not V-information proxy support or deployed V-information certification
 - replay package completeness => replay/observability evidence only, not scientific validation
 - model-adjudicated labels => not human labels
 - Codex/model audit => not human review
@@ -62,7 +62,7 @@ Candidate sources:
 
 | Source | Eligible manuscript use | Maximum claim |
 |---|---|---|
-| P38 synthetic benchmark | structural validity floor for diagnostics | `vinfo_proxy_supported` |
+| P38 synthetic benchmark | structural validity floor for diagnostics | `operational_utility_only` |
 | P39 schema freeze | artifact stability / replay readiness | engineering / replay readiness |
 | P40 Phase B replay | observability and diagnostic recomputation evidence | replay evidence only |
 | P41 Route B | model-adjudicated operational pilot evidence | `model_adjudicated_pilot_only` / `operational_utility_only` |
@@ -82,9 +82,9 @@ Add a concise results table:
 
 | Family | Expected signature | Observed result | Claim level |
 |---|---|---|---|
-| redundancy-dominated | high block-ratio, low synergy | TBD | `vinfo_proxy_supported` |
-| pairwise-synergy | interaction mass, seeded greedy improves | TBD | `vinfo_proxy_supported` |
-| higher-order | triple-excess / ambiguity; no greedy-valid false positive | TBD | `vinfo_proxy_supported` |
+| redundancy-dominated | high block-ratio, low synergy | TBD | `operational_utility_only` |
+| pairwise-synergy | interaction mass, seeded greedy improves | TBD | `operational_utility_only` |
+| higher-order | triple-excess / ambiguity; no greedy-valid false positive | TBD | `operational_utility_only` |
 
 ### 3.3 Section 6 Runtime artifacts
 

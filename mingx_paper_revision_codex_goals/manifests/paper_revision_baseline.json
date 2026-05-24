@@ -1,0 +1,38 @@
+{
+  "created": "2026-05-24",
+  "phase": "final_manuscript_revision",
+  "branch": "codex/integrated-validation-workbench",
+  "baseline_head": "ead306ba97fe9a85a881f1b0e931badf1edf2278",
+  "remote_aligned": true,
+  "tracked_worktree_clean": true,
+  "staged_files_empty": true,
+  "claim_ceiling": "operational_utility_only/no_claim_upgrade",
+  "sub4_decision": "NO_MORE_EXPERIMENTS_RECOMMENDED",
+  "handoff_verdict": "ACCEPT_WITH_NOTES",
+  "evidence_inventory": {
+    "POST-3": {
+      "normalized_rows": 240,
+      "live_api_calls": 240,
+      "evidence_tier": "model-adjudicated weak diagnostics only"
+    },
+    "POST-4": {
+      "final_normalized_rows": 50,
+      "evidence_tier": "sufficiency-abstention diagnostics only"
+    },
+    "POST-5": {
+      "rows": 26,
+      "repair_candidate_rate": 0.576923,
+      "evidence_tier": "candidate operational evidence only"
+    },
+    "POST-6": {
+      "replay_records": 2000,
+      "live_api_calls": 0,
+      "evidence_tier": "matched-budget operational replay only"
+    },
+    "POST-7": {
+      "records": 100,
+      "value_weighted_loss_proxy": 0.197403,
+      "evidence_tier": "extraction-risk diagnostics only"
+    }
+  }
+}
