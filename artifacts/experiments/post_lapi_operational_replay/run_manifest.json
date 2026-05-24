@@ -1,0 +1,68 @@
+{
+  "approval_gate_token_verified": true,
+  "budgets": [
+    512,
+    1024
+  ],
+  "candidate_pool_manifest_hash": "668cf259e02b4a37611e5b25a40957f661f5540f776c763c41a9bcc1bd12a062",
+  "claim_ledger_hash": "5aadb4f877cd239af06f3a09b4fb75cab6d74782ab33739acaab8a21c50f8864",
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "config_hash": "387166139ec6f2ca90f87ff2ae95ed2b918089daeb5ca2dc89f7617f8efcc3c3",
+  "cost_latency_ledger_hash": "e78f893a20bc94070f552affa1de6a0819a8fbce8da2e08e6a6408cce4e10bb8",
+  "dataset": "HotpotQA_continuation",
+  "deployable_baselines": [
+    "random_budget",
+    "topk_relevance_or_token_budget",
+    "mmr_density_greedy",
+    "v12_cost_aware_diagnostic_policy_operational_only"
+  ],
+  "diagnostic_claim_level": "scoped_operational_improvement_under_matched_budgets_only",
+  "endpoint": "offline_existing_replay_artifact",
+  "fixed_downstream_conditions": [
+    "candidate_pool_hash",
+    "budget",
+    "downstream_prompt_hash",
+    "model_snapshot",
+    "endpoint",
+    "thinking_mode",
+    "decoding_policy",
+    "token_budget_accounting"
+  ],
+  "live_api_call_count": 0,
+  "live_api_call_performed": false,
+  "manifest_hash": "0e819441425fa17d852fda9618fcfe87762588c08249644eaae786693da5346d",
+  "matched_budget_controls": {
+    "budget_mismatch_action": "stop_fail_closed",
+    "candidate_pool_mismatch_action": "stop_fail_closed",
+    "compare_only_with_matched_candidate_pool": true,
+    "hold_budget_fixed": true,
+    "hold_decoding_policy_fixed": true,
+    "hold_downstream_prompt_hash_fixed": true,
+    "hold_endpoint_fixed": true,
+    "hold_model_snapshot_fixed": true,
+    "hold_thinking_mode_fixed": true,
+    "model_snapshot_mismatch_action": "stop_fail_closed",
+    "prompt_hash_drift_action": "stop_fail_closed"
+  },
+  "model_snapshot": "offline_existing_replay_artifact_no_model",
+  "oracle_upper_bound": {
+    "deployable": false,
+    "selector_name": "gold_support_oracle_upper_bound",
+    "status": "non_deployable_upper_bound"
+  },
+  "output_dir": "artifacts/experiments/post_lapi_operational_replay",
+  "p56_report_hash": "3425a445da4564e63b3a022e98c717174b1d3d23c80eddd8cd8010b7f8f5d65d",
+  "raw_response_stored": false,
+  "replay_records_hash": "29c504333ab86759b356117ddcdb647f464e07796f7b76d30428564c955432bf",
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "run_id": "post_lapi_operational_replay_expansion_offline_v1",
+  "schema_version": "post_lapi_operational_replay_run_manifest_v1",
+  "source_config_hash": "e799686bafaa5927f1d8fb6de1a5a154ac068ad3e26eb5d8eaf8036075314ed5",
+  "source_traces_hash": "0ed00f1fdbe6f7fbde6b56c42d879929991d48e8744c1dde1ac08c01cd6bd2d5",
+  "terminal_status": "post6_operational_replay_completed",
+  "thinking_mode": "not_applicable_offline_replay",
+  "token_budget_accounting": "offline_selected_token_proxy_not_provider_usage",
+  "trace_count": 2000
+}

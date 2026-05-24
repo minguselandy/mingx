@@ -1,0 +1,37 @@
+{
+  "aggregate_label_status": "weak_model_adjudicated_candidate",
+  "allowed_claim_level": "model_adjudicated_weak_evidence",
+  "allowed_claims": [
+    "model_adjudicated_weak_evidence"
+  ],
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "human_external_gold_validation",
+    "measurement_validation",
+    "calibrated_judge",
+    "paper_grade_validation",
+    "paper_grade_evidence",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "duplicate_agreement": 0.9833333333333333,
+  "duplicate_agreement_min": 0.8,
+  "final_gate_status": "weak_evidence_candidate_ready",
+  "human_external_gold_label": false,
+  "input_token_count_max": 569,
+  "input_token_count_min": 420,
+  "length_aware_reporting": true,
+  "measurement_validation_claim": false,
+  "order_swap_agreement": 0.9833333333333333,
+  "order_swap_agreement_min": 0.8,
+  "output_token_count_max": 94,
+  "output_token_count_min": 56,
+  "parse_failure_rate": 0.0,
+  "parse_failure_rate_max": 0.15,
+  "raw_response_stored": false,
+  "reason_codes": [],
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "rubric_paraphrase_agreement": 0.9666666666666667,
+  "rubric_paraphrase_agreement_min": 0.75
+}

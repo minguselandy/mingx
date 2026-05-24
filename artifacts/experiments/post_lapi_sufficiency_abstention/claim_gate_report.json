@@ -1,0 +1,19 @@
+{
+  "allowed_claims": [
+    "sufficiency_abstention_diagnostic"
+  ],
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "denied_claims": [
+    "truth_validation",
+    "human_calibrated_abstention",
+    "measurement_validation",
+    "paper_grade_evidence",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "final_gate_status": "sufficiency_abstention_candidate_ready",
+  "raw_response_stored": false,
+  "reason_codes": [],
+  "route_5_locked": true,
+  "route_8_locked": true
+}

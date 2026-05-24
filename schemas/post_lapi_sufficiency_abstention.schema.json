@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "post_lapi_sufficiency_abstention.schema.json",
+  "title": "POST-LAPI Sufficiency Abstention Configuration",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "pilot_id",
+    "configuration_only_default",
+    "live_api_calls_allowed_by_default",
+    "model_judging_allowed_by_default",
+    "requires_explicit_approval_to_run",
+    "claim_level",
+    "diagnostic_claim_level",
+    "route_5_locked",
+    "route_8_locked",
+    "raw_response_storage_allowed",
+    "labels",
+    "additional_fields",
+    "regime_ledger",
+    "metrics",
+    "dry_run_input_selection",
+    "claim",
+    "output_policy"
+  ],
+  "properties": {
+    "pilot_id": {
+      "const": "post_lapi_sufficiency_abstention"
+    },
+    "configuration_only_default": {
+      "const": true
+    },
+    "live_api_calls_allowed_by_default": {
+      "const": false
+    },
+    "model_judging_allowed_by_default": {
+      "const": false
+    },
+    "requires_explicit_approval_to_run": {
+      "const": true
+    },
+    "claim_level": {
+      "const": "operational_utility_only/no_claim_upgrade"
+    },
+    "diagnostic_claim_level": {
+      "const": "sufficiency_abstention_diagnostic_only"
+    },
+    "route_5_locked": {
+      "const": true
+    },
+    "route_8_locked": {
+      "const": true
+    },
+    "raw_response_storage_allowed": {
+      "const": false
+    },
+    "raw_response_stored": {
+      "const": false
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "support",
+          "insufficient",
+          "contradict",
+          "uncertain",
+          "parse_failed"
+        ]
+      },
+      "minItems": 5,
+      "uniqueItems": true
+    },
+    "additional_fields": {
+      "type": "array",
+      "contains": {
+        "const": "raw_response_stored"
+      }
+    },
+    "field_defaults": {
+      "type": "object",
+      "properties": {
+        "raw_response_stored": {
+          "const": false
+        },
+        "live_api_call_performed": {
+          "const": false
+        },
+        "measurement_validation_claim": {
+          "const": false
+        },
+        "truth_validation_claim": {
+          "const": false
+        }
+      }
+    },
+    "regime_ledger": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "regime",
+          "meaning",
+          "desired_behavior"
+        ]
+      }
+    },
+    "dry_run_input_selection": {
+      "type": "object",
+      "required": [
+        "builder",
+        "run_id",
+        "downstream_prompt_template_hash",
+        "selection_policy",
+        "fixture_items",
+        "fixture_records",
+        "live_api_call_performed",
+        "raw_response_stored"
+      ],
+      "properties": {
+        "live_api_call_performed": {
+          "const": false
+        },
+        "raw_response_stored": {
+          "const": false
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "allowed",
+        "denied"
+      ]
+    },
+    "output_policy": {
+      "type": "object",
+      "properties": {
+        "store_raw_api_responses": {
+          "const": false
+        },
+        "counts_as_human_or_external_gold": {
+          "const": false
+        },
+        "measurement_validation_claim": {
+          "const": false
+        },
+        "truth_validation_claim": {
+          "const": false
+        },
+        "claim_upgrade_introduced": {
+          "const": false
+        }
+      }
+    }
+  }
+}

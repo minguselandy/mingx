@@ -1,0 +1,77 @@
+{
+  "cost_basis": "provider_usage_or_character_estimate",
+  "ledger": [
+    {
+      "input_tokens": 3439,
+      "latency_ms_mean": 3016.4,
+      "output_tokens": 474,
+      "stratum": "simple_factual",
+      "total_tokens": 3913
+    },
+    {
+      "input_tokens": 4201,
+      "latency_ms_mean": 2666.4,
+      "output_tokens": 510,
+      "stratum": "complex_conditional",
+      "total_tokens": 4711
+    },
+    {
+      "input_tokens": 3818,
+      "latency_ms_mean": 2873.5,
+      "output_tokens": 494,
+      "stratum": "qualifier_heavy",
+      "total_tokens": 4312
+    },
+    {
+      "input_tokens": 4063,
+      "latency_ms_mean": 2637.8,
+      "output_tokens": 525,
+      "stratum": "temporal_scope",
+      "total_tokens": 4588
+    },
+    {
+      "input_tokens": 4436,
+      "latency_ms_mean": 2189.5,
+      "output_tokens": 479,
+      "stratum": "cross_chunk",
+      "total_tokens": 4915
+    },
+    {
+      "input_tokens": 4023,
+      "latency_ms_mean": 2785.8,
+      "output_tokens": 493,
+      "stratum": "long_tail_entity",
+      "total_tokens": 4516
+    },
+    {
+      "input_tokens": 3852,
+      "latency_ms_mean": 2643.2,
+      "output_tokens": 526,
+      "stratum": "high_provenance_value",
+      "total_tokens": 4378
+    },
+    {
+      "input_tokens": 3768,
+      "latency_ms_mean": 2592.0,
+      "output_tokens": 502,
+      "stratum": "prerequisite",
+      "total_tokens": 4270
+    },
+    {
+      "input_tokens": 4063,
+      "latency_ms_mean": 2090.6,
+      "output_tokens": 553,
+      "stratum": "contradictory",
+      "total_tokens": 4616
+    },
+    {
+      "input_tokens": 4093,
+      "latency_ms_mean": 2729.9,
+      "output_tokens": 486,
+      "stratum": "adversarial",
+      "total_tokens": 4579
+    }
+  ],
+  "monetary_cost_status": "not_calculated_without_provider_pricing_config",
+  "schema_version": "post_lapi_extraction_quality_cost_latency_v1"
+}

@@ -1,0 +1,62 @@
+{
+  "allowed_claims_after_gate": [
+    "scoped_operational_improvement_under_matched_budgets",
+    "operational_utility_only"
+  ],
+  "budgets": [
+    512,
+    1024
+  ],
+  "calibrated_proxy_supported": false,
+  "candidate_pool_count": 200,
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "comparison_summary_rows": 10,
+  "dataset": "HotpotQA_continuation",
+  "denied_claims": [
+    "selector_superiority",
+    "global_selector_superiority",
+    "metric_bridge_support",
+    "measurement_validation",
+    "V_information_verification",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper_evidence",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "diagnostic_claim_level": "scoped_operational_improvement_under_matched_budgets_only",
+  "final_gate_status": "post6_operational_replay_completed",
+  "global_selector_superiority_claimed": false,
+  "live_api_call_count": 0,
+  "matched_budget_conditions_documented": true,
+  "measurement_validation_claim": false,
+  "metric_bridge_support": false,
+  "oracle_status": "non_deployable_upper_bound",
+  "oracle_used_as_deployable_baseline": false,
+  "paired_comparison_count": 6,
+  "paper_evidence_claim": false,
+  "raw_response_stored": false,
+  "record_count": 2000,
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "schema_version": "post_lapi_operational_replay_aggregate_v1",
+  "scoped_operational_comparison_evidence_only": true,
+  "selector_counts": {
+    "gold_support_oracle_upper_bound": 400,
+    "mmr_density_greedy": 400,
+    "random_budget": 400,
+    "topk_relevance_or_token_budget": 400,
+    "v12_cost_aware_diagnostic_policy_operational_only": 400
+  },
+  "selector_superiority_claimed": false,
+  "selectors": [
+    "gold_support_oracle_upper_bound",
+    "mmr_density_greedy",
+    "random_budget",
+    "topk_relevance_or_token_budget",
+    "v12_cost_aware_diagnostic_policy_operational_only"
+  ],
+  "trace_count": 2000,
+  "vinfo_proxy_supported": false
+}

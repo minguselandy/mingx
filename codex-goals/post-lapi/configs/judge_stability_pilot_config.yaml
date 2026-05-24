@@ -1,0 +1,36 @@
+pilot_id: post_lapi_judge_stability
+configuration_only_default: true
+live_api_calls_allowed_by_default: false
+requires_explicit_approval_to_run: true
+max_examples_first_pilot: 50
+conditions:
+  - original_order
+  - order_swapped
+  - duplicate_judging
+  - rubric_paraphrase
+labels:
+  - support
+  - insufficient
+  - contradict
+  - uncertain
+  - parse_failed
+metrics:
+  - parse_success_rate
+  - duplicate_agreement
+  - order_swap_agreement
+  - rubric_paraphrase_agreement
+  - confidence_bucket_stability
+  - position_bias_rate
+  - uncertain_rate
+  - parse_failed_rate
+  - cost_per_judgment
+  - latency_per_judgment
+claim:
+  allowed:
+    - model_adjudicated_weak_evidence
+    - operational_diagnostic_evidence
+  denied:
+    - human_gold
+    - measurement_validation
+    - judge_validation
+    - paper_grade_evidence

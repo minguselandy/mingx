@@ -1,0 +1,128 @@
+{
+  "allowed_claims": [
+    "model_adjudicated_weak_evidence",
+    "sufficiency_abstention_operational_diagnostic",
+    "operational_reprojection_witness",
+    "scoped_operational_improvement_under_matched_budgets",
+    "model_adjudicated_extraction_risk_evidence",
+    "operational_extraction_audit"
+  ],
+  "artifact_counts": {
+    "POST-3": 5,
+    "POST-4": 6,
+    "POST-5": 6,
+    "POST-6": 9,
+    "POST-7": 8
+  },
+  "branch": "codex/integrated-validation-workbench",
+  "calibrated_proxy_supported": false,
+  "checksums_path": "artifacts/audits/post_lapi_evidence_freeze/checksums.sha256",
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "commit": "ce1f7fa307bcacf794befc49eb34beb8f4e4c1e8",
+  "compileall": "passed",
+  "created_docs": [
+    "docs/paper/post-lapi-evidence-freeze-ledger.md",
+    "docs/paper/post-lapi-main-results-tables.md",
+    "docs/paper/post-lapi-claim-boundary-summary.md",
+    "docs/reviews/POST-LAPI-evidence-freeze-review.md"
+  ],
+  "denied_claims": [
+    "teacher-forced NLL support",
+    "fixed-target continuation scoring support",
+    "metric bridge support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement validation",
+    "human/external gold validation",
+    "paper-grade evidence",
+    "selector superiority",
+    "global selector superiority",
+    "Route 5 unlock",
+    "Route 8 unlock"
+  ],
+  "fixed_target_continuation_scoring_claimed": false,
+  "git_diff_check": "passed",
+  "global_selector_superiority_claimed": false,
+  "human_external_gold_validation_claimed": false,
+  "index_staged_before_write": false,
+  "json_validation": {
+    "files": 27,
+    "status": "passed"
+  },
+  "jsonl_validation": {
+    "files": 5,
+    "rows": 2416,
+    "status": "passed"
+  },
+  "live_api_call_counts": {
+    "POST-3": 240,
+    "POST-4_final_artifact_run": 50,
+    "POST-4_total_turn_calls": 100,
+    "POST-5": 26,
+    "POST-6": 0,
+    "POST-7": 100
+  },
+  "live_api_calls_run_during_sub0": 0,
+  "measurement_validation_claimed": false,
+  "metric_bridge_support_claimed": false,
+  "new_experiments_started": false,
+  "normalized_row_counts": {
+    "POST-3_rows": 240,
+    "POST-4_rows": 50,
+    "POST-5_rows": 26,
+    "POST-6_replay_records": 2000,
+    "POST-7_extraction_records": 100
+  },
+  "paper_grade_evidence_claimed": false,
+  "raw_api_responses_stored": false,
+  "recent_commit": "POST-LAPI add pilot audit outputs",
+  "remote_status": {
+    "aligned": true,
+    "remote_commit": "ce1f7fa307bcacf794befc49eb34beb8f4e4c1e8",
+    "remote_ref": "origin/codex/integrated-validation-workbench"
+  },
+  "route_5_status": "locked",
+  "route_8_status": "locked",
+  "scans": {
+    "forbidden_claim_grep": {
+      "command_scope": "active POST-LAPI docs/tests/scripts plus SUB-0 synthesis outputs; broad historical docs were not used as claim evidence",
+      "interpretation": "Matches are retained in denied-claim lists, false/locked boundary rows, scripts that serialize denied claims, and tests that assert forbidden language is rejected. No SUB-0 output introduces a positive claim upgrade.",
+      "result": "documented_context_matches_only",
+      "terms": [
+        "teacher-forced NLL support",
+        "fixed-target continuation scoring support",
+        "metric bridge support",
+        "calibrated_proxy_supported",
+        "vinfo_proxy_supported",
+        "measurement validation",
+        "human/external gold validation",
+        "paper-grade evidence",
+        "selector superiority",
+        "global selector superiority",
+        "Route 5 unlock",
+        "Route 8 unlock"
+      ]
+    },
+    "forbidden_path_scan": "passed",
+    "raw_response_storage_scan": "passed",
+    "secret_scan": "passed"
+  },
+  "schema_version": "post_lapi_evidence_freeze_manifest_v1",
+  "selector_superiority_claimed": false,
+  "silver_labels_scaled": false,
+  "source_artifact_roots": {
+    "POST-3": "artifacts/experiments/post_lapi_judge_stability",
+    "POST-4": "artifacts/experiments/post_lapi_sufficiency_abstention",
+    "POST-5": "artifacts/experiments/post_lapi_reprojection_witness",
+    "POST-6": "artifacts/experiments/post_lapi_operational_replay",
+    "POST-7": "artifacts/experiments/post_lapi_extraction_quality_audit"
+  },
+  "table_inputs_path": "artifacts/audits/post_lapi_evidence_freeze/table_inputs.json",
+  "teacher_forced_nll_claimed": false,
+  "tests": {
+    "focused_post3_to_post7_plus_guardrails": "59 passed",
+    "sub0_guardrails": "20 passed"
+  },
+  "unrelated_leftovers_staged": false,
+  "vinfo_proxy_supported": false
+}

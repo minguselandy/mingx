@@ -1,0 +1,87 @@
+{
+  "branch": "codex/integrated-validation-workbench",
+  "latest_pushed_commit": "ce1f7fa307bcacf794befc49eb34beb8f4e4c1e8",
+  "recent_commit": "POST-LAPI add pilot audit outputs",
+  "remote_branch_aligned": true,
+  "index_clean": true,
+  "untracked_leftovers_present": true,
+  "claim": "operational_utility_only/no_claim_upgrade",
+  "route_5": "locked",
+  "route_8": "locked",
+  "raw_api_responses_stored": false,
+  "completed": [
+    "EPF / PAPER-RS / LAPI completed and merged",
+    "POST-LAPI goal pack installed and committed",
+    "POST-0 through POST-8-CONFIG completed",
+    "POST-3 through POST-7 pilots completed"
+  ],
+  "pilot_results": {
+    "POST-3": {
+      "name": "Judge stability",
+      "live_api_calls": 240,
+      "examples": 30,
+      "normalized_rows": 240,
+      "duplicate_agreement": 0.9833,
+      "order_swap_agreement": 0.9833,
+      "rubric_paraphrase_agreement": 0.9667,
+      "gate": "weak_evidence_candidate_ready"
+    },
+    "POST-4": {
+      "name": "Sufficiency / abstention",
+      "final_artifact_run_calls": 50,
+      "total_turn_calls": 100,
+      "gate": "sufficiency_abstention_candidate_ready",
+      "diagnostic_label": "sufficiency_abstention_diagnostic_only"
+    },
+    "POST-5": {
+      "name": "Reprojection witness",
+      "live_api_calls": 26,
+      "gate": "reprojection_witness_candidate_ready",
+      "repair_candidate_rate": 0.576923,
+      "label_change_rate": 0.576923,
+      "unsupported_to_supported_rate": 0.576923,
+      "parse_failed_rate": 0.0
+    },
+    "POST-6": {
+      "name": "Operational replay expansion",
+      "live_api_calls": 0,
+      "normalized_replay_records": 2000,
+      "hotpotqa_candidate_pools": 200,
+      "budgets": [
+        512,
+        1024
+      ],
+      "oracle": "non_deployable_upper_bound"
+    },
+    "POST-7": {
+      "name": "Extraction quality audit",
+      "live_api_calls": 100,
+      "normalized_extraction_audit_records": 100,
+      "records_per_stratum": 10,
+      "final_gate": "post7_extraction_quality_audit_completed",
+      "value_weighted_loss_proxy": 0.197403
+    }
+  },
+  "validation": {
+    "focused_tests": "59 passed",
+    "json_files": 27,
+    "jsonl_files": 5,
+    "jsonl_rows": 2416,
+    "secret_scan": "passed",
+    "raw_response_storage_scan": "passed",
+    "forbidden_path_scan": "passed",
+    "compileall": "passed"
+  },
+  "denied_claims": [
+    "measurement validation",
+    "human/external gold validation",
+    "metric bridge support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper evidence",
+    "selector superiority",
+    "global selector superiority",
+    "Route 5 unlock",
+    "Route 8 unlock"
+  ]
+}

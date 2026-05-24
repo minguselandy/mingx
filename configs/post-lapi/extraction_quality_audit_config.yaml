@@ -1,0 +1,39 @@
+audit_id: post_lapi_extraction_quality_audit
+configuration_only_default: true
+live_api_calls_allowed_by_default: false
+requires_explicit_approval_to_run_if_model_adjudicated: true
+target_examples_first_pass: 100
+strata:
+  - simple_factual
+  - complex_conditional
+  - qualifier_heavy
+  - temporal_scope
+  - cross_chunk
+  - long_tail_entity
+  - high_provenance_value
+  - prerequisite
+  - contradictory
+  - adversarial
+labels:
+  - captured
+  - captured_core_preserved
+  - captured_core_materially_changed
+  - missing
+  - lost_qualifier
+  - temporal_scope_error
+  - provenance_loss
+  - selector_impact
+metrics:
+  - completeness_by_stratum
+  - value_weighted_loss_proxy
+  - qualifier_loss_rate
+  - temporal_scope_error_rate
+  - provenance_loss_rate
+  - selector_impact_rate
+claim:
+  allowed:
+    - model_adjudicated_extraction_risk_evidence
+    - operational_extraction_audit
+  denied:
+    - human_validated_extraction_measurement
+    - measurement_validation

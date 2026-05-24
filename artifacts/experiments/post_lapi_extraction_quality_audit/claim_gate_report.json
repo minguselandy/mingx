@@ -1,0 +1,38 @@
+{
+  "allowed_claims": [
+    "model_adjudicated_extraction_risk_evidence",
+    "operational_extraction_audit"
+  ],
+  "calibrated_proxy_supported": false,
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "denied_claims": [
+    "human_validated_extraction_measurement",
+    "measurement_validation",
+    "theorem_transfer_to_M_star",
+    "end_to_end_validation",
+    "end_to_end_measurement_validation",
+    "metric_bridge_support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper_evidence",
+    "selector_superiority",
+    "global_selector_superiority",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "diagnostic_claim_level": "model_adjudicated_extraction_risk_evidence",
+  "final_gate_status": "post7_extraction_quality_audit_completed",
+  "human_validated_extraction_measurement": false,
+  "live_api_call_count": 100,
+  "measurement_validation_claim": false,
+  "metric_bridge_support": false,
+  "paper_evidence_claim": false,
+  "raw_response_stored": false,
+  "record_count": 100,
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "selector_superiority_claim": false,
+  "value_weighted_loss_proxy_interpretation": "candidate_operational_evidence_only",
+  "vinfo_proxy_supported": false
+}

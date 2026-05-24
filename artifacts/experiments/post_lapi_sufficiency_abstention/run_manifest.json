@@ -1,0 +1,1015 @@
+{
+  "allowed_triggers": [
+    "hallucination_risk",
+    "insufficient_and_answered",
+    "sufficient_dropped",
+    "unknown_due_to_missing_context"
+  ],
+  "api_key_source": "DASHSCOPE_API_KEY",
+  "candidate_operational_evidence_only": true,
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "config_hash": "dcd5a5bccdd5b6df2b42e717bec23ad063853842750642be8f6531db475777db",
+  "denied_claims": [
+    "truth_validation",
+    "calibrated_abstention",
+    "measurement_validation",
+    "fixed_target_nll_bridge",
+    "human_external_gold_validation",
+    "paper_grade_validation",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "diagnostic_claim_level": "sufficiency_abstention_diagnostic_only",
+  "downstream_prompt_template_hash": "a3885dc6307611dee271aef6f41e18f2ff4c7e6b62f09f669d423282088766e4",
+  "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "endpoint_family": "dashscope_openai_compatible_chat_completions",
+  "example_count": 50,
+  "items": [
+    {
+      "item_id": "post4-hotpotqa-001"
+    },
+    {
+      "item_id": "post4-hotpotqa-002"
+    },
+    {
+      "item_id": "post4-hotpotqa-003"
+    },
+    {
+      "item_id": "post4-hotpotqa-004"
+    },
+    {
+      "item_id": "post4-hotpotqa-005"
+    },
+    {
+      "item_id": "post4-hotpotqa-006"
+    },
+    {
+      "item_id": "post4-hotpotqa-007"
+    },
+    {
+      "item_id": "post4-hotpotqa-008"
+    },
+    {
+      "item_id": "post4-hotpotqa-009"
+    },
+    {
+      "item_id": "post4-hotpotqa-010"
+    },
+    {
+      "item_id": "post4-hotpotqa-011"
+    },
+    {
+      "item_id": "post4-hotpotqa-012"
+    },
+    {
+      "item_id": "post4-hotpotqa-013"
+    },
+    {
+      "item_id": "post4-hotpotqa-014"
+    },
+    {
+      "item_id": "post4-hotpotqa-015"
+    },
+    {
+      "item_id": "post4-hotpotqa-016"
+    },
+    {
+      "item_id": "post4-hotpotqa-017"
+    },
+    {
+      "item_id": "post4-hotpotqa-018"
+    },
+    {
+      "item_id": "post4-hotpotqa-019"
+    },
+    {
+      "item_id": "post4-hotpotqa-020"
+    },
+    {
+      "item_id": "post4-hotpotqa-021"
+    },
+    {
+      "item_id": "post4-hotpotqa-022"
+    },
+    {
+      "item_id": "post4-hotpotqa-023"
+    },
+    {
+      "item_id": "post4-hotpotqa-024"
+    },
+    {
+      "item_id": "post4-hotpotqa-025"
+    },
+    {
+      "item_id": "post4-hotpotqa-026"
+    },
+    {
+      "item_id": "post4-hotpotqa-027"
+    },
+    {
+      "item_id": "post4-hotpotqa-028"
+    },
+    {
+      "item_id": "post4-hotpotqa-029"
+    },
+    {
+      "item_id": "post4-hotpotqa-030"
+    },
+    {
+      "item_id": "post4-hotpotqa-031"
+    },
+    {
+      "item_id": "post4-hotpotqa-032"
+    },
+    {
+      "item_id": "post4-hotpotqa-033"
+    },
+    {
+      "item_id": "post4-hotpotqa-034"
+    },
+    {
+      "item_id": "post4-hotpotqa-035"
+    },
+    {
+      "item_id": "post4-hotpotqa-036"
+    },
+    {
+      "item_id": "post4-hotpotqa-037"
+    },
+    {
+      "item_id": "post4-hotpotqa-038"
+    },
+    {
+      "item_id": "post4-hotpotqa-039"
+    },
+    {
+      "item_id": "post4-hotpotqa-040"
+    },
+    {
+      "item_id": "post4-hotpotqa-041"
+    },
+    {
+      "item_id": "post4-hotpotqa-042"
+    },
+    {
+      "item_id": "post4-hotpotqa-043"
+    },
+    {
+      "item_id": "post4-hotpotqa-044"
+    },
+    {
+      "item_id": "post4-hotpotqa-045"
+    },
+    {
+      "item_id": "post4-hotpotqa-046"
+    },
+    {
+      "item_id": "post4-hotpotqa-047"
+    },
+    {
+      "item_id": "post4-hotpotqa-048"
+    },
+    {
+      "item_id": "post4-hotpotqa-049"
+    },
+    {
+      "item_id": "post4-hotpotqa-050"
+    }
+  ],
+  "judge_labels": [
+    "contradict",
+    "insufficient",
+    "parse_failed",
+    "support",
+    "uncertain"
+  ],
+  "live_api_call_count": 50,
+  "live_api_call_performed": true,
+  "manifest_hash": "0942de3879c070b997175965648d0592a509c1eadd158023b3e925f7b997a07e",
+  "model_snapshot": "qwen3.6-flash",
+  "pilot_readiness_status": "live_pilot_completed",
+  "prompt_hashes": {
+    "prompts/reprojection/sufficiency_abstention_v1.md": "a3885dc6307611dee271aef6f41e18f2ff4c7e6b62f09f669d423282088766e4"
+  },
+  "protocol_version": "v1_operational_only",
+  "purpose": "classify_evidence_sufficiency_and_test_omission_sensitive_failures",
+  "raw_response_stored": false,
+  "required_regime_labels": [
+    "insufficient_and_abstained",
+    "insufficient_and_answered",
+    "sufficient_dropped",
+    "sufficient_kept"
+  ],
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "run_finished_at": "2026-05-24T11:47:19Z",
+  "run_id": "post_lapi_sufficiency_abstention_live_pilot_v1",
+  "run_started_at": "2026-05-24T11:45:16Z",
+  "schema_hash": "c6400f7c840970e176e193d47a26ae0ad55184dd55ea42c736ad158a066683f5",
+  "schema_version": "post_lapi_sufficiency_abstention_run_manifest_v1",
+  "source_cases": [
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "ba9f1b93d9820ed829b5c651fec9b4e8ab3c2527233c48ea52b9d7482b0749b3",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-001",
+      "projected_context_hash": "8941b9a1cdb06cc4b90ee7ca0f468828e67d6206e2dca389a001766695348757",
+      "projected_packet_hashes": [
+        "b8f9a0849a5447f9767121f7f1b6d399921e345aa53a84cd23f58fdf7c35ffca",
+        "3773f3b7590ab9fea5e7c289d9ace26006c6e40980c127127d8f49d2056559e7"
+      ],
+      "source_instance_hash": "ab3b7eb790b3a8954eaa8d8f418cc47b97ad87b3127784f6baf4c3b7ddda3f64",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "019a9968b0df12ce8ccbeb88b6b243cf14822ed5823c73c3d5a6eef1398e6dca",
+      "source_row_index": 0,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "c6dc1bdb5bc60b5f723a85d7d9d4fde4c23c16e2f029f7046eb87625c4e1cd73",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-002",
+      "projected_context_hash": "3e7bc9d8d33f58d1679f6929cf1570371c900d3f2054541f24090354f91e8591",
+      "projected_packet_hashes": [
+        "f2f60f0ab5083901937d67a90ad7e47980882931e0e29979f811a1726a7d0b17",
+        "64700b8428b5e88a9f5ce6f3ad43e69e7bb129f0488a35f788594f4ae33b570f"
+      ],
+      "source_instance_hash": "8c8c002195d5cbc8944ff4edbba21068e05430845b15438a2be242149023af42",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "eedbc23bb2c74e2c2fdff13bf51933cc3569ab60db5774ac037e61a8d4831418",
+      "source_row_index": 1,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "5ab426255f34b4aae669a34286d55465810e3ca8b4d5e12143e7dcd04d88c0b4",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-003",
+      "projected_context_hash": "c7e59875a3b004bc42e826303561bbf85ae1d3676bf59db6ee0cc0bc725d3b36",
+      "projected_packet_hashes": [
+        "b042958eb0529ac17a32e28be0e2c573ddbf7e9f2d37314b2e17bf8ae73fd8ec",
+        "f03a2ebe8a7ee20bc7d39e259a109c0a031aa46db6e3149ad35053108bc2fb97"
+      ],
+      "source_instance_hash": "2837c061c89a16daae31f487d34bd5fba96f0a0a35ac26a574cdb8dbcd1d9a77",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "c64de476b5b39e37a1f71baec8b425d00316e9141e0ba4f0229b32d1d0f60227",
+      "source_row_index": 2,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "d43f67351ea6316a950c15589ef5e81a1c6dc63405037ed3a551bc19c7512b65",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-004",
+      "projected_context_hash": "65173563843b3846f6090b0c83e77f32b06b7f0f312a15cd7e38abc172055b70",
+      "projected_packet_hashes": [
+        "bf09a2f24c99afdc7608b33c2e0450d013136e35085a6bf826db7fa936471e8c",
+        "2e9f74a52b654e03b8464b7da1b36f8da16b2d5cd48f54711324ecdbd2afdb8b"
+      ],
+      "source_instance_hash": "78879a1e35573abfa1a3dd4d6e3b386a1a2f5e30de1f5e7580595c2f931ee6cd",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "4e61ab18878712ef18206f214608feaecfd185d95f118b28999b0392e399fd20",
+      "source_row_index": 3,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "1dfdd60329bb76c25eb7866fd18b0af608ac9842a6a77b917468ffeb7fd3e4e1",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-005",
+      "projected_context_hash": "d6583a1b617ecc3d85f09dfe2d9723ab1f6c4afde40ac5d3de0cef0205823c7b",
+      "projected_packet_hashes": [
+        "dbeef5ec9ecd6f9b72fc6c798c34941f84b358e4baac0175c0c8034ada779a26",
+        "c529108f418eb1abcb44992e2c15fb360a14cd9ecbb32f88295edcc40281d14b"
+      ],
+      "source_instance_hash": "0045eca48d91a932e8cc3c0e2c2b52b0934b81ba4eafa82c25f5417cbd3aef79",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "7ebf1d5ca9ed3197d6088d82b88cd700a3e3b7357e30c5aa0883d26d056c8af1",
+      "source_row_index": 4,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "12179abbb34c23515f8a22e780f8474aa2d830d1893274b60396e24027cd9bf7",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-006",
+      "projected_context_hash": "eeebaa11b31c5d0ef4c9603bba23862b5c5920cff064c1ccab8f4184ddf03333",
+      "projected_packet_hashes": [
+        "7c68d280e6ebba1947c2ac5efcbca087b18187ef484c94279476aebd5cb3e6dc",
+        "b8686140180be3bb78cefdd7c35d2407e217b93ff04f440d18e6bf799287aeb8"
+      ],
+      "source_instance_hash": "9793f781dbb397cd6fe6afe9d66a19328b890d650c58e88e6bf4261ea311c806",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "d3393bef58f3d41776516d764b5772b0e2cc9d873a6e0f931c572643d1551a7a",
+      "source_row_index": 5,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "d694a5b030a9ef2fa85b64ac4650784a3fa1883320735200b37831ea0cc87570",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-007",
+      "projected_context_hash": "3406af80074f92b7b1bc70f7d492099b03ed05b57739bfb0285ade3cb9a95ceb",
+      "projected_packet_hashes": [
+        "9481e7446ded6d07e9795a4c92a4be2b44ac27dc5622202d6d52fa2e341f93b9",
+        "3a600de25d8763f9f6c78606ba75302e79baa66d759fe233ffc460afe6671935"
+      ],
+      "source_instance_hash": "38b94f408e304d17a15210b50296662131a1ca3e5def3b9deee4d48b03fca357",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "a4a546dea4fcce798bb678e81dc7bdb9b9090c6dc115c7a6439f2c7448f9d12e",
+      "source_row_index": 6,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "b0b8065e19c4e7ffc17622f00ca2cf93182ed0302fa3d807ff111430bf77fe8f",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-008",
+      "projected_context_hash": "79360971932fcefe83324ffdba6357e8d1cefec6b5367da34a3895cbb44bff39",
+      "projected_packet_hashes": [
+        "ea9c19f76f3b7ce114dff82b1c6c6b2973c9514a05e8b285c1b99057c0064f61",
+        "86665be0544d95c4d72092cb0ffb94ca7ad13f9b77567a738e497555d44f2686"
+      ],
+      "source_instance_hash": "844597e7d45f03df1309b92d5b0b0a9579730401a5b345adf54aa6f5a694ab2d",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "d461940e18e1218004140ee22f13f6ff5a85e4ce6b0fb6d3d31271fb3cc94cbe",
+      "source_row_index": 7,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "54eafc48508ed55d95837dcbaaae696b8227593b684ed3953769f6abfcf3d227",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-009",
+      "projected_context_hash": "0f6e710b6f7901715c8fd6c85a2ebab7dde70825674a113bc02dd72a2657482a",
+      "projected_packet_hashes": [
+        "305285656242e99aa616b1c1fa364f8a08fb4f7f79c17f3aafeb537300a23c4b",
+        "6d69b64ceb2ce8c2c52b610df50e71b96722e0b3ebc8136fe282b9949dc1f356"
+      ],
+      "source_instance_hash": "0606b5cb11a5e47fb1359b69e598fe0515fce9034846f78796ef7007455335ae",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "4a2bbab38fd197419c228e4c7caab89a684022caa4e959f8550ce247728613a6",
+      "source_row_index": 8,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "010fd13ab0774958ca2be7fd27824ab0ecb7b411cf79d47d50f0bbe07fc31fcd",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-010",
+      "projected_context_hash": "9dbf1be546997a3d73327b1bbae4889dfb1217682f64d5fc27fe94c08c741709",
+      "projected_packet_hashes": [
+        "1c69d9c222a83c5ec23798f0712e0fbfb1ffbff2bc459a325cb29f4b7505b3c1",
+        "43d80d8fa14d57fa59a5df263c572283b41a38caa47cbd0897e7185e0d3dcc36"
+      ],
+      "source_instance_hash": "8a4b6bfd8fe3cb137c244cb37acb722289b8fd990ac5cba6d8e1f458efad297e",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "8862a48420c324104b308eae5b1c0ca9851049a72707a7ad2d602fb4c55fa90a",
+      "source_row_index": 9,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "5b9cf8c841c45379708f40c45ce626f20f027ee1a18cf74eb30307832e793334",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-011",
+      "projected_context_hash": "907c656ebd7645fdf7c251b132eb2b88a600733e20300521207bbfc5a4a5671c",
+      "projected_packet_hashes": [
+        "2d4ee57930126a03db749c543ac26a7df0b6f3166101a68f5aca456b2a7ee47d",
+        "e1f89d4f6a5961c040ef7c6a47b7512eb1d3bf97b47d2d6b5a82d936b30b5cd2"
+      ],
+      "source_instance_hash": "4f350f24b032828ff9812a3f574063b64e37e18b8dd481dabd24cadcb1c8a303",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "125399d378591e86901a10a85b16e580ff9d144dfe8d1e6cb64f7d2a848cb898",
+      "source_row_index": 10,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "8dd2f7f15af8123b6454f21601c01897a778aa9f181a215f82b4a6e1f768e5a1",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-012",
+      "projected_context_hash": "dc0f721985946371c4c139bf2d80171a2c4ddcc8505a4fc693de67a733fdc22f",
+      "projected_packet_hashes": [
+        "6fd4c57a6bceca0413fc801ebb9664b95ed213eb0b83af7a0637151f30f4c819",
+        "86f962d77f570170ff602e27108b7f694e9acce9de3476d3a4493d5255cea715"
+      ],
+      "source_instance_hash": "4a5dd80fd4decc82dd60989ab7bdc47286697066795172110b4da8da7e7b688a",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "d6e600dc392eb9d8c59cbb3a4ce966000a961574fb614e65924702848a0a5e08",
+      "source_row_index": 11,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "7332e5b118862005cc58790ede247bb04f26f149782856bdf70c9613c2051835",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-013",
+      "projected_context_hash": "a990b53929e8530ca7d5439cde4b56f10b47efae6e77b2c9132d09395c2f61b7",
+      "projected_packet_hashes": [
+        "e81ed2c40ab15258a11b3df65f82c2496cd98c5b58196f0b659c5dc37fac1a7b",
+        "c0681853e69577b88fdbd0cd5093018438c832d16dab40274d89e58f02b4785a"
+      ],
+      "source_instance_hash": "96340fed93b77d242a503c0ac447a362808158d73021b8e2b8c8d8effa6ff0b2",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "6e7a2864d55a1f4cf4d9f43fba872891cacd7a2dc25ffdf268c33f31cf7e613c",
+      "source_row_index": 12,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "e2c110f0cadd13ac2c9736b48058d41d3dc465e33b61757d067248993bfcc428",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-014",
+      "projected_context_hash": "a2f0d7369e96b06503481f46ec3fe7aaf67a2a96b4b7c3d8eab2bc1a184cb585",
+      "projected_packet_hashes": [
+        "9e7ff3f167bdf67b088ef5e90fa1ee7530d0db03880d2850ed8b07d6d3d04744",
+        "819a64d8f3f659029839acc4831df4e271813769bca3f6106a2c4629a2901cce"
+      ],
+      "source_instance_hash": "16730a3d5aca704e5c1ea0b55216f8503f14d234a1a17a3d3671479c805b18d7",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "0b86f14cdb20d24c99c9696a074dadd514801ded5e51072d8cf2858ab63d7342",
+      "source_row_index": 13,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "8e5d84c3bf0ef661367585e5bd9e4bb9597e93245ce412930973648739c704b0",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-015",
+      "projected_context_hash": "a33f4f178ec1b23e360be0b60e76150e2fbe421e17fc943082960a4cf79b32cb",
+      "projected_packet_hashes": [
+        "ec776b1f3df14d90c4e900404b30b590e507e8399571c926c729cdc8ad83e5ff",
+        "3090d812f229fbc5a2855439fe9a69acfab049ed89e90bad458ed54d14818871"
+      ],
+      "source_instance_hash": "c2c8d0fce87891302907e106f8db637f1578eb665dbc9337a74b402753d7c582",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "903b107400b67d7b22bebf34edf5c6727094ba274007707f8903d145c612a2e7",
+      "source_row_index": 14,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "c4ee9ad4afcd08a7a0ccada3fcc922cc9b6fc384c3bad68647068ac91bd90365",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-016",
+      "projected_context_hash": "f6683c1bd69977a866b2773ca3ee5db5119b9a77ec5d264e51a7d03a93f62fb2",
+      "projected_packet_hashes": [
+        "6dd9764b2e7a2020585530c3da3240433b7c8c7c733303ed17f1f6298b13c990",
+        "669bc55d7a1d03e545357e691af397ca0d02ce9d19daf03a759441044710b135"
+      ],
+      "source_instance_hash": "828140cd83da1373896bbcfe0db0fe03e45f75270722ec9c409d75ab80f1d7b6",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "56f50717c3d0dbb5f5cb027f7ed9e46e7c63bc3c00158aac841333d5ad31f937",
+      "source_row_index": 15,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "5d65a0fee84893df8f53865b976416e890fc35975cda655e6a7ef8162721bbb4",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-017",
+      "projected_context_hash": "737cc231fd75789a2d1e5e70be3ac70235f9a5dc0c2fa09ac7e0a40331daad57",
+      "projected_packet_hashes": [
+        "76f292e843d7582f6f6e44bdcf2fa607ba6bde505af8c8b45b6590b81ecd09ef",
+        "06c23fe54bf867e4fffe6e8d0628a2a51c7e82532611efd317db824ec7298124"
+      ],
+      "source_instance_hash": "2a3227c45d46a3082fc8d172f76b6616d6629bed2e4015a89144da3a8ba444ae",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "c1cfdc3cb8ee86287fbaf828d201a531f1b3c8189067e4a952d04205ca3d3b61",
+      "source_row_index": 16,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "f7f75b0da419ae0215bac7fd5000324eae89eb71de7f289372952b71f98065c4",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-018",
+      "projected_context_hash": "1b8aadf09d45dee5aa8a0616392b52ab0184dca8c2001df36f61b132f52ec702",
+      "projected_packet_hashes": [
+        "142f0147dcf12ba01742266d55dc6ffa729f8b6c0d88b85328ff7ca405cb47da",
+        "18c242e768fbe4b06c3a1e7a84fd582bcd143b0e80949dc57aec12a4a588bf5d"
+      ],
+      "source_instance_hash": "d5bd5047ca186bedf6ad7832ffd2c53f439dedb3eda3d3e53435e291f35e69f6",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "5215b963348d3eea2db74bb6ad16b571c6c00949a63d9378e2fd2b89fb5ae179",
+      "source_row_index": 17,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "d7c03e38099f58334f5a50b9c0ee5c9e20ed0a6f957ee28092789563a4a598b9",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-019",
+      "projected_context_hash": "73a26690d4e12daf41af713b653ed4b9af51258a62dec709f5eaab3471afc3f8",
+      "projected_packet_hashes": [
+        "c03a8b38bdb0b74e2668236b2994bb1d73db87ebd1079a2933dcaa21c85fa5d4",
+        "784a61ead5cd347274b0d2bc442b49bf63c381de49b4adae2e345fa5740ccf25"
+      ],
+      "source_instance_hash": "62e530d3760daa853053a8660eeb05ec3887f262cf10710ae3c05f390e2d2516",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "364af679f90dbcf79ad7921c4eb4998984a7608caddf0615ca364ca604d0f42f",
+      "source_row_index": 18,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "53756b8304a7fcffe56fdd8dffd522b67f5f62d4a7be3c65523b4fc3564fd8ab",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-020",
+      "projected_context_hash": "340c34babb6d7a7c7a8216a0496daf124b04288d13fa672066acd2d25c76cd86",
+      "projected_packet_hashes": [
+        "59a94e4d04b7002806ed813463f26912e138b010350dc0265915752fc35d8196",
+        "a3377959b9f1b892f5c699ee6004e235cee3f95b216fc2c5a05d2628e46730b1"
+      ],
+      "source_instance_hash": "51fb4819769b8c2b0e9ed2e2cbfbc1f26d374617296e4a8eb9cd34a8e946550d",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "d1d39e61c19b4c1357eb7c69ab63640fa816f511c9a511d3e78c181e490840b9",
+      "source_row_index": 19,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "e5a4d155509a2495e9036393e34c21cc70e8e9e43bc2228e760f7f1f7bec3c09",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-021",
+      "projected_context_hash": "9b12d2ce626322da3f6ca5eb6e776839bea301246f97555ae13a7f0755fd7471",
+      "projected_packet_hashes": [
+        "47cdc2a68df43fc2d766df2a9021e9cc31777530a93a9372d7f614e1a51d9916",
+        "c01334f157519a27e5bbc5aca8187214c82cf84f994511f1f4560877f94cf478"
+      ],
+      "source_instance_hash": "ff0eb00d0c22cbd92f92a5a67b8988d7cce98549d8932ea37b65583776477c30",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "20af30a0211df0b5e011b0e84a7cf4722754eaf3ad42ed9bc67341ac6fae4a1c",
+      "source_row_index": 20,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "d35303f385c3b6fb566ee9d3b633fb56ef8c1bcdd1effe4a3645a03ade74f7ce",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-022",
+      "projected_context_hash": "55e4dd1ebf167f0305711ddab3b0e51c6143e5b5ce64251acd41502dfb448f0b",
+      "projected_packet_hashes": [
+        "4f57771e69de86d561da07b0eb7e5971a5f121909eaca84207d05a5d8369fcff",
+        "60b0345c59b8637ded2fcbe686f067556d9fa64c18b43fccfd9acd4ab6be1aa2"
+      ],
+      "source_instance_hash": "21b0b3f2390b3a3e7cd75ecb18eef21afe8ed84cf411a4c34158f11656e83a65",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "b4ecf60a884edcf26113dd2b38ce15780201db93f66eb3bd99255ac9e462eda5",
+      "source_row_index": 21,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "622094b19a217d6a378c13c88108b961277b694ba6ad3568bc10fe32819aa3b2",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-023",
+      "projected_context_hash": "7f9ae6de6851237cdada67758de2e4f9c5e3c5f4b99edaf89ff5948882d7d337",
+      "projected_packet_hashes": [
+        "373d190f352c2bdf208016b6d20780d74628728eeaef41edd8b2d8a387c2eecf",
+        "77ff8082ed0be7d6c659d79edbc1976302147141d8f959211a809f6e1fa7e69b"
+      ],
+      "source_instance_hash": "af033c32dae5c7ceb4d5f531919f6a06ce7139b713b331b8d32d96de4c058c0b",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "7083f86300271de70021c7a9db80f19e0005c3501907eb0d4e6038f1f474c6b4",
+      "source_row_index": 22,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "f18c2a1a4d05ab0808aac6e402a5b41dadafc0f39de9ad30e708e42d46cbf372",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-024",
+      "projected_context_hash": "3760cd5749e832d36582d073ca7255bd3566824705bc956b1dada72b04df1fb7",
+      "projected_packet_hashes": [
+        "cf09afecff83a13b3bc939e50c3508a8d7636ded7793abd9f7f88ace3858f483",
+        "8a32db1e43ab2dc17089c1848fb6d40fa5cad019dd201856c0165363d6563944"
+      ],
+      "source_instance_hash": "24a24209cf7257a45f9c656ccc13209ff867eb4deaabd7c669439496eddcfe15",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "de32e514661a5c1bf6b251a2afb99a86b21065dcbb4a2fdefbceebc8bc216fe0",
+      "source_row_index": 23,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "df39149f06a6869dba24b995c92f88f5d47a1bbfcb5c5a21f5f2493ae576f465",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-025",
+      "projected_context_hash": "8b0361671507e9d2ecaa332eacdfd7a708bd3339794c847357fe3e41a232529e",
+      "projected_packet_hashes": [
+        "a18dbb033ee49cb7dd43a6d4a5ae69c9e22e57af1690a485afaa250c6fc679b4",
+        "927d504e9ff5943b1d306e596fa8c65c5bf0f0a5b7e14c4c8f6a9a8b78262fe3"
+      ],
+      "source_instance_hash": "061f55c6bec0ab436d30df34b3cf8c9ec440e1e5f8d66daf9aba6413a598b33b",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "d367f9735ea9ad3229b95c84804cdd7e936b30bec952ac240bf2bf7b95b22609",
+      "source_row_index": 24,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "5ac08bcfad2b47248cc0cbd3354e3284e9059b0a3d5e87b1ab6d87c0f9d8a338",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-026",
+      "projected_context_hash": "7ac7e52d61268ade51f333e1e350f0e06a80064ba601ff22d49319215b675eae",
+      "projected_packet_hashes": [
+        "8650302a3e5be68725525ccae6eb7d84ac9688bf1814a12fb87d87b5456059b2",
+        "52d90adacbe22f68129d9aba8b817896980df227d87961b8ebcda1f4f5c7825e"
+      ],
+      "source_instance_hash": "e6dc2e92092b89414c31e136adcefe6cd2e12681e8b2ce78377855c91181f4dc",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "253c376888f98b3e7880dada529579936b107a61dbb6ea89e160394588f62eeb",
+      "source_row_index": 25,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "871e048f386be30ad28cd2b777fa3d5c71eee9110dba30f3d61ca7e6244965f0",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-027",
+      "projected_context_hash": "a1a36751d6fb3b5f2554224449097e5c0761c2c92b036fe43deaebd29c2c9c03",
+      "projected_packet_hashes": [
+        "eea5983ff542da3ae31573dc7bade161d66727b9626daf05ca64c774b2abc4ec",
+        "ba8c02ce8f1e3cc5e373e88778d2cf01678cc6cfc086a846783e216c84a01645"
+      ],
+      "source_instance_hash": "79b3b913e9a9acdab18cb30a54e9b1c697abf8ef4b2121f52c2677b480d8262b",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "cb9f37d13d5e62bb57e7abac0a7ec40cf2a14c536b1f82af4bbf385945ad89ef",
+      "source_row_index": 26,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "081b80cc3265280e3730a23879b36a3fd83824747ff445ab3d480b343d52945d",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-028",
+      "projected_context_hash": "f7fe67e0807954534e87f37f81c2ed232795efb9c826d6be0ef5caafa827a706",
+      "projected_packet_hashes": [
+        "7d7b9bd132c0b14df040fd7898d631a4b3f5fc56903e10c2c2a95116b43fbf06",
+        "d9163f58612c8649699b658ee89c1d1be298a77580ecad204466ed98d9d09c64"
+      ],
+      "source_instance_hash": "4c4565bdfabda35e4ebc710b774c3f4dc6410db06a895705bff30b73bf8d51dd",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "eb829610087cd25fdd3dd78f82bef0cfc12bd6bd837d9592573bab8dfa916675",
+      "source_row_index": 27,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "9e361f8fce053116f6f32d42a084543fa13bcb9f82fbfc4c2bf3e77df30d6df7",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-029",
+      "projected_context_hash": "a65eca618091c28b4c15da8c14ee3c875812d418334975b84936019a0331717d",
+      "projected_packet_hashes": [
+        "7eec74b887e0026fa31c9193124cae115430dc209541015d3bf342c517918634",
+        "97cf3ff4628fe71ea3e237c1bc68d819ed81d79a90e43ad1752cbb62792784b0"
+      ],
+      "source_instance_hash": "2066ac77b20225fcaa8154e7e8c5b34ec2b14464905fa5a07dde7d2bfebba269",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "908010a917c67d957bcb8d16de513846ba161e30f575748cdb96daaad95695ef",
+      "source_row_index": 28,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "b1fa94c0d2028c3cf4c4927c9fbe46520b85c0cf0e588b6c38e60e01ff3637ef",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-030",
+      "projected_context_hash": "54d71a1ea89ca3732e80e9f22c4cf037ddec34675de9864a738d199439077032",
+      "projected_packet_hashes": [
+        "f97549d2ff8d4ad26817fa6d208b52ce8b1f796b5218fd94a36bd946a4308da8",
+        "8bcd29f781ba305752fb99d8e3d5b1033e6a20e774f364d7a33bf9962da688b8"
+      ],
+      "source_instance_hash": "8b7494eda8d2cca78ebe8257fd9ab0fdc80b7ef66611d135b8682ee184a1a465",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "c6229e5b942dddfb465a9805bee599e2d2fac42d4244afffc5018e0a9ab2dcbe",
+      "source_row_index": 29,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "f6e113c6125a72c26fe519f76cfc65ecbc72526a3dbe55e29ca88d7ab973c7c2",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-031",
+      "projected_context_hash": "25a323eab3f0a8f8190df1d281cb5210a64bdfcfebaf0d72e2ff87fbacf53aca",
+      "projected_packet_hashes": [
+        "f70c4d1833c5de15a7f50927b7e93a0e2f75cf6e1af04832f2d0af5b001fcef9",
+        "ae6802ea8de6247218709927d9f0e9b747eef04c9ba02d32eb37b2bf219a0d7f"
+      ],
+      "source_instance_hash": "9c92634beae09b77b848df7f2b6bc0ad97cd718c01d1a11d2cc40e6c14c869e5",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "13e5b4a03c256da4ad1d0538c263c7f4d45370dd57f13beaab6ba6d5e3417133",
+      "source_row_index": 30,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "0abd418adc1f4b3ce0b3015d3897ff4121629b6b2af8b175e350b7cecb6abde5",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-032",
+      "projected_context_hash": "79be8efb40bbc2b0ce1be0a2cfe13bd3647ef64a88a27fd237e77faa10d260ea",
+      "projected_packet_hashes": [
+        "b5b3f521f82fe4d3a47b3d8a6723eb1d70a4e1cb622740be993ab45a461f30f7",
+        "9453792f8aeac2e24e5d5761e5b232e8051851686f97bcc8ac480fd4487d56a6"
+      ],
+      "source_instance_hash": "6b071c911313eff15557b1b1f6143f24ce0ac17d7cef2c1bdc4ab6a975fb1327",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "5aa2d9a6bef9eeb7de93eac89d66ff7a37a312013399b2390d0c381f7a884b1a",
+      "source_row_index": 31,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "114c56275c8d4e818e77978e52ac1c0a107d9f738a2d2e6c09eca892d73135fd",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-033",
+      "projected_context_hash": "256c94cb0133b6b50065e6d01ecbfc9ef27432f8249f5c1a4c349045382e45ba",
+      "projected_packet_hashes": [
+        "0d7031275fb2b77d318db81d61693980ec7c6f48f8ae48880c72925af8aa6c7f",
+        "1fc22a034984dbfcf3f6132dc4f5c547b008da16e80f1769c9fea5309ababece"
+      ],
+      "source_instance_hash": "815dfacd2ef1038fc88b65974a073936af2f3e598213ca2107919b14febefa51",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "ca526c1779b78701a74e1730590e6f0fa1335b1dd14bc07a55d9fe1f2844fba2",
+      "source_row_index": 32,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "8a3dce48c20e95ac9d232bec4e1bfb23525f784bfccd89a195a86510d56ff625",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-034",
+      "projected_context_hash": "94c6d0b9bda114d3337a15660f1f6fcff19df4386f4ad96f03f51ca29d239e8e",
+      "projected_packet_hashes": [
+        "e6455e2aee5bd3f26797f182d55476df8f235d96572723052bd2b7b1e8450bd9",
+        "f2d5694fc39553e2fc9d155dabb0c1f53eae5990246c39b0d77c06e88fd1ea7f"
+      ],
+      "source_instance_hash": "8c0ad691e16ed0f3807b4ff500e449aa082c9cc50effabb57b8c71e85fafebd4",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "97d684cac81c3e5be3249dc812e4afb7935e2249de549da057e7e985799ed8a8",
+      "source_row_index": 33,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "151fc0e0bfea397f244b338d9e8e83209e0b87f7295f7a9d56172559c0b08e1b",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-035",
+      "projected_context_hash": "cfa215a890f6dbb97600c484e5a1a8ecddcbfbdcaa3c507bb5597f0f16b610ca",
+      "projected_packet_hashes": [
+        "10e3eb5142cbcd7e4c5c4258c4408105c6ee72329e296aca612122ae9a03ddfc",
+        "0bc46f5cece4e334379fbeeb64dddfadf78984b1713b36399a0115aab5eccd87"
+      ],
+      "source_instance_hash": "bdefd8dad355232608d5838c88ea956ba2f461ea3063fbe7b8843510c34699d0",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "34e83cde15da9a389c2b0f4b361969e7b014b0e916e2d42eb358a1dec2c0d969",
+      "source_row_index": 34,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "690f25a14619b64b57a3f0ac17c7e384e7f575a7804fe9bace1dbac17fa693e2",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-036",
+      "projected_context_hash": "e88476154953c83e61d5c0fb131d1f03bdb0a313e792704aaf2cf3cfb4a388a0",
+      "projected_packet_hashes": [
+        "b9f698d02b33f96826da632a91cd0cb5ba81c1af08c619c0fa817a5432043eb8",
+        "12a3397d2e936d5121634ca7e9afc9f14a5a6087b4afb106df640059730ded4c"
+      ],
+      "source_instance_hash": "74cbb0d3148aa3f6ca1e0e0ee340ac774e81879dc879c69108b8d86d2757c51a",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "35f04f8f85ee9654358f18d37a814a303165d128019a62b7cba67f7721cae0f1",
+      "source_row_index": 35,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "01ddb7cfd969010c702d70dde2f8b1464539f77c8485acf0be37593813eedc38",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-037",
+      "projected_context_hash": "ff39832efa64ccceccbfb0b5fa138f963af1220b84c9f23f84e0e682b7de5266",
+      "projected_packet_hashes": [
+        "23fb8655e6582b02049d1d6e1fc0ecddc1f2c0f0ba10d82014ec547895ff6b1e",
+        "5541bd88e6354d25421f1e5c21679ef7bf33149406669af914e5f99566397ec1"
+      ],
+      "source_instance_hash": "bd141168481a5033a6310c395a47184ef8149fa8023c08163feec9bf47c00d07",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "689ed78a042c0b6de1f609a8cd5dcc0c0134a94aa175971d4187c5e4deaa3ad6",
+      "source_row_index": 36,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "af0e0f87d0b99dcd4c478a4b36289aa5d7103b5fcb897838f93c447289835467",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-038",
+      "projected_context_hash": "bc0866b6b51384f363346336e441a983f683dffd24133342519e7897be71a403",
+      "projected_packet_hashes": [
+        "36c6228bc1e2c1937dd6f6e69b273e724e764621b406570e8f229bbabd189865",
+        "6b8dd7db60e78dbd2511f5391a83fd9a354ad9ffad8a43af8094a12d18e1d638"
+      ],
+      "source_instance_hash": "a0a26a5681a73b4b1c4530dd7740a732dcbfca7674e1d81cf282f238a4ed9f6e",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "0291141d4017e50dcab37ba80dcc087c8f428ee6bd98fdaf2ebf4a5244300079",
+      "source_row_index": 37,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "671526e260d10a3fb3c87d1b598bf7514978949e1274717ee915ac0cb26562b0",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-039",
+      "projected_context_hash": "fc911f8653639912037c5933f798084a1abc45786e190cc6c16ec2a7c6c24f60",
+      "projected_packet_hashes": [
+        "96e78643d8f125031e62b2354b25c869dab32c925980c5cf878b856438b4dfef",
+        "95e0b5e3a5f77433f3495521e271600d6e0c2c1afbee9e95bb1ef555875dc60c"
+      ],
+      "source_instance_hash": "330557ae658da1079e470a7b0fa7630d04d5026de9f38e4b719092cb65a3ebfe",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "c00b3d116c20190528a6f4a51ca64390450cc310cd0144c61c4861bc71e91c7c",
+      "source_row_index": 38,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "3f44e517a46e0719b8a2583daa8d4fedf36b3cbf80cea17fab419e7ef7918f38",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-040",
+      "projected_context_hash": "6a2e28db1c9075516f6ca870705faa83e4e20abda977278cbfcf30a63c429b51",
+      "projected_packet_hashes": [
+        "dcb76a7443ac6a28cddff4a3498020b54b94deb73891aa655e0a13d157275bea",
+        "2636164f45d7d6721882c0a13060467366b7440b2a83bf23c84f4fd876693bbf"
+      ],
+      "source_instance_hash": "964c3e8ef7e273da76f1be5000cd7675b6375458370c6ebfe3a1990f1f483bb2",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "b5b4cf8852989401069d11589d626459f3775eed5d169fb60570d8f2ae5a9618",
+      "source_row_index": 39,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "9c96149f9d347a80e7615be3d1fcdfef97b6f94b5f805c9c3d7571152846ba69",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-041",
+      "projected_context_hash": "c7c09a7f70109e9559e1644be13f8a1024820eff76dcfb021922fcfe444c8be2",
+      "projected_packet_hashes": [
+        "55d112c3ccd73b8e6d855aaa25d384e0dd2be81c5adef5af1dfba0ea62c15536",
+        "fc764d851b653b55c839b23e5c6ec8f721080f8d36cc1e28fa4cd673137506fb"
+      ],
+      "source_instance_hash": "5557dd3c249d0a152e9045276c4abcfd6f61ad497d6a931870013ff5eead4fec",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "6f25bdb5f2d74f589d50e7283728fc91fe04a34d7ff556124dda29ff91a3f734",
+      "source_row_index": 40,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "3874058528e463b9ccbe848785ce24dcf17bc019db6319999ae364b4049f0f85",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-042",
+      "projected_context_hash": "704f8a1caefc40e1e9ec683fea7224d7c78945319c5a17344e8b8d3ef4353594",
+      "projected_packet_hashes": [
+        "e3071957fd5e5cc51947861a743e58f1427e2e1ebce4acba40f14909b394fdbb",
+        "05513f819cac748cbac40ff244082d3619b9c09f993c7e4218d1ea771e742d61"
+      ],
+      "source_instance_hash": "a4c6135418f4cd7959f6d316cf227e14cae1e4deac8908a262038b993dae320c",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "85cbaec9c74661e43cedd541ee07dc5305685574bd18e84ef81bf935ffd9efe6",
+      "source_row_index": 41,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "cca42b27d4b8772b51523150cd297bff5f90d7893fc89735fe58e989ab4a4503",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-043",
+      "projected_context_hash": "dd4eda25ff5b7958277fa7426305aef5c0d6bc7312be07d05454ebe1efa46ced",
+      "projected_packet_hashes": [
+        "419e0c1f06e5073fadab361cead1598f6abe1770ebb397f3c1c6e22d5cf98a34",
+        "b36447af2b7c083c9f13e5287bca0d48f8f3599d6076ed67bf8b9dd425d2c463"
+      ],
+      "source_instance_hash": "04873a67205c9d90f7a8be65a90ee604640f117a0006ff5bdbd48d07d009573b",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "315ded650c16b77966d4f4af95cdd3e4fc38812f5dc6f5243528f7a457b9e0da",
+      "source_row_index": 42,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "ff6a3bd474c0f9f09faf94746af30e63bb2c36d7e2fb9d924d528603dedd05a0",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-044",
+      "projected_context_hash": "791ba59e7bed2dc9ffe8086a09a1b016526add805950eba540b6925b0665ecb2",
+      "projected_packet_hashes": [
+        "f62a20ce7f1144bc8f7f0755275ffddebbf9e428ab3b996461f2b1bf3cfb005f",
+        "16853383b61f3ae4a054dc60405596c20f137a145737d92c478e0069a0181e83"
+      ],
+      "source_instance_hash": "6910fef3fd127e7d862abc6b2ac92833cc9532e72e6e503c398dc9b1d28548df",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "e3461bce79dc7a479cf8ed1784115349a1d5016dd85e4871fd6cb314653d8d0d",
+      "source_row_index": 43,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "9264340e4bda1f983370e00890674e6add7cf5cf2fa70ff8325bffa648fd98d2",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-045",
+      "projected_context_hash": "788a9b4feefd30ba2c22d7eb2cf51576749100521570cd6f5e08790604ada558",
+      "projected_packet_hashes": [
+        "8e23cba1aad4fb8568ee48518f1222c8eb65d8fa0d4867cd58eed8f2fdc26107",
+        "9e80e4d54c7d798ef0048d02ca74f6fec93810ae7e9f1d2eaef99188f84affc3"
+      ],
+      "source_instance_hash": "e2fcfb1084d37d5aac6c8c62f80d34ba8a4a839d7980a7629eec6c8791d38e9b",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "58c43f1fd87bbf695eaf2e37b3ad20e02161c1ba860f5abb8c9211cc428314ee",
+      "source_row_index": 44,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "b86a3acd8b49bfd6e8667b000ca8ddbfe8b30c1b628c7617459c4be2eb5109ca",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-046",
+      "projected_context_hash": "fca2f6b50b2f4d09174861e1eca581d2b7e79c4506528cca0b67047f56490e74",
+      "projected_packet_hashes": [
+        "4e5d152ce04b2d7597334b2880982b116555601826110d073ac2a03506a84fe4",
+        "a9bcae85d7227f8a45c61a8eaba10ea86d9212bd87d27e71a805785130905b4e"
+      ],
+      "source_instance_hash": "496fa8d872ad2e8e18136527d0b4cb8e7ab367ade90ebb475450c1d454aecb65",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "566159a58aaa02b12684d443035b9de95e4170e30150836ecf48af702bf9e50e",
+      "source_row_index": 45,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_answered",
+      "claim_hash": "36fa3eaa20c7bc5936da9fccbfce4833d158348f98916703f698251d0cadc59b",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-047",
+      "projected_context_hash": "25efa6d629bf8f6a40a7b10da5ae8c0a9d332790583c753d418c61106c49dc16",
+      "projected_packet_hashes": [
+        "6443d4fdbabbb2f95cd1b538b4759ee1c3cf823eda2b3aa149648f2db9f95ac9",
+        "5ed3f6c0d20060bd45b74e8b70a470f5d7278ef4a7a6fa13efc7b8401242c1aa"
+      ],
+      "source_instance_hash": "ec275a089b07e4f844858c7cfc716c3d2f8fd48fbd934398d66621278348f9b7",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "598e4b961861b84c04db112600955841dbf957e09a03b0e540d328a6eea51716",
+      "source_row_index": 46,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "insufficient_and_abstained",
+      "claim_hash": "640e2379f9f8550650f65ac07d7598a9f2f2ee8071b1b9b4d71388719e0b8d37",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-048",
+      "projected_context_hash": "5a3c29c7a975ef8c994e7ee470687f49205085ba81da2e12b35440dc4861dff9",
+      "projected_packet_hashes": [
+        "25ef5dbb1aaa08c2271e890c8f50d45f9650ac73ad10302a8923b71218763841",
+        "4baaf95fac9e586570e8be12ca0ae261a354d4ab7a645e1a68d432ad3774773a"
+      ],
+      "source_instance_hash": "77cae468efe3c687451006f2e89f9f0eff225c529542b072aee7036e321157b2",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "d95db3dc59361599711069f4d8b7e35583b812fe9834ca0360bef590716ff06e",
+      "source_row_index": 47,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_kept",
+      "claim_hash": "bbde8cd2c4da4f23f0f2a195daf6355fed122ec6651ffc2068168e0c8d28819c",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-049",
+      "projected_context_hash": "a01deaa8a9e0e0abcabe569927d08951785d8da900b9ba4c8d56e4258700b3ca",
+      "projected_packet_hashes": [
+        "5e98a3df13d6d88033adf7dc09f694b717d06b639ea4690915ca9a8dde2ac674",
+        "b37692c3a5df1a88417a789e8134fcaf55eef1e9643c2f31420f77d6e0dbdbdc"
+      ],
+      "source_instance_hash": "5b40c0d46f091344321c2ef5063bec2d8869ad8e0297a5819b3853a79ff69493",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "ee527217ddb42d988f9c010e5d3bf2157adc669080ab4f6aa895001c59f7ea1d",
+      "source_row_index": 48,
+      "split": "dev_distractor"
+    },
+    {
+      "case_kind": "sufficient_dropped",
+      "claim_hash": "4b7c765c55f3bf2c5314f255e9dd809d3509ab416fbebb1f1ee238a16d9c6811",
+      "dataset": "HotpotQA",
+      "item_id": "post4-hotpotqa-050",
+      "projected_context_hash": "04ec1448bb90c159508c11843db906c039749fbf7f1287d62d818d5d030ed631",
+      "projected_packet_hashes": [
+        "d0d2ba3bf9b972a9d709934cf82b70e86bc10dc65c226aad986b94c160b61dad",
+        "484714b475e7b2a27c09edd751b17fb7a9e3a6651771858fe6d7bbf3c284cacf"
+      ],
+      "source_instance_hash": "df7d6c1d6f291167dfc73f0ca12e143b2281552a7f39a0bdecf8276bf6fce283",
+      "source_policy": "hotpotqa_first_rows_cycled_regime_cases",
+      "source_row_hash": "bef992e258e366b24219efa40f5fbc337d903f60faa2535e1a2afca56039a136",
+      "source_row_index": 49,
+      "split": "dev_distractor"
+    }
+  ],
+  "terminal_status": "sufficiency_abstention_candidate_ready"
+}

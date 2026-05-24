@@ -1,0 +1,31 @@
+tables:
+  - id: table_1_backend_capability_claim_boundary
+    evidence_source: LAPI-1 + LAPI-3 docs and guardrails
+    allowed_claim: fail_closed_bridge_audit
+    live_api_needed: false
+  - id: table_2_artifact_replay_integrity
+    evidence_source: POST-1 offline audit
+    allowed_claim: replayable_artifact_evidence
+    live_api_needed: false
+  - id: table_3_matched_budget_operational_replay
+    evidence_source: Route 2 + POST-6 expansion
+    allowed_claim: scoped_operational_improvement_under_matched_budgets
+    live_api_needed: maybe
+  - id: table_4_judge_weak_evidence_stability
+    evidence_source: POST-3 pilot
+    allowed_claim: model_adjudicated_weak_evidence
+    live_api_needed: true
+  - id: table_5_sufficiency_abstention_regimes
+    evidence_source: POST-4 pilot
+    allowed_claim: sufficiency_abstention_diagnostic
+    live_api_needed: true
+  - id: table_6_reprojection_witness_repair
+    evidence_source: POST-5 pilot
+    allowed_claim: operational_reprojection_witness
+    live_api_needed: true
+appendix:
+  - EPF_FINAL_candidate_package
+  - denied_claim_ledger
+  - extraction_quality_audit_optional
+  - related_work_gap_matrix
+  - live_api_capability_matrix

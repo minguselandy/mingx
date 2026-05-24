@@ -1,0 +1,305 @@
+{
+  "allowed_claims": [
+    "model_adjudicated_weak_evidence",
+    "sufficiency_abstention_operational_diagnostic",
+    "operational_reprojection_witness",
+    "scoped_operational_improvement_under_matched_budgets",
+    "model_adjudicated_extraction_risk_evidence",
+    "operational_extraction_audit"
+  ],
+  "branch": "codex/integrated-validation-workbench",
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "commit": "ce1f7fa307bcacf794befc49eb34beb8f4e4c1e8",
+  "denied_claims": [
+    "teacher-forced NLL support",
+    "fixed-target continuation scoring support",
+    "metric bridge support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "measurement validation",
+    "human/external gold validation",
+    "paper-grade evidence",
+    "selector superiority",
+    "global selector superiority",
+    "Route 5 unlock",
+    "Route 8 unlock"
+  ],
+  "pilot_summaries": {
+    "POST-3": {
+      "artifact_count": 5,
+      "claim_upgrade_introduced": false,
+      "duplicate_agreement": 0.9833,
+      "examples": 30,
+      "final_gate_status": "weak_evidence_candidate_ready",
+      "json_files": 4,
+      "jsonl_files": 1,
+      "jsonl_rows": 240,
+      "live_api_call_count": 240,
+      "normalized_row_count": 240,
+      "order_swap_agreement": 0.9833,
+      "raw_response_stored": false,
+      "route_5_locked": true,
+      "route_8_locked": true,
+      "rubric_paraphrase_agreement": 0.9667
+    },
+    "POST-4": {
+      "artifact_count": 6,
+      "claim_upgrade_introduced": false,
+      "diagnostic_label": "sufficiency_abstention_diagnostic_only",
+      "final_gate_status": "sufficiency_abstention_candidate_ready",
+      "json_files": 5,
+      "jsonl_files": 1,
+      "jsonl_rows": 50,
+      "live_api_call_count": 50,
+      "normalized_row_count": 50,
+      "raw_response_stored": false,
+      "route_5_locked": true,
+      "route_8_locked": true,
+      "total_turn_calls": 100
+    },
+    "POST-5": {
+      "artifact_count": 6,
+      "claim_upgrade_introduced": false,
+      "final_gate_status": "reprojection_witness_candidate_ready",
+      "json_files": 5,
+      "jsonl_files": 1,
+      "jsonl_rows": 26,
+      "label_change_rate": 0.576923,
+      "live_api_call_count": 26,
+      "normalized_row_count": 26,
+      "parse_failed_rate": 0.0,
+      "raw_response_stored": false,
+      "repair_candidate_rate": 0.576923,
+      "route_5_locked": true,
+      "route_8_locked": true,
+      "unsupported_to_supported_rate": 0.576923
+    },
+    "POST-6": {
+      "artifact_count": 9,
+      "budgets": [
+        512,
+        1024
+      ],
+      "candidate_pools": 200,
+      "claim_upgrade_introduced": false,
+      "final_gate_status": "post6_operational_replay_completed",
+      "json_files": 7,
+      "jsonl_files": 1,
+      "jsonl_rows": 2000,
+      "live_api_call_count": 0,
+      "normalized_row_count": 2000,
+      "oracle": "non_deployable_upper_bound",
+      "raw_response_stored": false,
+      "route_5_locked": true,
+      "route_8_locked": true
+    },
+    "POST-7": {
+      "artifact_count": 8,
+      "claim_upgrade_introduced": false,
+      "final_gate_status": "post7_extraction_quality_audit_completed",
+      "json_files": 6,
+      "jsonl_files": 1,
+      "jsonl_rows": 100,
+      "live_api_call_count": 100,
+      "normalized_row_count": 100,
+      "raw_response_stored": false,
+      "records_per_stratum": [
+        [
+          "adversarial",
+          10
+        ],
+        [
+          "complex_conditional",
+          10
+        ],
+        [
+          "contradictory",
+          10
+        ],
+        [
+          "cross_chunk",
+          10
+        ],
+        [
+          "high_provenance_value",
+          10
+        ],
+        [
+          "long_tail_entity",
+          10
+        ],
+        [
+          "prerequisite",
+          10
+        ],
+        [
+          "qualifier_heavy",
+          10
+        ],
+        [
+          "simple_factual",
+          10
+        ],
+        [
+          "temporal_scope",
+          10
+        ]
+      ],
+      "route_5_locked": true,
+      "route_8_locked": true,
+      "value_weighted_loss_proxy": 0.197403
+    }
+  },
+  "raw_api_responses_stored": false,
+  "remote_commit": "ce1f7fa307bcacf794befc49eb34beb8f4e4c1e8",
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "schema_version": "post_lapi_evidence_freeze_table_inputs_v1",
+  "tables": [
+    {
+      "allowed_claim": "backend-constrained operational diagnostics only",
+      "denied_claim": "teacher-forced NLL support; fixed-target continuation scoring support; metric bridge support",
+      "evidence_source": "LAPI + POST-LAPI contracts and docs/paper/v12-live-api-operational-paper-claim-table.md",
+      "human_labels_present": false,
+      "id": "T1",
+      "metric_bridge_present": false,
+      "paper_section_target": "Operational Evaluation and Weak-Evidence Diagnostics / limitations",
+      "primary_metric": "fixed-target teacher-forced continuation scoring unavailable; claim ceiling preserved",
+      "route_5_unlocked": false,
+      "route_8_unlocked": false,
+      "sample_size_row_count_call_count": "No new samples in SUB-0; summarizes backend constraints",
+      "title": "Backend capability and claim boundary"
+    },
+    {
+      "allowed_claim": "model-adjudicated weak evidence candidate only",
+      "denied_claim": "human validation; measurement validation; calibrated judge; paper-grade evidence",
+      "evidence_source": "artifacts/experiments/post_lapi_judge_stability/",
+      "human_labels_present": false,
+      "id": "T2",
+      "metric_bridge_present": false,
+      "paper_section_target": "Judge stability diagnostics",
+      "primary_metric": "duplicate agreement 0.9833; order-swap agreement 0.9833; rubric paraphrase agreement 0.9667",
+      "route_5_unlocked": false,
+      "route_8_unlocked": false,
+      "sample_size_row_count_call_count": "30 examples / 240 normalized rows / 240 live API calls",
+      "title": "POST-3 judge stability"
+    },
+    {
+      "allowed_claim": "sufficiency_abstention_diagnostic_only",
+      "denied_claim": "truth validation; human-calibrated abstention; measurement validation; paper-grade evidence",
+      "evidence_source": "artifacts/experiments/post_lapi_sufficiency_abstention/",
+      "human_labels_present": false,
+      "id": "T3",
+      "metric_bridge_present": false,
+      "paper_section_target": "Sufficiency and abstention diagnostics",
+      "primary_metric": "gate sufficiency_abstention_candidate_ready",
+      "route_5_unlocked": false,
+      "route_8_unlocked": false,
+      "sample_size_row_count_call_count": "50 normalized rows / 50 final artifact calls / 100 total turn calls",
+      "title": "POST-4 sufficiency / abstention"
+    },
+    {
+      "allowed_claim": "operational reprojection witness and omitted-evidence diagnostic",
+      "denied_claim": "validated repair; truth correction guarantee; selector superiority; metric bridge support",
+      "evidence_source": "artifacts/experiments/post_lapi_reprojection_witness/",
+      "human_labels_present": false,
+      "id": "T4",
+      "metric_bridge_present": false,
+      "paper_section_target": "Reprojection witness diagnostics",
+      "primary_metric": "repair candidate rate 0.576923; label change rate 0.576923; unsupported-to-supported rate 0.576923; parse failed rate 0.0",
+      "route_5_unlocked": false,
+      "route_8_unlocked": false,
+      "sample_size_row_count_call_count": "26 normalized rows / 26 live API calls",
+      "title": "POST-5 reprojection witness"
+    },
+    {
+      "allowed_claim": "scoped operational improvement under matched budgets only",
+      "denied_claim": "selector superiority; global selector superiority; metric bridge support; paper evidence",
+      "evidence_source": "artifacts/experiments/post_lapi_operational_replay/",
+      "human_labels_present": false,
+      "id": "T5",
+      "metric_bridge_present": false,
+      "paper_section_target": "Matched-budget operational replay",
+      "primary_metric": "budgets 512 and 1024; gold-support oracle retained as non_deployable_upper_bound",
+      "route_5_unlocked": false,
+      "route_8_unlocked": false,
+      "sample_size_row_count_call_count": "2,000 normalized replay records / 200 candidate pools / 0 live API calls",
+      "title": "POST-6 matched-budget operational replay"
+    },
+    {
+      "allowed_claim": "model-adjudicated extraction-risk evidence and operational extraction audit only",
+      "denied_claim": "human-validated extraction measurement; measurement validation; theorem transfer to M*",
+      "evidence_source": "artifacts/experiments/post_lapi_extraction_quality_audit/",
+      "human_labels_present": false,
+      "id": "T6",
+      "metric_bridge_present": false,
+      "paper_section_target": "Extraction quality audit diagnostics",
+      "primary_metric": "value-weighted loss proxy 0.197403; gate post7_extraction_quality_audit_completed",
+      "route_5_unlocked": false,
+      "route_8_unlocked": false,
+      "sample_size_row_count_call_count": "100 normalized extraction audit records / 10 per stratum / 100 live API calls",
+      "title": "POST-7 extraction quality audit"
+    },
+    {
+      "allowed_claim": "artifact hygiene evidence for frozen candidate package",
+      "denied_claim": "new experiment; new live API evidence; raw response storage",
+      "evidence_source": "SUB-0 validation over POST-3 through POST-7 frozen artifacts",
+      "human_labels_present": false,
+      "id": "T7",
+      "metric_bridge_present": false,
+      "paper_section_target": "Reproducibility and artifact hygiene appendix",
+      "primary_metric": "secret scan passed; raw-response-storage scan passed; forbidden-path scan passed; compileall passed",
+      "route_5_unlocked": false,
+      "route_8_unlocked": false,
+      "sample_size_row_count_call_count": "27 JSON files / 5 JSONL files / 2,416 JSONL rows",
+      "title": "JSON/JSONL and artifact hygiene"
+    },
+    {
+      "allowed_claim": "operational_utility_only/no_claim_upgrade",
+      "denied_claim": "teacher-forced NLL support; fixed-target continuation scoring support; metric bridge support; calibrated_proxy_supported; vinfo_proxy_supported; measurement validation; human/external gold validation; paper-grade evidence; selector superiority; global selector superiority; Route 5 unlock; Route 8 unlock",
+      "evidence_source": "POST-LAPI claim gate contracts and manuscript integration docs",
+      "human_labels_present": false,
+      "id": "T8",
+      "metric_bridge_present": false,
+      "paper_section_target": "Claim boundary / limitations",
+      "primary_metric": "all denied claims remain denied; Route 5 and Route 8 remain locked",
+      "route_5_unlocked": false,
+      "route_8_unlocked": false,
+      "sample_size_row_count_call_count": "No new samples in SUB-0; boundary table only",
+      "title": "Denied claims / no-claim-upgrade table"
+    }
+  ],
+  "validation": {
+    "compileall": "passed",
+    "compileall_command": "python -m compileall cps tests scripts",
+    "focused_tests_post3_to_post7_plus_guardrails": "59 passed",
+    "forbidden_claim_grep": {
+      "command_scope": "active POST-LAPI docs/tests/scripts plus SUB-0 synthesis outputs; broad historical docs were not used as claim evidence",
+      "interpretation": "Matches are retained in denied-claim lists, false/locked boundary rows, scripts that serialize denied claims, and tests that assert forbidden language is rejected. No SUB-0 output introduces a positive claim upgrade.",
+      "result": "documented_context_matches_only",
+      "terms": [
+        "teacher-forced NLL support",
+        "fixed-target continuation scoring support",
+        "metric bridge support",
+        "calibrated_proxy_supported",
+        "vinfo_proxy_supported",
+        "measurement validation",
+        "human/external gold validation",
+        "paper-grade evidence",
+        "selector superiority",
+        "global selector superiority",
+        "Route 5 unlock",
+        "Route 8 unlock"
+      ]
+    },
+    "forbidden_path_scan": "passed",
+    "git_diff_check": "passed",
+    "json_files": 27,
+    "jsonl_files": 5,
+    "jsonl_rows": 2416,
+    "raw_response_storage_scan": "passed",
+    "secret_scan": "passed",
+    "sub0_guardrail_command": "uv run pytest tests/test_revised_framing_guardrails.py tests/test_live_api_claim_contract.py tests/test_no_teacher_forced_claims_live_api_only.py -q",
+    "sub0_guardrail_result": "20 passed"
+  }
+}

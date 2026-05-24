@@ -1,0 +1,242 @@
+{
+  "pilot_id": "post_lapi_reprojection_witness",
+  "goal_id": "POST-5-CONFIG",
+  "configuration_only_default": true,
+  "live_api_calls_allowed_by_default": false,
+  "controlled_replay_calls_allowed_by_default": false,
+  "requires_explicit_approval_to_run": true,
+  "pilot_execution_approval_scope": "later POST-5 run-pilot goal only after this config goal passes",
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "diagnostic_claim_level": "operational_reprojection_witness",
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "raw_response_storage_allowed": false,
+  "raw_response_stored": false,
+  "max_flagged_cases_first_pilot": 30,
+  "post4_config_dependency": "configs/post_lapi/sufficiency_abstention_config.yaml",
+  "schema_path": "schemas/post_lapi_reprojection_witness.schema.json",
+  "paper_table_template": "docs/paper/post-lapi-reprojection-witness-table-template.md",
+  "config_doc": "docs/experiments/POST-LAPI-reprojection-witness-config.md",
+  "offline_manifest_builder": "cps.replay.reprojection_witness.build_reprojection_manifest",
+  "eligible_cases": [
+    "sufficient_dropped",
+    "insufficient_and_answered",
+    "high_missing_evidence_type_confidence",
+    "replay_artifact_complete"
+  ],
+  "eligible_regimes": [
+    "sufficient_dropped",
+    "insufficient_and_answered"
+  ],
+  "required_control_fields": [
+    "downstream_prompt_hash",
+    "model_snapshot",
+    "endpoint",
+    "thinking_mode",
+    "decoding_policy",
+    "token_budget_accounting",
+    "selected_evidence_before_hash",
+    "restored_evidence_hash",
+    "context_diff_hash",
+    "before_output_hash",
+    "after_output_hash",
+    "judge_prompt_hash",
+    "claim_ledger_entry"
+  ],
+  "framework_field_mapping": {
+    "downstream_prompt_hash": "downstream_prompt_template_hash",
+    "token_budget_accounting": "token_budget_accounting_method",
+    "selected_evidence_before_hash": "context_hash_before",
+    "restored_evidence_hash": "context_hash_after"
+  },
+  "controlled_replay_defaults": {
+    "downstream_prompt_hash": "dry-run-downstream-prompt-hash",
+    "model_snapshot": "static-config-only-model-snapshot",
+    "endpoint": "offline-config-only",
+    "thinking_mode": "disabled",
+    "decoding_policy": {
+      "temperature": 0,
+      "top_p": 1
+    },
+    "token_budget_accounting": "offline_token_estimate_v1",
+    "raw_response_stored": false,
+    "live_api_call_performed": false,
+    "controlled_replay_call_performed": false
+  },
+  "allowed_interventions": [
+    "restore_excluded_evidence_span",
+    "expand_budget_with_budget_delta_recorded",
+    "switch_selector_to_pair_aware_local_search",
+    "switch_selector_to_seeded_augmented_greedy"
+  ],
+  "dry_run_manifest": {
+    "run_id": "post_lapi_reprojection_witness_config_dry_run",
+    "downstream_prompt_hash": "dry-run-downstream-prompt-hash",
+    "model_snapshot": "static-config-only-model-snapshot",
+    "endpoint": "offline-config-only",
+    "thinking_mode": "disabled",
+    "decoding_policy": {
+      "temperature": 0,
+      "top_p": 1
+    },
+    "items": [
+      {
+        "item_id": "dry-run-sufficient-dropped",
+        "trigger_label": "sufficient_dropped",
+        "eligibility": [
+          "sufficient_dropped",
+          "high_missing_evidence_type_confidence",
+          "replay_artifact_complete"
+        ]
+      },
+      {
+        "item_id": "dry-run-insufficient-answered",
+        "trigger_label": "insufficient_and_answered",
+        "eligibility": [
+          "insufficient_and_answered",
+          "high_missing_evidence_type_confidence",
+          "replay_artifact_complete"
+        ]
+      }
+    ],
+    "fixture_witness_records": [
+      {
+        "witness_id": "dry-run-rw-sufficient-dropped",
+        "item_id": "dry-run-sufficient-dropped",
+        "trigger_label": "sufficient_dropped",
+        "intervention_type": "restore_excluded_evidence_span",
+        "downstream_prompt_hash": "dry-run-downstream-prompt-hash",
+        "downstream_prompt_template_hash": "dry-run-downstream-prompt-hash",
+        "model_snapshot": "static-config-only-model-snapshot",
+        "endpoint": "offline-config-only",
+        "thinking_mode": "disabled",
+        "decoding_policy": {
+          "temperature": 0,
+          "top_p": 1
+        },
+        "token_budget_accounting": "offline_token_estimate_v1",
+        "token_budget_accounting_method": "offline_token_estimate_v1",
+        "original_budget_tokens": 100,
+        "reprojected_budget_tokens": 112,
+        "selector_before": "v12_cost_aware_diagnostic_policy_operational_only",
+        "selector_after": "pair_aware_local_search_operational_only",
+        "selected_evidence_before_hash": "selected-before-hash",
+        "restored_evidence_hash": "restored-evidence-hash",
+        "context_hash_before": "selected-before-hash",
+        "context_hash_after": "restored-evidence-hash",
+        "context_diff_hash": "context-diff-hash",
+        "before_output_hash": "before-output-hash",
+        "after_output_hash": "after-output-hash",
+        "judge_prompt_hash": "judge-prompt-hash",
+        "claim_ledger_entry": {
+          "current_claim_level": "operational_utility_only/no_claim_upgrade",
+          "claim_upgrade": false,
+          "route_5_locked": true,
+          "route_8_locked": true,
+          "raw_response_stored": false
+        },
+        "repair_status": "reprojection_candidate",
+        "position_aware_replay_manifest": {
+          "enabled": true,
+          "original_position_ids": [
+            "e1"
+          ],
+          "reprojected_position_ids": [
+            "e1",
+            "e2"
+          ],
+          "position_policy_hash": "position-policy-hash"
+        },
+        "raw_response_stored": false,
+        "live_api_call_performed": false
+      },
+      {
+        "witness_id": "dry-run-rw-insufficient-answered",
+        "item_id": "dry-run-insufficient-answered",
+        "trigger_label": "insufficient_and_answered",
+        "intervention_type": "expand_budget_with_budget_delta_recorded",
+        "downstream_prompt_hash": "dry-run-downstream-prompt-hash",
+        "downstream_prompt_template_hash": "dry-run-downstream-prompt-hash",
+        "model_snapshot": "static-config-only-model-snapshot",
+        "endpoint": "offline-config-only",
+        "thinking_mode": "disabled",
+        "decoding_policy": {
+          "temperature": 0,
+          "top_p": 1
+        },
+        "token_budget_accounting": "offline_token_estimate_v1",
+        "token_budget_accounting_method": "offline_token_estimate_v1",
+        "original_budget_tokens": 80,
+        "reprojected_budget_tokens": 96,
+        "selector_before": "v12_cost_aware_diagnostic_policy_operational_only",
+        "selector_after": "budget_expanded_operational_only",
+        "selected_evidence_before_hash": "selected-before-hash-2",
+        "restored_evidence_hash": "restored-evidence-hash-2",
+        "context_hash_before": "selected-before-hash-2",
+        "context_hash_after": "restored-evidence-hash-2",
+        "context_diff_hash": "context-diff-hash-2",
+        "before_output_hash": "before-output-hash-2",
+        "after_output_hash": "after-output-hash-2",
+        "judge_prompt_hash": "judge-prompt-hash",
+        "claim_ledger_entry": {
+          "current_claim_level": "operational_utility_only/no_claim_upgrade",
+          "claim_upgrade": false,
+          "route_5_locked": true,
+          "route_8_locked": true,
+          "raw_response_stored": false
+        },
+        "repair_status": "reprojection_candidate",
+        "position_aware_replay_manifest": {
+          "enabled": true,
+          "original_position_ids": [
+            "e3"
+          ],
+          "reprojected_position_ids": [
+            "e3",
+            "e4"
+          ],
+          "position_policy_hash": "position-policy-hash"
+        },
+        "raw_response_stored": false,
+        "live_api_call_performed": false
+      }
+    ],
+    "live_api_call_performed": false,
+    "controlled_replay_call_performed": false,
+    "raw_response_stored": false
+  },
+  "metrics": [
+    "repair_rate",
+    "label_change_rate",
+    "abstain_to_support_rate",
+    "unsupported_to_supported_rate",
+    "cost_delta",
+    "latency_delta",
+    "position_sensitivity_rate"
+  ],
+  "claim": {
+    "allowed": [
+      "operational_reprojection_witness",
+      "omitted_evidence_operational_diagnostic",
+      "replayable_artifact_evidence"
+    ],
+    "denied": [
+      "validated_repair",
+      "truth_correction_guarantee",
+      "metric_bridge_support",
+      "selector_superiority"
+    ]
+  },
+  "output_policy": {
+    "store_normalized_witnesses": true,
+    "store_prompt_hashes": true,
+    "store_model_snapshot": true,
+    "store_endpoint": true,
+    "store_cost_latency": true,
+    "store_raw_api_responses": false,
+    "measurement_validation_claim": false,
+    "truth_correction_guarantee": false,
+    "validated_repair_claim": false,
+    "claim_upgrade_introduced": false
+  }
+}

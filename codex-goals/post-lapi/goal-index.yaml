@@ -1,0 +1,26 @@
+phase: POST-LAPI
+current_claim: operational_utility_only/no_claim_upgrade
+execution_order:
+  config_first:
+    - codex-goals/configure/00-post-merge-baseline-verification.goal.md
+    - codex-goals/configure/01-artifact-replay-integrity-config.goal.md
+    - codex-goals/configure/02-paper-table-readiness-config.goal.md
+    - codex-goals/configure/03-judge-stability-config.goal.md
+    - codex-goals/configure/04-sufficiency-abstention-config.goal.md
+    - codex-goals/configure/05-reprojection-witness-config.goal.md
+    - codex-goals/configure/06-operational-replay-config.goal.md
+    - codex-goals/configure/07-extraction-quality-audit-config.goal.md
+    - codex-goals/configure/08-submission-reviewer-package-config.goal.md
+  run_later_only_with_explicit_approval:
+    - codex-goals/run-pilots/POST-3-run-judge-stability-pilot.goal.md
+    - codex-goals/run-pilots/POST-4-run-sufficiency-abstention-pilot.goal.md
+    - codex-goals/run-pilots/POST-5-run-reprojection-witness-pilot.goal.md
+    - codex-goals/run-pilots/POST-6-run-operational-replay-expansion.goal.md
+    - codex-goals/run-pilots/POST-7-run-extraction-quality-audit.goal.md
+global_locks:
+  route_5: locked
+  route_8: locked
+  fixed_target_teacher_forced_nll: unsupported
+  fixed_target_continuation_scoring: unsupported
+  measurement_validation: blocked
+  raw_api_responses: do_not_store
