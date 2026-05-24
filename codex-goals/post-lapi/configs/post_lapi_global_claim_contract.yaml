@@ -1,0 +1,28 @@
+current_claim: operational_utility_only/no_claim_upgrade
+allowed_claim_classes:
+  - operational_replay_evidence
+  - candidate_operational_evidence
+  - model_adjudicated_weak_evidence
+  - sufficiency_abstention_diagnostic
+  - replayable_artifact_evidence
+  - fail_closed_bridge_audit
+  - scoped_operational_improvement_under_matched_budgets
+denied_claims:
+  fixed_target_nll_support: false
+  teacher_forced_scoring_support: false
+  fixed_target_continuation_scoring_support: false
+  metric_bridge_support: false
+  calibrated_proxy_supported: false
+  vinfo_proxy_supported: false
+  measurement_validation: false
+  human_external_gold_validation: false
+  paper_grade_evidence: false
+  selector_superiority: false
+  global_selector_superiority: false
+  route_5_unlock: false
+  route_8_unlock: false
+storage_policy:
+  raw_api_responses_stored: false
+  allow_normalized_outputs: true
+  allow_hashes: true
+  allow_compact_provenance: true

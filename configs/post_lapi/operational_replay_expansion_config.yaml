@@ -1,0 +1,300 @@
+{
+  "experiment_id": "post_lapi_operational_replay_expansion",
+  "goal_id": "POST-6-CONFIG",
+  "configuration_only_default": true,
+  "live_api_calls_allowed_by_default": false,
+  "operational_replay_pilot_allowed_by_default": false,
+  "dataset_scale_execution_allowed_by_default": false,
+  "requires_explicit_approval_to_run": true,
+  "pilot_execution_approval_scope": "later POST-6 run-pilot goal only after this config goal passes",
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "diagnostic_claim_level": "scoped_operational_improvement_under_matched_budgets_only",
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "raw_response_storage_allowed": false,
+  "raw_response_stored": false,
+  "raw_api_responses_stored": false,
+  "source_references": {
+    "route2_operational_package_doc": "docs/experiments/P67R-route2-operational-evidence-package.md",
+    "route2_operational_comparison_doc": "docs/experiments/P66-hotpotqa-operational-comparison.md",
+    "route2_claim_ledger": "artifacts/experiments/route2_operational_evidence_package/claim_ledger.json",
+    "lapi6_hotpotqa_config": "configs/experiments/hotpotqa_operational_replay_v1.yaml",
+    "lapi6_fever_style_config": "configs/experiments/fever_style_sufficiency_v1.yaml",
+    "v12_evidence_ledger": "docs/paper/v12-evidence-ledger.md"
+  },
+  "teacher_forced_nll_allowed": false,
+  "metric_bridge_claim_allowed": false,
+  "calibrated_proxy_supported": false,
+  "vinfo_proxy_supported": false,
+  "selector_superiority_allowed": false,
+  "global_selector_superiority_allowed": false,
+  "replay_config_registry": [
+    {
+      "registry_id": "hotpotqa_continuation_additional_slices",
+      "dataset": "HotpotQA_continuation",
+      "priority": 1,
+      "config_path": "configs/experiments/hotpotqa_operational_replay_v1.yaml",
+      "status": "configured_for_later_owner_approved_run",
+      "run_now": false,
+      "live_api_needed_for_config": false,
+      "replay_pilot_run_performed": false,
+      "expected_artifact_location": "artifacts/experiments/post_lapi_operational_replay_expansion/hotpotqa/"
+    },
+    {
+      "registry_id": "fever_style_support_contradict_insufficient",
+      "dataset": "FEVER_style_closed_label",
+      "priority": 2,
+      "config_path": "configs/experiments/fever_style_sufficiency_v1.yaml",
+      "status": "configured_but_gated_after_hotpotqa_acceptance",
+      "run_now": false,
+      "live_api_needed_for_config": false,
+      "replay_pilot_run_performed": false,
+      "expected_artifact_location": "artifacts/experiments/post_lapi_operational_replay_expansion/fever_style/"
+    },
+    {
+      "registry_id": "twowiki_or_musique_later_only",
+      "dataset": "2Wiki_or_MuSiQue_later_only",
+      "priority": 3,
+      "config_path": null,
+      "status": "deferred_until_post6_config_passes_and_owner_approves",
+      "run_now": false,
+      "live_api_needed_for_config": false,
+      "replay_pilot_run_performed": false,
+      "expected_artifact_location": "artifacts/experiments/post_lapi_operational_replay_expansion/later_only/"
+    }
+  ],
+  "preferred_dataset_order": [
+    "HotpotQA_continuation",
+    "FEVER_style_closed_label",
+    "2Wiki_or_MuSiQue_later_only"
+  ],
+  "do_not_start_until_owner_approval": [
+    "2Wiki",
+    "MuSiQue"
+  ],
+  "budgets": {
+    "initial": [
+      512,
+      1024
+    ],
+    "optional_after_pilot": [
+      2048
+    ],
+    "matched_budget_required": true
+  },
+  "baseline_registry": {
+    "deployable": [
+      {
+        "baseline_id": "random_budget",
+        "enabled": true,
+        "claim_scope": "deployable_baseline"
+      },
+      {
+        "baseline_id": "topk_relevance_or_token_budget",
+        "enabled": true,
+        "claim_scope": "deployable_baseline"
+      },
+      {
+        "baseline_id": "mmr_density_greedy",
+        "enabled": true,
+        "claim_scope": "deployable_baseline"
+      },
+      {
+        "baseline_id": "v12_cost_aware_diagnostic_policy_operational_only",
+        "enabled": true,
+        "claim_scope": "deployable_operational_policy"
+      }
+    ],
+    "optional_candidates": [
+      {
+        "baseline_id": "dashscope_llm_prune_extract_operational_only",
+        "enabled": false,
+        "reason": "optional_only_if_implemented_safely_and_owner_approved"
+      },
+      {
+        "baseline_id": "adaptive_budget_router_operational_only",
+        "enabled": false,
+        "reason": "optional_only_if_implemented_safely_and_owner_approved"
+      }
+    ],
+    "oracle": [
+      {
+        "baseline_id": "gold_support_oracle_upper_bound",
+        "enabled": true,
+        "claim_scope": "non_deployable_upper_bound",
+        "deployable": false,
+        "reporting_rule": "must_be_marked_non_deployable_upper_bound"
+      }
+    ]
+  },
+  "matched_budget_controls": {
+    "compare_only_with_matched_candidate_pool": true,
+    "hold_budget_fixed": true,
+    "hold_downstream_prompt_hash_fixed": true,
+    "hold_model_snapshot_fixed": true,
+    "hold_endpoint_fixed": true,
+    "hold_thinking_mode_fixed": true,
+    "hold_decoding_policy_fixed": true,
+    "budget_mismatch_action": "stop_fail_closed",
+    "prompt_hash_drift_action": "stop_fail_closed",
+    "model_snapshot_mismatch_action": "stop_fail_closed",
+    "candidate_pool_mismatch_action": "stop_fail_closed"
+  },
+  "fixed_downstream_conditions": [
+    "candidate_pool_hash",
+    "budget",
+    "downstream_prompt_hash",
+    "model_snapshot",
+    "endpoint",
+    "thinking_mode",
+    "decoding_policy",
+    "token_budget_accounting"
+  ],
+  "metrics": [
+    "supporting_fact_recall",
+    "evidence_recall",
+    "selected_tokens",
+    "quality_per_1k_tokens",
+    "latency",
+    "cost",
+    "parse_success_rate",
+    "claim_gate_distribution",
+    "abstain_rate"
+  ],
+  "manifest_contracts": {
+    "candidate_pool_manifest": {
+      "builder": "cps.benchmarks.candidate_pool_manifest.build_candidate_pool_manifest",
+      "required_fields": [
+        "candidate_pool_hashes",
+        "dataset",
+        "gold_reachable_by_budget",
+        "schema_valid"
+      ]
+    },
+    "run_manifest": {
+      "required_fields": [
+        "run_id",
+        "dataset",
+        "budgets",
+        "deployable_baselines",
+        "oracle_upper_bound",
+        "matched_budget_controls",
+        "claim_ledger"
+      ]
+    },
+    "cost_latency_ledger": {
+      "required_fields": [
+        "input_tokens",
+        "output_tokens",
+        "total_tokens",
+        "estimated_cost",
+        "latency_ms"
+      ]
+    },
+    "claim_ledger": {
+      "required_fields": [
+        "current_claim_level",
+        "allowed_claims",
+        "denied_claims",
+        "claim_upgrade",
+        "route_5_locked",
+        "route_8_locked",
+        "raw_response_stored"
+      ]
+    }
+  },
+  "dry_run_manifest": {
+    "run_id": "post_lapi_operational_replay_config_dry_run",
+    "dataset": "HotpotQA",
+    "budgets": [
+      512,
+      1024
+    ],
+    "fixture_candidate_pools": [
+      {
+        "candidate_pool_hash": "dry-run-pool-1",
+        "gold_reachable_under_budget": {
+          "512": true,
+          "1024": true
+        },
+        "packets": [
+          {
+            "packet_id": "gold-1",
+            "token_cost": 128,
+            "gold_support_label": "gold_supporting",
+            "provenance": {
+              "source": "static_fixture"
+            }
+          },
+          {
+            "packet_id": "hard-negative-1",
+            "token_cost": 96,
+            "gold_support_label": "same_context_distractor",
+            "provenance": {
+              "source": "static_fixture"
+            }
+          }
+        ]
+      }
+    ],
+    "live_api_call_performed": false,
+    "operational_replay_pilot_performed": false,
+    "raw_response_stored": false
+  },
+  "claim": {
+    "allowed": [
+      "scoped_operational_improvement_under_matched_budgets",
+      "operational_utility_only"
+    ],
+    "denied": [
+      "selector_superiority",
+      "global_selector_superiority",
+      "metric_bridge_support",
+      "measurement_validation",
+      "V_information_verification",
+      "calibrated_proxy_supported",
+      "vinfo_proxy_supported",
+      "teacher_forced_nll_support",
+      "route_5_unlock",
+      "route_8_unlock"
+    ]
+  },
+  "reporting_rules": {
+    "report_only_matched_budget_fixed_downstream_conditions": true,
+    "report_oracle_only_as_non_deployable_upper_bound": true,
+    "never_report_teacher_forced_nll": true,
+    "never_report_selector_superiority": true,
+    "never_report_global_selector_superiority": true,
+    "never_report_metric_bridge_support": true,
+    "never_report_measurement_validation": true,
+    "never_report_calibrated_proxy_support": true,
+    "never_report_vinfo_proxy_support": true,
+    "never_report_route_5_or_route_8_unlock": true
+  },
+  "stop_conditions": [
+    "budget_mismatch_detected",
+    "downstream_prompt_hash_drift_detected",
+    "model_snapshot_mismatch_detected",
+    "endpoint_mismatch_detected",
+    "thinking_mode_mismatch_detected",
+    "decoding_policy_mismatch_detected",
+    "candidate_pool_mismatch_detected",
+    "claim_ledger_missing_or_incomplete",
+    "live_api_call_attempted_without_explicit_approval",
+    "operational_replay_pilot_attempted_during_config_goal",
+    "raw_response_storage_detected"
+  ],
+  "output_policy": {
+    "store_normalized_metrics": true,
+    "store_candidate_pool_hashes": true,
+    "store_prompt_hashes": true,
+    "store_model_snapshot": true,
+    "store_endpoint": true,
+    "store_cost_latency": true,
+    "store_raw_api_responses": false,
+    "claim_upgrade_introduced": false
+  },
+  "live_api_call_performed": false,
+  "operational_replay_pilot_performed": false,
+  "replay_run_performed": false
+}

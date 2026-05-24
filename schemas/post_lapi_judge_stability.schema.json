@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "post_lapi_judge_stability.schema.json",
+  "title": "POST-LAPI Judge Stability Configuration",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "pilot_id",
+    "configuration_only_default",
+    "live_api_calls_allowed_by_default",
+    "model_judging_allowed_by_default",
+    "requires_explicit_approval_to_run",
+    "claim_level",
+    "route_5_locked",
+    "route_8_locked",
+    "raw_response_storage_allowed",
+    "conditions",
+    "labels",
+    "controls",
+    "thresholds",
+    "metrics",
+    "claim",
+    "dry_run_manifest",
+    "output_policy"
+  ],
+  "properties": {
+    "pilot_id": {
+      "const": "post_lapi_judge_stability"
+    },
+    "configuration_only_default": {
+      "const": true
+    },
+    "live_api_calls_allowed_by_default": {
+      "const": false
+    },
+    "model_judging_allowed_by_default": {
+      "const": false
+    },
+    "silver_label_scaling_allowed": {
+      "const": false
+    },
+    "requires_explicit_approval_to_run": {
+      "const": true
+    },
+    "claim_level": {
+      "const": "operational_utility_only/no_claim_upgrade"
+    },
+    "route_5_locked": {
+      "const": true
+    },
+    "route_8_locked": {
+      "const": true
+    },
+    "raw_response_storage_allowed": {
+      "const": false
+    },
+    "raw_response_stored": {
+      "const": false
+    },
+    "conditions": {
+      "type": "array",
+      "contains": {
+        "const": "original_order"
+      }
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "support",
+          "insufficient",
+          "contradict",
+          "uncertain",
+          "parse_failed"
+        ]
+      },
+      "minItems": 5,
+      "uniqueItems": true
+    },
+    "controls": {
+      "type": "object",
+      "required": [
+        "order_swapped_duplication",
+        "duplicate_judging_min",
+        "rubric_paraphrase_set_min",
+        "temperature",
+        "parse_failure_tracking",
+        "raw_response_stored"
+      ],
+      "properties": {
+        "order_swapped_duplication": {
+          "const": true
+        },
+        "duplicate_judging_min": {
+          "minimum": 2
+        },
+        "rubric_paraphrase_set_min": {
+          "minimum": 2
+        },
+        "temperature": {
+          "const": 0
+        },
+        "parse_failure_tracking": {
+          "const": true
+        },
+        "raw_response_stored": {
+          "const": false
+        }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "required": [
+        "max_parse_failure_rate",
+        "min_order_swap_agreement",
+        "min_duplicate_agreement",
+        "min_rubric_paraphrase_agreement",
+        "if_threshold_failed"
+      ]
+    },
+    "dry_run_manifest": {
+      "type": "object",
+      "required": [
+        "builder",
+        "run_id",
+        "fixture_items",
+        "expected_request_count_per_item",
+        "live_api_call_performed",
+        "raw_response_stored"
+      ],
+      "properties": {
+        "live_api_call_performed": {
+          "const": false
+        },
+        "raw_response_stored": {
+          "const": false
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "allowed",
+        "denied"
+      ]
+    },
+    "output_policy": {
+      "type": "object",
+      "properties": {
+        "store_raw_api_responses": {
+          "const": false
+        },
+        "counts_as_human_or_external_gold": {
+          "const": false
+        },
+        "measurement_validation_claim": {
+          "const": false
+        },
+        "claim_upgrade_introduced": {
+          "const": false
+        }
+      }
+    }
+  }
+}

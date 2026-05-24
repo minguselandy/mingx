@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "post_lapi_extraction_quality.schema.json",
+  "title": "POST-LAPI Extraction Quality Audit Configuration",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "audit_id",
+    "goal_id",
+    "configuration_only_default",
+    "live_api_calls_allowed_by_default",
+    "model_adjudicated_extraction_run_allowed_by_default",
+    "claim_level",
+    "route_5_locked",
+    "route_8_locked",
+    "raw_response_storage_allowed",
+    "human_validation_claim_allowed",
+    "measurement_validation_claim_allowed",
+    "strata",
+    "labels",
+    "metrics",
+    "controls",
+    "dry_run_manifest",
+    "claim",
+    "output_policy"
+  ],
+  "properties": {
+    "audit_id": {
+      "const": "post_lapi_extraction_quality_audit"
+    },
+    "goal_id": {
+      "const": "POST-7-CONFIG"
+    },
+    "configuration_only_default": {
+      "const": true
+    },
+    "live_api_calls_allowed_by_default": {
+      "const": false
+    },
+    "model_adjudicated_extraction_run_allowed_by_default": {
+      "const": false
+    },
+    "claim_level": {
+      "const": "operational_utility_only/no_claim_upgrade"
+    },
+    "route_5_locked": {
+      "const": true
+    },
+    "route_8_locked": {
+      "const": true
+    },
+    "raw_response_storage_allowed": {
+      "const": false
+    },
+    "raw_response_stored": {
+      "const": false
+    },
+    "raw_api_responses_stored": {
+      "const": false
+    },
+    "human_validation_claim_allowed": {
+      "const": false
+    },
+    "measurement_validation_claim_allowed": {
+      "const": false
+    },
+    "claim_upgrade_introduced": {
+      "const": false
+    },
+    "strata": {
+      "type": "array",
+      "minItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "simple_factual",
+          "complex_conditional",
+          "qualifier_heavy",
+          "temporal_scope",
+          "cross_chunk",
+          "long_tail_entity",
+          "high_provenance_value",
+          "prerequisite",
+          "contradictory",
+          "adversarial"
+        ]
+      }
+    },
+    "labels": {
+      "type": "array",
+      "minItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "captured",
+          "captured_core_preserved",
+          "captured_core_materially_changed",
+          "missing",
+          "lost_qualifier",
+          "temporal_scope_error",
+          "provenance_loss",
+          "selector_impact"
+        ]
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "completeness_by_stratum",
+          "value_weighted_loss_proxy",
+          "qualifier_loss_rate",
+          "temporal_scope_error_rate",
+          "provenance_loss_rate",
+          "selector_impact_rate"
+        ]
+      }
+    },
+    "controls": {
+      "type": "object",
+      "required": [
+        "frozen_prompts",
+        "prompt_hashes_required",
+        "duplicate_judging",
+        "order_swap",
+        "raw_response_stored",
+        "live_api_call_performed",
+        "model_adjudication_run_performed"
+      ],
+      "properties": {
+        "frozen_prompts": {
+          "const": true
+        },
+        "prompt_hashes_required": {
+          "const": true
+        },
+        "duplicate_judging": {
+          "const": true
+        },
+        "order_swap": {
+          "const": true
+        },
+        "raw_response_stored": {
+          "const": false
+        },
+        "live_api_call_performed": {
+          "const": false
+        },
+        "model_adjudication_run_performed": {
+          "const": false
+        }
+      }
+    },
+    "dry_run_manifest": {
+      "type": "object",
+      "required": [
+        "builder",
+        "run_id",
+        "fixture_items",
+        "fixture_records",
+        "live_api_call_performed",
+        "model_adjudicated_extraction_run_performed",
+        "raw_response_stored"
+      ],
+      "properties": {
+        "live_api_call_performed": {
+          "const": false
+        },
+        "model_adjudicated_extraction_run_performed": {
+          "const": false
+        },
+        "raw_response_stored": {
+          "const": false
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "allowed",
+        "denied"
+      ]
+    },
+    "output_policy": {
+      "type": "object",
+      "properties": {
+        "store_raw_api_responses": {
+          "const": false
+        },
+        "counts_as_human_validation": {
+          "const": false
+        },
+        "human_validation_claim": {
+          "const": false
+        },
+        "measurement_validation_claim": {
+          "const": false
+        },
+        "claim_upgrade_introduced": {
+          "const": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "post_lapi_reprojection_witness.schema.json",
+  "title": "POST-LAPI Reprojection Witness Configuration",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "pilot_id",
+    "configuration_only_default",
+    "live_api_calls_allowed_by_default",
+    "controlled_replay_calls_allowed_by_default",
+    "requires_explicit_approval_to_run",
+    "claim_level",
+    "diagnostic_claim_level",
+    "route_5_locked",
+    "route_8_locked",
+    "raw_response_storage_allowed",
+    "eligible_cases",
+    "required_control_fields",
+    "controlled_replay_defaults",
+    "dry_run_manifest",
+    "metrics",
+    "claim",
+    "output_policy"
+  ],
+  "properties": {
+    "pilot_id": {
+      "const": "post_lapi_reprojection_witness"
+    },
+    "configuration_only_default": {
+      "const": true
+    },
+    "live_api_calls_allowed_by_default": {
+      "const": false
+    },
+    "controlled_replay_calls_allowed_by_default": {
+      "const": false
+    },
+    "requires_explicit_approval_to_run": {
+      "const": true
+    },
+    "claim_level": {
+      "const": "operational_utility_only/no_claim_upgrade"
+    },
+    "diagnostic_claim_level": {
+      "const": "operational_reprojection_witness"
+    },
+    "route_5_locked": {
+      "const": true
+    },
+    "route_8_locked": {
+      "const": true
+    },
+    "raw_response_storage_allowed": {
+      "const": false
+    },
+    "raw_response_stored": {
+      "const": false
+    },
+    "eligible_cases": {
+      "type": "array",
+      "contains": {
+        "const": "replay_artifact_complete"
+      }
+    },
+    "required_control_fields": {
+      "type": "array",
+      "minItems": 13,
+      "contains": {
+        "const": "claim_ledger_entry"
+      }
+    },
+    "controlled_replay_defaults": {
+      "type": "object",
+      "properties": {
+        "raw_response_stored": {
+          "const": false
+        },
+        "live_api_call_performed": {
+          "const": false
+        },
+        "controlled_replay_call_performed": {
+          "const": false
+        }
+      }
+    },
+    "dry_run_manifest": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "downstream_prompt_hash",
+        "model_snapshot",
+        "endpoint",
+        "thinking_mode",
+        "decoding_policy",
+        "items",
+        "fixture_witness_records",
+        "live_api_call_performed",
+        "controlled_replay_call_performed",
+        "raw_response_stored"
+      ],
+      "properties": {
+        "live_api_call_performed": {
+          "const": false
+        },
+        "controlled_replay_call_performed": {
+          "const": false
+        },
+        "raw_response_stored": {
+          "const": false
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "allowed",
+        "denied"
+      ]
+    },
+    "output_policy": {
+      "type": "object",
+      "properties": {
+        "store_raw_api_responses": {
+          "const": false
+        },
+        "measurement_validation_claim": {
+          "const": false
+        },
+        "truth_correction_guarantee": {
+          "const": false
+        },
+        "validated_repair_claim": {
+          "const": false
+        },
+        "claim_upgrade_introduced": {
+          "const": false
+        }
+      }
+    }
+  }
+}

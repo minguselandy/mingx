@@ -1,0 +1,127 @@
+{
+  "audit_id": "post_lapi_artifact_replay_integrity",
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "live_api_calls_allowed": false,
+  "new_experiments_allowed": false,
+  "raw_response_storage_allowed": false,
+  "output_dir": "artifacts/audits/post_lapi_replay_integrity",
+  "exclude_roots": [
+    ".codex",
+    "artifacts/operator_inputs",
+    "operator_inputs",
+    "raw_api_dumps",
+    "raw_dataset_mirrors"
+  ],
+  "bundle_sources": [
+    {
+      "bundle_id": "epf_final_projection_bundle_v1",
+      "kind": "epf_final_metadata",
+      "final_manifest": "artifacts/experiments/epf_final/final_epf_manifest.json",
+      "final_claim_request": "artifacts/experiments/epf_final/final_claim_request.json",
+      "scoped_operational_evaluation_summary": "artifacts/experiments/epf_final/scoped_operational_evaluation_summary.json"
+    }
+  ],
+  "supporting_artifacts": [
+    "artifacts/experiments/epf_final/final_claim_request.json",
+    "artifacts/experiments/epf_final/final_epf_manifest.json",
+    "artifacts/experiments/epf_final/independent_review_checklist.md",
+    "artifacts/experiments/epf_final/scoped_operational_evaluation_summary.json",
+    "artifacts/experiments/epf_c_silver_labels/label_generation_report.json",
+    "artifacts/experiments/epf_c_silver_labels/label_schema.json",
+    "artifacts/experiments/epf_c_silver_labels/silver_label_manifest.json",
+    "artifacts/experiments/epf_c_silver_labels/silver_labels.jsonl",
+    "artifacts/experiments/epf_c_silver_labels/uncertainty_disagreement_report.json",
+    "configs/experiments/hotpotqa_operational_replay_v1.yaml",
+    "configs/experiments/fever_style_sufficiency_v1.yaml",
+    "docs/api/live-api-capability-contract.md",
+    "docs/api/projection-bundle-v1.md",
+    "docs/paper/live-api-experiment-boundaries.md",
+    "docs/paper/v12-evidence-ledger.md",
+    "docs/paper/v12-live-api-operational-paper-claim-table.md",
+    "docs/paper/v12-manuscript-integration-checklist.md",
+    "docs/paper/live-api-operational-evaluation-section.md",
+    "docs/roadmaps/live-api-only-development-plan.md",
+    "docs/experiments/EPF-final-live-api-silver-label-candidate-package.md",
+    "docs/experiments/operational-replay-expansion-plan.md",
+    "docs/experiments/sufficiency-abstention-reprojection-protocol.md",
+    "docs/experiments/extraction-quality-audit-protocol.md"
+  ],
+  "required_records": [
+    "projection_plan",
+    "budget_witness",
+    "materialized_context",
+    "metric_bridge_witness",
+    "claim_ledger"
+  ],
+  "required_fields": {
+    "projection_plan": [
+      "candidate_ids_considered",
+      "selected_evidence_ids",
+      "excluded_evidence_ids"
+    ],
+    "budget_witness": [
+      "requested_budget_tokens",
+      "realized_budget_tokens",
+      "token_count_method"
+    ],
+    "materialized_context": [
+      "materialization_order",
+      "downstream_prompt_hash",
+      "evidence_hashes"
+    ],
+    "metric_bridge_witness": [
+      "metric_class",
+      "diagnostic_claim_level",
+      "bridge_status",
+      "model_snapshot",
+      "endpoint"
+    ],
+    "claim_ledger": [
+      "current_claim_level",
+      "allowed_claims",
+      "denied_claims",
+      "claim_upgrade",
+      "route_5_locked",
+      "route_8_locked",
+      "raw_response_stored"
+    ]
+  },
+  "allowed_claims": [
+    "replayable_artifact_evidence",
+    "artifact_hygiene_evidence",
+    "operational_audit_evidence"
+  ],
+  "denied_claims": [
+    "scientific_validation",
+    "measurement_validation",
+    "paper_grade_evidence",
+    "metric_bridge_support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "selector_superiority",
+    "global_selector_superiority",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "forbidden_true_fields": [
+    "claim_upgrade",
+    "measurement_validation_claim",
+    "metric_bridge_support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper_evidence",
+    "paper_evidence_eligible",
+    "paper_grade_evidence",
+    "selector_superiority",
+    "global_selector_superiority",
+    "teacher_forced_nll_support",
+    "fixed_target_continuation_scoring_support",
+    "route5_unlock_requested",
+    "route8_unlock_requested",
+    "route_5_unlock",
+    "route_8_unlock",
+    "raw_response_stored",
+    "raw_api_responses_stored",
+    "live_api_call_performed"
+  ]
+}

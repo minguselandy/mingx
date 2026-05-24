@@ -1,0 +1,247 @@
+{
+  "allowed_claims": [
+    "replayable_artifact_evidence",
+    "artifact_hygiene_evidence",
+    "operational_audit_evidence"
+  ],
+  "audit_id": "post_lapi_artifact_replay_integrity",
+  "bundles": [
+    {
+      "budget_witness.realized_budget_tokens_present": true,
+      "budget_witness.requested_budget_tokens_present": true,
+      "budget_witness.token_count_method_present": true,
+      "budget_witness_present": true,
+      "bundle_id": "epf_final_projection_bundle_v1",
+      "canonical_hash": "5210311671afca7a58d426a6c0ee425dc583d38aefe0cae3231486f7e7284ca7",
+      "claim_boundary_consistent": true,
+      "claim_ledger.allowed_claims_present": true,
+      "claim_ledger.claim_upgrade_present": true,
+      "claim_ledger.current_claim_level_present": true,
+      "claim_ledger.denied_claims_present": true,
+      "claim_ledger.raw_response_stored_present": true,
+      "claim_ledger.route_5_locked_present": true,
+      "claim_ledger.route_8_locked_present": true,
+      "claim_ledger_present": true,
+      "denied_claim_leakage_count": 0,
+      "downstream_prompt_hash_present": true,
+      "endpoint_present": true,
+      "excluded_evidence_ids_present": true,
+      "materialization_order_present": true,
+      "materialized_context.downstream_prompt_hash_present": true,
+      "materialized_context.evidence_hashes_present": true,
+      "materialized_context.materialization_order_present": true,
+      "materialized_context_present": true,
+      "metric_bridge_witness.bridge_status_present": true,
+      "metric_bridge_witness.diagnostic_claim_level_present": true,
+      "metric_bridge_witness.endpoint_present": true,
+      "metric_bridge_witness.metric_class_present": true,
+      "metric_bridge_witness.model_snapshot_present": true,
+      "metric_bridge_witness_present": true,
+      "model_snapshot_present": true,
+      "projection_plan.candidate_ids_considered_present": true,
+      "projection_plan.excluded_evidence_ids_present": true,
+      "projection_plan.selected_evidence_ids_present": true,
+      "projection_plan_present": true,
+      "raw_response_stored_false": true,
+      "replay_reconstruction_pass": true,
+      "schema_valid": true,
+      "selected_evidence_ids_present": true,
+      "source_kind": "epf_final_metadata",
+      "validation_error": null
+    }
+  ],
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "denied_claims": [
+    "scientific_validation",
+    "measurement_validation",
+    "paper_grade_evidence",
+    "metric_bridge_support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "selector_superiority",
+    "global_selector_superiority",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "live_api_calls_run": false,
+  "metrics": {
+    "budget_witness_present_count": 1,
+    "budget_witness_present_rate": 1.0,
+    "bundle_count": 1,
+    "claim_boundary_consistency_count": 1,
+    "claim_boundary_consistency_rate": 1.0,
+    "claim_ledger_present_count": 1,
+    "claim_ledger_present_rate": 1.0,
+    "denied_claim_leakage_count": 0,
+    "downstream_prompt_hash_present_count": 1,
+    "downstream_prompt_hash_present_rate": 1.0,
+    "excluded_evidence_ids_present_count": 1,
+    "excluded_evidence_ids_present_rate": 1.0,
+    "materialization_order_present_count": 1,
+    "materialization_order_present_rate": 1.0,
+    "materialized_context_present_count": 1,
+    "materialized_context_present_rate": 1.0,
+    "metric_bridge_witness_present_count": 1,
+    "metric_bridge_witness_present_rate": 1.0,
+    "model_snapshot_endpoint_present_count": 1,
+    "model_snapshot_endpoint_present_rate": 1.0,
+    "projection_plan_present_count": 1,
+    "projection_plan_present_rate": 1.0,
+    "raw_response_stored_false_count": 1,
+    "raw_response_stored_false_rate": 1.0,
+    "replay_reconstruction_pass_count": 1,
+    "replay_reconstruction_pass_rate": 1.0,
+    "schema_valid_count": 1,
+    "schema_valid_rate": 1.0,
+    "selected_evidence_ids_present_count": 1,
+    "selected_evidence_ids_present_rate": 1.0,
+    "supporting_artifact_count": 23,
+    "supporting_artifact_exists_count": 23,
+    "supporting_artifact_exists_rate": 1.0
+  },
+  "new_experiments_run": false,
+  "raw_api_responses_stored": false,
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "supporting_artifacts": [
+    {
+      "exists": true,
+      "path": "artifacts/experiments/epf_final/final_claim_request.json",
+      "sha256": "2151721373995924ff85544136d45ddfd356fe1656014d0d8d17ec950f68c938",
+      "size_bytes": 1704
+    },
+    {
+      "exists": true,
+      "path": "artifacts/experiments/epf_final/final_epf_manifest.json",
+      "sha256": "0ba215d66720ed3173fca0699597e0882cce67d841eac1b94d0b5f92f173e5bf",
+      "size_bytes": 1670
+    },
+    {
+      "exists": true,
+      "path": "artifacts/experiments/epf_final/independent_review_checklist.md",
+      "sha256": "77d088ccc2c6441c2005f2d2aa7387ea95f103bea0c9375dc7cd2d0bb6146dc4",
+      "size_bytes": 734
+    },
+    {
+      "exists": true,
+      "path": "artifacts/experiments/epf_final/scoped_operational_evaluation_summary.json",
+      "sha256": "eca667940954ab7d6cba95a5db6eb24095d9b79db011ae9e931a4aa44f4032f6",
+      "size_bytes": 2336
+    },
+    {
+      "exists": true,
+      "path": "artifacts/experiments/epf_c_silver_labels/label_generation_report.json",
+      "sha256": "86bbb9aac3957d41461a4f8d1b65badda361f95580cea2335a5d878f832c6545",
+      "size_bytes": 1208
+    },
+    {
+      "exists": true,
+      "path": "artifacts/experiments/epf_c_silver_labels/label_schema.json",
+      "sha256": "830388ca6425ca1cbc1b6c3c3fb726d47ae55bc8c97b562bbe75bb45f94d6edf",
+      "size_bytes": 1457
+    },
+    {
+      "exists": true,
+      "path": "artifacts/experiments/epf_c_silver_labels/silver_label_manifest.json",
+      "sha256": "507561b7835d8450d36277a97a190fff15ece7738e00373d932524436ebe7f4f",
+      "size_bytes": 942
+    },
+    {
+      "exists": true,
+      "path": "artifacts/experiments/epf_c_silver_labels/silver_labels.jsonl",
+      "sha256": "c806552487200e2d5a6986ff7cd62df779b8e75da69ddfdcdfc0397d1d30fe8f",
+      "size_bytes": 15836
+    },
+    {
+      "exists": true,
+      "path": "artifacts/experiments/epf_c_silver_labels/uncertainty_disagreement_report.json",
+      "sha256": "7f6081784a16d98ec7914777df0dfc9daed7f8794e4c7f21ee568bbe68dc1e2d",
+      "size_bytes": 1106
+    },
+    {
+      "exists": true,
+      "path": "configs/experiments/hotpotqa_operational_replay_v1.yaml",
+      "sha256": "e799686bafaa5927f1d8fb6de1a5a154ac068ad3e26eb5d8eaf8036075314ed5",
+      "size_bytes": 4651
+    },
+    {
+      "exists": true,
+      "path": "configs/experiments/fever_style_sufficiency_v1.yaml",
+      "sha256": "47e671dcf244557ddcbd5169b4e091721affceb23dce71e4c4c6df35e0a233f4",
+      "size_bytes": 4730
+    },
+    {
+      "exists": true,
+      "path": "docs/api/live-api-capability-contract.md",
+      "sha256": "9ffc26df791745449c5f7b492050a84552b43242f5622d0bacf4ae7a3248e1c7",
+      "size_bytes": 4392
+    },
+    {
+      "exists": true,
+      "path": "docs/api/projection-bundle-v1.md",
+      "sha256": "fe3f74bfd06bc79257e04bacb0b96e3eb6a68c1eeac41b37df8d7235270dee43",
+      "size_bytes": 4981
+    },
+    {
+      "exists": true,
+      "path": "docs/paper/live-api-experiment-boundaries.md",
+      "sha256": "046d276baa3eba30657bb77e2204eaa6d0b7dc8d6b42fa7a9ff5cf1f43f6e643",
+      "size_bytes": 3315
+    },
+    {
+      "exists": true,
+      "path": "docs/paper/v12-evidence-ledger.md",
+      "sha256": "8ec9d286bbb3ae408daf74a21504699456bb229ef216e4234dc8c7d47d1fa23a",
+      "size_bytes": 35633
+    },
+    {
+      "exists": true,
+      "path": "docs/paper/v12-live-api-operational-paper-claim-table.md",
+      "sha256": "c8db7c74b5708e4213c9ff747a3ae65349d02a19d0287b2131979a92ae4f81df",
+      "size_bytes": 3767
+    },
+    {
+      "exists": true,
+      "path": "docs/paper/v12-manuscript-integration-checklist.md",
+      "sha256": "9b34782bbe94e473a65c0064528378d804a05a84caa130004601c604911d44bf",
+      "size_bytes": 14056
+    },
+    {
+      "exists": true,
+      "path": "docs/paper/live-api-operational-evaluation-section.md",
+      "sha256": "f85205487e23f1cf1357af23c5290b4c69e74146fcda38f2175f91cece70d77d",
+      "size_bytes": 5078
+    },
+    {
+      "exists": true,
+      "path": "docs/roadmaps/live-api-only-development-plan.md",
+      "sha256": "a16c10293b96b4c09e198b53962b0dc553821213db2fb52d241418ba4a618e48",
+      "size_bytes": 3060
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/EPF-final-live-api-silver-label-candidate-package.md",
+      "sha256": "2af57fed01cf35d3796a1a0190f1ef2de131d15e2a2a5815ad4796810bc0b2ff",
+      "size_bytes": 2262
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/operational-replay-expansion-plan.md",
+      "sha256": "d6874038228c45a6047339ace7ba9e95cf521a06ee06d4c9532e3a41d09175fc",
+      "size_bytes": 2465
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/sufficiency-abstention-reprojection-protocol.md",
+      "sha256": "22290d2a6b78256eae393c743262fbfa43be3af305fe100c5053bdfef5fdc04e",
+      "size_bytes": 2005
+    },
+    {
+      "exists": true,
+      "path": "docs/experiments/extraction-quality-audit-protocol.md",
+      "sha256": "c1e4f08d5ff1304d586cf8c5f03b516ed4c24675975be289958c4eef1c8ab734",
+      "size_bytes": 2608
+    }
+  ]
+}

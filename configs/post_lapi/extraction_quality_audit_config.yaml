@@ -1,0 +1,241 @@
+{
+  "audit_id": "post_lapi_extraction_quality_audit",
+  "goal_id": "POST-7-CONFIG",
+  "configuration_only_default": true,
+  "live_api_calls_allowed_by_default": false,
+  "model_adjudicated_extraction_run_allowed_by_default": false,
+  "requires_explicit_approval_to_run_if_model_adjudicated": true,
+  "run_execution_approval_scope": "later POST-7 run-pilot goal only after this config goal passes",
+  "target_examples_first_pass": 100,
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "raw_response_storage_allowed": false,
+  "raw_response_stored": false,
+  "raw_api_responses_stored": false,
+  "human_validation_claim_allowed": false,
+  "measurement_validation_claim_allowed": false,
+  "claim_upgrade_introduced": false,
+  "schema_path": "schemas/post_lapi_extraction_quality.schema.json",
+  "paper_table_template": "docs/paper/post-lapi-extraction-quality-table-template.md",
+  "config_doc": "docs/experiments/POST-LAPI-extraction-quality-audit-config.md",
+  "source_references": {
+    "legacy_read_first_config": "configs/post-lapi/extraction_quality_audit_config.yaml",
+    "lapi7_protocol": "docs/experiments/extraction-quality-audit-protocol.md",
+    "lapi7_schema_tests": "tests/test_extraction_quality_audit_schema.py",
+    "live_api_boundaries": "docs/paper/live-api-experiment-boundaries.md",
+    "v12_evidence_ledger": "docs/paper/v12-evidence-ledger.md"
+  },
+  "strata": [
+    "simple_factual",
+    "complex_conditional",
+    "qualifier_heavy",
+    "temporal_scope",
+    "cross_chunk",
+    "long_tail_entity",
+    "high_provenance_value",
+    "prerequisite",
+    "contradictory",
+    "adversarial"
+  ],
+  "labels": [
+    "captured",
+    "captured_core_preserved",
+    "captured_core_materially_changed",
+    "missing",
+    "lost_qualifier",
+    "temporal_scope_error",
+    "provenance_loss",
+    "selector_impact"
+  ],
+  "label_source_policy": {
+    "model_adjudicated_labels_configured": true,
+    "model_adjudicated_extraction_run_performed": false,
+    "model_adjudicated_run_requires_explicit_approval": true,
+    "human_labels_collected": false,
+    "human_sentinel_lane_enabled_now": false,
+    "counts_as_human_validated_extraction_measurement": false,
+    "measurement_validation_candidate": false
+  },
+  "controls": {
+    "frozen_prompts": true,
+    "prompt_hashes_required": true,
+    "duplicate_judging": true,
+    "order_swap": true,
+    "rubric_paraphrase_set_min": 2,
+    "temperature": 0,
+    "parse_failure_tracking": true,
+    "value_weight_required": true,
+    "candidate_pool_hash_required": true,
+    "provenance_hash_required": true,
+    "raw_response_stored": false,
+    "live_api_call_performed": false,
+    "model_adjudication_run_performed": false,
+    "raw_response_storage_detected_action": "stop_fail_closed",
+    "claim_upgrade_detected_action": "stop_fail_closed"
+  },
+  "metrics": [
+    "completeness_by_stratum",
+    "value_weighted_loss_proxy",
+    "qualifier_loss_rate",
+    "temporal_scope_error_rate",
+    "provenance_loss_rate",
+    "selector_impact_rate"
+  ],
+  "metric_definitions": {
+    "completeness_by_stratum": {
+      "implementation_metric": "capture_rate_by_stratum",
+      "interpretation": "stratum-local captured or core-preserved rate"
+    },
+    "value_weighted_loss_proxy": {
+      "implementation_metric": "value_weighted_loss_candidate",
+      "interpretation": "operational extraction-risk proxy only"
+    },
+    "qualifier_loss_rate": {
+      "implementation_metric": "qualifier_loss_rate"
+    },
+    "temporal_scope_error_rate": {
+      "implementation_metric": "temporal_scope_error_rate"
+    },
+    "provenance_loss_rate": {
+      "implementation_metric": "provenance_loss_rate"
+    },
+    "selector_impact_rate": {
+      "implementation_metric": "selector_impact_rate",
+      "interpretation": "candidate-pool risk signal only; not selector validity"
+    }
+  },
+  "manifest_contracts": {
+    "manifest_builder": "cps.extraction.audit_schema.build_extraction_audit_manifest",
+    "risk_ledger_builder": "cps.extraction.extraction_risk_ledger.build_extraction_risk_ledger",
+    "required_record_fields": [
+      "record_id",
+      "source_document_id",
+      "source_document_hash",
+      "source_span_hash",
+      "extracted_item_id",
+      "extracted_item_hash",
+      "candidate_pool_hash",
+      "stratum",
+      "label",
+      "label_source_kind",
+      "judge_model_snapshot",
+      "judge_prompt_hash",
+      "rubric_version",
+      "rubric_paraphrase_id",
+      "order_swap",
+      "duplicate_index",
+      "value_weight",
+      "selector_impact",
+      "raw_response_stored",
+      "live_api_call_performed"
+    ],
+    "claim_ledger_required_fields": [
+      "current_claim_level",
+      "allowed_claims",
+      "denied_claims",
+      "claim_upgrade",
+      "route_5_locked",
+      "route_8_locked",
+      "raw_response_stored"
+    ]
+  },
+  "dry_run_manifest": {
+    "builder": "cps.extraction.audit_schema.build_extraction_audit_manifest",
+    "run_id": "post_lapi_extraction_quality_config_dry_run",
+    "fixture_items": [
+      {
+        "item_id": "extract-dry-run-item-1"
+      },
+      {
+        "item_id": "extract-dry-run-item-2"
+      }
+    ],
+    "fixture_records": [
+      {
+        "record_id": "dry-run-record-1",
+        "source_document_id": "doc-1",
+        "source_document_hash": "doc-hash-1",
+        "source_span_hash": "span-hash-1",
+        "extracted_item_id": "item-1",
+        "extracted_item_hash": "item-hash-1",
+        "candidate_pool_hash": "pool-hash-1",
+        "stratum": "qualifier_heavy",
+        "label": "lost_qualifier",
+        "label_source_kind": "model_adjudicated",
+        "judge_model_snapshot": "static-judge-snapshot",
+        "judge_prompt_hash": "prompt-hash-1",
+        "rubric_version": "extraction_quality_audit_v1",
+        "rubric_paraphrase_id": "p0",
+        "order_swap": false,
+        "duplicate_index": 0,
+        "value_weight": 2.0,
+        "selector_impact": "candidate_pool_risk_only",
+        "raw_response_stored": false,
+        "live_api_call_performed": false
+      },
+      {
+        "record_id": "dry-run-record-2",
+        "source_document_id": "doc-2",
+        "source_document_hash": "doc-hash-2",
+        "source_span_hash": "span-hash-2",
+        "extracted_item_id": "item-2",
+        "extracted_item_hash": "item-hash-2",
+        "candidate_pool_hash": "pool-hash-2",
+        "stratum": "temporal_scope",
+        "label": "temporal_scope_error",
+        "label_source_kind": "model_adjudicated",
+        "judge_model_snapshot": "static-judge-snapshot",
+        "judge_prompt_hash": "prompt-hash-1",
+        "rubric_version": "extraction_quality_audit_v1",
+        "rubric_paraphrase_id": "p0",
+        "order_swap": true,
+        "duplicate_index": 1,
+        "value_weight": 1.0,
+        "selector_impact": "candidate_pool_risk_only",
+        "raw_response_stored": false,
+        "live_api_call_performed": false
+      }
+    ],
+    "live_api_call_performed": false,
+    "model_adjudicated_extraction_run_performed": false,
+    "raw_response_stored": false
+  },
+  "claim": {
+    "allowed": [
+      "model_adjudicated_extraction_risk_evidence",
+      "operational_extraction_audit"
+    ],
+    "denied": [
+      "human_validated_extraction_measurement",
+      "measurement_validation",
+      "theorem_transfer_to_M_star",
+      "end_to_end_validation",
+      "end_to_end_measurement_validation",
+      "metric_bridge_support",
+      "calibrated_proxy_supported",
+      "vinfo_proxy_supported",
+      "paper_evidence",
+      "selector_superiority",
+      "global_selector_superiority",
+      "route_5_unlock",
+      "route_8_unlock"
+    ]
+  },
+  "output_policy": {
+    "store_normalized_labels": true,
+    "store_prompt_hashes": true,
+    "store_model_snapshot": true,
+    "store_candidate_pool_hashes": true,
+    "store_provenance_hashes": true,
+    "store_cost_latency": true,
+    "store_raw_api_responses": false,
+    "counts_as_human_validation": false,
+    "human_validation_claim": false,
+    "measurement_validation_claim": false,
+    "claim_upgrade_introduced": false
+  },
+  "live_api_call_performed": false,
+  "model_adjudicated_extraction_run_performed": false,
+  "replay_run_performed": false
+}

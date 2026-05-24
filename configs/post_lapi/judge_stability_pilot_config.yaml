@@ -1,0 +1,151 @@
+{
+  "pilot_id": "post_lapi_judge_stability",
+  "goal_id": "POST-3-CONFIG",
+  "configuration_only_default": true,
+  "live_api_calls_allowed_by_default": false,
+  "model_judging_allowed_by_default": false,
+  "silver_label_scaling_allowed": false,
+  "requires_explicit_approval_to_run": true,
+  "pilot_execution_approval_scope": "later POST-3 run-pilot goal only after this config goal passes",
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "raw_response_storage_allowed": false,
+  "raw_response_stored": false,
+  "max_examples_first_pilot": 50,
+  "schema_path": "schemas/post_lapi_judge_stability.schema.json",
+  "paper_table_template": "docs/paper/post-lapi-judge-stability-table-template.md",
+  "config_doc": "docs/experiments/POST-LAPI-judge-stability-config.md",
+  "prompt_assets": [
+    {
+      "condition": "original_order",
+      "prompt_path": "prompts/judge/weak_evidence_v1.md"
+    },
+    {
+      "condition": "order_swapped",
+      "prompt_path": "prompts/judge/weak_evidence_v1_order_swapped.md"
+    },
+    {
+      "condition": "duplicate_judging",
+      "prompt_path": "prompts/judge/weak_evidence_v1.md"
+    },
+    {
+      "condition": "rubric_paraphrase",
+      "prompt_path": "prompts/judge/weak_evidence_v1.md"
+    }
+  ],
+  "conditions": [
+    "original_order",
+    "order_swapped",
+    "duplicate_judging",
+    "rubric_paraphrase"
+  ],
+  "labels": [
+    "support",
+    "insufficient",
+    "contradict",
+    "uncertain",
+    "parse_failed"
+  ],
+  "confidence_buckets": [
+    "low",
+    "medium",
+    "high"
+  ],
+  "required_record_fields": [
+    "judgment_id",
+    "item_id",
+    "pair_id",
+    "judge_model_snapshot",
+    "prompt_hash",
+    "rubric_version",
+    "rubric_paraphrase_id",
+    "order_swap",
+    "duplicate_index",
+    "normalized_label",
+    "confidence_bucket",
+    "flags",
+    "parse_status",
+    "raw_response_stored",
+    "input_token_count",
+    "output_token_count",
+    "allowed_claim_level",
+    "claim_status",
+    "counts_as_human_or_external_gold",
+    "measurement_validation_claim"
+  ],
+  "dry_run_manifest": {
+    "builder": "cps.judge.judge_manifest.build_judge_run_manifest",
+    "run_id": "post_lapi_judge_stability_config_dry_run",
+    "fixture_items": [
+      {
+        "item_id": "dry-run-item-1",
+        "left_evidence_hash": "left-evidence-dry-run-1",
+        "right_evidence_hash": "right-evidence-dry-run-1"
+      },
+      {
+        "item_id": "dry-run-item-2",
+        "left_evidence_hash": "left-evidence-dry-run-2",
+        "right_evidence_hash": "right-evidence-dry-run-2"
+      }
+    ],
+    "expected_request_count_per_item": 8,
+    "live_api_call_performed": false,
+    "raw_response_stored": false
+  },
+  "controls": {
+    "blinded_pairwise_comparison": true,
+    "order_swapped_duplication": true,
+    "duplicate_judging_min": 2,
+    "rubric_paraphrase_set_min": 2,
+    "temperature": 0,
+    "length_aware_reporting": true,
+    "parse_failure_tracking": true,
+    "family_separation_if_available": true,
+    "raw_response_stored": false
+  },
+  "thresholds": {
+    "max_parse_failure_rate": 0.15,
+    "min_order_swap_agreement": 0.80,
+    "min_duplicate_agreement": 0.80,
+    "min_rubric_paraphrase_agreement": 0.75,
+    "if_threshold_failed": "downgrade_to_ambiguous_or_suppress_claim"
+  },
+  "metrics": [
+    "parse_success_rate",
+    "duplicate_agreement",
+    "order_swap_agreement",
+    "rubric_paraphrase_agreement",
+    "confidence_bucket_stability",
+    "position_bias_rate",
+    "uncertain_rate",
+    "parse_failed_rate",
+    "cost_per_judgment",
+    "latency_per_judgment"
+  ],
+  "claim": {
+    "allowed": [
+      "model_adjudicated_weak_evidence",
+      "operational_diagnostic_evidence"
+    ],
+    "denied": [
+      "human_gold",
+      "human_external_gold_validation",
+      "measurement_validation",
+      "judge_validation",
+      "paper_grade_evidence",
+      "selector_superiority"
+    ]
+  },
+  "output_policy": {
+    "store_normalized_labels": true,
+    "store_prompt_hashes": true,
+    "store_model_snapshot": true,
+    "store_endpoint": true,
+    "store_cost_latency": true,
+    "store_raw_api_responses": false,
+    "counts_as_human_or_external_gold": false,
+    "measurement_validation_claim": false,
+    "claim_upgrade_introduced": false
+  }
+}

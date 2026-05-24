@@ -1,0 +1,51 @@
+audit_id: post_lapi_artifact_replay_integrity
+live_api_calls_allowed: false
+input_roots:
+  - artifacts/experiments/epf_final
+  - artifacts/experiments/epf_c_silver_labels
+  - artifacts/experiments
+  - docs/experiments
+  - docs/paper
+exclude_roots:
+  - artifacts/operator_inputs
+  - .codex
+  - raw_api_dumps
+required_fields:
+  projection_plan:
+    - selected_evidence_ids
+    - excluded_evidence_ids
+    - considered_candidate_ids
+  budget_witness:
+    - estimated_tokens
+    - realized_tokens
+    - budget_limit
+  materialized_context:
+    - materialization_order
+    - context_hash
+    - prompt_hash
+  metric_bridge_witness:
+    - metric_class
+    - diagnostic_claim_level
+    - bridge_status
+  claim_ledger:
+    - claim_level
+    - denied_claims
+    - route_5_locked
+    - route_8_locked
+  storage:
+    - raw_response_stored
+metrics:
+  - bundle_count
+  - schema_valid_rate
+  - projection_plan_present_rate
+  - budget_witness_present_rate
+  - materialized_context_present_rate
+  - metric_bridge_witness_present_rate
+  - claim_ledger_present_rate
+  - selected_evidence_ids_present_rate
+  - excluded_evidence_ids_present_rate
+  - materialization_order_present_rate
+  - prompt_hash_present_rate
+  - raw_response_stored_false_rate
+  - replay_reconstruction_pass_rate
+  - claim_boundary_consistency_rate

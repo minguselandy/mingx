@@ -1,0 +1,40 @@
+pilot_id: post_lapi_reprojection_witness
+configuration_only_default: true
+live_api_calls_allowed_by_default: false
+requires_explicit_approval_to_run: true
+max_flagged_cases_first_pilot: 30
+eligible_regimes:
+  - sufficient_dropped
+  - insufficient_and_answered
+required_control_fields:
+  - downstream_prompt_hash
+  - model_snapshot
+  - endpoint
+  - thinking_mode
+  - decoding_policy
+  - token_budget_accounting
+  - selected_evidence_before_hash
+  - restored_evidence_hash
+  - context_diff_hash
+  - before_output_hash
+  - after_output_hash
+  - judge_prompt_hash
+  - claim_ledger_entry
+metrics:
+  - repair_rate
+  - label_change_rate
+  - abstain_to_support_rate
+  - unsupported_to_supported_rate
+  - cost_delta
+  - latency_delta
+  - position_sensitivity_rate
+claim:
+  allowed:
+    - operational_reprojection_witness
+    - omitted_evidence_operational_diagnostic
+    - replayable_artifact_evidence
+  denied:
+    - validated_repair
+    - truth_correction_guarantee
+    - metric_bridge_support
+    - selector_superiority

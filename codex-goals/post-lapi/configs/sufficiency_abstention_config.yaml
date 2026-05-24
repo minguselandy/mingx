@@ -1,0 +1,48 @@
+pilot_id: post_lapi_sufficiency_abstention
+configuration_only_default: true
+live_api_calls_allowed_by_default: false
+requires_explicit_approval_to_run: true
+max_examples_first_pilot: 50
+preferred_dataset_order:
+  - HotpotQA
+  - FEVER_style_closed_label
+labels:
+  - support
+  - insufficient
+  - contradict
+  - uncertain
+  - parse_failed
+additional_fields:
+  - abstain_recommended
+  - missing_evidence_type
+  - confidence_bucket
+  - prompt_hash
+  - model_snapshot
+  - endpoint
+  - raw_response_stored
+regimes:
+  - sufficient_kept
+  - sufficient_dropped
+  - insufficient_and_answered
+  - insufficient_and_abstained
+metrics:
+  - support_rate
+  - insufficient_rate
+  - contradict_rate
+  - uncertain_rate
+  - parse_failed_rate
+  - abstain_rate
+  - abstain_when_insufficient_rate
+  - unsafe_answer_rate
+  - missing_evidence_type_distribution
+  - cost_per_case
+  - latency_per_case
+claim:
+  allowed:
+    - sufficiency_abstention_diagnostic
+    - model_adjudicated_weak_evidence
+    - operational_utility_only
+  denied:
+    - truth_validation
+    - human_calibrated_abstention
+    - measurement_validation

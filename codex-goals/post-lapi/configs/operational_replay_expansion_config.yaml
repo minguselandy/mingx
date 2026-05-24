@@ -1,0 +1,39 @@
+experiment_id: post_lapi_operational_replay_expansion
+configuration_only_default: true
+live_api_calls_allowed_by_default: false
+requires_explicit_approval_to_run: true
+dataset_order:
+  - HotpotQA_continuation
+  - FEVER_style_closed_label
+  - 2Wiki_or_MuSiQue_later_only
+deployable_baselines:
+  - random_budget
+  - topk_relevance_or_token_budget
+  - mmr_density_greedy
+  - v12_cost_aware_diagnostic_policy_operational_only
+optional_baselines:
+  - dashscope_llm_prune_extract_operational_only
+  - adaptive_budget_router_operational_only
+oracle:
+  - gold_support_oracle_upper_bound
+oracle_claim_boundary: non_deployable_upper_bound
+metrics:
+  - supporting_fact_recall
+  - evidence_recall
+  - selected_tokens
+  - quality_per_1k_tokens
+  - latency
+  - cost
+  - parse_success_rate
+  - claim_gate_distribution
+  - abstain_rate
+claim:
+  allowed:
+    - scoped_operational_improvement_under_matched_budgets
+    - operational_utility_only
+  denied:
+    - selector_superiority
+    - global_selector_superiority
+    - metric_bridge_support
+    - measurement_validation
+    - V_information_verification

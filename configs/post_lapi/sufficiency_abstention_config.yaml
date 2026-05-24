@@ -1,0 +1,237 @@
+{
+  "pilot_id": "post_lapi_sufficiency_abstention",
+  "goal_id": "POST-4-CONFIG",
+  "configuration_only_default": true,
+  "live_api_calls_allowed_by_default": false,
+  "model_judging_allowed_by_default": false,
+  "requires_explicit_approval_to_run": true,
+  "pilot_execution_approval_scope": "later POST-4 run-pilot goal only after this config goal passes",
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "diagnostic_claim_level": "sufficiency_abstention_diagnostic_only",
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "raw_response_storage_allowed": false,
+  "raw_response_stored": false,
+  "max_examples_first_pilot": 50,
+  "preferred_dataset_order": [
+    "HotpotQA",
+    "FEVER_style_closed_label"
+  ],
+  "schema_path": "schemas/post_lapi_sufficiency_abstention.schema.json",
+  "paper_table_template": "docs/paper/post-lapi-sufficiency-abstention-table-template.md",
+  "config_doc": "docs/experiments/POST-LAPI-sufficiency-abstention-config.md",
+  "prompt_templates": [
+    {
+      "template_id": "sufficiency_abstention_v1",
+      "prompt_path": "prompts/reprojection/sufficiency_abstention_v1.md",
+      "purpose": "classify evidence sufficiency, abstention recommendation, missing evidence type, and reprojection candidacy"
+    }
+  ],
+  "labels": [
+    "support",
+    "insufficient",
+    "contradict",
+    "uncertain",
+    "parse_failed"
+  ],
+  "additional_fields": [
+    "abstain_recommended",
+    "missing_evidence_type",
+    "confidence_bucket",
+    "prompt_hash",
+    "model_snapshot",
+    "endpoint",
+    "raw_response_stored"
+  ],
+  "field_defaults": {
+    "raw_response_stored": false,
+    "live_api_call_performed": false,
+    "counts_as_human_or_external_gold": false,
+    "measurement_validation_claim": false,
+    "truth_validation_claim": false,
+    "human_calibrated_abstention_claim": false
+  },
+  "missing_evidence_types": [
+    "entity",
+    "temporal",
+    "bridge_fact",
+    "qualifier",
+    "provenance",
+    "multi_hop_prerequisite",
+    "unknown"
+  ],
+  "confidence_buckets": [
+    "low",
+    "medium",
+    "high"
+  ],
+  "regime_ledger": [
+    {
+      "regime": "sufficient_kept",
+      "meaning": "projected evidence was enough and the system answered",
+      "desired_behavior": "answer"
+    },
+    {
+      "regime": "sufficient_dropped",
+      "meaning": "omitted evidence appears necessary in hindsight",
+      "desired_behavior": "flag as reprojection candidate"
+    },
+    {
+      "regime": "insufficient_and_answered",
+      "meaning": "projected evidence was not enough but the system answered",
+      "desired_behavior": "unsafe answer diagnostic"
+    },
+    {
+      "regime": "insufficient_and_abstained",
+      "meaning": "projected evidence was not enough and the system abstained or escalated",
+      "desired_behavior": "fail-closed abstention"
+    }
+  ],
+  "reprojection_triggers": [
+    "sufficient_dropped",
+    "insufficient_and_answered",
+    "unknown_due_to_missing_context",
+    "hallucination_risk"
+  ],
+  "metrics": [
+    "support_rate",
+    "insufficient_rate",
+    "contradict_rate",
+    "uncertain_rate",
+    "parse_failed_rate",
+    "abstain_rate",
+    "abstain_when_insufficient_rate",
+    "unsafe_answer_rate",
+    "missing_evidence_type_distribution",
+    "cost_per_case",
+    "latency_per_case"
+  ],
+  "dry_run_input_selection": {
+    "builder": "cps.evaluation.sufficiency_regime.build_sufficiency_manifest",
+    "run_id": "post_lapi_sufficiency_abstention_config_dry_run",
+    "downstream_prompt_template_hash": "dry-run-downstream-prompt-hash",
+    "selection_policy": "static_fixture_items_only_no_api_calls",
+    "fixture_items": [
+      {
+        "item_id": "dry-run-sufficient-kept"
+      },
+      {
+        "item_id": "dry-run-sufficient-dropped"
+      },
+      {
+        "item_id": "dry-run-insufficient-answered"
+      },
+      {
+        "item_id": "dry-run-insufficient-abstained"
+      }
+    ],
+    "fixture_records": [
+      {
+        "record_id": "dry-run-sufficient-kept",
+        "item_id": "dry-run-sufficient-kept",
+        "judge_label": "support",
+        "projected_evidence_sufficient": true,
+        "answer_emitted": true,
+        "abstained": false,
+        "missing_evidence_types": [],
+        "abstain_recommended": false,
+        "confidence_bucket": "high",
+        "prompt_hash": "dry-run-prompt-hash",
+        "model_snapshot": "static-config-only-model-snapshot",
+        "endpoint": "offline-config-only",
+        "input_token_count": 64,
+        "output_token_count": 8,
+        "raw_response_stored": false,
+        "live_api_call_performed": false
+      },
+      {
+        "record_id": "dry-run-sufficient-dropped",
+        "item_id": "dry-run-sufficient-dropped",
+        "judge_label": "support",
+        "projected_evidence_sufficient": true,
+        "answer_emitted": false,
+        "abstained": false,
+        "omitted_evidence_necessary": true,
+        "missing_evidence_types": [
+          "bridge_fact"
+        ],
+        "abstain_recommended": true,
+        "confidence_bucket": "medium",
+        "prompt_hash": "dry-run-prompt-hash",
+        "model_snapshot": "static-config-only-model-snapshot",
+        "endpoint": "offline-config-only",
+        "input_token_count": 71,
+        "output_token_count": 9,
+        "raw_response_stored": false,
+        "live_api_call_performed": false
+      },
+      {
+        "record_id": "dry-run-insufficient-answered",
+        "item_id": "dry-run-insufficient-answered",
+        "judge_label": "insufficient",
+        "projected_evidence_sufficient": false,
+        "answer_emitted": true,
+        "abstained": false,
+        "missing_evidence_types": [
+          "entity"
+        ],
+        "abstain_recommended": true,
+        "confidence_bucket": "medium",
+        "prompt_hash": "dry-run-prompt-hash",
+        "model_snapshot": "static-config-only-model-snapshot",
+        "endpoint": "offline-config-only",
+        "input_token_count": 73,
+        "output_token_count": 10,
+        "raw_response_stored": false,
+        "live_api_call_performed": false
+      },
+      {
+        "record_id": "dry-run-insufficient-abstained",
+        "item_id": "dry-run-insufficient-abstained",
+        "judge_label": "uncertain",
+        "projected_evidence_sufficient": false,
+        "answer_emitted": false,
+        "abstained": true,
+        "missing_evidence_types": [
+          "unknown"
+        ],
+        "abstain_recommended": true,
+        "confidence_bucket": "low",
+        "prompt_hash": "dry-run-prompt-hash",
+        "model_snapshot": "static-config-only-model-snapshot",
+        "endpoint": "offline-config-only",
+        "input_token_count": 70,
+        "output_token_count": 8,
+        "raw_response_stored": false,
+        "live_api_call_performed": false
+      }
+    ],
+    "live_api_call_performed": false,
+    "raw_response_stored": false
+  },
+  "claim": {
+    "allowed": [
+      "sufficiency_abstention_diagnostic",
+      "model_adjudicated_weak_evidence",
+      "operational_utility_only"
+    ],
+    "denied": [
+      "truth_validation",
+      "human_calibrated_abstention",
+      "measurement_validation",
+      "paper_grade_evidence"
+    ]
+  },
+  "output_policy": {
+    "store_normalized_labels": true,
+    "store_prompt_hashes": true,
+    "store_model_snapshot": true,
+    "store_endpoint": true,
+    "store_cost_latency": true,
+    "store_raw_api_responses": false,
+    "counts_as_human_or_external_gold": false,
+    "measurement_validation_claim": false,
+    "truth_validation_claim": false,
+    "claim_upgrade_introduced": false
+  }
+}
