@@ -18,6 +18,50 @@ candidate package. This checklist creates no empirical evidence.
   assumptions.
 - Keep fixed-model logloss, operational utility, proxy metrics, heuristic
   selector behavior, and metric-claim levels separate.
+- For the live-API-only paper section, use the title "Operational Evaluation
+  and Weak-Evidence Diagnostics". Do not title this section validation.
+- The exact section name is operational evaluation and weak-evidence diagnostics.
+
+## LAPI-8 Live-API-Only Paper Integration
+
+The LAPI-8 paper-facing integration consists of:
+
+- `docs/paper/live-api-operational-evaluation-section.md`
+- `docs/paper/reviewer-defense-live-api-only.md`
+- `docs/paper/related-work-live-api-operational-audit.md`
+
+These documents integrate the completed live-API-only LAPI package into
+paper-facing prose and reviewer defense only. They do not modify experiment
+code, run live API calls, add empirical evidence, or change any route state.
+
+The completed package is tracked as:
+
+- LAPI-1: live API capability contract; generated output-token logprobs are
+  answer-side confidence diagnostics only.
+- LAPI-2: ProjectionBundleV1 artifact envelope and claim ledger; raw response
+  storage remains false.
+- LAPI-3: backend bridge audit witness; fixed-target teacher-forced NLL and
+  fixed-target continuation scoring remain unsupported.
+- LAPI-4: LLM judge weak-evidence harness; stable model-adjudicated labels are
+  weak candidate evidence only.
+- LAPI-5: sufficiency, abstention, and reprojection protocol; all outputs are
+  candidate operational diagnostics.
+- LAPI-6: operational replay expansion plan; it prepares matched-budget configs
+  but does not run replay or live API calls.
+- LAPI-7: extraction quality audit framework; model-adjudicated extraction-risk
+  records remain diagnostics only, with human sentinel audit future optional.
+
+Required LAPI-8 stance:
+
+- live-API-only
+- audit-first
+- claim-gated
+- formal V-information anchor only
+- current experiments do not estimate a fixed-target bridge
+- hard replay evidence is separated from weak model-adjudicated evidence
+- live-API outputs remain operational diagnostics or candidate evidence only
+- Route 5 locked: true
+- Route 8 locked: true
 
 ## Required Evidence-State Boundaries
 
