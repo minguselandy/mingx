@@ -1,81 +1,56 @@
 # Submission Experiment Summary
 
-Status: POST-8 submission package
+Status: SUB-3 submission package
 Claim ceiling: `operational_utility_only/no_claim_upgrade`
 
-This summary organizes existing POST-LAPI and v12 evidence for reviewer-facing
-submission. It does not run live API calls, execute experiments, create labels,
-or store raw API responses.
+This summary organizes the frozen POST-LAPI evidence for reviewer-facing submission. It does not run live API calls, execute experiments, create labels, or store raw API responses.
 
-## Operational evaluation and weak-evidence diagnostics
+## Operational Evaluation and Weak-Evidence Diagnostics
 
-The operational evaluation is limited to named datasets, baselines, budgets,
-and artifact contracts. Route 2 supports a scoped HotpotQA operational
-comparison under matched budgets. It does not support selector superiority,
-global selector superiority, metric bridge support, measurement validation, or
-V-information verification.
+The empirical section should be read as operational audit and weak-evidence diagnostics in a live-agent / live-API setting. The formal V-information anchor motivates dispatch-time evidence projection, but the evidence below remains operational-only and claim-gated.
 
-Weak-evidence diagnostics include LLM judge stability, sufficiency and
-abstention regimes, EPF-FINAL candidate silver labels, and extraction-quality
-audit configuration. These diagnostics are useful as operational risk
-interfaces and candidate evidence, but they are not human/external gold labels
-and do not supply measurement validation.
+## Main Results Summary
 
-## Backend capability and claim boundary
+| result | evidence source | sample / call count | paper-facing use | non-claim |
+|---|---|---|---|---|
+| POST-3 judge stability | `artifacts/experiments/post_lapi_judge_stability/` | 30 examples / 240 normalized rows / 240 live API calls | Weak model-adjudicated diagnostics over duplicate, order-swap, and rubric-paraphrase stability. | Not human/external gold validation, measurement validation, or paper-grade evidence. |
+| POST-4 sufficiency / abstention | `artifacts/experiments/post_lapi_sufficiency_abstention/` | 50 normalized rows / 50 final artifact calls / 100 total turn calls | Sufficiency / abstention operational diagnostic. | Not truth validation, human-calibrated abstention, measurement validation, or paper-grade evidence. |
+| POST-5 reprojection witness | `artifacts/experiments/post_lapi_reprojection_witness/` | 26 normalized rows / 26 live API calls | Operational omitted-evidence and reprojection witness evidence. | Not validated repair, truth correction guarantee, metric bridge support, or selector superiority. |
+| POST-6 operational replay | `artifacts/experiments/post_lapi_operational_replay/` | 2,000 normalized replay records / 200 candidate pools / 0 live API calls | Scoped operational replay under matched budgets `512` and `1024`; oracle marked `non_deployable_upper_bound`. | Not selector superiority, global selector superiority, metric bridge support, measurement validation, or paper-grade evidence. |
+| POST-7 extraction audit | `artifacts/experiments/post_lapi_extraction_quality_audit/` | 100 model-adjudicated extraction audit records / 10 per stratum / 100 live API calls | Model-adjudicated extraction-risk candidate evidence; value-weighted loss proxy `0.197403`. | Not human-validated extraction measurement, measurement validation, theorem transfer to M-star, or selector validity. |
+| JSON / JSONL and scan hygiene | `artifacts/audits/post_lapi_evidence_freeze/` | 27 JSON files / 5 JSONL files / 2,416 JSONL rows | Artifact hygiene, replayability, checksums, and storage-policy evidence. | Not a new experiment, new live API evidence, or raw response storage. |
 
-The live API provides generated-token chat logprobs, not fixed-target
-teacher-forced NLL or fixed-target continuation scoring. We do not relabel
-generated-token chat logprobs as teacher-forced NLL. We do not claim
-V-information verification. We do not claim measurement validation.
+## Backend Capability and Claim Boundary
 
-The live-API-only constraint contributes a concrete backend boundary: it shows
-which audit artifacts can be reproduced through deployed APIs and where formal
-metric claims must fail closed because the needed scoring backend is absent.
+The supported live API provides generated-token chat logprobs, not fixed-target teacher-forced NLL or fixed-target continuation scoring. The submission does not relabel generated-token chat logprobs as teacher-forced NLL. It does not claim metric bridge support, V-information proxy validation, calibrated proxy support, measurement validation, or human/external gold validation.
 
-## Replayable artifact interface
+The live-API-only constraint contributes a concrete backend boundary: it shows which operational artifacts can be reproduced through deployed APIs and where formal metric claims must fail closed because the needed scoring backend is absent.
 
-The paper package emphasizes replayable artifacts, manifests, claim ledgers,
-prompt and model snapshots where applicable, candidate-pool hashes, and
-normalized outputs. This interface lets reviewers inspect the operational
-audit trail without treating operational artifacts as validation.
+## Replayable Artifact Evidence
 
-Raw API responses are not stored. Route 5 remains locked. Route 8 remains
-locked.
+The paper package emphasizes replayable artifacts, manifests, claim ledgers, prompt and schema hashes where applicable, candidate-pool hashes, materialization constraints, normalized outputs, and storage-policy checks. These artifacts are a contribution because they let reviewers inspect the operational audit trail and reproduce claim-gate decisions. They are replay/audit evidence, not validation evidence.
 
-## Sufficiency, abstention, and reprojection witnesses
+Raw API responses are not stored. Route 5 remains locked. Route 8 remains locked.
 
-Sufficiency and abstention tables are planned diagnostics for support,
-contradict, insufficient, abstain, and parse-failure regimes. Reprojection
-witness tables are planned replayability and repair-audit surfaces. These are
-not truth validation, human-calibrated abstention, validated repair, or theorem
-transfer.
+## Sufficiency, Abstention, and Reprojection Witness
 
-They are included to show the submission's fail-closed audit architecture:
-when weak evidence is unstable, insufficient, or provenance-losing, the claim
-stays operational-only or is suppressed.
+Sufficiency / abstention diagnostics expose support, contradiction, insufficiency, abstention, and parse-failure behavior in a bounded model-adjudicated setting. Reprojection witness artifacts expose omitted-evidence and repair-candidate behavior. These are not truth validation, human-calibrated abstention, validated repair, or theorem transfer.
 
-## Limitations and non-claims
+They are included to show the submission's fail-closed audit architecture: when weak evidence is unstable, insufficient, provenance-losing, or backend-limited, the claim remains operational-only or is suppressed.
 
-The submission does not claim a fixed-target NLL bridge, metric bridge support,
-calibrated proxy support, V-information proxy support, measurement validation,
-paper evidence, selector superiority, global selector superiority, Route 5
-unlock, or Route 8 unlock.
+## Extraction Quality Boundary
 
-The contribution is a fail-closed, replayable, claim-gated operational audit
-framework for dispatch-time evidence selection. It connects formal motivation,
-backend capability checks, operational replay, and weak-evidence diagnostics
-while keeping claim boundaries explicit.
+Extraction quality is separate from selector quality because the selector operates over an extracted pool, while end-to-end task performance also depends on what the extraction gate omitted or distorted. POST-7 therefore reports model-adjudicated extraction-risk evidence only. It does not establish selector validity, measurement validation, or transfer from M-star to the extracted pool.
 
 ## Current Completion State
 
 | component | status | allowed use | non-claim |
 |---|---|---|---|
-| Backend capability boundary | complete | explain live-API limits | no fixed-target NLL bridge |
-| Route 2 operational replay | complete for scoped HotpotQA package | operational comparison under matched budgets | no selector superiority |
-| Artifact replay integrity | complete offline audit | replayable artifact interface | no measurement validation |
-| POST-LAPI table/readiness plan | complete | submission organization | no experiment result upgrade |
-| Judge stability | config/table template | weak-evidence diagnostic after approved run | no human gold or judge validation |
-| Sufficiency and abstention | config/table template | operational diagnostic after approved run | no truth validation |
-| Reprojection witness | config/table template | replayable witness after approved run | no validated repair |
-| Operational replay expansion | config/table template | future matched-budget expansion after approval | no global superiority |
-| Extraction quality audit | config/table template | M* -> M extraction-risk audit after approval | no extraction measurement validation |
+| SUB-0 evidence freeze | complete | frozen normalized source package | no live API calls during SUB-0 synthesis |
+| SUB-1 manuscript integration | complete | manuscript-facing integration under exact operational section | no claim upgrade |
+| SUB-2 independent review | complete, `ACCEPT_WITH_NOTES` | claim-boundary review and SUB-3 go-ahead | no required corrections |
+| SUB-3 submission package | this package | reviewer-facing summary, ledger, limitations, abstract, conclusion, Q&A, and review | no live API calls or new experiments |
+
+## Non-Claims
+
+The submission does not claim fixed-target teacher-forced NLL, fixed-target continuation scoring support, metric bridge support, calibrated proxy support, `vinfo_proxy_supported`, V-information proxy validation, measurement validation, human/external gold validation, paper-grade evidence, selector superiority, global selector superiority, Route 5 unlock, or Route 8 unlock.

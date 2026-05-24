@@ -1,51 +1,47 @@
 # Submission Limitations
 
-Status: POST-8 submission package
+Status: SUB-3 submission package
 Claim ceiling: `operational_utility_only/no_claim_upgrade`
 
-## Backend capability and claim boundary
+## Backend Capability and Claim Boundary
 
-The deployed live API does not provide fixed-target teacher-forced NLL or
-fixed-target continuation scoring for arbitrary target continuations. Generated
-chat-token logprobs are answer-side diagnostics only. The submission therefore
-does not use them as metric bridge support, calibrated proxy support,
-V-information proxy support, or Route 5 / Route 8 unlock evidence.
+The supported live API does not provide true fixed-target teacher-forced NLL or fixed-target continuation scoring for arbitrary target continuations. Generated-token chat logprobs are output-side confidence diagnostics only. The submission therefore does not use them as metric bridge support, calibrated proxy support, V-information proxy support, V-information proxy validation, or Route 5 / Route 8 unlock evidence.
 
-## Operational-only evidence
+## Operational-Only Evidence
 
-Operational replay and artifact checks show auditability and scoped operational
-behavior under named conditions. They do not establish measurement validation,
-paper evidence, selector superiority, global selector superiority, or theorem
-transfer to deployed M* extraction behavior.
+Operational replay and artifact checks show auditability and scoped operational behavior under named datasets, budgets, baselines, metrics, and materialization regime. They do not establish measurement validation, paper-grade evidence, selector superiority, global selector superiority, or theorem transfer to deployed extraction behavior.
 
-## Weak-source diagnostics
+## Weak-Source Diagnostics
 
-LLM judges and LLM-generated silver labels are weak sources. They can organize
-candidate evidence, disagreement, sufficiency, abstention, and extraction-risk
-signals. They are not human labels, external gold labels, human-human kappa,
-human-validated extraction measurement, or measurement validation.
+LLM judges and model-adjudicated labels are weak sources. They can organize candidate evidence, disagreement, sufficiency, abstention, reprojection, and extraction-risk signals. They are not human labels, external gold labels, human-human kappa, human-validated extraction measurement, or measurement validation.
 
-## Replay and extraction limits
+## Replay and Artifact Limits
 
-Replayability makes artifacts inspectable; it does not make the metric valid.
-Extraction-quality audit configuration can expose the M* -> M bottleneck, but
-it cannot by itself prove that theorem assumptions transfer to extracted
-runtime representations.
+Replayability makes artifacts inspectable; it does not make the metric valid. Artifacts are replay/audit evidence, not validation evidence. JSON/JSONL checks, checksums, secret scans, raw-response-storage scans, and forbidden-path scans support artifact hygiene and storage policy only.
 
-## Non-claims
+## Extraction Quality Limit
+
+Extraction quality is separate from selector quality. POST-7 can expose model-adjudicated M-star to extracted-pool risk, but it cannot by itself prove selector validity, measurement validation, or theorem transfer to runtime representations.
+
+## Scope Limit
+
+POST-6 operational replay is scoped to the frozen named datasets, budgets, baselines, metrics, and materialization regime. The oracle baseline remains `non_deployable_upper_bound`. The replay result is not selector superiority or global selector superiority.
+
+## Non-Claims
 
 This submission does not claim:
 
-- fixed-target NLL bridge
-- teacher-forced NLL support
-- V-information verification
+- fixed-target teacher-forced NLL
+- teacher-forced scoring support
+- fixed-target continuation scoring support
+- V-information proxy validation
 - metric bridge support
 - calibrated proxy support
-- V-information proxy support
+- `vinfo_proxy_supported`
 - measurement validation
 - human/external gold validation
 - human-validated extraction measurement
-- paper evidence
+- paper-grade evidence
 - selector superiority
 - global selector superiority
 - Route 5 unlock

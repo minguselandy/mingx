@@ -1,0 +1,38 @@
+package: mingx_sub_stage_codex_goals
+phase: SUB / paper synthesis
+baseline_commit: ce1f7fa307bcacf794befc49eb34beb8f4e4c1e8
+current_claim: operational_utility_only/no_claim_upgrade
+route_5: locked
+route_8: locked
+raw_api_responses_stored: false
+goals:
+  - id: SUB-0
+    file: codex-goals/SUB-0-evidence-freeze-and-paper-synthesis-baseline.goal.md
+    purpose: Freeze POST-LAPI evidence package and create paper-ready results tables.
+    live_api_allowed: false
+    commit_recommended_after_review: true
+  - id: SUB-1
+    file: codex-goals/SUB-1-manuscript-integration-post-lapi-evidence.goal.md
+    purpose: Integrate POST-LAPI evidence into manuscript-facing docs.
+    live_api_allowed: false
+    commit_recommended_after_review: true
+  - id: SUB-2
+    file: codex-goals/SUB-2-independent-claim-boundary-review.goal.md
+    purpose: Review evidence freeze and manuscript integration for claim violations.
+    live_api_allowed: false
+    commit_recommended_after_review: true
+  - id: SUB-3
+    file: codex-goals/SUB-3-submission-reviewer-package.goal.md
+    purpose: Build submission/reviewer defense package.
+    live_api_allowed: false
+    commit_recommended_after_review: true
+  - id: SUB-4
+    file: codex-goals/SUB-4-gap-filling-decision-gate.optional.goal.md
+    purpose: Decide whether any additional experiment is needed.
+    live_api_allowed: false
+    commit_recommended_after_review: false
+  - id: SUB-5
+    file: codex-goals/SUB-5-final-pr-or-submission-readiness-summary.goal.md
+    purpose: Produce final PR or submission readiness summary.
+    live_api_allowed: false
+    commit_recommended_after_review: true

@@ -1,0 +1,45 @@
+schema_name: post_lapi_evidence_freeze_manifest
+version: 1
+required_fields:
+  - branch
+  - commit
+  - remote_status
+  - claim_level
+  - route_5_status
+  - route_8_status
+  - raw_api_responses_stored
+  - live_api_call_counts
+  - normalized_row_counts
+  - artifact_counts
+  - json_validation
+  - jsonl_validation
+  - scans
+  - tests
+  - compileall
+  - allowed_claims
+  - denied_claims
+  - checksums_path
+  - table_inputs_path
+
+live_api_call_counts_required:
+  POST-3: 240
+  POST-4_final_artifact_run: 50
+  POST-4_total_turn_calls: 100
+  POST-5: 26
+  POST-6: 0
+  POST-7: 100
+
+normalized_counts_expected:
+  POST-3_rows: 240
+  POST-6_replay_records: 2000
+  POST-7_extraction_records: 100
+
+validation_expected:
+  focused_tests: "59 passed"
+  json_files: 27
+  jsonl_files: 5
+  jsonl_rows: 2416
+  secret_scan: passed
+  raw_response_storage_scan: passed
+  forbidden_path_scan: passed
+  compileall: passed

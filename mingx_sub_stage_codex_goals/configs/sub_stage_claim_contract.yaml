@@ -1,0 +1,55 @@
+phase: SUB
+current_claim: operational_utility_only/no_claim_upgrade
+live_api_calls_allowed: false
+new_experiments_allowed: false
+route_5: locked
+route_8: locked
+raw_api_responses_stored: false
+
+allowed_claims:
+  - operational replay evidence
+  - candidate operational evidence
+  - model-adjudicated weak evidence
+  - sufficiency / abstention diagnostic
+  - replayable artifact evidence
+  - fail-closed bridge audit
+  - scoped operational improvement under matched budgets
+  - model-adjudicated extraction-risk evidence
+  - operational reprojection witness
+  - artifact hygiene evidence
+
+denied_claims:
+  - fixed-target NLL support
+  - teacher-forced scoring support
+  - fixed-target continuation scoring support
+  - metric bridge support
+  - calibrated_proxy_supported
+  - vinfo_proxy_supported
+  - measurement validation
+  - human/external gold validation
+  - paper-grade evidence
+  - selector superiority
+  - global selector superiority
+  - Route 5 unlock
+  - Route 8 unlock
+  - deployed V-information verification
+
+required_phrases:
+  claim_level: operational_utility_only/no_claim_upgrade
+  route_5: locked
+  route_8: locked
+  raw_api_responses: raw_response_stored=false
+
+forbidden_active_claim_phrases:
+  - "teacher-forced NLL support"
+  - "fixed-target continuation scoring support"
+  - "metric bridge support"
+  - "calibrated_proxy_supported"
+  - "vinfo_proxy_supported"
+  - "measurement validation"
+  - "human/external gold validation"
+  - "paper-grade evidence"
+  - "selector superiority"
+  - "global selector superiority"
+  - "Route 5 unlock"
+  - "Route 8 unlock"

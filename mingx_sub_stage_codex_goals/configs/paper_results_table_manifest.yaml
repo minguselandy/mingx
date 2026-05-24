@@ -1,0 +1,61 @@
+tables:
+  - id: T1
+    title: Backend capability and claim boundary
+    claim: fail-closed bridge audit
+    source: LAPI + POST-LAPI contracts
+  - id: T2
+    title: POST-3 judge stability
+    claim: model-adjudicated weak evidence
+    source: POST-3 artifacts
+    key_metrics:
+      duplicate_agreement: 0.9833
+      order_swap_agreement: 0.9833
+      rubric_paraphrase_agreement: 0.9667
+  - id: T3
+    title: POST-4 sufficiency / abstention
+    claim: sufficiency / abstention diagnostic
+    source: POST-4 artifacts
+    key_metrics:
+      final_artifact_run_calls: 50
+      total_turn_calls: 100
+      gate: sufficiency_abstention_candidate_ready
+  - id: T4
+    title: POST-5 reprojection witness
+    claim: operational reprojection witness
+    source: POST-5 artifacts
+    key_metrics:
+      repair_candidate_rate: 0.576923
+      label_change_rate: 0.576923
+      unsupported_to_supported_rate: 0.576923
+      parse_failed_rate: 0.0
+  - id: T5
+    title: POST-6 matched-budget operational replay
+    claim: scoped operational improvement under matched budgets
+    source: POST-6 artifacts
+    key_metrics:
+      normalized_replay_records: 2000
+      hotpotqa_candidate_pools: 200
+      budgets: [512, 1024]
+      oracle: non_deployable_upper_bound
+  - id: T6
+    title: POST-7 extraction quality audit
+    claim: model-adjudicated extraction-risk evidence
+    source: POST-7 artifacts
+    key_metrics:
+      live_api_calls: 100
+      normalized_records: 100
+      records_per_stratum: 10
+      value_weighted_loss_proxy: 0.197403
+  - id: T7
+    title: Artifact hygiene and validation
+    claim: artifact hygiene evidence
+    source: validation scans
+    key_metrics:
+      json_files: 27
+      jsonl_files: 5
+      jsonl_rows: 2416
+      focused_tests: 59 passed
+  - id: T8
+    title: Denied claims / no-claim-upgrade table
+    claim: no_claim_upgrade
+    source: claim contract

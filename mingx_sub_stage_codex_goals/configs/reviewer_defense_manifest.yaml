@@ -1,0 +1,27 @@
+reviewer_objections:
+  - objection: Why is there no NLL bridge?
+    response_key: supported_live_api_does_not_provide_fixed_target_teacher_forced_scoring
+    must_say:
+      - generated-token chat logprobs are output-side diagnostics only
+      - fixed-target teacher-forced NLL remains unsupported
+      - relabeling chat logprobs as NLL would be methodologically wrong
+  - objection: Why mention V-information?
+    response_key: formal_anchor_not_empirical_validation
+    must_say:
+      - V-information motivates usable-information-preserving projection
+      - current evidence does not estimate or validate V-information
+  - objection: Are LLM judge labels gold?
+    response_key: weak_evidence_only
+    must_say:
+      - LLM judges are weak noisy annotators
+      - order-swap and rubric-paraphrase controls support stability, not validation
+  - objection: Is the selector superior?
+    response_key: scoped_operational_comparison_only
+    must_say:
+      - matched-budget replay supports scoped operational comparisons
+      - no global selector superiority is claimed
+  - objection: Why is this not just another compressor/router?
+    response_key: audit_surface_not_optimization_claim
+    must_say:
+      - prior work covers compression/routing
+      - novelty is claim-gated operational audit and replay witnesses

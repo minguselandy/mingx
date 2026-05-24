@@ -1,0 +1,26 @@
+{
+  "package": "mingx_sub_stage_codex_goals",
+  "created_at_utc": "2026-05-24T13:22:31.919256Z",
+  "file_count": 19,
+  "files_sha256": {
+    "CODEX_COMMANDS.md": "bd8dfa520828f4bb0bc55ef806093c6bd5e6098a289fe9b7cdbb62009d7a3b41",
+    "GLOBAL_CONSTRAINTS.md": "a5228eb14f14906ad5bdae124995e3799dd0c20806c4aab61cf0eb2023977793",
+    "README.md": "9b6dc88843e85140b32fd913a4cb171fed5e4d7e53c5595809fdce35684e0f8e",
+    "codex-goals/SUB-0-evidence-freeze-and-paper-synthesis-baseline.goal.md": "c785ad85984a831c6c4da4acd3b76ada887ccb1854683a57ecdd3791e14b0c4c",
+    "codex-goals/SUB-1-manuscript-integration-post-lapi-evidence.goal.md": "f911c4d180ea77274ea76227ef17c20fe6f029e7cd37ec917646e2a2286f55dd",
+    "codex-goals/SUB-2-independent-claim-boundary-review.goal.md": "1abadb3158e608dd45edfff2cd3f8708a0e40cdc8c89209df33d1f305ca5e90a",
+    "codex-goals/SUB-3-submission-reviewer-package.goal.md": "a6b9eacbf45266f267ab36d6119a2b65224d54eebac012d717621c8323290c01",
+    "codex-goals/SUB-4-gap-filling-decision-gate.optional.goal.md": "e2b760b3ea0077fdf8c340c2facaf99677f80a640fe2ee2f8015de18b4e81ede",
+    "codex-goals/SUB-5-final-pr-or-submission-readiness-summary.goal.md": "9b7270e8a5eab39dcfa148d05786b3f7b3e71df4474d56302e9c4e18356537a1",
+    "configs/evidence_freeze_manifest_schema.yaml": "0d97e604ed49a14377f4615ec45d7608984b331d2f105551345f57cd572b1695",
+    "configs/paper_results_table_manifest.yaml": "8a9fe3fcc7a4770c74c2956dddbd44ad1d1a5a615ae922212a9bf9247839612d",
+    "configs/reviewer_defense_manifest.yaml": "b5a90ac45d34abb73e0c0f09808ff1db863555b48aa6df2d08d50536a67217f2",
+    "configs/sub_stage_claim_contract.yaml": "130760138a897841bb8ab1f4929fd469b8fc65c44ca1e67be9374b652e741459",
+    "goal-index.yaml": "8c3434f100858918b955f36c4709f0d65ab62c80b1666c4711f7d7e3acb8304c",
+    "manifests/current_post_lapi_baseline.json": "3a4791412e401494452064542558c2060728f16cc87bf5ac3f9d498c8e244227",
+    "templates/evidence_freeze_ledger_template.md": "81325262b8579d73bddb8009eb2da4ffbb670e95caa850ff9e24e9d93bd019f2",
+    "templates/independent_claim_review_template.md": "6c3ea2c827eb95f48d279fc13c47d5774c11740f763cfe4c910ec775e212ad5a",
+    "templates/main_results_table_template.md": "278e7ed109a602129b6917f4b808a8bf12f92b8cfc8ffc27b8a8d9029113b56e",
+    "templates/reviewer_defense_template.md": "1b63e6049d982ed58ecf1e1dd8818c16b147068697205796c856934a22f13d95"
+  }
+}

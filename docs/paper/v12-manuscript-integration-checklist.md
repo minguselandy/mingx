@@ -18,9 +18,11 @@ candidate package. This checklist creates no empirical evidence.
   assumptions.
 - Keep fixed-model logloss, operational utility, proxy metrics, heuristic
   selector behavior, and metric-claim levels separate.
-- For the live-API-only paper section, use the title "Operational Evaluation
-  and Weak-Evidence Diagnostics". Do not title this section validation.
-- The exact section name is operational evaluation and weak-evidence diagnostics.
+- For the live-API-only paper section, use the exact title "Operational
+  evaluation and weak-evidence diagnostics". Do not title this section
+  validation.
+- The exact section name is `Operational evaluation and weak-evidence
+  diagnostics`.
 
 ## LAPI-8 Live-API-Only Paper Integration
 
@@ -62,6 +64,63 @@ Required LAPI-8 stance:
 - live-API outputs remain operational diagnostics or candidate evidence only
 - Route 5 locked: true
 - Route 8 locked: true
+
+## SUB-1 POST-LAPI Manuscript Integration
+
+SUB-1 integrates the frozen POST-LAPI package into manuscript-facing docs as
+weak candidate evidence only. The source of truth is the SUB-0 freeze package:
+
+- `artifacts/audits/post_lapi_evidence_freeze/manifest.json`
+- `artifacts/audits/post_lapi_evidence_freeze/table_inputs.json`
+- `artifacts/audits/post_lapi_evidence_freeze/checksums.sha256`
+- `docs/paper/post-lapi-evidence-freeze-ledger.md`
+- `docs/paper/post-lapi-main-results-tables.md`
+- `docs/paper/post-lapi-claim-boundary-summary.md`
+
+SUB-1 manuscript integration creates no new experiment and runs no live API
+call. It must leave the conclusion as
+`operational_utility_only/no_claim_upgrade`.
+
+Required POST-LAPI result summaries:
+
+| result | manuscript placement | live API calls | required boundary |
+|---|---|---:|---|
+| POST-3 judge stability | `Operational evaluation and weak-evidence diagnostics` / judge stability diagnostics | 240 | model-adjudicated weak evidence only; no measurement validation or paper-grade evidence |
+| POST-4 sufficiency / abstention | `Operational evaluation and weak-evidence diagnostics` / sufficiency and abstention diagnostics | 50 final artifact calls / 100 total turn calls | operational diagnostic candidate only; no human-calibrated abstention or paper-grade evidence |
+| POST-5 reprojection witness | `Operational evaluation and weak-evidence diagnostics` / reprojection witness diagnostics | 26 | operational omitted-evidence evidence only; no selector superiority or metric bridge support |
+| POST-6 operational replay expansion | `Operational evaluation and weak-evidence diagnostics` / matched-budget operational replay | 0 | scoped to named datasets, budgets, baselines, metrics, and materialization regime; no global selector superiority |
+| POST-7 extraction quality audit | `Operational evaluation and weak-evidence diagnostics` / extraction quality audit diagnostics | 100 | model-adjudicated extraction-risk evidence only; no human/external gold validation |
+| Artifact hygiene / raw-response policy | `Operational evaluation and weak-evidence diagnostics` / reproducibility and artifact hygiene appendix | 0 during SUB-0/SUB-1 synthesis | no raw API responses stored; no new live API evidence |
+
+For every POST-LAPI result, manuscript-facing rows must state allowed claim,
+denied claim, evidence tier, live API call count, human label status, metric
+bridge status, Route 5 and Route 8 status, and `raw_response_stored` status.
+All human label statuses are absent, all metric bridge statuses are absent,
+Route 5 and Route 8 remain locked, and `raw_response_stored` remains false.
+
+Required POST-LAPI prose:
+
+- generated-token chat logprobs are operational confidence diagnostics only;
+- model-adjudicated labels are weak evidence only;
+- operational replay is scoped to named datasets, budgets, baselines, metrics,
+  and materialization regime;
+- extraction audit is model-adjudicated extraction-risk evidence only;
+- reprojection witness is operational omitted-evidence evidence only.
+
+Denied POST-LAPI upgrades:
+
+- fixed-target NLL support;
+- teacher-forced scoring support;
+- metric bridge support;
+- `calibrated_proxy_supported`;
+- `vinfo_proxy_supported`;
+- measurement validation;
+- human/external gold validation;
+- paper-grade evidence;
+- selector superiority;
+- global selector superiority;
+- Route 5 unlock;
+- Route 8 unlock.
 
 ## Required Evidence-State Boundaries
 
