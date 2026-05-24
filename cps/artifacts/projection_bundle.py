@@ -1,4 +1,4 @@
-"""Schema wrappers for CPS artifact exchange."""
+"""ProjectionBundleV1 artifact schema entrypoint."""
 
 from cps.schema.projection_bundle_v1 import ClaimLedger
 from cps.schema.projection_bundle_v1 import CostLatencyLedger
