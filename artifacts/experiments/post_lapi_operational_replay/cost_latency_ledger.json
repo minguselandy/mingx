@@ -1,0 +1,105 @@
+{
+  "ledger": [
+    {
+      "budget": 512,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 101015,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "gold_support_oracle_upper_bound",
+      "total_tokens": 101015
+    },
+    {
+      "budget": 512,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 101085,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "mmr_density_greedy",
+      "total_tokens": 101085
+    },
+    {
+      "budget": 512,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 101017,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "random_budget",
+      "total_tokens": 101017
+    },
+    {
+      "budget": 512,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 101032,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "topk_relevance_or_token_budget",
+      "total_tokens": 101032
+    },
+    {
+      "budget": 512,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 101093,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "v12_cost_aware_diagnostic_policy_operational_only",
+      "total_tokens": 101093
+    },
+    {
+      "budget": 1024,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 169154,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "gold_support_oracle_upper_bound",
+      "total_tokens": 169154
+    },
+    {
+      "budget": 1024,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 169122,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "mmr_density_greedy",
+      "total_tokens": 169122
+    },
+    {
+      "budget": 1024,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 169161,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "random_budget",
+      "total_tokens": 169161
+    },
+    {
+      "budget": 1024,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 169164,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "topk_relevance_or_token_budget",
+      "total_tokens": 169164
+    },
+    {
+      "budget": 1024,
+      "cost_basis": "offline_selected_token_proxy_not_provider_billing",
+      "estimated_cost": 0.0,
+      "input_tokens": 169217,
+      "latency_ms": 0,
+      "output_tokens": 0,
+      "selector_name": "v12_cost_aware_diagnostic_policy_operational_only",
+      "total_tokens": 169217
+    }
+  ],
+  "schema_version": "post_lapi_operational_replay_cost_latency_ledger_v1"
+}

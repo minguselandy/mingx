@@ -1,0 +1,74 @@
+{
+  "allowed_claims_after_gate": [
+    "model_adjudicated_extraction_risk_evidence",
+    "operational_extraction_audit"
+  ],
+  "calibrated_proxy_supported": false,
+  "candidate_operational_evidence_only": true,
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "cost_summary": {
+    "input_tokens_total": 39756,
+    "monetary_cost_status": "not_calculated_without_provider_pricing_config",
+    "output_tokens_total": 5042,
+    "token_cost_per_case_mean": 447.98,
+    "total_tokens": 44798,
+    "usage_counts_estimated_count": 0,
+    "usage_counts_provider_count": 100
+  },
+  "denied_claims": [
+    "human_validated_extraction_measurement",
+    "measurement_validation",
+    "theorem_transfer_to_M_star",
+    "end_to_end_validation",
+    "end_to_end_measurement_validation",
+    "metric_bridge_support",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper_evidence",
+    "selector_superiority",
+    "global_selector_superiority",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "diagnostic_claim_level": "model_adjudicated_extraction_risk_evidence",
+  "end_to_end_validation_claim": false,
+  "final_gate_status": "post7_extraction_quality_audit_completed",
+  "human_validated_extraction_measurement": false,
+  "label_counts": {
+    "captured": 16,
+    "captured_core_preserved": 53,
+    "lost_qualifier": 1,
+    "missing": 22,
+    "temporal_scope_error": 8
+  },
+  "latency_summary_ms": {
+    "max": 6695.0,
+    "mean": 2622.51,
+    "median": 2433.5,
+    "min": 1538.0,
+    "p95": 3960.0
+  },
+  "live_api_call_count": 100,
+  "measurement_validation_claim": false,
+  "metric_bridge_support": false,
+  "paper_evidence_claim": false,
+  "parse_failed_rate": 0.0,
+  "provenance_loss_rate": 0.0,
+  "qualifier_loss_rate": 0.01,
+  "raw_response_stored": false,
+  "record_count": 100,
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "schema_version": "post_lapi_extraction_quality_aggregate_v1",
+  "selector_impact_rate": 0.0,
+  "selector_superiority_claim": false,
+  "stratum_count": 10,
+  "temporal_scope_error_rate": 0.08,
+  "theorem_transfer_to_M_star": false,
+  "value_weighted_loss_proxy": {
+    "interpretation": "candidate_operational_evidence_only",
+    "value": 0.197403
+  },
+  "vinfo_proxy_supported": false
+}

@@ -1,0 +1,31 @@
+{
+  "allowed_claims_after_gate": [
+    "operational_reprojection_witness",
+    "omitted_evidence_operational_diagnostic",
+    "replayable_artifact_evidence"
+  ],
+  "candidate_operational_evidence_only": true,
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "denied_claims": [
+    "validated_repair",
+    "truth_correction_guarantee",
+    "metric_bridge_support",
+    "selector_superiority",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "diagnostic_claim_level": "operational_reprojection_witness",
+  "final_gate_status": "reprojection_witness_candidate_ready",
+  "human_external_gold_label": false,
+  "measurement_validation_claim": false,
+  "metric_bridge_support": false,
+  "raw_response_stored": false,
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "selector_superiority_claim": false,
+  "treated_as": "model_adjudicated_candidate_operational_evidence_only",
+  "truth_correction_guarantee": false,
+  "validated_repair_claim": false
+}

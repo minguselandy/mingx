@@ -1,0 +1,123 @@
+{
+  "aggregate_label_status": "weak_model_adjudicated_candidate",
+  "allowed_claim_level": "model_adjudicated_weak_evidence",
+  "allowed_claims_after_gate": [
+    "model_adjudicated_weak_evidence"
+  ],
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "condition_rows": [
+    {
+      "claim_gate_status": "weak_evidence_candidate_ready",
+      "condition": "original_order",
+      "confidence_bucket_stability": 1.0,
+      "duplicate_agreement": null,
+      "latency_ms_per_judgment": 2306.733,
+      "n_judgments": 30,
+      "order_swap_agreement": null,
+      "parse_failed_rate": 0.0,
+      "parse_success_rate": 1.0,
+      "position_bias_rate": null,
+      "rubric_paraphrase_agreement": null,
+      "token_cost_per_judgment": 537.4,
+      "uncertain_rate": 0.0
+    },
+    {
+      "claim_gate_status": "weak_evidence_candidate_ready",
+      "condition": "order_swapped",
+      "confidence_bucket_stability": 0.933333,
+      "duplicate_agreement": null,
+      "latency_ms_per_judgment": 2399.7,
+      "n_judgments": 120,
+      "order_swap_agreement": 0.983333,
+      "parse_failed_rate": 0.0,
+      "parse_success_rate": 1.0,
+      "position_bias_rate": 0.016667,
+      "rubric_paraphrase_agreement": null,
+      "token_cost_per_judgment": 560.958,
+      "uncertain_rate": 0.0
+    },
+    {
+      "claim_gate_status": "weak_evidence_candidate_ready",
+      "condition": "duplicate_judging",
+      "confidence_bucket_stability": 0.833333,
+      "duplicate_agreement": 0.983333,
+      "latency_ms_per_judgment": 2491.717,
+      "n_judgments": 120,
+      "order_swap_agreement": null,
+      "parse_failed_rate": 0.0,
+      "parse_success_rate": 1.0,
+      "position_bias_rate": null,
+      "rubric_paraphrase_agreement": null,
+      "token_cost_per_judgment": 553.358,
+      "uncertain_rate": 0.0
+    },
+    {
+      "claim_gate_status": "weak_evidence_candidate_ready",
+      "condition": "rubric_paraphrase",
+      "confidence_bucket_stability": 0.866667,
+      "duplicate_agreement": null,
+      "latency_ms_per_judgment": 2376.667,
+      "n_judgments": 120,
+      "order_swap_agreement": null,
+      "parse_failed_rate": 0.0,
+      "parse_success_rate": 1.0,
+      "position_bias_rate": null,
+      "rubric_paraphrase_agreement": 0.966667,
+      "token_cost_per_judgment": 561.583,
+      "uncertain_rate": 0.0
+    }
+  ],
+  "confidence_bucket_counts": {
+    "high": 218,
+    "medium": 22
+  },
+  "confidence_bucket_stability": 0.833333,
+  "cost_summary": {
+    "billing_export_available": false,
+    "input_tokens_total": 115232,
+    "latency_count": 240,
+    "monetary_cost_status": "not_calculated_without_provider_pricing_config",
+    "output_tokens_total": 17574,
+    "token_cost_per_judgment_mean": 553.358,
+    "total_tokens": 132806,
+    "usage_counts_actual_count": 240,
+    "usage_counts_estimated_count": 0
+  },
+  "denied_claims": [
+    "human_gold",
+    "human_external_gold_validation",
+    "measurement_validation",
+    "judge_validation",
+    "paper_grade_evidence",
+    "selector_superiority",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "duplicate_agreement": 0.9833333333333333,
+  "final_gate_status": "weak_evidence_candidate_ready",
+  "label_counts": {
+    "insufficient": 160,
+    "support": 80
+  },
+  "latency_summary_ms": {
+    "max": 4490.0,
+    "mean": 2425.058,
+    "median": 2262.5,
+    "min": 1492.0,
+    "p95": 3587.0
+  },
+  "live_api_call_count": 240,
+  "measurement_validation_claim": false,
+  "order_swap_agreement": 0.9833333333333333,
+  "parse_failure_rate": 0.0,
+  "position_bias_rate": 0.016667,
+  "raw_response_stored": false,
+  "reason_codes": [],
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "rubric_paraphrase_agreement": 0.9666666666666667,
+  "schema_version": "post_lapi_judge_stability_aggregate_v1",
+  "treated_as": "weak_model_adjudicated_candidate_evidence_only",
+  "uncertain_rate": 0.0
+}

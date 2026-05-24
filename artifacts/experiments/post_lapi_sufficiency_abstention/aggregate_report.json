@@ -1,0 +1,83 @@
+{
+  "abstain_rate": 0.58,
+  "abstain_when_insufficient_rate": 1.0,
+  "abstention_bucket_counts": {
+    "abstained_without_recommendation": 11,
+    "answer_allowed": 10,
+    "recommended_and_abstained": 14,
+    "recommended_but_answered": 15
+  },
+  "allowed_claims_after_gate": [
+    "sufficiency_abstention_diagnostic"
+  ],
+  "candidate_operational_evidence_only": true,
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "confidence_bucket_counts": {
+    "high": 49,
+    "low": 1
+  },
+  "contradict_rate": 0.0,
+  "cost_summary": {
+    "billing_export_available": false,
+    "input_tokens_total": 23699,
+    "monetary_cost_status": "not_calculated_without_provider_pricing_config",
+    "output_tokens_total": 2884,
+    "token_cost_per_case_mean": 531.66,
+    "total_tokens": 26583,
+    "usage_counts_actual_count": 50,
+    "usage_counts_estimated_count": 0
+  },
+  "denied_claims": [
+    "truth_validation",
+    "human_calibrated_abstention",
+    "measurement_validation",
+    "paper_grade_evidence",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "final_gate_status": "sufficiency_abstention_candidate_ready",
+  "human_calibrated_abstention_claim": false,
+  "human_external_gold_label": false,
+  "insufficient_rate": 0.56,
+  "judge_label_counts": {
+    "insufficient": 28,
+    "support": 21,
+    "uncertain": 1
+  },
+  "latency_summary_ms": {
+    "max": 4678.0,
+    "mean": 2301.6,
+    "median": 2197.5,
+    "min": 1574.0,
+    "p95": 2926.0
+  },
+  "live_api_call_count": 50,
+  "measurement_validation_claim": false,
+  "missing_evidence_type_distribution": {
+    "bridge_fact": 11,
+    "entity": 22,
+    "temporal": 6,
+    "unknown": 21
+  },
+  "parse_failed_rate": 0.0,
+  "raw_response_stored": false,
+  "reason_codes": [],
+  "regime_counts": {
+    "insufficient_and_abstained": 14,
+    "insufficient_and_answered": 15,
+    "sufficient_dropped": 11,
+    "sufficient_kept": 10
+  },
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "schema_version": "post_lapi_sufficiency_abstention_aggregate_v1",
+  "support_rate": 0.42,
+  "truth_validation_claim": false,
+  "uncertain_rate": 0.02,
+  "uncertainty_bucket_counts": {
+    "high_uncertainty": 1,
+    "low_uncertainty": 49
+  },
+  "unsafe_answer_rate": 0.3
+}

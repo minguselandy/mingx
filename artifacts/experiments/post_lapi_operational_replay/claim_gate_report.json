@@ -1,0 +1,33 @@
+{
+  "allowed_claims": [
+    "scoped_operational_improvement_under_matched_budgets",
+    "operational_utility_only"
+  ],
+  "calibrated_proxy_supported": false,
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "denied_claims": [
+    "selector_superiority",
+    "global_selector_superiority",
+    "metric_bridge_support",
+    "measurement_validation",
+    "V_information_verification",
+    "calibrated_proxy_supported",
+    "vinfo_proxy_supported",
+    "paper_evidence",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "final_gate_status": "post6_operational_replay_completed",
+  "global_selector_superiority_claimed": false,
+  "live_api_call_count": 0,
+  "measurement_validation_claim": false,
+  "metric_bridge_support": false,
+  "oracle_status": "non_deployable_upper_bound",
+  "paper_evidence_claim": false,
+  "raw_response_stored": false,
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "selector_superiority_claimed": false,
+  "vinfo_proxy_supported": false
+}

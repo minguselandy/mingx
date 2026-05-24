@@ -1,0 +1,31 @@
+{
+  "regimes": [
+    {
+      "abstain_to_support_rate": 1.0,
+      "claim_gate_status": "reprojection_witness_candidate_ready",
+      "cost_delta_tokens_mean": 121.6,
+      "label_change_rate": 1.0,
+      "latency_delta_ms_mean": 234.933,
+      "n_cases": 15,
+      "parse_failed_rate": 0.0,
+      "position_sensitivity_rate": 1.0,
+      "regime": "insufficient_and_answered",
+      "repair_rate": 1.0,
+      "unsupported_to_supported_rate": 1.0
+    },
+    {
+      "abstain_to_support_rate": 0.0,
+      "claim_gate_status": "reprojection_witness_candidate_ready",
+      "cost_delta_tokens_mean": 36.545,
+      "label_change_rate": 0.0,
+      "latency_delta_ms_mean": 184.273,
+      "n_cases": 11,
+      "parse_failed_rate": 0.0,
+      "position_sensitivity_rate": 0.090909,
+      "regime": "sufficient_dropped",
+      "repair_rate": 0.0,
+      "unsupported_to_supported_rate": 0.0
+    }
+  ],
+  "schema_version": "post_lapi_reprojection_regime_ledger_v1"
+}

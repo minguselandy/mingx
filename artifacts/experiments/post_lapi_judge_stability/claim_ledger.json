@@ -1,0 +1,26 @@
+{
+  "allowed_claim_level": "model_adjudicated_weak_evidence",
+  "allowed_claims_after_gate": [
+    "model_adjudicated_weak_evidence"
+  ],
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_status": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "counts_as_human_or_external_gold": false,
+  "denied_claims": [
+    "human_gold",
+    "human_external_gold_validation",
+    "measurement_validation",
+    "judge_validation",
+    "paper_grade_evidence",
+    "selector_superiority",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "final_gate_status": "weak_evidence_candidate_ready",
+  "measurement_validation_claim": false,
+  "raw_response_stored": false,
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "treated_as": "weak_model_adjudicated_candidate_evidence_only"
+}

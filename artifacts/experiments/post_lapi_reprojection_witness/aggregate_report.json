@@ -1,0 +1,53 @@
+{
+  "abstain_to_support_rate": 0.5769230769230769,
+  "allowed_claims_after_gate": [
+    "operational_reprojection_witness",
+    "omitted_evidence_operational_diagnostic",
+    "replayable_artifact_evidence"
+  ],
+  "candidate_operational_evidence_only": true,
+  "case_count": 26,
+  "claim_level": "operational_utility_only/no_claim_upgrade",
+  "claim_upgrade_introduced": false,
+  "cost_delta_summary": {
+    "after_tokens_total": 16150,
+    "before_tokens_total": 13924,
+    "delta_tokens_mean": 85.615,
+    "delta_tokens_total": 2226,
+    "monetary_cost_status": "not_calculated_without_provider_pricing_config"
+  },
+  "denied_claims": [
+    "validated_repair",
+    "truth_correction_guarantee",
+    "metric_bridge_support",
+    "selector_superiority",
+    "route_5_unlock",
+    "route_8_unlock"
+  ],
+  "diagnostic_claim_level": "operational_reprojection_witness",
+  "final_gate_status": "reprojection_witness_candidate_ready",
+  "label_change_rate": 0.5769230769230769,
+  "latency_delta_summary_ms": {
+    "max": 1300.0,
+    "mean": 213.5,
+    "median": 234.0,
+    "min": -1087.0,
+    "p95": 1001.0
+  },
+  "live_api_call_count": 26,
+  "measurement_validation_claim": false,
+  "parse_failed_rate": 0.0,
+  "position_sensitivity_rate": 0.6153846153846154,
+  "raw_response_stored": false,
+  "regime_counts": {
+    "insufficient_and_answered": 15,
+    "sufficient_dropped": 11
+  },
+  "repair_rate": 0.5769230769230769,
+  "route_5_locked": true,
+  "route_8_locked": true,
+  "schema_version": "post_lapi_reprojection_witness_aggregate_v1",
+  "truth_correction_guarantee": false,
+  "unsupported_to_supported_rate": 0.5769230769230769,
+  "validated_repair_claim": false
+}

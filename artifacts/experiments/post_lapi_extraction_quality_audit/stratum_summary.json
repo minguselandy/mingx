@@ -1,0 +1,191 @@
+{
+  "schema_version": "post_lapi_extraction_quality_stratum_summary_v1",
+  "strata": [
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.9,
+      "cost_per_case_tokens": 391.3,
+      "label_counts": {
+        "captured": 8,
+        "captured_core_preserved": 1,
+        "missing": 1
+      },
+      "latency_per_case_ms": 3016.4,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.0,
+      "selector_impact_rate": 0.0,
+      "stratum": "simple_factual",
+      "temporal_scope_error_rate": 0.0,
+      "value_weighted_loss_proxy": 0.027027
+    },
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.8,
+      "cost_per_case_tokens": 471.1,
+      "label_counts": {
+        "captured": 4,
+        "captured_core_preserved": 4,
+        "missing": 2
+      },
+      "latency_per_case_ms": 2666.4,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.0,
+      "selector_impact_rate": 0.0,
+      "stratum": "complex_conditional",
+      "temporal_scope_error_rate": 0.0,
+      "value_weighted_loss_proxy": 0.058824
+    },
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.8,
+      "cost_per_case_tokens": 431.2,
+      "label_counts": {
+        "captured_core_preserved": 8,
+        "lost_qualifier": 1,
+        "missing": 1
+      },
+      "latency_per_case_ms": 2873.5,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.1,
+      "selector_impact_rate": 0.0,
+      "stratum": "qualifier_heavy",
+      "temporal_scope_error_rate": 0.0,
+      "value_weighted_loss_proxy": 0.094972
+    },
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.1,
+      "cost_per_case_tokens": 458.8,
+      "label_counts": {
+        "captured_core_preserved": 1,
+        "missing": 1,
+        "temporal_scope_error": 8
+      },
+      "latency_per_case_ms": 2637.8,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.0,
+      "selector_impact_rate": 0.0,
+      "stratum": "temporal_scope",
+      "temporal_scope_error_rate": 0.8,
+      "value_weighted_loss_proxy": 0.660584
+    },
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.9,
+      "cost_per_case_tokens": 491.5,
+      "label_counts": {
+        "captured": 3,
+        "captured_core_preserved": 6,
+        "missing": 1
+      },
+      "latency_per_case_ms": 2189.5,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.0,
+      "selector_impact_rate": 0.0,
+      "stratum": "cross_chunk",
+      "temporal_scope_error_rate": 0.0,
+      "value_weighted_loss_proxy": 0.027027
+    },
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.5,
+      "cost_per_case_tokens": 451.6,
+      "label_counts": {
+        "captured": 1,
+        "captured_core_preserved": 4,
+        "missing": 5
+      },
+      "latency_per_case_ms": 2785.8,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.0,
+      "selector_impact_rate": 0.0,
+      "stratum": "long_tail_entity",
+      "temporal_scope_error_rate": 0.0,
+      "value_weighted_loss_proxy": 0.230769
+    },
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.9,
+      "cost_per_case_tokens": 437.8,
+      "label_counts": {
+        "captured_core_preserved": 9,
+        "missing": 1
+      },
+      "latency_per_case_ms": 2643.2,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.0,
+      "selector_impact_rate": 0.0,
+      "stratum": "high_provenance_value",
+      "temporal_scope_error_rate": 0.0,
+      "value_weighted_loss_proxy": 0.1
+    },
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.7,
+      "cost_per_case_tokens": 427.0,
+      "label_counts": {
+        "captured_core_preserved": 7,
+        "missing": 3
+      },
+      "latency_per_case_ms": 2592.0,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.0,
+      "selector_impact_rate": 0.0,
+      "stratum": "prerequisite",
+      "temporal_scope_error_rate": 0.0,
+      "value_weighted_loss_proxy": 0.3
+    },
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.7,
+      "cost_per_case_tokens": 461.6,
+      "label_counts": {
+        "captured_core_preserved": 7,
+        "missing": 3
+      },
+      "latency_per_case_ms": 2090.6,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.0,
+      "selector_impact_rate": 0.0,
+      "stratum": "contradictory",
+      "temporal_scope_error_rate": 0.0,
+      "value_weighted_loss_proxy": 0.099338
+    },
+    {
+      "claim_gate_status": "model_adjudicated_extraction_risk_ready",
+      "completeness_by_stratum": 0.6,
+      "cost_per_case_tokens": 457.9,
+      "label_counts": {
+        "captured_core_preserved": 6,
+        "missing": 4
+      },
+      "latency_per_case_ms": 2729.9,
+      "n_examples": 10,
+      "parse_failure_rate": 0.0,
+      "provenance_loss_rate": 0.0,
+      "qualifier_loss_rate": 0.0,
+      "selector_impact_rate": 0.0,
+      "stratum": "adversarial",
+      "temporal_scope_error_rate": 0.0,
+      "value_weighted_loss_proxy": 0.4
+    }
+  ]
+}

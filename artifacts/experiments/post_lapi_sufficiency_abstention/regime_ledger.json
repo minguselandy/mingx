@@ -1,0 +1,85 @@
+{
+  "regimes": [
+    {
+      "abstain_rate": 0.0,
+      "abstain_when_insufficient_rate": 0.0,
+      "claim_gate_status": "sufficiency_abstention_candidate_ready",
+      "contradict_rate": 0.0,
+      "cost_per_case_tokens": 514.6,
+      "insufficient_rate": 0.0,
+      "latency_per_case_ms": 2097.2,
+      "missing_evidence_type_distribution": {
+        "unknown": 10
+      },
+      "n_cases": 10,
+      "parse_failed_rate": 0.0,
+      "regime": "sufficient_kept",
+      "support_rate": 1.0,
+      "system_abstained_rate": 0.0,
+      "uncertain_rate": 0.0,
+      "unsafe_answer_rate": 0.0
+    },
+    {
+      "abstain_rate": 0.0,
+      "abstain_when_insufficient_rate": 0.0,
+      "claim_gate_status": "sufficiency_abstention_candidate_ready",
+      "contradict_rate": 0.0,
+      "cost_per_case_tokens": 525.273,
+      "insufficient_rate": 0.0,
+      "latency_per_case_ms": 2284.364,
+      "missing_evidence_type_distribution": {
+        "unknown": 11
+      },
+      "n_cases": 11,
+      "parse_failed_rate": 0.0,
+      "regime": "sufficient_dropped",
+      "support_rate": 1.0,
+      "system_abstained_rate": 1.0,
+      "uncertain_rate": 0.0,
+      "unsafe_answer_rate": 0.0
+    },
+    {
+      "abstain_rate": 1.0,
+      "abstain_when_insufficient_rate": 1.0,
+      "claim_gate_status": "sufficiency_abstention_candidate_ready",
+      "contradict_rate": 0.0,
+      "cost_per_case_tokens": 543.067,
+      "insufficient_rate": 1.0,
+      "latency_per_case_ms": 2407.533,
+      "missing_evidence_type_distribution": {
+        "bridge_fact": 6,
+        "entity": 11,
+        "temporal": 5
+      },
+      "n_cases": 15,
+      "parse_failed_rate": 0.0,
+      "regime": "insufficient_and_answered",
+      "support_rate": 0.0,
+      "system_abstained_rate": 0.0,
+      "uncertain_rate": 0.0,
+      "unsafe_answer_rate": 1.0
+    },
+    {
+      "abstain_rate": 1.0,
+      "abstain_when_insufficient_rate": 1.0,
+      "claim_gate_status": "sufficiency_abstention_candidate_ready",
+      "contradict_rate": 0.0,
+      "cost_per_case_tokens": 536.643,
+      "insufficient_rate": 0.928571,
+      "latency_per_case_ms": 2347.643,
+      "missing_evidence_type_distribution": {
+        "bridge_fact": 5,
+        "entity": 11,
+        "temporal": 1
+      },
+      "n_cases": 14,
+      "parse_failed_rate": 0.0,
+      "regime": "insufficient_and_abstained",
+      "support_rate": 0.0,
+      "system_abstained_rate": 1.0,
+      "uncertain_rate": 0.071429,
+      "unsafe_answer_rate": 0.0
+    }
+  ],
+  "schema_version": "post_lapi_sufficiency_regime_ledger_v1"
+}

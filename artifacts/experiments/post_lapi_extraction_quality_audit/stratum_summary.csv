@@ -1,0 +1,11 @@
+stratum,n_examples,completeness_by_stratum,value_weighted_loss_proxy,qualifier_loss_rate,temporal_scope_error_rate,provenance_loss_rate,selector_impact_rate,parse_failure_rate,cost_per_case_tokens,latency_per_case_ms,claim_gate_status,label_counts
+simple_factual,10,0.9,0.027027,0.0,0.0,0.0,0.0,0.0,391.3,3016.4,model_adjudicated_extraction_risk_ready,"{'captured': 8, 'captured_core_preserved': 1, 'missing': 1}"
+complex_conditional,10,0.8,0.058824,0.0,0.0,0.0,0.0,0.0,471.1,2666.4,model_adjudicated_extraction_risk_ready,"{'captured': 4, 'captured_core_preserved': 4, 'missing': 2}"
+qualifier_heavy,10,0.8,0.094972,0.1,0.0,0.0,0.0,0.0,431.2,2873.5,model_adjudicated_extraction_risk_ready,"{'captured_core_preserved': 8, 'lost_qualifier': 1, 'missing': 1}"
+temporal_scope,10,0.1,0.660584,0.0,0.8,0.0,0.0,0.0,458.8,2637.8,model_adjudicated_extraction_risk_ready,"{'captured_core_preserved': 1, 'missing': 1, 'temporal_scope_error': 8}"
+cross_chunk,10,0.9,0.027027,0.0,0.0,0.0,0.0,0.0,491.5,2189.5,model_adjudicated_extraction_risk_ready,"{'captured': 3, 'captured_core_preserved': 6, 'missing': 1}"
+long_tail_entity,10,0.5,0.230769,0.0,0.0,0.0,0.0,0.0,451.6,2785.8,model_adjudicated_extraction_risk_ready,"{'captured': 1, 'captured_core_preserved': 4, 'missing': 5}"
+high_provenance_value,10,0.9,0.1,0.0,0.0,0.0,0.0,0.0,437.8,2643.2,model_adjudicated_extraction_risk_ready,"{'captured_core_preserved': 9, 'missing': 1}"
+prerequisite,10,0.7,0.3,0.0,0.0,0.0,0.0,0.0,427.0,2592.0,model_adjudicated_extraction_risk_ready,"{'captured_core_preserved': 7, 'missing': 3}"
+contradictory,10,0.7,0.099338,0.0,0.0,0.0,0.0,0.0,461.6,2090.6,model_adjudicated_extraction_risk_ready,"{'captured_core_preserved': 7, 'missing': 3}"
+adversarial,10,0.6,0.4,0.0,0.0,0.0,0.0,0.0,457.9,2729.9,model_adjudicated_extraction_risk_ready,"{'captured_core_preserved': 6, 'missing': 4}"
